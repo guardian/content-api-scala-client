@@ -124,4 +124,55 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
       Thread.sleep(500)
     }
   }
+
+  feature ("configuring content display:") {
+
+    scenario("retrieving all content's tags") {
+      val search = Api.searchQuery.withPageSize(1).withShowTags("all").search
+
+      val tags = search.results.head.tags.get // NB tags list is optional and not returned by default, hence the get
+      tags.length should be > (0)
+      tags.foreach (tag => println(tag.tagType + ":" +tag.webTitle))
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
+
+    scenario("retrieving just the content's keywords") {
+      val search = Api.searchQuery.withPageSize(1).withShowTags("keyword").search
+
+      val tags = search.results.head.tags.get // NB tags list is optional and not returned by default, hence the get
+      tags.foreach (tag => println(tag.tagType + ":" +tag.webTitle))
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
+
+    scenario("retrieving an article's headline and trail") {
+      val search = Api.searchQuery.withPageSize(1).withTagTerm("type/article")
+              .withFields("headline,trail-text").search
+
+      val fields: Map[String, String] = search.results.head.fields.get // NB fields map is optional and not returned by default, hence the get
+      fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
+
+    scenario("retrieving all article's fields") {
+      val search = Api.searchQuery.withPageSize(1).withTagTerm("type/article")
+              .withFields("all").search
+
+      val fields: Map[String, String] = search.results.head.fields.get // NB fields map is optional and not returned by default, hence the get
+      fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
+
+  }
 }
