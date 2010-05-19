@@ -8,7 +8,7 @@ import org.scalatest.junit.JUnitRunner
 
 
 @RunWith(classOf[JUnitRunner])
-class ExampleUsages extends FeatureSpec with ShouldMatchers {
+class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
   feature("Pagination:") {
 
