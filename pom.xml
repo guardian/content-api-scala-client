@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>openplatform content-api client</name>
+    <name>open platform content api scala client</name>
 
     <description>A simple scala client library for the Guardian's openplatform content api</description>
 
