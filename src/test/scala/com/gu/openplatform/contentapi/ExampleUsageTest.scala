@@ -173,6 +173,38 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
       // so putting in a cheeky sleep
       Thread.sleep(500)
     }
+  }
+
+  feature("Finding tags") {
+
+    // pagination and query terms work much like content search
+
+    scenario("find some tags") {
+      val search = Api.tagsQuery.tags
+      search.results.foreach(tag => println(tag.webTitle))
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
+
+    scenario("find tags representing series") {
+      val search = Api.tagsQuery.withTypeTerm("series").tags
+      search.results.foreach(tag => println(tag.tagType + ":" + tag.webTitle))
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
+
+    scenario("find tags in the technology section") {
+      val search = Api.tagsQuery.withSectionTerm("technology").tags
+      search.results.foreach(tag => println(tag.webTitle + " (" + tag.sectionName.get + ")"))
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
 
   }
 }
