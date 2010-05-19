@@ -1,9 +1,9 @@
 package com.gu.openplatform.contentapi.connection
 
 
-import java.net.URL
 import com.gu.openplatform.contentapi.model._
 import com.gu.openplatform.contentapi.parser.XmlParser
+import java.net.{URLEncoder, URL}
 
 // thrown when an "expected" error is thrown by the api
 case class ApiError(val httpStatus: Int, val httpMessage: String)
@@ -138,7 +138,7 @@ object Api {
     var queryTerm: Option[String] = None
 
     def withQueryTerm(newQueryTerm: String) :T = {
-      queryTerm = Some(newQueryTerm)
+      queryTerm = Some(URLEncoder.encode(newQueryTerm))
       this.asInstanceOf[T]
     }
 
@@ -151,7 +151,6 @@ object Api {
 
   trait FilterableResultsQuery[T] {
     var sectionTerm: Option[String] = None
-    var idsTerm: Option[List[String]] = None
     var tagTerm: Option[String] = None
     var orderBy: Option[String] = None
     var fromDate: Option[String] = None
@@ -159,11 +158,6 @@ object Api {
 
     def withSectionTerm(newSectionTerm: String): T = {
       sectionTerm = Some(newSectionTerm)
-      this.asInstanceOf[T]
-    }
-
-    def withIdsTerm(newIdsTerm: List[String]): T = {
-      idsTerm = Some(newIdsTerm)
       this.asInstanceOf[T]
     }
 
@@ -192,7 +186,6 @@ object Api {
 
       sectionTerm.foreach(s => stringBuilder.append("&section=").append(s))
       tagTerm.foreach(s => stringBuilder.append("&tag=").append(s))
-      idsTerm.foreach(s => stringBuilder.append("&ids=").append(s.mkString(",")))
       orderBy.foreach(s => stringBuilder.append("&order-by=").append(s))
       fromDate.foreach(s => stringBuilder.append("&from-date=").append(s))
       toDate.foreach(s => stringBuilder.append("&to-date=").append(s))
