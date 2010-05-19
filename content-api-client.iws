@@ -3,7 +3,7 @@
   <component name="ChangeListManager" verified="true">
     <list default="true" readonly="true" id="33a25278-a82b-4964-98bc-8e6accf0a285" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content-api-client.iws" afterPath="$PROJECT_DIR$/content-api-client.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala" afterPath="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala" afterPath="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala" />
     </list>
     <ignored path="content-api-client.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -84,7 +84,7 @@
       <file leaf-file-name="Api.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="188" column="0" selection-start="5179" selection-end="5179" vertical-scroll-proportion="0.0">
+            <state line="23" column="20" selection-start="682" selection-end="682" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -93,7 +93,7 @@
       <file leaf-file-name="ExampleUsageTest.scala" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="166" column="30" selection-start="5847" selection-end="5847" vertical-scroll-proportion="0.6666667">
+            <state line="11" column="0" selection-start="309" selection-end="309" vertical-scroll-proportion="0.36666667">
               <folding />
             </state>
           </provider>
@@ -150,8 +150,8 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/model/Model.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsages.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala" />
       </list>
     </option>
@@ -606,13 +606,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="188" column="0" selection-start="5179" selection-end="5179" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="109" column="27" selection-start="3659" selection-end="3659" vertical-scroll-proportion="0.0">
@@ -634,9 +627,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="20" selection-start="682" selection-end="682" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="166" column="30" selection-start="5847" selection-end="5847" vertical-scroll-proportion="0.6666667">
+        <state line="11" column="0" selection-start="309" selection-end="309" vertical-scroll-proportion="0.36666667">
           <folding />
         </state>
       </provider>

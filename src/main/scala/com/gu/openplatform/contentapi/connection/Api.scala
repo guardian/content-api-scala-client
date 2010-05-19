@@ -12,6 +12,9 @@ case class ApiError(val httpStatus: Int, val httpMessage: String)
 object Api {
 
   private val targetUrl = "http://content.guardianapis.com"
+  private var apiKey: Option[String] = None
+
+  def setKey(key: String) = { apiKey = Some(key) }
 
   def sectionsQuery = new SectionsQuery
   def tagsQuery = new TagsQuery
@@ -19,12 +22,6 @@ object Api {
   def itemQuery = new ItemQuery
 
   trait ApiQuery[T]{
-    var apiKey: Option[String] = None
-
-    def withApiKey(newApiKey: String) :T = {
-      apiKey = Some(newApiKey)
-      this.asInstanceOf[T]
-    }
 
     def getResponse(endpoint: String, responseString: String) : Response = {
       XmlParser.parseEndpoint(endpoint, responseString)
