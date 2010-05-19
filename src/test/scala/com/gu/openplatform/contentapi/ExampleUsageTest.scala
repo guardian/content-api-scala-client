@@ -1,6 +1,7 @@
 package com.gu.openplatform.contentapi
 
 import connection.Api
+import model.ItemResponse
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FeatureSpec
 import org.junit.runner.RunWith
@@ -205,6 +206,44 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
       // so putting in a cheeky sleep
       Thread.sleep(500)
     }
+  }
 
+  feature("finding sections") {
+
+    // not much to see here, the sections search is not even paginated, this gets you the list
+    // of all section id you can use.
+
+    // You can use the query term, q, parameter to restrict your seach, or just use your eyes.
+    scenario("listing the sections") {
+      val search = Api.sectionsQuery.sections
+      search.results.foreach(section => println(section.id))
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
+  }
+
+  feature("getting more information about an individual item") {
+
+    scenario("loading a content item from seach results") {
+      // why would you do this when you can flesh out results in the search?
+      // the answer is you can get more information on the individual item's url
+      // this includes pictures etc for galleries and articles (and more stuff in the future).
+      // Unfortunately a key is needed to get at this data and I'm not handing my key out
+      // here so the example is a bit noddy.
+
+      val search = Api.searchQuery.withQueryTerm("tottenham hotspur").withPageSize(1).search
+
+      val contentApiUrl = search.results.head.apiUrl
+      println("following api url: " + contentApiUrl)
+
+      val item: ItemResponse = Api.itemQuery.withApiUrl(contentApiUrl).query
+      println("loaded " + item.content.get.webTitle)
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
   }
 }

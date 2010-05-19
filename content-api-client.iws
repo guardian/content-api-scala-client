@@ -4,6 +4,7 @@
     <list default="true" readonly="true" id="33a25278-a82b-4964-98bc-8e6accf0a285" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content-api-client.iws" afterPath="$PROJECT_DIR$/content-api-client.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala" afterPath="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala" afterPath="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala" />
     </list>
     <ignored path="content-api-client.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -90,10 +91,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExampleUsageTest.scala" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ExampleUsageTest.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="205" column="23" selection-start="7336" selection-end="7336" vertical-scroll-proportion="0.93333334">
+            <state line="235" column="75" selection-start="8533" selection-end="8533" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -102,16 +103,16 @@
       <file leaf-file-name="Model.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/model/Model.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="75" column="11" selection-start="2370" selection-end="2370" vertical-scroll-proportion="0.0">
+            <state line="75" column="19" selection-start="2378" selection-end="2378" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Http.scala" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Http.scala" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="21" selection-start="261" selection-end="267" vertical-scroll-proportion="0.0">
+            <state line="12" column="4" selection-start="291" selection-end="291" vertical-scroll-proportion="0.168">
               <folding />
             </state>
           </provider>
@@ -147,12 +148,12 @@
       <list>
         <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/parser/XMLParser.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/parser/XMLParserTest.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/model/Model.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsages.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala" />
       </list>
     </option>
   </component>
@@ -592,30 +593,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="21" selection-start="261" selection-end="267" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/parser/XMLParser.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="6" selection-start="205" selection-end="205" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/parser/XMLParserTest.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="46" selection-start="308" selection-end="308" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="20" selection-start="682" selection-end="682" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -629,14 +609,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/model/Model.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="75" column="11" selection-start="2370" selection-end="2370" vertical-scroll-proportion="0.0">
+        <state line="75" column="19" selection-start="2378" selection-end="2378" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="205" column="23" selection-start="7336" selection-end="7336" vertical-scroll-proportion="0.93333334">
+        <state line="235" column="75" selection-start="8533" selection-end="8533" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="20" selection-start="682" selection-end="682" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/parser/XMLParser.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="6" selection-start="205" selection-end="205" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="4" selection-start="291" selection-end="291" vertical-scroll-proportion="0.168">
           <folding />
         </state>
       </provider>

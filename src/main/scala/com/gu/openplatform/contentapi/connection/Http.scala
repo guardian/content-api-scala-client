@@ -10,8 +10,7 @@ object Http {
   val httpClient = new HttpClient
 
   def GET(url: String): HttpResponse = {
-    Console.err.println("Getting: " + url)
-
+    
     val method = new GetMethod(url)
     method.setFollowRedirects(false)
 
