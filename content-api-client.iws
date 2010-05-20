@@ -91,10 +91,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExampleUsageTest.scala" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="ExampleUsageTest.scala" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="235" column="75" selection-start="8533" selection-end="8533" vertical-scroll-proportion="0.0">
+            <state line="259" column="73" selection-start="9551" selection-end="9551" vertical-scroll-proportion="0.9">
               <folding />
             </state>
           </provider>
@@ -109,10 +109,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Http.scala" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Http.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="4" selection-start="291" selection-end="291" vertical-scroll-proportion="0.168">
+            <state line="12" column="4" selection-start="291" selection-end="291" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -152,8 +152,8 @@
         <option value="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsages.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala" />
       </list>
     </option>
   </component>
@@ -614,13 +614,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="235" column="75" selection-start="8533" selection-end="8533" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Api.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="23" column="20" selection-start="682" selection-end="682" vertical-scroll-proportion="0.0">
@@ -637,7 +630,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/gu/openplatform/contentapi/connection/Http.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="4" selection-start="291" selection-end="291" vertical-scroll-proportion="0.168">
+        <state line="12" column="4" selection-start="291" selection-end="291" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/com/gu/openplatform/contentapi/ExampleUsageTest.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="259" column="73" selection-start="9551" selection-end="9551" vertical-scroll-proportion="0.9">
           <folding />
         </state>
       </provider>

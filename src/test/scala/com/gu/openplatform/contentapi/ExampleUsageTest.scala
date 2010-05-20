@@ -1,7 +1,7 @@
 package com.gu.openplatform.contentapi
 
 import connection.Api
-import model.ItemResponse
+import model.{Refinement, RefinementGroup, ItemResponse}
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FeatureSpec
 import org.junit.runner.RunWith
@@ -240,6 +240,26 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       val item: ItemResponse = Api.itemQuery.withApiUrl(contentApiUrl).query
       println("loaded " + item.content.get.webTitle)
+
+      // if you run all these tests they will exceed the rate limit in the basic tier,
+      // so putting in a cheeky sleep
+      Thread.sleep(500)
+    }
+  }
+
+  feature("refineing search results") {
+
+    scenario("finding the most popular keywords for a seach") {
+      val search = Api.searchQuery.withPageSize(1).withSectionTerm("music")
+              .withShowRefinements("keyword").withRefinementSize(20).search
+
+      val refinementGroups: List[RefinementGroup] = search.refinementGroups.get
+      refinementGroups foreach { group: RefinementGroup =>
+        println(group.refinementType)
+        group.refinements.foreach { refinement: Refinement =>
+          println("\t" + refinement.displayName + " (" + refinement.count + ")")
+        }
+      }
 
       // if you run all these tests they will exceed the rate limit in the basic tier,
       // so putting in a cheeky sleep
