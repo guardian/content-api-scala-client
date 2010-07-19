@@ -4,11 +4,8 @@ import connection.Api
 import model.{Refinement, RefinementGroup, ItemResponse}
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FeatureSpec
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 
 
-@RunWith(classOf[JUnitRunner])
 class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
   feature("Pagination:") {

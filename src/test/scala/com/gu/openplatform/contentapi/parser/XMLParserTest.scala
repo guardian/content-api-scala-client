@@ -1,15 +1,12 @@
 package com.gu.openplatform.contentapi.parser
 
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FeatureSpec
-import org.junit.runner.RunWith
 import java.net.URL
 import org.joda.time.DateTime
 import xml.Elem
 import com.gu.openplatform.contentapi.model._
 
-@RunWith(classOf[JUnitRunner])
 class XmlParserTest extends FeatureSpec with ShouldMatchers {
 
   private val searchEndpointXml =
