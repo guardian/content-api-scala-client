@@ -9,6 +9,8 @@ import com.gu.openplatform.contentapi.model._
 
 class XmlParserTest extends FeatureSpec with ShouldMatchers {
 
+   protected def scenariosFor(unit: Unit*) {}
+
   private val searchEndpointXml =
     <response status="ok" total="13976" start-index="0" user-tier="free" page-size="2" current-page="1" pages="6988">
       <results>
@@ -264,7 +266,7 @@ class XmlParserTest extends FeatureSpec with ShouldMatchers {
         val content :Content = contentSelector(response)
 
         content.fields should not be (None)
-        val fields: Map[String, String] = content.fields.get
+        val fields: Map[String, String] = content.fields
         fields should have size(2)
 
         fields("headline") should be ("Accusations fly as Kelly's farewell leaves bad taste")
@@ -310,7 +312,7 @@ class XmlParserTest extends FeatureSpec with ShouldMatchers {
         factbox.heading.get should be ("the bible")
         factbox.picture.get should be ("http://static.guim.co.uk/thebible.jpg")
 
-        val fields: Map[String, String] = factbox.fields.get
+        val fields: Map[String, String] = factbox.fields
         fields should have size(2)
         fields("rating") should be ("5 stars")
         fields("author") should be ("God")
@@ -331,7 +333,7 @@ class XmlParserTest extends FeatureSpec with ShouldMatchers {
         mediaAsset.index should be (1)
         mediaAsset.file should be ("http://static.guim.co.uk/thebible.jpg")
 
-        val fields: Map[String, String] = mediaAsset.fields.get
+        val fields: Map[String, String] = mediaAsset.fields
         fields should have size(2)
         fields("altText") should be ("alt text")
         fields("caption") should be ("caption")
@@ -345,7 +347,7 @@ class XmlParserTest extends FeatureSpec with ShouldMatchers {
         val response: Response = XmlParser.parseEndpoint(endpointName, endpointXml)
 
         val content :Content = contentSelector(response)
-        val fields: Map[String, String] = contentSelector(response).fields.get
+        val fields: Map[String, String] = contentSelector(response).fields
         fields should have size(5)
 
         fields("durationMinutes") should not be (None)
@@ -362,16 +364,16 @@ class XmlParserTest extends FeatureSpec with ShouldMatchers {
     testPagedResponseHeaderCanBeParsed("search endpoint", "search", searchEndpointXml),
     testThereAre2ItemsInTheResults("search endpoint response -> results ", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results),
     testTheStandardArticleIsParsedCorrectly("search endpoint", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head),
-    testThereAre2ItemsInTheResults("search endpoint response -> results -> tags", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head.tags.get),
-    testTheStandardTagIsParsedCorrectly("search endpoint response -> results -> content -> tag", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head.tags.get.head),
+    testThereAre2ItemsInTheResults("search endpoint response -> results -> tags", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head.tags),
+    testTheStandardTagIsParsedCorrectly("search endpoint response -> results -> content -> tag", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head.tags.head),
     testTheStandardFieldsAreParsedCorrectly("search endpoint", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head),
     testCamelCasingForHyphenatedFieldNames("search endpoint", "search", camelCaseTestEndpointXml, _.asInstanceOf[SearchResponse].results.head),
-    testThereAre2ItemsInTheResults("search endpoint response -> refinementGroups", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].refinementGroups.get),
-    testTheStandardRefinementGroupIsParsedCorrectly("search endpoint response -> refinementGroups -> refinementGroup", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].refinementGroups.get.head),
-    testThereAre2ItemsInTheResults("search endpoint response -> refinementGroups -> refinementGroup -> refinements", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].refinementGroups.get.head.refinements),
-    testTheStandardRefinementIsParsedCorrectly("search endpoint response -> refinementGroups -> refinementGroup -> refinements -> refinement", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].refinementGroups.get.head.refinements.head),
-    testTheStandardFactboxIsParsedCorrectly("search endpoint response -> results -> content -> factboxes", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head.factboxes.get.head),
-    testTheStandardMediaAssetIsParsedCorrectly("search endpoint response -> results -> content -> media-assets", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head.mediaAssets.get.head)
+    testThereAre2ItemsInTheResults("search endpoint response -> refinementGroups", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].refinementGroups),
+    testTheStandardRefinementGroupIsParsedCorrectly("search endpoint response -> refinementGroups -> refinementGroup", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].refinementGroups.head),
+    testThereAre2ItemsInTheResults("search endpoint response -> refinementGroups -> refinementGroup -> refinements", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].refinementGroups.head.refinements),
+    testTheStandardRefinementIsParsedCorrectly("search endpoint response -> refinementGroups -> refinementGroup -> refinements -> refinement", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].refinementGroups.head.refinements.head),
+    testTheStandardFactboxIsParsedCorrectly("search endpoint response -> results -> content -> factboxes", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head.factboxes.head),
+    testTheStandardMediaAssetIsParsedCorrectly("search endpoint response -> results -> content -> media-assets", "search", searchEndpointXml, _.asInstanceOf[SearchResponse].results.head.mediaAssets.head)
   )
 
   scenariosFor(
@@ -390,11 +392,11 @@ class XmlParserTest extends FeatureSpec with ShouldMatchers {
   scenariosFor(
     testBasicResponseHeaderCanBeParsed("id endpoint returning content", "id", idEndpointContentXml),
     testTheStandardArticleIsParsedCorrectly("id endpoint", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get),
-    testThereAre2ItemsInTheResults("id endpoint response -> content -> tags", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get.tags.get),
-    testTheStandardTagIsParsedCorrectly("id endpoint response ->  content -> tag", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get.tags.get.head),
+    testThereAre2ItemsInTheResults("id endpoint response -> content -> tags", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get.tags),
+    testTheStandardTagIsParsedCorrectly("id endpoint response ->  content -> tag", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get.tags.head),
     testTheStandardFieldsAreParsedCorrectly("id endpoint", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get),
-    testTheStandardFactboxIsParsedCorrectly("id endpoint", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get.factboxes.get.head),
-    testTheStandardMediaAssetIsParsedCorrectly("id endpoint -> content -> media-assets", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get.mediaAssets.get.head)
+    testTheStandardFactboxIsParsedCorrectly("id endpoint", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get.factboxes.head),
+    testTheStandardMediaAssetIsParsedCorrectly("id endpoint -> content -> media-assets", "id", idEndpointContentXml, _.asInstanceOf[ItemResponse].content.get.mediaAssets.head)
   )
 
   scenariosFor(
@@ -403,8 +405,8 @@ class XmlParserTest extends FeatureSpec with ShouldMatchers {
     testPagedItemResponseHeaderCanBeParsed("id endpoint returning tag", "id", idEndpointTagXml),
     testThereAre2ItemsInTheResults("id endpoint returning tag -> results ", "id", idEndpointTagXml, _.asInstanceOf[ItemResponse].results),
     testTheStandardArticleIsParsedCorrectly("id endpoint returning tag -> results", "id", idEndpointTagXml, _.asInstanceOf[ItemResponse].results.head),
-    testThereAre2ItemsInTheResults("id endpoint returning tag -> results -> tags", "id", idEndpointTagXml, _.asInstanceOf[ItemResponse].results.head.tags.get),
-    testTheStandardTagIsParsedCorrectly("id endpoint returning tag -> results -> content -> tag", "id", idEndpointTagXml, _.asInstanceOf[ItemResponse].results.head.tags.get.head),
+    testThereAre2ItemsInTheResults("id endpoint returning tag -> results -> tags", "id", idEndpointTagXml, _.asInstanceOf[ItemResponse].results.head.tags),
+    testTheStandardTagIsParsedCorrectly("id endpoint returning tag -> results -> content -> tag", "id", idEndpointTagXml, _.asInstanceOf[ItemResponse].results.head.tags.head),
     testTheStandardFieldsAreParsedCorrectly("id endpoint returning tag -> results", "id", idEndpointTagXml, _.asInstanceOf[ItemResponse].results.head)
   )
 

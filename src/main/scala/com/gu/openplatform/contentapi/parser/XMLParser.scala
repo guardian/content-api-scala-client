@@ -37,10 +37,7 @@ object XmlParser {
         (xml \ "@total" text).toInt,
         (xml \ "@order-by" text),
         (xml \ "results" \ "content" map { contentNode => parseContentNode(contentNode)}).toList,
-        xml \ "refinement-groups" \ "refinement-group" length match {
-          case 0 => None
-          case _ => Some((xml \ "refinement-groups" \ "refinement-group" map {refinementGroupNode => parseRefinementGroupNode(refinementGroupNode)}).toList)
-        }
+        (xml \ "refinement-groups" \ "refinement-group" map {refinementGroupNode => parseRefinementGroupNode(refinementGroupNode)}).toList
       )
   }
 
@@ -140,32 +137,15 @@ object XmlParser {
         new URL(contentNode \ "@web-url" text),
         new URL(contentNode \ "@api-url" text),
         parseFields(contentNode),
-        contentNode \ "tags" \ "tag" length match {
-          case 0 => None
-          case _ => Some((contentNode \ "tags" \ "tag" map {tagNode => parseTagNode(tagNode)}).toList)
-        },
-        contentNode \ "factboxes" \ "factbox" length match {
-          case 0 => None
-          case _ => Some((contentNode \ "factboxes" \ "factbox" map {factboxNode => parseFactboxNode(factboxNode)}).toList)
-        },
-        contentNode \ "media-assets" \ "asset" length match {
-          case 0 => None
-          case _ => Some((contentNode \ "media-assets" \ "asset" map {mediaAssetNode => parseMediaAssetNode(mediaAssetNode)}).toList)
-        }
+        (contentNode \ "tags" \ "tag" map {tagNode => parseTagNode(tagNode)}).toList,
+        (contentNode \ "factboxes" \ "factbox" map {factboxNode => parseFactboxNode(factboxNode)}).toList,
+        (contentNode \ "media-assets" \ "asset" map {mediaAssetNode => parseMediaAssetNode(mediaAssetNode)}).toList
     )
   }
 
-  def parseFields(xmlItem: Node) : Option[Map[String,String]] = {
-    val fields = xmlItem \ "fields" \ "field"
-
-    fields.length match {
-      case 0 => None
-      case _ => Some(
-        Map.empty[String, String] ++
-                ( fields map { xmlField => (camelCase(xmlField \ "@name" text) , xmlField text) } )
-      )
-    }
-  }
+  def parseFields(xmlItem: Node) : Map[String,String] =
+    Map.empty[String, String] ++
+      ( xmlItem \ "fields" \ "field" map { xmlField => (camelCase(xmlField \ "@name" text) , xmlField text) } )
 
   def camelCase(text: String) = text split("-") reduceLeft(_ + _.capitalize)
 

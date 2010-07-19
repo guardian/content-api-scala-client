@@ -32,7 +32,7 @@ case class SearchResponse(
         override val total: Int,
         val orderBy: String,
         val results: List[Content],
-        val refinementGroups: Option[List[RefinementGroup]]
+        val refinementGroups: List[RefinementGroup]
         ) extends PagedResponse(format, status, userTier, startIndex, currentPage, pages, pageSize, total)
 
 // "/tags"
@@ -81,10 +81,10 @@ case class Content(
         val webTitle: String,
         val webUrl: URL,
         val apiUrl: URL,
-        val fields: Option[Map[String, String]],
-        val tags : Option[List[Tag]],
-        val factboxes : Option[List[Factbox]],
-        val mediaAssets : Option[List[MediaAsset]]
+        val fields: Map[String, String],
+        val tags : List[Tag],
+        val factboxes : List[Factbox],
+        val mediaAssets : List[MediaAsset]
         )
 
 case class Tag(
@@ -108,7 +108,7 @@ case class Factbox(
         val heading : Option[String],
         val factboxType : String,
         val picture : Option[String],
-        val fields: Option[Map[String, String]]
+        val fields: Map[String, String]
         )
 
 case class MediaAsset(
@@ -116,7 +116,7 @@ case class MediaAsset(
         val relationship : String,
         val index : Int,
         val file : String,
-        val fields: Option[Map[String, String]]
+        val fields: Map[String, String]
         )
 
 case class RefinementGroup(

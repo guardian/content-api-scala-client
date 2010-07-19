@@ -128,7 +128,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
     scenario("retrieving all content's tags") {
       val search = Api.searchQuery.withPageSize(1).withShowTags("all").search
 
-      val tags = search.results.head.tags.get // NB tags list is optional and not returned by default, hence the get
+      val tags = search.results.head.tags
       tags.length should be > (0)
       tags.foreach (tag => println(tag.tagType + ":" +tag.webTitle))
 
@@ -140,7 +140,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
     scenario("retrieving just the content's keywords") {
       val search = Api.searchQuery.withPageSize(1).withShowTags("keyword").search
 
-      val tags = search.results.head.tags.get // NB tags list is optional and not returned by default, hence the get
+      val tags = search.results.head.tags
       tags.foreach (tag => println(tag.tagType + ":" +tag.webTitle))
 
       // if you run all these tests they will exceed the rate limit in the basic tier,
@@ -152,7 +152,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
       val search = Api.searchQuery.withPageSize(1).withTagTerm("type/article")
               .withFields("headline,trail-text").search
 
-      val fields: Map[String, String] = search.results.head.fields.get // NB fields map is optional and not returned by default, hence the get
+      val fields: Map[String, String] = search.results.head.fields
       fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
 
       // if you run all these tests they will exceed the rate limit in the basic tier,
@@ -164,7 +164,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
       val search = Api.searchQuery.withPageSize(1).withTagTerm("type/article")
               .withFields("all").search
 
-      val fields: Map[String, String] = search.results.head.fields.get // NB fields map is optional and not returned by default, hence the get
+      val fields: Map[String, String] = search.results.head.fields
       fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
 
       // if you run all these tests they will exceed the rate limit in the basic tier,
@@ -250,8 +250,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
       val search = Api.searchQuery.withPageSize(1).withSectionTerm("music")
               .withShowRefinements("keyword").withRefinementSize(20).search
 
-      val refinementGroups: List[RefinementGroup] = search.refinementGroups.get
-      refinementGroups foreach { group: RefinementGroup =>
+      search.refinementGroups foreach { group: RefinementGroup =>
         println(group.refinementType)
         group.refinements.foreach { refinement: Refinement =>
           println("\t" + refinement.displayName + " (" + refinement.count + ")")
