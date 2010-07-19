@@ -7,7 +7,7 @@ import org.apache.commons.httpclient.methods.GetMethod
 import org.apache.commons.httpclient.HttpClient
 
 object Http {
-  val httpClient = new HttpClient
+  var httpClient = new HttpClient
 
   def GET(url: String): HttpResponse = {
     

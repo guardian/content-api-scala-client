@@ -11,55 +11,44 @@ case class ApiError(val httpStatus: Int, val httpMessage: String)
 
 object Api {
 
-  private val targetUrl = "http://content.guardianapis.com"
-  private var apiKey: Option[String] = None
-
-  def setKey(key: String) = { apiKey = Some(key) }
+  val targetUrl = "http://content.guardianapis.com"
+  var apiKey: Option[String] = None
 
   def sectionsQuery = new SectionsQuery
   def tagsQuery = new TagsQuery
   def searchQuery = new SearchQuery
   def itemQuery = new ItemQuery
 
+
   trait ApiQuery[T]{
-
-    def getResponse(endpoint: String, responseString: String) : Response = {
+    def getResponse(endpoint: String, responseString: String) =
       XmlParser.parseEndpoint(endpoint, responseString)
-    }
 
-    def mandatoryParameters :String = {
-      "?format=xml"
-    }
+    def mandatoryParameters = "?format=xml"
 
-    def optionalParameters :String = {
-      var stringBuilder = new StringBuilder
-
-      apiKey.foreach(s => stringBuilder.append("&api-key=").append(s))
-
-      stringBuilder.toString
-    }
+    def optionalParameters = apiKey.map("&api-key=" + _).getOrElse("")
   }
 
   trait PaginatedQuery[T] {
     var pageSize: Option[String] = None
     var page: Option[Int] = None
 
-    def withPageSize(newPageSize: Int) :T = {
+    def withPageSize(newPageSize: Int) = {
       pageSize = Some(newPageSize.toString)
       this.asInstanceOf[T]
     }
 
-    def withPageSize(newPageSize: String) :T = {
+    def withPageSize(newPageSize: String) = {
       pageSize = Some(newPageSize)
       this.asInstanceOf[T]
     }
 
-    def withPage(newPage: Int) :T = {
+    def withPage(newPage: Int) = {
       page = Some(newPage)
       this.asInstanceOf[T]
     }
 
-    def paginationParameters :String = {
+    def paginationParameters = {
       var stringBuilder = new StringBuilder
 
       pageSize.foreach(i => stringBuilder.append("&page-size=").append(i))
@@ -75,22 +64,22 @@ object Api {
     var showFactboxes: Option[String] = None
     var showMediaTypes: Option[String] = None
 
-    def withFields(newFields: String) :T = {
+    def withFields(newFields: String) = {
       fields = Some(newFields)
       this.asInstanceOf[T]
     }
 
-    def withShowTags(newShowTags: String) :T = {
+    def withShowTags(newShowTags: String) = {
       showTags = Some(newShowTags)
       this.asInstanceOf[T]
     }
 
-    def withShowFactboxes(newShowFactboxes: String) :T = {
+    def withShowFactboxes(newShowFactboxes: String) = {
       showFactboxes = Some(newShowFactboxes)
       this.asInstanceOf[T]
     }
 
-    def withShowMedia(newShowMediaTypes: String) :T = {
+    def withShowMedia(newShowMediaTypes: String) = {
       showMediaTypes = Some(newShowMediaTypes)
       this.asInstanceOf[T]
     }
@@ -111,17 +100,17 @@ object Api {
     var showRefinements: Option[String] = None
     var refinementSize: Option[Int] = None
 
-    def withShowRefinements(newShowRefinements: String) :T = {
+    def withShowRefinements(newShowRefinements: String) = {
       showRefinements = Some(newShowRefinements)
       this.asInstanceOf[T]
     }
 
-    def withRefinementSize(newRefinementSize: Int) :T = {
+    def withRefinementSize(newRefinementSize: Int) = {
       refinementSize = Some(newRefinementSize)
       this.asInstanceOf[T]
     }
 
-    def refinementDisplayParameters :String = {
+    def refinementDisplayParameters = {
       var stringBuilder = new StringBuilder
 
       showRefinements.foreach(s => stringBuilder.append("&show-refinements=").append(s))
@@ -134,12 +123,12 @@ object Api {
   trait SearchTermQuery[T] {
     var queryTerm: Option[String] = None
 
-    def withQueryTerm(newQueryTerm: String) :T = {
-      queryTerm = Some(URLEncoder.encode(newQueryTerm))
+    def withQueryTerm(newQueryTerm: String) = {
+      queryTerm = Some(URLEncoder.encode(newQueryTerm, "UTF-8"))
       this.asInstanceOf[T]
     }
 
-    def queryTermParameters: String = {
+    def queryTermParameters = {
       var stringBuilder = new StringBuilder
       queryTerm.foreach(s => stringBuilder.append("&q=").append(s))
       stringBuilder.toString
@@ -153,12 +142,12 @@ object Api {
     var fromDate: Option[String] = None
     var toDate: Option[String] = None
 
-    def withSectionTerm(newSectionTerm: String): T = {
+    def withSectionTerm(newSectionTerm: String) = {
       sectionTerm = Some(newSectionTerm)
       this.asInstanceOf[T]
     }
 
-    def withTagTerm(newTagTerm: String): T = {
+    def withTagTerm(newTagTerm: String) = {
       tagTerm = Some(newTagTerm)
       this.asInstanceOf[T]
     }
@@ -168,17 +157,17 @@ object Api {
       this.asInstanceOf[T]
     }
 
-    def withFromDate(newFromDate: String): T = {
+    def withFromDate(newFromDate: String) = {
       fromDate = Some(newFromDate)
       this.asInstanceOf[T]
     }
 
-    def withToDate(newToDate: String): T = {
+    def withToDate(newToDate: String) = {
       toDate = Some(newToDate)
       this.asInstanceOf[T]
     }
 
-    def filterableResultsParameters: String = {
+    def filterableResultsParameters = {
       var stringBuilder = new StringBuilder
 
       sectionTerm.foreach(s => stringBuilder.append("&section=").append(s))
@@ -193,25 +182,20 @@ object Api {
 
   class SectionsQuery extends ApiQuery[SectionsQuery] with SearchTermQuery[SectionsQuery] {
 
-    def sections: SectionsResponse = parseSectionsResponse(Http GET buildUrl)
+    def sections = parseSectionsResponse(Http GET buildUrl)
 
-    private def parseSectionsResponse(httpResponse: HttpResponse): SectionsResponse = {
+    private def parseSectionsResponse(httpResponse: HttpResponse) = {
       val response = getResponse("sections", httpResponse.body)
       response.asInstanceOf[SectionsResponse]
     }
 
-    def buildUrl = {
-      var urlBuilder = new StringBuilder
-
-      urlBuilder
+    def buildUrl = new StringBuilder()
         .append(targetUrl)
         .append("/sections")
         .append(mandatoryParameters)
         .append(optionalParameters)
         .append(queryTermParameters)
-
-      urlBuilder.toString
-    }
+        .toString
   }
 
   class TagsQuery extends ApiQuery[TagsQuery]
@@ -308,10 +292,7 @@ object Api {
       var urlBuilder = new StringBuilder
 
       urlBuilder
-        .append(apiUrl match {
-          case Some(s) => s.toString
-          case None => throw new Exception("No api url provided to item query, ensure withApiUrl is called")
-        })
+        .append(apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")).toString)
         .append(mandatoryParameters)
         .append(optionalParameters)
         .append(itemDisplayParameters)

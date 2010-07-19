@@ -107,17 +107,17 @@ object XmlParser {
         }),
         (xml \ "content" size match {
           case 0 => None
-          case 1 => Some(parseContentNode(xml \ "content" first))
+          case 1 => Some(parseContentNode(xml \ "content" head))
           case _ => throw new RuntimeException("more than 1 content item returned from id endpoint")
         }),
         (xml \ "tag" size match {
           case 0 => None
-          case 1 => Some(parseTagNode(xml \ "tag" first))
+          case 1 => Some(parseTagNode(xml \ "tag" head))
           case _ => throw new RuntimeException("more than 1 tag returned from id endpoint")
         }),
         (xml \ "section" size match {
           case 0 => None
-          case 1 => Some(parseSectionNode(xml \ "section" first))
+          case 1 => Some(parseSectionNode(xml \ "section" head))
           case _ => throw new RuntimeException("more than 1 section returned from id endpoint")
         }),
         (xml \ "results" \ "content" map { contentNode => parseContentNode(contentNode)}).toList
