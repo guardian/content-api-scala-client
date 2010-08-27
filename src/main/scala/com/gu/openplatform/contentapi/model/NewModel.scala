@@ -41,6 +41,32 @@ case class TagsResponse(
 )
 
 
+// /sections
+case class SectionsResponse(
+        status: String,
+        userTier: String,
+        total: Long,
+        results: List[Section]
+)
+
+
+// /anythingelse
+case class ItemResponse(
+        status: String,
+        userTier: String,
+        total: Option[Long],
+        startIndex: Option[Long],
+        pageSize: Option[Long],
+        currentPage: Option[Long],
+        pages: Option[Long],
+        orderBy: Option[String],
+        tag: Option[Tag],
+        section: Option[Section],
+        content: Option[Content],
+        results: List[Content],
+        relatedContent: List[Content]
+        )
+
 
 
 
@@ -76,6 +102,15 @@ case class Tag(
   // for those that don't like backticks
   def tagType = `type`
 }
+
+
+case class Section(
+        id: String,
+        webTitle: String,
+        webUrl: String,
+        apiUrl: String
+        )
+
 
 case class Factbox(
         `type`: String,

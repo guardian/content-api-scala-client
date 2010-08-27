@@ -1,0 +1,97 @@
+{
+  "response":{
+    "status":"ok",
+    "userTier":"free",
+    "total":1,
+    "content":{
+      "id":"travel/2010/aug/27/britains-best-budget-eats-oxford",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-08-27T11:29:44+01:00",
+      "webTitle":"Oxford's top 10 budget eats",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/27/britains-best-budget-eats-oxford",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/aug/27/britains-best-budget-eats-oxford"
+    },
+    "relatedContent":[{
+      "id":"travel/2009/sep/16/nottingham-top-10-restaurants-budget",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2009-09-16T09:14:00+01:00",
+      "webTitle":"Nottingham's top 10 budget eats",
+      "webUrl":"http://www.guardian.co.uk/travel/2009/sep/16/nottingham-top-10-restaurants-budget",
+      "apiUrl":"http://content.guardianapis.com/travel/2009/sep/16/nottingham-top-10-restaurants-budget"
+    },{
+      "id":"travel/2010/jun/02/sheffield-top-10-budget-food",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-06-02T09:46:00+01:00",
+      "webTitle":"Sheffield's top 10 budget places to eat",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/jun/02/sheffield-top-10-budget-food",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/jun/02/sheffield-top-10-budget-food"
+    },{
+      "id":"travel/2010/jul/02/bath-top-10-budget-restaurants",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-07-02T10:50:10+01:00",
+      "webTitle":"Bath's top 10 budget eats",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/jul/02/bath-top-10-budget-restaurants",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/jul/02/bath-top-10-budget-restaurants"
+    },{
+      "id":"travel/2010/apr/06/glasgow-top-10-budget-restaurants",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-04-06T11:33:00+01:00",
+      "webTitle":"Glasgow's top 10 budget eats",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/apr/06/glasgow-top-10-budget-restaurants",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/apr/06/glasgow-top-10-budget-restaurants"
+    },{
+      "id":"travel/2010/may/18/cardiff-top-10-budget-food",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-05-18T10:35:28+01:00",
+      "webTitle":"Top 10 budget places to eat in Cardiff",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/may/18/cardiff-top-10-budget-food",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/may/18/cardiff-top-10-budget-food"
+    },{
+      "id":"travel/2010/jan/22/chester-top-10-budget-eats",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-01-22T10:00:00Z",
+      "webTitle":"Chester's top 10 budget eats",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/jan/22/chester-top-10-budget-eats",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/jan/22/chester-top-10-budget-eats"
+    },{
+      "id":"travel/2008/dec/10/liverpool-restaurants-budget-culture-uk",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2008-12-10T10:09:53Z",
+      "webTitle":"Ten top cheap places to eat in Liverpool ",
+      "webUrl":"http://www.guardian.co.uk/travel/2008/dec/10/liverpool-restaurants-budget-culture-uk",
+      "apiUrl":"http://content.guardianapis.com/travel/2008/dec/10/liverpool-restaurants-budget-culture-uk"
+    },{
+      "id":"travel/2009/nov/24/york-10-best-budget-eats",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2009-11-24T16:03:00Z",
+      "webTitle":"York's top 10 budget eats",
+      "webUrl":"http://www.guardian.co.uk/travel/2009/nov/24/york-10-best-budget-eats",
+      "apiUrl":"http://content.guardianapis.com/travel/2009/nov/24/york-10-best-budget-eats"
+    },{
+      "id":"travel/2009/aug/14/edinburgh-cafes-restaurants-budget-food",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2009-08-14T12:32:00+01:00",
+      "webTitle":"Edinburgh's 10 best budget eateries",
+      "webUrl":"http://www.guardian.co.uk/travel/2009/aug/14/edinburgh-cafes-restaurants-budget-food",
+      "apiUrl":"http://content.guardianapis.com/travel/2009/aug/14/edinburgh-cafes-restaurants-budget-food"
+    },{
+      "id":"travel/2010/aug/06/lancashire-best-budget-eats",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-08-06T10:54:00+01:00",
+      "webTitle":"Lancashire coast's top 10 budget eats",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/06/lancashire-best-budget-eats",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/aug/06/lancashire-best-budget-eats"
+    }]
+  }
+}

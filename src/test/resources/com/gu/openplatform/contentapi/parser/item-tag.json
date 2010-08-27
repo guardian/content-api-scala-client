@@ -1,0 +1,102 @@
+{
+  "response":{
+    "status":"ok",
+    "userTier":"free",
+    "total":1034,
+    "startIndex":1,
+    "pageSize":10,
+    "currentPage":1,
+    "pages":104,
+    "orderBy":"newest",
+    "tag":{
+      "id":"travel/france",
+      "type":"keyword",
+      "webTitle":"France",
+      "webUrl":"http://www.guardian.co.uk/travel/france",
+      "apiUrl":"http://content.guardianapis.com/travel/france",
+      "sectionId":"travel",
+      "sectionName":"Travel"
+    },
+    "results":[{
+      "id":"travel/2010/aug/17/autumn-sun-short-haul-breaks",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-08-17T11:42:26+01:00",
+      "webTitle":"Top 10 autumn sunshine holidays",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/17/autumn-sun-short-haul-breaks",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/aug/17/autumn-sun-short-haul-breaks"
+    },{
+      "id":"commentisfree/2010/aug/12/for-the-love-of-biking",
+      "sectionId":"commentisfree",
+      "sectionName":"Comment is free",
+      "webPublicationDate":"2010-08-12T14:30:19+01:00",
+      "webTitle":"For the love of biking | Peter Bracken",
+      "webUrl":"http://www.guardian.co.uk/commentisfree/2010/aug/12/for-the-love-of-biking",
+      "apiUrl":"http://content.guardianapis.com/commentisfree/2010/aug/12/for-the-love-of-biking"
+    },{
+      "id":"travel/2010/aug/08/nicola-iseard-short-haul-five-star-two-star-luxury-hotels",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-08-08T00:04:16+01:00",
+      "webTitle":"The 20 best short-haul hotels",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/08/nicola-iseard-short-haul-five-star-two-star-luxury-hotels",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/aug/08/nicola-iseard-short-haul-five-star-two-star-luxury-hotels"
+    },{
+      "id":"lifeandstyle/2010/jul/28/france-boules-petanques-got-cool",
+      "sectionId":"lifeandstyle",
+      "sectionName":"Life and style",
+      "webPublicationDate":"2010-07-28T01:14:13+01:00",
+      "webTitle":"How boules got cool",
+      "webUrl":"http://www.guardian.co.uk/lifeandstyle/2010/jul/28/france-boules-petanques-got-cool",
+      "apiUrl":"http://content.guardianapis.com/lifeandstyle/2010/jul/28/france-boules-petanques-got-cool"
+    },{
+      "id":"travel/2010/jul/24/cycling-tour-de-france-etape",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-07-24T00:04:44+01:00",
+      "webTitle":"Fancy a go at the Tour de France?",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/jul/24/cycling-tour-de-france-etape",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/jul/24/cycling-tour-de-france-etape"
+    },{
+      "id":"travel/2010/jul/24/cycling-european-cities-london-paris",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-07-24T00:04:43+01:00",
+      "webTitle":"Insiders' guide to ... Europe's top cycling cities",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/jul/24/cycling-european-cities-london-paris",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/jul/24/cycling-european-cities-london-paris"
+    },{
+      "id":"lifeandstyle/2010/jul/24/buying-secondhand-france-interiors",
+      "sectionId":"lifeandstyle",
+      "sectionName":"Life and style",
+      "webPublicationDate":"2010-07-24T00:02:50+01:00",
+      "webTitle":"Interiors: How to pick up secondhand bargains in France",
+      "webUrl":"http://www.guardian.co.uk/lifeandstyle/2010/jul/24/buying-secondhand-france-interiors",
+      "apiUrl":"http://content.guardianapis.com/lifeandstyle/2010/jul/24/buying-secondhand-france-interiors"
+    },{
+      "id":"money/gallery/2010/jul/22/snooping-around-homes-market",
+      "sectionId":"money",
+      "sectionName":"Money",
+      "webPublicationDate":"2010-07-24T00:01:51+01:00",
+      "webTitle":"Snooping around: Rural, urban or renovation",
+      "webUrl":"http://www.guardian.co.uk/money/gallery/2010/jul/22/snooping-around-homes-market",
+      "apiUrl":"http://content.guardianapis.com/money/gallery/2010/jul/22/snooping-around-homes-market"
+    },{
+      "id":"travel/2010/jul/22/tour-de-france-etape-cycling",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-07-22T13:49:01+01:00",
+      "webTitle":"How to cycle your own Tour de France",
+      "webUrl":"http://www.guardian.co.uk/travel/2010/jul/22/tour-de-france-etape-cycling",
+      "apiUrl":"http://content.guardianapis.com/travel/2010/jul/22/tour-de-france-etape-cycling"
+    },{
+      "id":"travel/audioslideshow/2010/jul/22/tour-de-france-cycling-etape",
+      "sectionId":"travel",
+      "sectionName":"Travel",
+      "webPublicationDate":"2010-07-22T13:49:00+01:00",
+      "webTitle":"Tour de France: how you can do today's stage",
+      "webUrl":"http://www.guardian.co.uk/travel/audioslideshow/2010/jul/22/tour-de-france-cycling-etape",
+      "apiUrl":"http://content.guardianapis.com/travel/audioslideshow/2010/jul/22/tour-de-france-cycling-etape"
+    }]
+  }
+}

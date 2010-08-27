@@ -18,13 +18,13 @@ class NewTest extends FeatureSpec with ShouldMatchers {
 
       val result = Http GET "http://content.guardianapis.com/search.json?show-tags=all"
 
-      println(result.body)
+      //println(result.body)
 
       val json = JsonParser.parse(result.body)
 
       val parsed = (json \ "response").extract[SearchResponse]
 
-      println(parsed)
+      //println(parsed)
 
     }
   }
