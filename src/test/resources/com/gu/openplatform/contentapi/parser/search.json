@@ -1,0 +1,224 @@
+{
+  "response":{
+    "status":"ok",
+    "userTier":"free",
+    "total":1210879,
+    "startIndex":1,
+    "pageSize":2,
+    "currentPage":1,
+    "pages":605440,
+    "orderBy":"newest",
+    "results":[{
+      "id":"edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events",
+      "sectionId":"edinburgh",
+      "sectionName":"Edinburgh",
+      "webPublicationDate":"2010-08-27T10:30:05+01:00",
+      "webTitle":"Map: Things to do across Edinburgh this Bank Holiday weekend",
+      "webUrl":"http://www.guardian.co.uk/edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events",
+      "apiUrl":"http://content.guardianapis.com/edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events",
+      "fields":{
+        "headline":"Map: Things to do across Edinburgh this Bank Holiday weekend",
+        "trailText":"<p>Explore events for all ages going on in Edinburgh</p>",
+        "shortUrl":"http://gu.com/p/2javn",
+        "standfirst":"Explore events for all ages going on in Edinburgh",
+        "byline":"Michael MacLeod",
+        "publication":"guardian.co.uk"
+      },
+      "tags":[{
+        "id":"edinburgh/edinburgh",
+        "type":"blog",
+        "webTitle":"Edinburgh",
+        "webUrl":"http://www.guardian.co.uk/edinburgh/edinburgh",
+        "apiUrl":"http://content.guardianapis.com/edinburgh/edinburgh",
+        "sectionId":"edinburgh",
+        "sectionName":"Edinburgh"
+      },{
+        "id":"tone/blog",
+        "type":"tone",
+        "webTitle":"Blogposts",
+        "webUrl":"http://www.guardian.co.uk/tone/blog",
+        "apiUrl":"http://content.guardianapis.com/tone/blog"
+      },{
+        "id":"profile/michael-macleod",
+        "type":"contributor",
+        "webTitle":"Michael MacLeod",
+        "webUrl":"http://www.guardian.co.uk/profile/michael-macleod",
+        "apiUrl":"http://content.guardianapis.com/profile/michael-macleod"
+      },{
+        "id":"type/article",
+        "type":"type",
+        "webTitle":"Article",
+        "webUrl":"http://www.guardian.co.uk/articles",
+        "apiUrl":"http://content.guardianapis.com/articles"
+      }]
+    },{
+      "id":"football/2010/aug/27/newcastle-steven-taylor-hatem-ben-arfa",
+      "sectionId":"football",
+      "sectionName":"Football",
+      "webPublicationDate":"2010-08-27T10:26:22+01:00",
+      "webTitle":"Newcastle hopeful over Steven Taylor and Hatem Ben Arfa deals",
+      "webUrl":"http://www.guardian.co.uk/football/2010/aug/27/newcastle-steven-taylor-hatem-ben-arfa",
+      "apiUrl":"http://content.guardianapis.com/football/2010/aug/27/newcastle-steven-taylor-hatem-ben-arfa",
+      "fields":{
+        "headline":"Newcastle hopeful over Steven Taylor and Hatem Ben Arfa deals",
+        "trailText":"Chris Hughton hopes Steven Taylor will stay and says talks are ongoing about bringing Hatem Ben Arfa to the club",
+        "shortUrl":"http://gu.com/p/2ja2h",
+        "standfirst":"\u2022 Chris Hughton confident Steven Taylor will stay<br />\u2022 Talks with Marseille over Hatem Ben Arfa 'ongoing'",
+        "thumbnail":"http://static.guim.co.uk/sys-images/Football/Pix/pictures/2010/3/27/1269708526219/Steven-Taylor-005.jpg",
+        "byline":"Press Association",
+        "publication":"guardian.co.uk"
+      },
+      "tags":[{
+        "id":"football/newcastleunited",
+        "type":"keyword",
+        "webTitle":"Newcastle United",
+        "webUrl":"http://www.guardian.co.uk/football/newcastleunited",
+        "apiUrl":"http://content.guardianapis.com/football/newcastleunited",
+        "sectionId":"football",
+        "sectionName":"Football"
+      },{
+        "id":"football/football",
+        "type":"keyword",
+        "webTitle":"Football",
+        "webUrl":"http://www.guardian.co.uk/football/football",
+        "apiUrl":"http://content.guardianapis.com/football/football",
+        "sectionId":"football",
+        "sectionName":"Football"
+      },{
+        "id":"football/transfer-window",
+        "type":"keyword",
+        "webTitle":"Transfer window",
+        "webUrl":"http://www.guardian.co.uk/football/transfer-window",
+        "apiUrl":"http://content.guardianapis.com/football/transfer-window",
+        "sectionId":"football",
+        "sectionName":"Football"
+      },{
+        "id":"sport/sport",
+        "type":"keyword",
+        "webTitle":"Sport",
+        "webUrl":"http://www.guardian.co.uk/sport/sport",
+        "apiUrl":"http://content.guardianapis.com/sport/sport",
+        "sectionId":"sport",
+        "sectionName":"Sport"
+      },{
+        "id":"tone/news",
+        "type":"tone",
+        "webTitle":"News",
+        "webUrl":"http://www.guardian.co.uk/tone/news",
+        "apiUrl":"http://content.guardianapis.com/tone/news"
+      },{
+        "id":"type/article",
+        "type":"type",
+        "webTitle":"Article",
+        "webUrl":"http://www.guardian.co.uk/articles",
+        "apiUrl":"http://content.guardianapis.com/articles"
+      }]
+    }],
+    "refinementGroups":[{
+      "type":"keyword",
+      "refinements":[{
+        "count":256463,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=uk/uk",
+        "displayName":"UK news",
+        "id":"uk/uk",
+        "apiUrl":"http://content.guardianapis.com/uk/uk"
+      },{
+        "count":207418,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=world/world",
+        "displayName":"World news",
+        "id":"world/world",
+        "apiUrl":"http://content.guardianapis.com/world/world"
+      }]
+    },{
+      "type":"type",
+      "refinements":[{
+        "count":1167622,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=type/article",
+        "displayName":"Article",
+        "id":"type/article",
+        "apiUrl":"http://content.guardianapis.com/articles"
+      },{
+        "count":10838,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=type/gallery",
+        "displayName":"Gallery",
+        "id":"type/gallery",
+        "apiUrl":"http://content.guardianapis.com/inpictures"
+      }]
+    },{
+      "type":"contributor",
+      "refinements":[{
+        "count":8300,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=profile/jackschofield",
+        "displayName":"Jack Schofield",
+        "id":"profile/jackschofield",
+        "apiUrl":"http://content.guardianapis.com/profile/jackschofield"
+      },{
+        "count":6724,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=profile/roygreenslade",
+        "displayName":"Roy Greenslade",
+        "id":"profile/roygreenslade",
+        "apiUrl":"http://content.guardianapis.com/profile/roygreenslade"
+      }]
+    },{
+      "type":"tone",
+      "refinements":[{
+        "count":126633,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=tone/news",
+        "displayName":"News",
+        "id":"tone/news",
+        "apiUrl":"http://content.guardianapis.com/tone/news"
+      },{
+        "count":110283,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=tone/comment",
+        "displayName":"Comment",
+        "id":"tone/comment",
+        "apiUrl":"http://content.guardianapis.com/tone/comment"
+      }]
+    },{
+      "type":"section",
+      "refinements":[{
+        "count":125848,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&section=world&show-fields=all&show-refinements=all&show-tags=all",
+        "displayName":"World news",
+        "id":"world",
+        "apiUrl":"http://content.guardianapis.com/world"
+      },{
+        "count":94898,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&section=sport&show-fields=all&show-refinements=all&show-tags=all",
+        "displayName":"Sport",
+        "id":"sport",
+        "apiUrl":"http://content.guardianapis.com/sport"
+      }]
+    },{
+      "type":"series",
+      "refinements":[{
+        "count":3476,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=crosswords/series/quick",
+        "displayName":"Quick",
+        "id":"crosswords/series/quick",
+        "apiUrl":"http://content.guardianapis.com/crosswords/series/quick"
+      },{
+        "count":3340,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=theguardian/series/correctionsandclarifications",
+        "displayName":"Corrections and clarifications",
+        "id":"theguardian/series/correctionsandclarifications",
+        "apiUrl":"http://content.guardianapis.com/theguardian/series/correctionsandclarifications"
+      }]
+    },{
+      "type":"blog",
+      "refinements":[{
+        "count":51780,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=commentisfree/commentisfree",
+        "displayName":"Comment is free",
+        "id":"commentisfree/commentisfree",
+        "apiUrl":"http://content.guardianapis.com/commentisfree/commentisfree"
+      },{
+        "count":15109,
+        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=sport/blog",
+        "displayName":"Sportblog",
+        "id":"sport/blog",
+        "apiUrl":"http://content.guardianapis.com/sport/blog"
+      }]
+    }]
+  }
+}

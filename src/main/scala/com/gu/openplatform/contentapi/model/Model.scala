@@ -3,6 +3,7 @@ package com.gu.openplatform.contentapi.model
 import org.joda.time.DateTime
 import java.net.URL
 
+
 class Response(
         val format: String,
         val status: String,
