@@ -1,12 +1,15 @@
-package com.gu.openplatform.contentapi
-
-import connection.Api
-import model.{Refinement, RefinementGroup, ItemResponse}
+import com.gu.openplatform.contentapi.Api
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.FeatureSpec
+import org.scalatest.{BeforeAndAfterEach, FeatureSpec}
 
+class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAfterEach {
 
-class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
+  override protected def beforeEach() {
+    // if you run all these tests they will exceed the rate limit in the free tier,
+    // so putting in a cheeky sleep
+    Thread.sleep(500)
+  }
+
 
   feature("Pagination:") {
 
@@ -16,10 +19,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       latest10Items.pageSize should be (10)
       latest10Items.results.foreach ( item => println(item.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("get the second page of 10 recent items") {
@@ -29,10 +28,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
       items11to20.pageSize should be (10)
       items11to20.currentPage should be (2)
       items11to20.results.foreach ( item => println(item.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("get the most recent 25 items") {
@@ -41,10 +36,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       items11to20.pageSize should be (25)
       items11to20.results.foreach ( item => println(item.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
   }
@@ -56,10 +47,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("ordering free text query results by relevance") {
@@ -70,10 +57,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("find content by tag") {
@@ -81,10 +64,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("find content by multiple tags") {
@@ -92,10 +71,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("find content in a section") {
@@ -103,10 +78,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("find content between 2 dates") {
@@ -116,10 +87,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
   }
 
@@ -131,10 +98,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
       val tags = search.results.head.tags
       tags.length should be > (0)
       tags.foreach (tag => println(tag.tagType + ":" +tag.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("retrieving just the content's keywords") {
@@ -142,34 +105,22 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
 
       val tags = search.results.head.tags
       tags.foreach (tag => println(tag.tagType + ":" +tag.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("retrieving an article's headline and trail") {
       val search = Api.searchQuery.withPageSize(1).withTagTerm("type/article")
               .withFields("headline,trail-text").search
 
-      val fields: Map[String, String] = search.results.head.fields
+      val fields = search.results.head.fields.getOrElse(Map())
       fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("retrieving all article's fields") {
       val search = Api.searchQuery.withPageSize(1).withTagTerm("type/article")
               .withFields("all").search
 
-      val fields: Map[String, String] = search.results.head.fields
+      val fields = search.results.head.fields.getOrElse(Map())
       fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
   }
 
@@ -180,28 +131,16 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
     scenario("find some tags") {
       val search = Api.tagsQuery.tags
       search.results.foreach(tag => println(tag.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("find tags representing series") {
       val search = Api.tagsQuery.withTypeTerm("series").tags
       search.results.foreach(tag => println(tag.tagType + ":" + tag.webTitle))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
 
     scenario("find tags in the technology section") {
       val search = Api.tagsQuery.withSectionTerm("technology").tags
       search.results.foreach(tag => println(tag.webTitle + " (" + tag.sectionName.get + ")"))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
   }
 
@@ -214,10 +153,6 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
     scenario("listing the sections") {
       val search = Api.sectionsQuery.sections
       search.results.foreach(section => println(section.id))
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
   }
 
@@ -235,31 +170,23 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers {
       val contentApiUrl = search.results.head.apiUrl
       println("following api url: " + contentApiUrl)
 
-      val item: ItemResponse = Api.itemQuery.withApiUrl(contentApiUrl).query
+      val item = Api.itemQuery.withApiUrl(contentApiUrl).query
       println("loaded " + item.content.get.webTitle)
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
   }
 
-  feature("refineing search results") {
+  feature("refining search results") {
 
     scenario("finding the most popular keywords for a seach") {
       val search = Api.searchQuery.withPageSize(1).withSectionTerm("music")
               .withShowRefinements("keyword").withRefinementSize(20).search
 
-      search.refinementGroups foreach { group: RefinementGroup =>
+      search.refinementGroups foreach { group =>
         println(group.refinementType)
-        group.refinements.foreach { refinement: Refinement =>
+        group.refinements.foreach { refinement =>
           println("\t" + refinement.displayName + " (" + refinement.count + ")")
         }
       }
-
-      // if you run all these tests they will exceed the rate limit in the basic tier,
-      // so putting in a cheeky sleep
-      Thread.sleep(500)
     }
   }
 }

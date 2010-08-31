@@ -6,6 +6,7 @@ import net.liftweb.json.JsonAST._
 import org.joda.time.format.ISODateTimeFormat
 import net.liftweb.json.{MappingException, TypeInfo, Formats, Serializer}
 
+// Adds Joda DateTime support to the lift-json serializer
 class JodaJsonSerializer extends Serializer[DateTime] {
   private val DateTimeClass = classOf[DateTime]
   val formatter = ISODateTimeFormat.dateTimeNoMillis

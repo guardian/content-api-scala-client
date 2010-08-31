@@ -1,6 +1,5 @@
 package com.gu.openplatform.contentapi
 
-import connection.Api
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
 

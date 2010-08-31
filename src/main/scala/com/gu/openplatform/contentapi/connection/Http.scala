@@ -5,29 +5,35 @@ import java.lang.String
 
 import org.apache.commons.httpclient.methods.GetMethod
 import org.apache.commons.httpclient.HttpClient
+import com.gu.openplatform.contentapi.ApiError
 
-object Http {
+case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
+
+trait Http {
+  // this is what the Api client requires of an http connection
+  def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse
+}
+
+
+trait ApacheHttpClient extends Http {
   var httpClient = new HttpClient
 
-  def GET(url: String): HttpResponse = {
+  def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse = {
     
     val method = new GetMethod(url)
-    method.setFollowRedirects(false)
+
+    headers.foreach { case (k, v) => method.addRequestHeader(k, v) }
 
     httpClient.executeMethod(method)
 
     val statusLine = method getStatusLine
-    val responseBody = Source.fromInputStream(method.getResponseBodyAsStream).mkString
+    val responseBody = Option(method.getResponseBodyAsStream)
+            .map(Source.fromInputStream(_).mkString)
+            .getOrElse("")
 
     method.releaseConnection
 
-    if (List(200, 302) contains statusLine.getStatusCode) {
-      new HttpResponse(responseBody, statusLine.getStatusCode)
-    } else {
-      Console.err.println(" => response '%s'" format statusLine)
-      throw new ApiError(statusLine.getStatusCode, statusLine.getReasonPhrase)
-    }
+    new HttpResponse(responseBody, statusLine.getStatusCode, statusLine.getReasonPhrase)
   }
 }
 
-class HttpResponse(val body: String, val status: Int)

@@ -1,15 +1,16 @@
-package com.gu.openplatform.contentapi.connection
+package com.gu.openplatform.contentapi
 
 
-import com.gu.openplatform.contentapi.model._
-import com.gu.openplatform.contentapi.parser.XmlParser
-import java.net.{URLEncoder, URL}
+import connection.{ApacheHttpClient, Http}
+import java.net.URLEncoder
+import com.gu.openplatform.contentapi.parser.JsonParser
+import scala.collection
 
 // thrown when an "expected" error is thrown by the api
 case class ApiError(val httpStatus: Int, val httpMessage: String)
         extends Exception(httpMessage)
 
-object Api {
+abstract class Api extends Http {
 
   val targetUrl = "http://content.guardianapis.com"
   var apiKey: Option[String] = None
@@ -20,13 +21,11 @@ object Api {
   def itemQuery = new ItemQuery
 
 
-  trait ApiQuery[T]{
-    def getResponse(endpoint: String, responseString: String) =
-      XmlParser.parseEndpoint(endpoint, responseString)
-
-    def mandatoryParameters = "?format=xml"
+  trait ApiQuery[T] extends JsonParser {
+    def mandatoryParameters = "?"
 
     def optionalParameters = apiKey.map("&api-key=" + _).getOrElse("")
+
   }
 
   trait PaginatedQuery[T] {
@@ -180,14 +179,11 @@ object Api {
     }
   }
 
-  class SectionsQuery extends ApiQuery[SectionsQuery] with SearchTermQuery[SectionsQuery] {
+  class SectionsQuery
+          extends ApiQuery[SectionsQuery]
+          with SearchTermQuery[SectionsQuery] {
 
-    def sections = parseSectionsResponse(Http GET buildUrl)
-
-    private def parseSectionsResponse(httpResponse: HttpResponse) = {
-      val response = getResponse("sections", httpResponse.body)
-      response.asInstanceOf[SectionsResponse]
-    }
+    def sections = parseSections(fetch(buildUrl))
 
     def buildUrl = new StringBuilder()
         .append(targetUrl)
@@ -199,7 +195,9 @@ object Api {
   }
 
   class TagsQuery extends ApiQuery[TagsQuery]
-          with PaginatedQuery[TagsQuery] with ConfigurableItemDisplay[TagsQuery] with SearchTermQuery[TagsQuery] {
+          with PaginatedQuery[TagsQuery]
+          with ConfigurableItemDisplay[TagsQuery]
+          with SearchTermQuery[TagsQuery] {
 
     var sectionTerm: Option[String] = None
     var typeTerm: Option[String] = None
@@ -214,12 +212,7 @@ object Api {
       this
     }
 
-    def tags: TagsResponse = parseTagsResponse(Http GET buildUrl)
-
-    private def parseTagsResponse(httpResponse: HttpResponse): TagsResponse = {
-      val response = getResponse("tags", httpResponse.body)
-      response.asInstanceOf[TagsResponse]
-    }
+    def tags = parseTags(fetch(buildUrl))
 
     def buildUrl = {
       var urlBuilder = new StringBuilder
@@ -245,12 +238,7 @@ object Api {
           with RefineableQuery[SearchQuery] with SearchTermQuery[SearchQuery]
           with FilterableResultsQuery[SearchQuery] {
 
-    def search: SearchResponse = parseSearchResponse(Http GET buildUrl)
-
-    private def parseSearchResponse(httpResponse: HttpResponse): SearchResponse = {
-      val response = getResponse("search", httpResponse.body)
-      response.asInstanceOf[SearchResponse]
-    }
+    def search = parseSearch(fetch(buildUrl))
 
     def buildUrl = {
       var urlBuilder = new StringBuilder
@@ -274,19 +262,14 @@ object Api {
         with FilterableResultsQuery[ItemQuery] with PaginatedQuery[ItemQuery]
         with SearchTermQuery[ItemQuery]{
 
-    var apiUrl: Option[URL] = None
+    var apiUrl: Option[String] = None
 
-    def withApiUrl(newContentPath: URL) = {
+    def withApiUrl(newContentPath: String) = {
       apiUrl = Some(newContentPath)
       this
     }
 
-    def query: ItemResponse = parseItemResponse(Http GET buildUrl)
-
-    private def parseItemResponse(httpResponse: HttpResponse): ItemResponse = {
-      val response = getResponse("id", httpResponse.body)
-      response.asInstanceOf[ItemResponse]
-    }
+    def query = parseItem(fetch(buildUrl))
 
     def buildUrl = {
       var urlBuilder = new StringBuilder
@@ -303,4 +286,21 @@ object Api {
       urlBuilder.toString
     }
   }
+
+
+  def fetch(url: String, parameters: Map[String, String] = Map.empty): String = {
+    require(parameters.isEmpty || !url.contains('?'), "must either specifiy paramters or append to query string, not both")
+
+
+    val response = GET(url, List("User-Agent" -> "scala-api-client", "Accept" -> "application/json"))
+
+    if (List(200, 302) contains response.statusCode) {
+      response.body
+    } else {
+      throw new ApiError(response.statusCode, response.statusMessage)
+    }
+
+  }
 }
+
+object Api extends Api with ApacheHttpClient
