@@ -8,4 +8,7 @@ class ContentApiClient(info: ProjectInfo) extends DefaultProject(info) with Idea
   val lift_json = "net.liftweb" %% "lift-json" % "2.1-M1" withSources()
 
   val scalaTest = "org.scalatest" % "scalatest" % "1.2" % "test" withSources()
+
+
+  override def compileOptions = super.compileOptions ++ Seq(Unchecked)
 }

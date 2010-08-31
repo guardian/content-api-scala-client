@@ -4,14 +4,16 @@ package com.gu.openplatform.contentapi
 import connection.{ApacheHttpClient, Http}
 import java.net.URLEncoder
 import com.gu.openplatform.contentapi.parser.JsonParser
-import scala.collection
+import org.joda.time.format.ISODateTimeFormat
+import org.joda.time.ReadableInstant
+
 
 // thrown when an "expected" error is thrown by the api
 case class ApiError(val httpStatus: Int, val httpMessage: String)
         extends Exception(httpMessage)
 
-abstract class Api extends Http {
 
+abstract class Api extends Http {
   val targetUrl = "http://content.guardianapis.com"
   var apiKey: Option[String] = None
 
@@ -21,14 +23,20 @@ abstract class Api extends Http {
   def itemQuery = new ItemQuery
 
 
-  trait ApiQuery[T] extends JsonParser {
-    def mandatoryParameters = "?"
-
-    def optionalParameters = apiKey.map("&api-key=" + _).getOrElse("")
-
+  trait Parameters {
+    def parameters: Map[String, Any] = Map.empty
   }
 
-  trait PaginatedQuery[T] {
+
+
+  trait GeneralParameters[T] extends Parameters {
+     override def parameters: Map[String, Any] = super.parameters ++
+            apiKey.map("api-key" -> _)
+  }
+
+
+
+  trait PaginationParameters[T] extends Parameters {
     var pageSize: Option[String] = None
     var page: Option[Int] = None
 
@@ -47,24 +55,87 @@ abstract class Api extends Http {
       this.asInstanceOf[T]
     }
 
-    def paginationParameters = {
-      var stringBuilder = new StringBuilder
-
-      pageSize.foreach(i => stringBuilder.append("&page-size=").append(i))
-      page.foreach(i => stringBuilder.append("&page=").append(i))
-
-      stringBuilder.toString
-    }
+    override def parameters = super.parameters ++
+            pageSize.map("page-size" -> _) ++
+            page.map("page" -> _)
   }
 
-  trait ConfigurableItemDisplay[T] {
-    var fields: Option[String] = None
+
+  trait FilterParameters[T] extends Parameters {
+    var q: Option[String] = None
+    var section: Option[String] = None
+    var ids: List[String] = Nil
+    var tag: List[String] = Nil
+
+    def withSection(s: String) = {
+      section = Some(s)
+      this.asInstanceOf[T]
+    }
+
+    def withQ(newQ: String) = {
+      q = Some(newQ)
+      this.asInstanceOf[T]
+    }
+
+    def withTag(newTagTerm: String) = {
+      tag = newTagTerm :: tag
+      this.asInstanceOf[T]
+    }
+
+    def withTags(tags: List[String]) = {
+      tag = tags
+      this.asInstanceOf[T]
+    }
+
+    def withId(id: String) = {
+      ids = id :: ids
+      this.asInstanceOf[T]
+    }
+
+    def withIds(newIds: List[String]) = {
+      ids = newIds
+      this.asInstanceOf[T]
+    }
+
+    override def parameters = super.parameters ++
+            q.map("q" -> _) ++
+            section.map("section" -> _) ++
+            Map("ids" -> ids, "tag" -> tag)
+  }
+
+
+  trait ContentFilterParamters[T] extends FilterParameters[T] {
+    var orderBy: Option[String] = None
+    var fromDate: Option[ReadableInstant] = None
+    var toDate: Option[ReadableInstant] = None
+
+    def withOrderBy(s: String): this.type = {
+      orderBy = Some(s); this
+    }
+
+    def withFromDate(d: ReadableInstant): this.type = {
+      fromDate = Some(d); this
+    }
+
+    def withToDate(d: ReadableInstant): this.type = {
+      toDate = Some(d); this
+    }
+
+    override def parameters = super.parameters ++
+            orderBy.map("order-by" -> _) ++
+            fromDate.map("from-date" -> _) ++
+            toDate.map("to-date" -> _)
+
+  }
+
+  trait ShowParameters[T] extends Parameters {
+    var showFields: Option[String] = None
     var showTags: Option[String] = None
     var showFactboxes: Option[String] = None
-    var showMediaTypes: Option[String] = None
+    var showMedia: Option[String] = None
 
-    def withFields(newFields: String) = {
-      fields = Some(newFields)
+    def withShowFields(newFields: String) = {
+      showFields = Some(newFields)
       this.asInstanceOf[T]
     }
 
@@ -79,23 +150,19 @@ abstract class Api extends Http {
     }
 
     def withShowMedia(newShowMediaTypes: String) = {
-      showMediaTypes = Some(newShowMediaTypes)
+      showMedia = Some(newShowMediaTypes)
       this.asInstanceOf[T]
     }
 
-    def itemDisplayParameters :String = {
-      var stringBuilder = new StringBuilder
+    override def parameters = super.parameters ++
+            showFields.map("show-fields" -> _) ++
+            showTags.map("show-tags" -> _) ++
+            showFactboxes.map("show-factboxes" -> _) ++
+            showMedia.map("show-media" -> _)
 
-      fields.foreach(s => stringBuilder.append("&show-fields=").append(s))
-      showTags.foreach(s => stringBuilder.append("&show-tags=").append(s))
-      showFactboxes.foreach(s => stringBuilder.append("&show-factboxes=").append(s))
-      showMediaTypes.foreach(s => stringBuilder.append("&show-media=").append(s))
-
-      stringBuilder.toString
-    }
   }
 
-  trait RefineableQuery[T] {
+  trait RefinementParameters[T] extends Parameters {
     var showRefinements: Option[String] = None
     var refinementSize: Option[Int] = None
 
@@ -109,159 +176,56 @@ abstract class Api extends Http {
       this.asInstanceOf[T]
     }
 
-    def refinementDisplayParameters = {
-      var stringBuilder = new StringBuilder
-
-      showRefinements.foreach(s => stringBuilder.append("&show-refinements=").append(s))
-      refinementSize.foreach(s => stringBuilder.append("&refinement-size=").append(s))
-
-      stringBuilder.toString
-    }
+    override def parameters = super.parameters ++
+            showRefinements.map("show-refinements" -> _) ++
+            refinementSize.map("refinement-size" -> _)
   }
 
-  trait SearchTermQuery[T] {
-    var queryTerm: Option[String] = None
 
-    def withQueryTerm(newQueryTerm: String) = {
-      queryTerm = Some(URLEncoder.encode(newQueryTerm, "UTF-8"))
-      this.asInstanceOf[T]
-    }
-
-    def queryTermParameters = {
-      var stringBuilder = new StringBuilder
-      queryTerm.foreach(s => stringBuilder.append("&q=").append(s))
-      stringBuilder.toString
-    }
-  }
-
-  trait FilterableResultsQuery[T] {
-    var sectionTerm: Option[String] = None
-    var tagTerm: Option[String] = None
-    var orderBy: Option[String] = None
-    var fromDate: Option[String] = None
-    var toDate: Option[String] = None
-
-    def withSectionTerm(newSectionTerm: String) = {
-      sectionTerm = Some(newSectionTerm)
-      this.asInstanceOf[T]
-    }
-
-    def withTagTerm(newTagTerm: String) = {
-      tagTerm = Some(newTagTerm)
-      this.asInstanceOf[T]
-    }
-
-    def orderBy(newOrderBy: String): T = {
-      orderBy = Some(newOrderBy)
-      this.asInstanceOf[T]
-    }
-
-    def withFromDate(newFromDate: String) = {
-      fromDate = Some(newFromDate)
-      this.asInstanceOf[T]
-    }
-
-    def withToDate(newToDate: String) = {
-      toDate = Some(newToDate)
-      this.asInstanceOf[T]
-    }
-
-    def filterableResultsParameters = {
-      var stringBuilder = new StringBuilder
-
-      sectionTerm.foreach(s => stringBuilder.append("&section=").append(s))
-      tagTerm.foreach(s => stringBuilder.append("&tag=").append(s))
-      orderBy.foreach(s => stringBuilder.append("&order-by=").append(s))
-      fromDate.foreach(s => stringBuilder.append("&from-date=").append(s))
-      toDate.foreach(s => stringBuilder.append("&to-date=").append(s))
-
-      stringBuilder.toString
-    }
-  }
 
   class SectionsQuery
-          extends ApiQuery[SectionsQuery]
-          with SearchTermQuery[SectionsQuery] {
-
-    def sections = parseSections(fetch(buildUrl))
-
-    def buildUrl = new StringBuilder()
-        .append(targetUrl)
-        .append("/sections")
-        .append(mandatoryParameters)
-        .append(optionalParameters)
-        .append(queryTermParameters)
-        .toString
+          extends GeneralParameters[SectionsQuery]
+                  with FilterParameters[SectionsQuery]
+                  with JsonParser {
+    def sections = parseSections(fetch(targetUrl + "/sections", parameters))
   }
 
-  class TagsQuery extends ApiQuery[TagsQuery]
-          with PaginatedQuery[TagsQuery]
-          with ConfigurableItemDisplay[TagsQuery]
-          with SearchTermQuery[TagsQuery] {
 
-    var sectionTerm: Option[String] = None
-    var typeTerm: Option[String] = None
 
-    def withSectionTerm(newSectionTerm: String) = {
-      sectionTerm = Some(newSectionTerm)
+  class TagsQuery extends GeneralParameters[TagsQuery]
+          with PaginationParameters[TagsQuery]
+          with FilterParameters[TagsQuery]
+          with JsonParser {
+    var tagType: Option[String] = None
+
+    def withType(newTypeTerm: String) = {
+      tagType = Some(newTypeTerm)
       this
     }
 
-    def withTypeTerm(newTypeTerm: String) = {
-      typeTerm = Some(newTypeTerm)
-      this
-    }
+    def tags = parseTags(fetch(targetUrl + "/tags", parameters))
 
-    def tags = parseTags(fetch(buildUrl))
+    override def parameters = super.parameters ++
+            tagType.map("type" -> _)
 
-    def buildUrl = {
-      var urlBuilder = new StringBuilder
-
-      urlBuilder
-        .append(targetUrl)
-        .append("/tags")
-        .append(mandatoryParameters)
-        .append(optionalParameters)
-        .append(paginationParameters)
-        .append(itemDisplayParameters)
-        .append(queryTermParameters)
-
-      sectionTerm.foreach(s => urlBuilder.append("&section=").append(s))
-      typeTerm.foreach(s => urlBuilder.append("&type=").append(s))
-
-      urlBuilder.toString
-    }
   }
 
-  class SearchQuery extends ApiQuery[SearchQuery]
-          with PaginatedQuery[SearchQuery] with ConfigurableItemDisplay[SearchQuery]
-          with RefineableQuery[SearchQuery] with SearchTermQuery[SearchQuery]
-          with FilterableResultsQuery[SearchQuery] {
-
-    def search = parseSearch(fetch(buildUrl))
-
-    def buildUrl = {
-      var urlBuilder = new StringBuilder
-
-      urlBuilder
-        .append(targetUrl)
-        .append("/search")
-        .append(mandatoryParameters)
-        .append(optionalParameters)
-        .append(paginationParameters)
-        .append(itemDisplayParameters)
-        .append(refinementDisplayParameters)
-        .append(queryTermParameters)
-        .append(filterableResultsParameters)
-
-      urlBuilder.toString
-    }
+  class SearchQuery extends GeneralParameters[SearchQuery]
+          with PaginationParameters[SearchQuery]
+          with ShowParameters[SearchQuery]
+          with RefinementParameters[SearchQuery]
+          with FilterParameters[SearchQuery]
+          with ContentFilterParamters[SearchQuery]
+          with JsonParser {
+    def search = parseSearch(fetch(targetUrl + "/search", parameters))
   }
 
-  class ItemQuery extends ApiQuery[ItemQuery] with ConfigurableItemDisplay[ItemQuery]
-        with FilterableResultsQuery[ItemQuery] with PaginatedQuery[ItemQuery]
-        with SearchTermQuery[ItemQuery]{
-
+  class ItemQuery extends GeneralParameters[ItemQuery]
+          with ShowParameters[ItemQuery]
+          with ContentFilterParamters[ItemQuery]
+          with PaginationParameters[ItemQuery]
+          with JsonParser
+  {
     var apiUrl: Option[String] = None
 
     def withApiUrl(newContentPath: String) = {
@@ -269,38 +233,35 @@ abstract class Api extends Http {
       this
     }
 
-    def query = parseItem(fetch(buildUrl))
+    def query = parseItem(fetch(apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")), parameters))
 
-    def buildUrl = {
-      var urlBuilder = new StringBuilder
-
-      urlBuilder
-        .append(apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")).toString)
-        .append(mandatoryParameters)
-        .append(optionalParameters)
-        .append(itemDisplayParameters)
-        .append(filterableResultsParameters)
-        .append(paginationParameters)
-        .append(queryTermParameters)
-
-      urlBuilder.toString
-    }
   }
 
 
-  def fetch(url: String, parameters: Map[String, String] = Map.empty): String = {
-    require(parameters.isEmpty || !url.contains('?'), "must either specifiy paramters or append to query string, not both")
+  protected def fetch(url: String, parameters: Map[String, Any] = Map.empty): String = {
+    require(!url.contains('?'), "must not specify paramaters on query string")
 
+    def encodeParameter(p: Any): String = p match {
+      case list: List[_] => list.map(encodeParameter(_)).mkString(",")
+      case dt: ReadableInstant => ISODateTimeFormat.yearMonthDay.print(dt)
+      case other => URLEncoder.encode(other.toString, "UTF-8")
+    }
 
-    val response = GET(url, List("User-Agent" -> "scala-api-client", "Accept" -> "application/json"))
+    val queryString = parameters.map {case (k, v) => k + "=" + encodeParameter(v)}.mkString("&")
+    val target = url + "?" + queryString
+
+    println("target=" + target)
+
+    val response = GET(target, List("User-Agent" -> "scala-api-client", "Accept" -> "application/json"))
 
     if (List(200, 302) contains response.statusCode) {
       response.body
     } else {
       throw new ApiError(response.statusCode, response.statusMessage)
     }
-
   }
+
+
 }
 
 object Api extends Api with ApacheHttpClient

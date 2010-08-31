@@ -1,7 +1,6 @@
 package com.gu.openplatform.contentapi.parser
 
 import org.scalatest.matchers.ShouldMatchers
-import com.gu.openplatform.contentapi.model.json._
 import org.scalatest.FlatSpec
 import org.joda.time.DateTime
 import JsonFileLoader._

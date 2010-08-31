@@ -5,7 +5,7 @@ import net.liftweb.json.JsonParser._
 import net.liftweb.json.DefaultFormats
 
 
-class JsonParser {
+trait JsonParser {
   implicit val formats = DefaultFormats + new JodaJsonSerializer
 
   def parseSearch(json: String) = (parse(json) \ "response").extract[SearchResponse]
