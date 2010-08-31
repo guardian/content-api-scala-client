@@ -24,7 +24,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
     scenario("get the second page of 10 recent items") {
 
-      val items11to20 = Api.searchQuery.withPage(2).search
+      val items11to20 = Api.searchQuery.page(2).search
 
       items11to20.pageSize should be (10)
       items11to20.currentPage should be (2)
@@ -33,7 +33,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
     scenario("get the most recent 25 items") {
 
-      val items11to20 = Api.searchQuery.withPageSize(25).search
+      val items11to20 = Api.searchQuery.pageSize(25).search
 
       items11to20.pageSize should be (25)
       items11to20.results.foreach ( item => println(item.webTitle))
@@ -44,7 +44,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
   feature("Finding Content:") {
 
     scenario("find content by free text query") {
-      val search = Api.searchQuery.withQ("tottenham hotspur").search
+      val search = Api.searchQuery.q("tottenham hotspur").search
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
@@ -52,8 +52,8 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
     scenario("ordering free text query results by relevance") {
       val search = Api.searchQuery
-              .withQ("tottenham hotspur white hart lane")
-              .withOrderBy("relevance")
+              .q("tottenham hotspur white hart lane")
+              .orderBy("relevance")
               .search
 
       search.total should be > (0)
@@ -61,21 +61,21 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     }
 
     scenario("find content by tag") {
-      val search = Api.searchQuery.withTag("football/tottenham-hotspur").search
+      val search = Api.searchQuery.tags("football/tottenham-hotspur").search
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content by multiple tags") {
-      val search = Api.searchQuery.withTag("football/tottenham-hotspur,tone/matchreports").search
+      val search = Api.searchQuery.tags("football/tottenham-hotspur,tone/matchreports").search
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content in a section") {
-      val search = Api.searchQuery.withSection("football").search
+      val search = Api.searchQuery.section("football").search
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
@@ -83,8 +83,8 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
     scenario("find content between 2 dates") {
       val search = Api.searchQuery
-              .withFromDate(new DateMidnight(2009, 1, 1))
-              .withToDate(new DateMidnight(2009, 12, 31)).search
+              .fromDate(new DateMidnight(2009, 1, 1))
+              .toDate(new DateMidnight(2009, 12, 31)).search
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
@@ -94,7 +94,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
   feature ("configuring content display:") {
 
     scenario("retrieving all content's tags") {
-      val search = Api.searchQuery.withPageSize(1).withShowTags("all").search
+      val search = Api.searchQuery.pageSize(1).showTags("all").search
 
       val tags = search.results.head.tags
       tags.length should be > (0)
@@ -102,23 +102,23 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     }
 
     scenario("retrieving just the content's keywords") {
-      val search = Api.searchQuery.withPageSize(1).withShowTags("keyword").search
+      val search = Api.searchQuery.pageSize(1).showTags("keyword").search
 
       val tags = search.results.head.tags
       tags.foreach (tag => println(tag.tagType + ":" +tag.webTitle))
     }
 
     scenario("retrieving an article's headline and trail") {
-      val search = Api.searchQuery.withPageSize(1).withTag("type/article")
-              .withShowFields("headline,trail-text").search
+      val search = Api.searchQuery.pageSize(1).tags("type/article")
+              .showFields("headline,trail-text").search
 
       val fields = search.results.head.fields.getOrElse(Map())
       fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
     }
 
     scenario("retrieving all article's fields") {
-      val search = Api.searchQuery.withPageSize(1).withTag("type/article")
-              .withShowFields("all").search
+      val search = Api.searchQuery.pageSize(1).tags("type/article")
+              .showFields("all").search
 
       val fields = search.results.head.fields.getOrElse(Map())
       fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
@@ -135,12 +135,12 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     }
 
     scenario("find tags representing series") {
-      val search = Api.tagsQuery.withType("series").tags
+      val search = Api.tagsQuery.tagType("series").tags
       search.results.foreach(tag => println(tag.tagType + ":" + tag.webTitle))
     }
 
     scenario("find tags in the technology section") {
-      val search = Api.tagsQuery.withSection("technology").tags
+      val search = Api.tagsQuery.section("technology").tags
       search.results.foreach(tag => println(tag.webTitle + " (" + tag.sectionName.get + ")"))
     }
   }
@@ -166,12 +166,12 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       // Unfortunately a key is needed to get at this data and I'm not handing my key out
       // here so the example is a bit noddy.
 
-      val search = Api.searchQuery.withQ("tottenham hotspur").withPageSize(1).search
+      val search = Api.searchQuery.q("tottenham hotspur").pageSize(1).search
 
       val contentApiUrl = search.results.head.apiUrl
       println("following api url: " + contentApiUrl)
 
-      val item = Api.itemQuery.withApiUrl(contentApiUrl).query
+      val item = Api.itemQuery.apiUrl(contentApiUrl).query
       println("loaded " + item.content.get.webTitle)
     }
   }
@@ -179,8 +179,8 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
   feature("refining search results") {
 
     scenario("finding the most popular keywords for a seach") {
-      val search = Api.searchQuery.withPageSize(1).withSection("music")
-              .withShowRefinements("keyword").withRefinementSize(20).search
+      val search = Api.searchQuery.pageSize(1).section("music")
+              .showRefinements("keyword").refinementSize(20).search
 
       search.refinementGroups foreach { group =>
         println(group.refinementType)

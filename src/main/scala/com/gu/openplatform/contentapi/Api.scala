@@ -29,211 +29,209 @@ abstract class Api extends Http {
 
 
 
-  trait GeneralParameters[T] extends Parameters {
-     override def parameters: Map[String, Any] = super.parameters ++
+  trait GeneralParameters extends Parameters {
+     override def parameters = super.parameters ++
             apiKey.map("api-key" -> _)
   }
 
 
 
-  trait PaginationParameters[T] extends Parameters {
-    var pageSize: Option[String] = None
-    var page: Option[Int] = None
+  trait PaginationParameters extends Parameters {
+    var _pageSize: Option[String] = None
+    var _page: Option[Int] = None
 
-    def withPageSize(newPageSize: Int) = {
-      pageSize = Some(newPageSize.toString)
-      this.asInstanceOf[T]
+    def pageSize(newPageSize: Int): this.type = {
+      _pageSize = Some(newPageSize.toString); this
     }
 
-    def withPageSize(newPageSize: String) = {
-      pageSize = Some(newPageSize)
-      this.asInstanceOf[T]
+    def pageSize(newPageSize: String): this.type  = {
+      _pageSize = Some(newPageSize); this
     }
 
-    def withPage(newPage: Int) = {
-      page = Some(newPage)
-      this.asInstanceOf[T]
+    def page(newPage: Int): this.type  = {
+      _page = Some(newPage); this
     }
 
     override def parameters = super.parameters ++
-            pageSize.map("page-size" -> _) ++
-            page.map("page" -> _)
+            _pageSize.map("page-size" -> _) ++
+            _page.map("page" -> _)
   }
 
 
-  trait FilterParameters[T] extends Parameters {
-    var q: Option[String] = None
-    var section: Option[String] = None
-    var ids: List[String] = Nil
-    var tag: List[String] = Nil
+  trait FilterParameters extends Parameters {
+    var _q: Option[String] = None
+    var _section: Option[String] = None
+    var _ids: Option[String] = None
+    var _tag: Option[String] = None
 
-    def withSection(s: String) = {
-      section = Some(s)
-      this.asInstanceOf[T]
+    def section(s: String): this.type = {
+      _section = Some(s)
+      this
     }
 
-    def withQ(newQ: String) = {
-      q = Some(newQ)
-      this.asInstanceOf[T]
+    def q(newQ: String): this.type = {
+      _q = Some(newQ)
+      this
     }
 
-    def withTag(newTagTerm: String) = {
-      tag = newTagTerm :: tag
-      this.asInstanceOf[T]
+    def tags(newTagTerm: String): this.type = {
+      _tag = Some(newTagTerm)
+      this
     }
 
-    def withTags(tags: List[String]) = {
-      tag = tags
-      this.asInstanceOf[T]
-    }
-
-    def withId(id: String) = {
-      ids = id :: ids
-      this.asInstanceOf[T]
-    }
-
-    def withIds(newIds: List[String]) = {
-      ids = newIds
-      this.asInstanceOf[T]
+    def ids(newIds: String): this.type= {
+      _ids = Some(newIds)
+      this
     }
 
     override def parameters = super.parameters ++
-            q.map("q" -> _) ++
-            section.map("section" -> _) ++
-            Map("ids" -> ids, "tag" -> tag)
+            _q.map("q" -> _) ++
+            _section.map("section" -> _) ++
+            _ids.map("ids" -> _) ++
+            _tag.map("tag" -> )
+            Map("ids" -> _ids, "tag" -> _tag)
   }
 
 
-  trait ContentFilterParamters[T] extends FilterParameters[T] {
-    var orderBy: Option[String] = None
-    var fromDate: Option[ReadableInstant] = None
-    var toDate: Option[ReadableInstant] = None
 
-    def withOrderBy(s: String): this.type = {
-      orderBy = Some(s); this
+  trait ContentFilterParamters extends FilterParameters {
+    var _orderBy: Option[String] = None
+    var _fromDate: Option[ReadableInstant] = None
+    var _toDate: Option[ReadableInstant] = None
+
+    def orderBy(s: String): this.type = {
+      _orderBy = Some(s); this
     }
 
-    def withFromDate(d: ReadableInstant): this.type = {
-      fromDate = Some(d); this
+    // most likely, you'll want to use DateMidnight
+    // to pass to this
+    def fromDate(d: ReadableInstant): this.type = {
+      _fromDate = Some(d); this
     }
 
-    def withToDate(d: ReadableInstant): this.type = {
-      toDate = Some(d); this
+    // most likely, you'll want to use DateMidnight
+    // to pass to this
+    def toDate(d: ReadableInstant): this.type = {
+      _toDate = Some(d); this
     }
 
     override def parameters = super.parameters ++
-            orderBy.map("order-by" -> _) ++
-            fromDate.map("from-date" -> _) ++
-            toDate.map("to-date" -> _)
+            _orderBy.map("order-by" -> _) ++
+            _fromDate.map("from-date" -> _) ++
+            _toDate.map("to-date" -> _)
 
   }
 
-  trait ShowParameters[T] extends Parameters {
-    var showFields: Option[String] = None
-    var showTags: Option[String] = None
-    var showFactboxes: Option[String] = None
-    var showMedia: Option[String] = None
 
-    def withShowFields(newFields: String) = {
-      showFields = Some(newFields)
-      this.asInstanceOf[T]
+
+  trait ShowParameters extends Parameters {
+    var _showFields: Option[String] = None
+    var _showTags: Option[String] = None
+    var _showFactboxes: Option[String] = None
+    var _showMedia: Option[String] = None
+
+    def showFields(newFields: String): this.type  = {
+      _showFields = Some(newFields)
+      this
     }
 
-    def withShowTags(newShowTags: String) = {
-      showTags = Some(newShowTags)
-      this.asInstanceOf[T]
+    def showTags(newShowTags: String): this.type  = {
+      _showTags = Some(newShowTags)
+      this
     }
 
-    def withShowFactboxes(newShowFactboxes: String) = {
-      showFactboxes = Some(newShowFactboxes)
-      this.asInstanceOf[T]
+    def showFactboxes(newShowFactboxes: String): this.type  = {
+      _showFactboxes = Some(newShowFactboxes)
+      this
     }
 
-    def withShowMedia(newShowMediaTypes: String) = {
-      showMedia = Some(newShowMediaTypes)
-      this.asInstanceOf[T]
+    def showMedia(newShowMediaTypes: String): this.type  = {
+      _showMedia = Some(newShowMediaTypes)
+      this
     }
 
     override def parameters = super.parameters ++
-            showFields.map("show-fields" -> _) ++
-            showTags.map("show-tags" -> _) ++
-            showFactboxes.map("show-factboxes" -> _) ++
-            showMedia.map("show-media" -> _)
+            _showFields.map("show-fields" -> _) ++
+            _showTags.map("show-tags" -> _) ++
+            _showFactboxes.map("show-factboxes" -> _) ++
+            _showMedia.map("show-media" -> _)
 
   }
 
-  trait RefinementParameters[T] extends Parameters {
-    var showRefinements: Option[String] = None
-    var refinementSize: Option[Int] = None
+  trait RefinementParameters extends Parameters {
+    var _showRefinements: Option[String] = None
+    var _refinementSize: Option[Int] = None
 
-    def withShowRefinements(newShowRefinements: String) = {
-      showRefinements = Some(newShowRefinements)
-      this.asInstanceOf[T]
+    def showRefinements(newShowRefinements: String): this.type = {
+      _showRefinements = Some(newShowRefinements)
+      this
     }
 
-    def withRefinementSize(newRefinementSize: Int) = {
-      refinementSize = Some(newRefinementSize)
-      this.asInstanceOf[T]
+    def refinementSize(newRefinementSize: Int): this.type = {
+      _refinementSize = Some(newRefinementSize)
+      this
     }
 
     override def parameters = super.parameters ++
-            showRefinements.map("show-refinements" -> _) ++
-            refinementSize.map("refinement-size" -> _)
+            _showRefinements.map("show-refinements" -> _) ++
+            _refinementSize.map("refinement-size" -> _)
   }
 
 
 
   class SectionsQuery
-          extends GeneralParameters[SectionsQuery]
-                  with FilterParameters[SectionsQuery]
+          extends GeneralParameters
+                  with FilterParameters
                   with JsonParser {
     def sections = parseSections(fetch(targetUrl + "/sections", parameters))
   }
 
 
 
-  class TagsQuery extends GeneralParameters[TagsQuery]
-          with PaginationParameters[TagsQuery]
-          with FilterParameters[TagsQuery]
+  class TagsQuery extends GeneralParameters
+          with PaginationParameters
+          with FilterParameters
           with JsonParser {
-    var tagType: Option[String] = None
+    var _tagType: Option[String] = None
 
-    def withType(newTypeTerm: String) = {
-      tagType = Some(newTypeTerm)
+    def tagType(newTypeTerm: String) = {
+      _tagType = Some(newTypeTerm)
       this
     }
 
     def tags = parseTags(fetch(targetUrl + "/tags", parameters))
 
     override def parameters = super.parameters ++
-            tagType.map("type" -> _)
+            _tagType.map("type" -> _)
 
   }
 
-  class SearchQuery extends GeneralParameters[SearchQuery]
-          with PaginationParameters[SearchQuery]
-          with ShowParameters[SearchQuery]
-          with RefinementParameters[SearchQuery]
-          with FilterParameters[SearchQuery]
-          with ContentFilterParamters[SearchQuery]
+  class SearchQuery extends GeneralParameters
+          with PaginationParameters
+          with ShowParameters
+          with RefinementParameters
+          with FilterParameters
+          with ContentFilterParamters
           with JsonParser {
     def search = parseSearch(fetch(targetUrl + "/search", parameters))
   }
 
-  class ItemQuery extends GeneralParameters[ItemQuery]
-          with ShowParameters[ItemQuery]
-          with ContentFilterParamters[ItemQuery]
-          with PaginationParameters[ItemQuery]
-          with JsonParser
-  {
-    var apiUrl: Option[String] = None
+  class ItemQuery extends GeneralParameters
+          with ShowParameters
+          with ContentFilterParamters
+          with PaginationParameters
+          with JsonParser {
+    var _apiUrl: Option[String] = None
 
-    def withApiUrl(newContentPath: String) = {
-      apiUrl = Some(newContentPath)
+    def apiUrl(newContentPath: String): this.type = {
+      require(newContentPath startsWith targetUrl, "apiUrl expects a full url; use itemId if you only have an id")
+      _apiUrl = Some(newContentPath)
       this
     }
 
-    def query = parseItem(fetch(apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")), parameters))
+    def itemId(contentId: String): this.type = apiUrl(targetUrl + "/" + contentId)
+
+    def query = parseItem(fetch(_apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")), parameters))
 
   }
 
