@@ -1,3 +1,4 @@
+import java.io.File
 import sbt._
 
 class ContentApiClient(info: ProjectInfo) extends DefaultProject(info) with IdeaProject {
@@ -11,4 +12,13 @@ class ContentApiClient(info: ProjectInfo) extends DefaultProject(info) with Idea
 
 
   override def compileOptions = super.compileOptions ++ Seq(Unchecked)
+
+  override def managedStyle = ManagedStyle.Maven
+
+  val publishTo = Resolver.file("guardian github", new File(System.getProperty("user.home")
+          + "/guardian.github.com/maven/repo-releases"))
+
+  override def packageSrcJar= defaultJarPath("-sources.jar")
+  val sourceArtifact = Artifact.sources(artifactID)
+  override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageSrc)
 }
