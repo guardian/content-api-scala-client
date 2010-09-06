@@ -1,7 +1,7 @@
 package com.gu.openplatform.contentapi
 
 
-import connection.{ApacheHttpClient, Http}
+import connection.{JavaNetHttp, ApacheHttpClient, Http}
 import java.net.URLEncoder
 import com.gu.openplatform.contentapi.parser.JsonParser
 import org.joda.time.format.ISODateTimeFormat
@@ -89,7 +89,6 @@ abstract class Api extends Http {
             _section.map("section" -> _) ++
             _ids.map("ids" -> _) ++
             _tag.map("tag" -> )
-            Map("ids" -> _ids, "tag" -> _tag)
   }
 
 
@@ -248,8 +247,6 @@ abstract class Api extends Http {
     val queryString = parameters.map {case (k, v) => k + "=" + encodeParameter(v)}.mkString("&")
     val target = url + "?" + queryString
 
-    println("target=" + target)
-
     val response = GET(target, List("User-Agent" -> "scala-api-client", "Accept" -> "application/json"))
 
     if (List(200, 302) contains response.statusCode) {
@@ -262,4 +259,4 @@ abstract class Api extends Http {
 
 }
 
-object Api extends Api with ApacheHttpClient
+object Api extends Api with JavaNetHttp
