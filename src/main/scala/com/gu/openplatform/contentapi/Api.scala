@@ -4,6 +4,7 @@ package com.gu.openplatform.contentapi
 import connection.{JavaNetHttp, ApacheHttpClient, Http}
 import java.net.URLEncoder
 import com.gu.openplatform.contentapi.parser.JsonParser
+import model.TagsResponse
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.ReadableInstant
 
@@ -17,10 +18,10 @@ abstract class Api extends Http {
   val targetUrl = "http://content.guardianapis.com"
   var apiKey: Option[String] = None
 
-  def sectionsQuery = new SectionsQuery
-  def tagsQuery = new TagsQuery
-  def searchQuery = new SearchQuery
-  def itemQuery = new ItemQuery
+  def sections = new SectionsQuery
+  def tags = new TagsQuery
+  def search = new SearchQuery
+  def item = new ItemQuery
 
 
   trait Parameters {
@@ -37,14 +38,10 @@ abstract class Api extends Http {
 
 
   trait PaginationParameters extends Parameters {
-    var _pageSize: Option[String] = None
+    var _pageSize: Option[Int] = None
     var _page: Option[Int] = None
 
     def pageSize(newPageSize: Int): this.type = {
-      _pageSize = Some(newPageSize.toString); this
-    }
-
-    def pageSize(newPageSize: String): this.type  = {
       _pageSize = Some(newPageSize); this
     }
 
@@ -164,6 +161,8 @@ abstract class Api extends Http {
 
   }
 
+
+
   trait RefinementParameters extends Parameters {
     var _showRefinements: Option[String] = None
     var _refinementSize: Option[Int] = None
@@ -189,7 +188,12 @@ abstract class Api extends Http {
           extends GeneralParameters
                   with FilterParameters
                   with JsonParser {
-    def sections = parseSections(fetch(targetUrl + "/sections", parameters))
+    lazy val response = parseSections(fetch(targetUrl + "/sections", parameters))
+  }
+
+  object SectionsQuery {
+    implicit def asResponse(q: SectionsQuery) = q.response
+    implicit def asSections(q: SectionsQuery) = q.response.results
   }
 
 
@@ -205,12 +209,19 @@ abstract class Api extends Http {
       this
     }
 
-    def tags = parseTags(fetch(targetUrl + "/tags", parameters))
+    lazy val response = parseTags(fetch(targetUrl + "/tags", parameters))
 
     override def parameters = super.parameters ++
             _tagType.map("type" -> _)
 
   }
+
+  object TagsQuery {
+    implicit def asResponse(q: TagsQuery) = q.response
+    implicit def asTags(q: TagsQuery) = q.response.results
+  }
+
+
 
   class SearchQuery extends GeneralParameters
           with PaginationParameters
@@ -219,8 +230,15 @@ abstract class Api extends Http {
           with FilterParameters
           with ContentFilterParamters
           with JsonParser {
-    def search = parseSearch(fetch(targetUrl + "/search", parameters))
+    lazy val response = parseSearch(fetch(targetUrl + "/search", parameters))
   }
+
+  object SearchQuery {
+    implicit def asResponse(q: SearchQuery) = q.response
+    implicit def asContent(q: SearchQuery) = q.response.results
+  }
+
+
 
   class ItemQuery extends GeneralParameters
           with ShowParameters
@@ -237,8 +255,14 @@ abstract class Api extends Http {
 
     def itemId(contentId: String): this.type = apiUrl(targetUrl + "/" + contentId)
 
-    def query = parseItem(fetch(_apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")), parameters))
+    lazy val response = parseItem(
+      fetch(
+        _apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
+        parameters))
+  }
 
+  object ItemQuery {
+    implicit def asResponse(q: ItemQuery) = q.response
   }
 
 
