@@ -18,7 +18,8 @@ case class Content(
         fields: Option[Map[String, String]],
         tags: List[Tag],
         factboxes: List[Factbox],
-        mediaAssets: List[MediaAsset]
+        mediaAssets: List[MediaAsset],
+        snippets: Option[Map[String, String]]
 )
 
 

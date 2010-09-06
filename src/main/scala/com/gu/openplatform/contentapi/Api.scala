@@ -125,12 +125,18 @@ abstract class Api extends Http {
 
   trait ShowParameters extends Parameters {
     var _showFields: Option[String] = None
+    var _showSnippets: Option[String] = None
     var _showTags: Option[String] = None
     var _showFactboxes: Option[String] = None
     var _showMedia: Option[String] = None
 
     def showFields(newFields: String): this.type  = {
       _showFields = Some(newFields)
+      this
+    }
+
+    def showSnippets(newSnippets: String): this.type  = {
+      _showSnippets = Some(newSnippets)
       this
     }
 
@@ -151,6 +157,7 @@ abstract class Api extends Http {
 
     override def parameters = super.parameters ++
             _showFields.map("show-fields" -> _) ++
+            _showSnippets.map("show-snippets" -> _) ++
             _showTags.map("show-tags" -> _) ++
             _showFactboxes.map("show-factboxes" -> _) ++
             _showMedia.map("show-media" -> _)
@@ -239,7 +246,6 @@ abstract class Api extends Http {
     require(!url.contains('?'), "must not specify paramaters on query string")
 
     def encodeParameter(p: Any): String = p match {
-      case list: List[_] => list.map(encodeParameter(_)).mkString(",")
       case dt: ReadableInstant => ISODateTimeFormat.yearMonthDay.print(dt)
       case other => URLEncoder.encode(other.toString, "UTF-8")
     }
