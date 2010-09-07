@@ -126,6 +126,8 @@ abstract class Api extends Http {
     var _showTags: Option[String] = None
     var _showFactboxes: Option[String] = None
     var _showMedia: Option[String] = None
+    var _snippetPre: Option[String] = None
+    var _snippetPost: Option[String] = None
 
     def showFields(newFields: String): this.type  = {
       _showFields = Some(newFields)
@@ -152,12 +154,23 @@ abstract class Api extends Http {
       this
     }
 
+    def snippetPre(s: String): this.type = {
+      _snippetPre = Some(s); this
+    }
+
+    def snippetPost(s: String): this.type = {
+      _snippetPost = Some(s); this
+    }
+
+
     override def parameters = super.parameters ++
             _showFields.map("show-fields" -> _) ++
             _showSnippets.map("show-snippets" -> _) ++
             _showTags.map("show-tags" -> _) ++
             _showFactboxes.map("show-factboxes" -> _) ++
-            _showMedia.map("show-media" -> _)
+            _showMedia.map("show-media" -> _) ++
+            _snippetPre.map("snippet-pre" -> _) ++
+            _snippetPost.map("snippet-post" -> _)
 
   }
 
