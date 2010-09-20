@@ -38,7 +38,7 @@ What calls can I make on the Content API?
 
 There are four different types of request that can be made on the Content API: content search, tag search,
 section search and single item. The best place to look for documentation on these is to visit
-http://content.guardianapis.com/ in a web browser, which will bring up the API explorer.
+[the API explorer](http://explorer.content.guardianapis.com).
 
 Content Search
 --------------
@@ -101,5 +101,5 @@ http://content.guardianapis.com:
 More reading
 ============
 
-Further examples can be found in [ExampleUsageTest.scala](src/test/scala/ExampleUsageTest.scala).
+Further examples can be found in [ExampleUsageTest.scala](open-platform-content-api-scala-client/src/test/scala/ExampleUsageTest.scala).
 
