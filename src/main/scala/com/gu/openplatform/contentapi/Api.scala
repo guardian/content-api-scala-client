@@ -125,6 +125,8 @@ abstract class Api extends Http {
     var _showFactboxes: Option[String] = None
     var _showMedia: Option[String] = None
     var _showRelated: Boolean = false
+    var _showEditorsPicks: Boolean = false
+    var _showBestBets: Boolean = false
     var _snippetPre: Option[String] = None
     var _snippetPost: Option[String] = None
 
@@ -158,6 +160,16 @@ abstract class Api extends Http {
       this
     }
 
+    def showEditorsPicks(): this.type = {
+      _showEditorsPicks = true
+      this
+    }
+
+    def showBestBets(): this.type = {
+      _showBestBets = true
+      this
+    }
+
     def snippetPre(s: String): this.type = {
       _snippetPre = Some(s);
       this
@@ -174,7 +186,9 @@ abstract class Api extends Http {
             _showTags.map("show-tags" -> _) ++
             _showFactboxes.map("show-factboxes" -> _) ++
             _showMedia.map("show-media" -> _) +
-            ("show-related" -> _showRelated.toString) ++
+            ("show-related" -> _showRelated.toString) +
+            ("show-editors-picks" -> _showEditorsPicks.toString) +
+            ("show-best-bets" -> _showBestBets.toString) ++
             _snippetPre.map("snippet-pre" -> _) ++
             _snippetPost.map("snippet-post" -> _)
   }

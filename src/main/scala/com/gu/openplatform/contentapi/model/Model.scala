@@ -78,3 +78,9 @@ case class Refinement(
         id: String,
         apiUrl: String
         )
+
+case class BestBet(
+        webTitle: String,
+        webUrl: String,
+        trailText: Option[String]
+        )

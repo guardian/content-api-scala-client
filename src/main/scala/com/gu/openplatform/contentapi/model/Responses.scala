@@ -23,7 +23,8 @@ case class SearchResponse(
         pages: Int,
         orderBy: String,
         results: List[Content],
-        refinementGroups: List[RefinementGroup]
+        refinementGroups: List[RefinementGroup],
+        bestBets: List[BestBet]
 )
 
 // /tags
@@ -62,7 +63,8 @@ case class ItemResponse(
         section: Option[Section],
         content: Option[Content],
         results: List[Content],
-        relatedContent: List[Content]
+        relatedContent: List[Content],
+        editorsPicks: List[Content]
         )
 
 
