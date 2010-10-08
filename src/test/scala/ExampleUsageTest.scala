@@ -171,6 +171,19 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     }
   }
 
+  feature("getting the most viewed content in a section") {
+
+    scenario("showing the most viewed for a section") {
+
+      val politicsSection = Api.item.itemId("politics").showMostViewed
+
+      println("most viewed for politics:")
+      politicsSection.mostViewed.foreach { c =>
+        println(c.webTitle)
+      }
+    }
+  }
+
   feature("refining search results") {
 
     scenario("finding the most popular keywords for a seach") {
