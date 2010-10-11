@@ -88,6 +88,13 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
+
+    scenario("did you mean?") {
+      val search = Api.search.q("the green hills of ingland")
+
+      search.total should be (0)
+      search.didYouMean should be (Some("the green hills of england"))
+    }
   }
 
   feature ("configuring content display:") {

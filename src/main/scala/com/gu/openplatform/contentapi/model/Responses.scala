@@ -22,6 +22,7 @@ case class SearchResponse(
         currentPage: Int,
         pages: Int,
         orderBy: String,
+        didYouMean: Option[String],
         results: List[Content],
         refinementGroups: List[RefinementGroup],
         bestBets: List[BestBet]
