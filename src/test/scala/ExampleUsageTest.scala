@@ -60,14 +60,14 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     }
 
     scenario("find content by tag") {
-      val search = Api.search.tags("football/tottenham-hotspur")
+      val search = Api.search.tag("football/tottenham-hotspur")
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content by multiple tags") {
-      val search = Api.search.tags("football/tottenham-hotspur,tone/matchreports")
+      val search = Api.search.tag("football/tottenham-hotspur,tone/matchreports")
 
       search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
@@ -115,7 +115,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     }
 
     scenario("retrieving an article's headline and trail") {
-      val search = Api.search.pageSize(1).tags("type/article")
+      val search = Api.search.pageSize(1).tag("type/article")
               .showFields("headline,trail-text")
 
       val fields = search.results.head.fields.getOrElse(Map())
@@ -123,7 +123,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     }
 
     scenario("retrieving all article's fields") {
-      val search = Api.search.pageSize(1).tags("type/article")
+      val search = Api.search.pageSize(1).tag("type/article")
               .showFields("all")
 
       val fields = search.results.head.fields.getOrElse(Map())
@@ -182,7 +182,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
     scenario("showing the most viewed for a section") {
 
-      val politicsSection = Api.item.itemId("politics").showMostViewed
+      val politicsSection = Api.item.itemId("politics").showMostViewed()
 
       println("most viewed for politics:")
       politicsSection.mostViewed.foreach { c =>

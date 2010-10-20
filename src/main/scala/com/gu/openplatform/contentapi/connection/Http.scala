@@ -3,9 +3,8 @@ package com.gu.openplatform.contentapi.connection
 import java.lang.String
 
 import org.apache.commons.httpclient.methods.GetMethod
-import com.gu.openplatform.contentapi.ApiError
 import java.net.{URL, HttpURLConnection}
-import io.{Codec, Source}
+import io.Source
 import org.apache.commons.httpclient.{MultiThreadedHttpConnectionManager, HttpClient}
 
 case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
