@@ -4,12 +4,13 @@ import java.lang.String
 
 import org.apache.commons.httpclient.methods.GetMethod
 import java.net.{URL, HttpURLConnection}
-import io.Source
 import org.apache.commons.httpclient.{MultiThreadedHttpConnectionManager, HttpClient}
+import io.{Codec, Source}
 
 case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
 
 trait Http {
+  implicit val codec = Codec("UTF-8")
   // this is what the Api client requires of an http connection
   def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse
 }
@@ -80,7 +81,7 @@ trait JavaNetHttp extends Http {
     val connection = new URL(urlString).openConnection.asInstanceOf[HttpURLConnection]
     headers.foreach { case (k, v) => connection.setRequestProperty(k, v) }
 
-    val src = Source.fromInputStream(connection.getInputStream, "UTF-8")
+    val src = Source.fromInputStream(connection.getInputStream)
     val responseBody = src.mkString
     src.close
 
