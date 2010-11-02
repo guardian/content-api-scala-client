@@ -19,7 +19,7 @@ trait Http {
 // an implementation using apache http client, not this just uses the default connection manager
 // and does not support multithreaded use.
 trait ApacheHttpClient extends Http {
-  var httpClient = new HttpClient
+  val httpClient = new HttpClient
 
   def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse = {
     
@@ -45,8 +45,8 @@ trait ApacheHttpClient extends Http {
 // feel free to up this number by calling maxConnections
 trait MultiThreadedApacheHttpClient extends Http {
 
-  var connectionManager = new MultiThreadedHttpConnectionManager
-  var httpClient = new HttpClient(connectionManager)
+  val connectionManager = new MultiThreadedHttpConnectionManager
+  val httpClient = new HttpClient(connectionManager)
   
   def maxConnections(i: Int) {
     connectionManager.getParams.setMaxTotalConnections(i)
