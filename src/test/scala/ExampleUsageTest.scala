@@ -176,6 +176,23 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       val item = Api.item.apiUrl(contentApiUrl)
       println("loaded " + item.content.get.webTitle)
     }
+
+    scenario("loading a stories story package") {
+
+      // look at the content on the homepage and find the first item that has a package
+      val networkFront = Api.item.itemId("").showFields("has-story-package").showEditorsPicks(true).pageSize(1)
+      val contentWithPackage = networkFront.editorsPicks.filter(_.fields.get("hasStoryPackage") == "true").head
+
+      val contentApiUrl = contentWithPackage.apiUrl
+      println("following api url: " + contentApiUrl)
+
+      val item = Api.item.apiUrl(contentApiUrl).showStoryPackage(true)
+      println("loaded " + item.content.get.webTitle)
+      item.storyPackage.size should be > 0
+
+      println("story package headlines:")
+      item.storyPackage foreach (c => println("\t" + c.webTitle))
+    }
   }
 
   feature("getting the most viewed content in a section") {

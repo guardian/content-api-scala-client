@@ -66,7 +66,8 @@ case class ItemResponse(
         results: List[Content],
         relatedContent: List[Content],
         editorsPicks: List[Content],
-        mostViewed: List[Content]
+        mostViewed: List[Content],
+        storyPackage: List[Content]
         )
 
 

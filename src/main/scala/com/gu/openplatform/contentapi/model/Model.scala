@@ -222,10 +222,16 @@ case class MediaAsset(
         rel: String,
         index: Int,
         file: String,
-        fields: Option[Map[String, String]]
+        fields: Option[Map[String, String]],
+        encodings: List[MediaEncoding] = Nil
         ) {
   def mediaAssetType = `type`
 }
+
+case class MediaEncoding(
+        format: String,
+        file: String
+        )
 
 case class RefinementGroup(
         `type`: String,
