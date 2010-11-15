@@ -117,7 +117,17 @@ case class Content(
          * (It's included in this client library because we use this
          * client library internally :)
          */
-        snippets: Option[Map[String, String]] = None
+        snippets: Option[Map[String, String]] = None,
+
+        /**
+         * List of references associated with the content. References are
+         * strings that identify things beyond the content api. A good example
+         * is an isbn number, which associates a piece of content with a book.
+         *
+         * Use showReferences passing in the the type of reference you want to
+         * see or 'all' to see all references.
+         */
+        references: List[Reference] = Nil
 ) {
   // Unfortunately lift-json (as of 2.1) requires a Map to be wrapped in an
   // Option if the json field that contains it is optional. (This is unlike a list
@@ -169,7 +179,17 @@ case class Tag(
          * For tags, this allows access to the editorsPicks for the tag,
          * and automatically shows the most recent content for the tag.
          */
-        apiUrl: String
+        apiUrl: String,
+
+        /**
+         * List of references associated with the tag. References are
+         * strings that identify things beyond the content api. A good example
+         * is an isbn number, which associates the tag with a book.
+         *
+         * Use showReferences passing in the the type of reference you want to
+         * see or 'all' to see all references.
+         */
+        references: List[Reference] = Nil
         ) {
 
   /**
@@ -246,4 +266,9 @@ case class BestBet(
         webTitle: String,
         webUrl: String,
         trailText: Option[String]
+        )
+
+case class Reference(
+        `type`: String,
+        id: String
         )

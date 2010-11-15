@@ -16,6 +16,12 @@
       "webTitle":"Map: Things to do across Edinburgh this Bank Holiday weekend",
       "webUrl":"http://www.guardian.co.uk/edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events",
       "apiUrl":"http://content.guardianapis.com/edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events",
+      "references": [
+          {
+            "type": "opta-football-team",
+            "id": "opta-football-team/8"
+          }
+      ],
       "fields":{
         "headline":"Map: Things to do across Edinburgh this Bank Holiday weekend",
         "trailText":"<p>Explore events for all ages going on in Edinburgh</p>",

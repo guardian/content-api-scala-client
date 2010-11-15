@@ -113,9 +113,10 @@ class SearchJsonParserTest extends FlatSpec with ShouldMatchers {
           "caption" -> "Singer George Michael leaves  Highbury magistrates court surrounded by press and police. Michael pleaded guilty to driving under the influence of drugs and possessing cannabis after he crashed his car into a  shop in London. The singer has been warned that he may face a custodial sentence after a previous similar offence",
           "width" -> "780"    
       )))
-
-
   }
 
-
+  it should "parse references" in {
+    searchResponse.results.head.references.head.`type` should be ("opta-football-team")
+    searchResponse.results.head.references.head.id should be ("opta-football-team/8")
+  }
 }
