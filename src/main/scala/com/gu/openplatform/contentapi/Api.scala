@@ -127,6 +127,7 @@ abstract class Api extends Http with JsonParser {
     object showRelated extends BoolParameter(self, "show-related")
     object showEditorsPicks extends BoolParameter(self, "show-editors-picks")
     object showMostViewed extends BoolParameter(self, "show-most-viewed")
+    object showStoryPackage extends BoolParameter(self, "show-story-package")
     object showBestBets extends BoolParameter(self, "show-best-bets")
     object snippetPre extends StringParameter(self, "snippet-pre")
     object snippetPost extends StringParameter(self, "snippet-post")
