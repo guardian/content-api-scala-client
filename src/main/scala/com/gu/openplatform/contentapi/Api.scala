@@ -38,7 +38,8 @@ abstract class Api extends Http with JsonParser {
   class TagsQuery extends GeneralParameters[TagsQuery]
           with PaginationParameters[TagsQuery]
           with FilterParameters[TagsQuery]
-          with RefererenceParameters[TagsQuery] {
+          with RefererenceParameters[TagsQuery]
+          with ShowReferenceParameters[TagsQuery] {
     object tagType extends StringParameter(self, "type")
     lazy val response = parseTags(fetch(targetUrl + "/tags", parameters))
   }
@@ -56,7 +57,8 @@ abstract class Api extends Http with JsonParser {
           with RefinementParameters[SearchQuery]
           with FilterParameters[SearchQuery]
           with ContentFilterParameters[SearchQuery]
-          with RefererenceParameters[SearchQuery] {
+          with RefererenceParameters[SearchQuery]
+          with ShowReferenceParameters[SearchQuery] {
     lazy val response = parseSearch(fetch(targetUrl + "/search", parameters))
   }
 
@@ -71,7 +73,8 @@ abstract class Api extends Http with JsonParser {
   class ItemQuery extends GeneralParameters[ItemQuery]
           with ShowParameters[ItemQuery]
           with ContentFilterParameters[ItemQuery]
-          with PaginationParameters[ItemQuery] {
+          with PaginationParameters[ItemQuery]
+          with ShowReferenceParameters[ItemQuery] {
     var _apiUrl: Option[String] = None
 
     def apiUrl(newContentPath: String): this.type = {
@@ -139,9 +142,12 @@ abstract class Api extends Http with JsonParser {
   }
 
   trait RefererenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object showReferences extends StringParameter(self, "show-references")
     object reference extends StringParameter(self, "reference")
     object referenceType extends StringParameter(self, "reference-type")
+  }
+
+  trait ShowReferenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+    object showReferences extends StringParameter(self, "show-references")
   }
 
 
