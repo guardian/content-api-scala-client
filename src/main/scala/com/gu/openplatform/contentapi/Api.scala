@@ -119,6 +119,7 @@ abstract class Api extends Http with JsonParser {
     // to pass to these
     object fromDate extends DateParameter(self, "from-date")
     object toDate extends DateParameter(self, "to-date")
+    object dateId extends StringParameter(self, "date-id")
    }
 
   trait ShowParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {

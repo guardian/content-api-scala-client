@@ -1,7 +1,7 @@
 import java.io.File
 import sbt._
 
-class ContentApiClient(info: ProjectInfo) extends DefaultProject(info) with IdeaProject {
+class ContentApiClient(info: ProjectInfo) extends DefaultProject(info) {
 
   val joda = "joda-time" % "joda-time" % "1.6" withSources()
   val httpClient = "commons-httpclient" % "commons-httpclient" % "3.1"
