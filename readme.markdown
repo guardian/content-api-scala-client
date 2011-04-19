@@ -15,14 +15,14 @@ This library provides a simple client wrapper round the [guardian.co.uk][g.co.uk
 To use from sbt:
 
     val guardianGithub = "Guardian Github Releases" at "http://guardian.github.com/maven/repo-releases"
-    val contentApiClient = "com.gu.openplatform" %% "content-api-client" % "1.9" withSources()
+    val contentApiClient = "com.gu.openplatform" %% "content-api-client" % "1.11" withSources()
 
 To use from maven:
 
     <dependency>
         <groupId>com.gu.openplatform</groupId>
         <artifactId>content-api-client_2.8.0</artifactId>
-        <version>1.9</version>
+        <version>1.11</version>
     </dependency>
 
     ...
