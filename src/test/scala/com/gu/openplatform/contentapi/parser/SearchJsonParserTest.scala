@@ -102,7 +102,7 @@ class SearchJsonParserTest extends FlatSpec with ShouldMatchers {
     val mediaAssets = partnerSearchResponse.results.head.mediaAssets
     mediaAssets.size should be (2)
     mediaAssets.head.`type` should be ("picture")
-    mediaAssets.head.file should be ("http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2010/8/25/1282722354152/george-michael-appears-in-003.jpg")
+    mediaAssets.head.file should be (Some("http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2010/8/25/1282722354152/george-michael-appears-in-003.jpg"))
 
     mediaAssets.head.fields should be (Some(Map(
          "source" -> "Getty Images",

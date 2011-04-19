@@ -241,7 +241,7 @@ case class MediaAsset(
         `type`: String,
         rel: String,
         index: Int,
-        file: String,
+        file: Option[String],
         fields: Option[Map[String, String]],
         encodings: List[MediaEncoding] = Nil
         ) {
