@@ -115,11 +115,10 @@ abstract class Api extends Http with JsonParser {
 
   trait ContentFilterParameters[OwnerType <: ParameterHolder] extends FilterParameters[OwnerType] {
     object orderBy extends StringParameter(self, "order-by")
-    // most likely, you'll want to use DateMidnight
-    // to pass to these
     object fromDate extends DateParameter(self, "from-date")
     object toDate extends DateParameter(self, "to-date")
     object dateId extends StringParameter(self, "date-id")
+    object useDate extends StringParameter(self, "use-date")
    }
 
   trait ShowParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
@@ -157,7 +156,7 @@ abstract class Api extends Http with JsonParser {
     require(!url.contains('?'), "must not specify parameters in url")
 
     def encodeParameter(p: Any): String = p match {
-      case dt: ReadableInstant => ISODateTimeFormat.yearMonthDay.print(dt)
+      case dt: ReadableInstant => URLEncoder.encode(ISODateTimeFormat.dateTimeNoMillis.print(dt), "UTF-8")
       case other => URLEncoder.encode(other.toString, "UTF-8")
     }
 
