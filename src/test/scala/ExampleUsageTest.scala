@@ -193,6 +193,14 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       println("story package headlines:")
       item.storyPackage foreach (c => println("\t" + c.webTitle))
     }
+
+    scenario("loading editors picks for the us homepage") {
+
+      val usNetworkFront = Api.item.itemId("").edition("US").showEditorsPicks(true)
+
+      println("US network front editors picks:")
+      usNetworkFront.editorsPicks.foreach (c => println("\t" + c.webTitle))
+    }
   }
 
   feature("getting the most viewed content in a section") {
@@ -202,9 +210,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       val politicsSection = Api.item.itemId("politics").showMostViewed()
 
       println("most viewed for politics:")
-      politicsSection.mostViewed.foreach { c =>
-        println(c.webTitle)
-      }
+      politicsSection.mostViewed.foreach (c => println("\t" + c.webTitle))
     }
   }
 
