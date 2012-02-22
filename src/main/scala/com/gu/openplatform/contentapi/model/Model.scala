@@ -189,7 +189,25 @@ case class Tag(
          * Use showReferences passing in the the type of reference you want to
          * see or 'all' to see all references.
          */
-        references: List[Reference] = Nil
+        references: List[Reference] = Nil,
+
+        /**
+         * If this tag is a contributor then we *may* have a small bio
+         * for the contributor.
+         *
+         * This field is optional in all cases, even contributors are not
+         * guaranteed to have one.
+         */
+        bio: Option[String] = None,
+
+          /**
+           * If this tag is a contributor then we *may* have a small byline
+           * picturefor the contributor.
+           *
+           * This field is optional in all cases, even contributors are not
+           * guaranteed to have one.
+           */
+          bylineImageUrl: Option[String] = None
         ) {
 
   /**
