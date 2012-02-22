@@ -49,6 +49,17 @@ case class SectionsResponse(
         results: List[Section]
 )
 
+// /sections
+case class FoldersResponse(
+        status: String,
+        userTier: String,
+        total: Int,
+        startIndex: Int,
+        pageSize: Int,
+        currentPage: Int,
+        pages: Int,
+        results: List[Folder]
+        )
 
 // /anythingelse
 case class ItemResponse(
