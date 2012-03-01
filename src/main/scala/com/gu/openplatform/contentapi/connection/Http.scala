@@ -16,41 +16,13 @@ trait Http {
 }
 
 
-// an implementation using apache http client, not this just uses the default connection manager
+// an implementation using apache http client, note this just uses the default connection manager
 // and does not support multithreaded use.
 trait ApacheHttpClient extends Http {
   val httpClient = new HttpClient
 
-  def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse = {
-    
-    val method = new GetMethod(url)
-
-    headers.foreach { case (k, v) => method.addRequestHeader(k, v) }
-
-    httpClient.executeMethod(method)
-
-    val statusLine = method getStatusLine
-    val responseBody = Option(method.getResponseBodyAsStream)
-            .map(Source.fromInputStream(_).mkString)
-            .getOrElse("")
-
-    method.releaseConnection
-
-    new HttpResponse(responseBody, statusLine.getStatusCode, statusLine.getReasonPhrase)
-  }
-}
-
-// an implementation using the MultiThreadedHttpConnectionManager
-// note this defaults to 2 connections in accordance to the http spec
-// feel free to up this number by calling maxConnections
-trait MultiThreadedApacheHttpClient extends Http {
-
-  val connectionManager = new MultiThreadedHttpConnectionManager
-  val httpClient = new HttpClient(connectionManager)
-  
-  def maxConnections(i: Int) {
-    connectionManager.getParams.setMaxTotalConnections(i)
-    connectionManager.getParams.setDefaultMaxConnectionsPerHost(i)
+  def setProxy(host: String, port: Int) {
+    httpClient.getHostConfiguration().setProxy(host, port)
   }
 
   def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse = {
@@ -70,6 +42,27 @@ trait MultiThreadedApacheHttpClient extends Http {
     } finally {
       method.releaseConnection
     }
+  }
+}
+
+// an implementation using the MultiThreadedHttpConnectionManager
+// note this defaults to 2 connections in accordance to the http spec
+// feel free to up this number by calling maxConnections
+trait MultiThreadedApacheHttpClient extends ApacheHttpClient {
+  val connectionManager = new MultiThreadedHttpConnectionManager
+  override val httpClient = new HttpClient(connectionManager)
+
+  def maxConnections(i: Int) {
+    connectionManager.getParams.setMaxTotalConnections(i)
+    connectionManager.getParams.setDefaultMaxConnectionsPerHost(i)
+  }
+
+  def setConnectionTimeout(seconds: Int) {
+    connectionManager.getParams.setConnectionTimeout(seconds * 1000)
+  }
+
+  def setSocketTimeout(seconds: Int) {
+    connectionManager.getParams.setSoTimeout(seconds * 1000)
   }
 }
 
