@@ -46,23 +46,23 @@ trait ApacheHttpClient extends Http {
 }
 
 // an implementation using the MultiThreadedHttpConnectionManager
-// note this defaults to 2 connections in accordance to the http spec
-// feel free to up this number by calling maxConnections
 trait MultiThreadedApacheHttpClient extends ApacheHttpClient {
   val connectionManager = new MultiThreadedHttpConnectionManager
   override val httpClient = new HttpClient(connectionManager)
+
+  maxConnections(10)
 
   def maxConnections(i: Int) {
     connectionManager.getParams.setMaxTotalConnections(i)
     connectionManager.getParams.setDefaultMaxConnectionsPerHost(i)
   }
 
-  def setConnectionTimeout(seconds: Int) {
-    connectionManager.getParams.setConnectionTimeout(seconds * 1000)
+  def setConnectionTimeout(ms: Int) {
+    connectionManager.getParams.setConnectionTimeout(ms)
   }
 
-  def setSocketTimeout(seconds: Int) {
-    connectionManager.getParams.setSoTimeout(seconds * 1000)
+  def setSocketTimeout(ms: Int) {
+    connectionManager.getParams.setSoTimeout(ms)
   }
 }
 
