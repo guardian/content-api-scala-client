@@ -2,25 +2,27 @@
   "response":{
     "status":"ok",
     "userTier":"free",
-    "total":20733,
+    "total":29238,
     "startIndex":1,
     "pageSize":2,
     "currentPage":1,
-    "pages":10367,
+    "pages":14619,
     "results":[{
-      "id":"enjoy-england/south-west",
-      "type":"keyword",
-      "webTitle":"South-west",
-      "webUrl":"http://www.guardian.co.uk/enjoy-england/south-west",
-      "apiUrl":"http://content.guardianapis.com/enjoy-england/south-west",
-      "sectionId":"enjoy-england",
-      "sectionName":"Enjoy England"
-    },{
-      "id":"profile/dick-vinegar",
+      "id":"profile/mohamed-abdul-malek",
       "type":"contributor",
-      "webTitle":"Dick Vinegar",
-      "webUrl":"http://www.guardian.co.uk/profile/dick-vinegar",
-      "apiUrl":"http://content.guardianapis.com/profile/dick-vinegar"
+      "webTitle":"Mohamed Abdul Malek",
+      "webUrl":"http://www.guardian.co.uk/profile/mohamed-abdul-malek",
+      "apiUrl":"http://content.guardianapis.com/profile/mohamed-abdul-malek",
+      "bio":"<p>Mohamed Abdul Malek is chairman of Libya Watch</p>",
+      "bylineImageUrl":"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2011/2/21/1298313935126/mohamed_malek.jpg"
+    },{
+      "id":"stage/series/movetube-dance-column",
+      "type":"series",
+      "webTitle":"MoveTube: the best dance on the web",
+      "webUrl":"http://www.guardian.co.uk/stage/series/movetube-dance-column",
+      "apiUrl":"http://content.guardianapis.com/stage/series/movetube-dance-column",
+      "sectionId":"stage",
+      "sectionName":"Stage"
     }]
   }
 }

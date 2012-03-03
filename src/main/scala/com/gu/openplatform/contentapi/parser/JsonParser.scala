@@ -11,6 +11,7 @@ trait JsonParser {
   def parseSearch(json: String) = (parse(json) \ "response").extract[SearchResponse]
   def parseTags(json: String) = (parse(json) \ "response").extract[TagsResponse]
   def parseSections(json: String) = (parse(json) \ "response").extract[SectionsResponse]
+  def parseFolders(json: String) = (parse(json) \ "response").extract[FoldersResponse]
   def parseItem(json: String) = (parse(json) \ "response").extract[ItemResponse]
 }
 

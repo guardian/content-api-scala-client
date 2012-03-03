@@ -228,4 +228,42 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       }
     }
   }
+
+  feature("contributor bios and pictures") {
+    scenario("show contributor bios") {
+      Api.tags.tagType("contributor").filter(_.bio.isDefined).foreach(tag => println(tag.webTitle + ":" + tag.bio.get))
+    }
+    scenario("show contributor byline Pictures") {
+      Api.tags.tagType("contributor").foreach(tag => println(tag.webTitle + ":" + tag.bylineImageUrl.getOrElse("None")))
+    }
+  }
+  
+  feature("editorial folders are available") {
+    scenario("can query for folders") {
+      println("Query folders")
+
+      Api.folders.foreach(folder => println("    "+folder.id+": "+folder.webTitle))
+    }
+
+    scenario("can query tags by folder") {
+      println("Tags by Folder: folder/traveleditorsindex/travelawards")
+      Api.tags.ids("folder/traveleditorsindex/travelawards").foreach(
+        tag => println("    "+tag.webTitle))
+    }
+
+    scenario("can query content by folder") {
+      println("Content by Folder: folder/traveleditorsindex/travelawards")
+      Api.item.itemId("folder/traveleditorsindex/travelawards").results.foreach(
+        content => println("    "+content.webTitle))
+    }
+
+    /**
+     * Note that this is similar to the above
+     */
+    scenario("can filter content search by folder") {
+      println("Content Search by Folder: folder/traveleditorsindex/travelawards")
+      Api.search.q("sausages").folder("folder/traveleditorsindex/travelawards").results.foreach(
+        content => println("    "+content.webTitle))
+    }
+  }
 }

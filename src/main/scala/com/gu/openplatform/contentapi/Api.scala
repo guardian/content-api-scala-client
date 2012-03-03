@@ -19,8 +19,21 @@ abstract class Api extends Http with JsonParser {
 
   def sections = new SectionsQuery
   def tags = new TagsQuery
+  def folders = new FoldersQuery
   def search = new SearchQuery
   def item = new ItemQuery
+
+  class FoldersQuery
+    extends GeneralParameters[FoldersQuery]
+    with FilterParameters[FoldersQuery] {
+    lazy val response = parseFolders(fetch(targetUrl + "/folders", parameters))
+  }
+
+  object FoldersQuery {
+    implicit def asResponse(q: FoldersQuery) = q.response
+    implicit def asSections(q: FoldersQuery) = q.response.results
+  }
+
 
   class SectionsQuery
     extends GeneralParameters[SectionsQuery]
@@ -111,6 +124,7 @@ abstract class Api extends Http with JsonParser {
     object section extends StringParameter(self, "section")
     object ids extends StringParameter(self, "ids")
     object tag extends StringParameter(self, "tag")
+    object folder extends StringParameter(self, "folder")
   }
 
   trait ContentFilterParameters[OwnerType <: ParameterHolder] extends FilterParameters[OwnerType] {
