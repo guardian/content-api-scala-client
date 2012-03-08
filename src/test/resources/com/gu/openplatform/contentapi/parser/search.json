@@ -2,110 +2,81 @@
   "response":{
     "status":"ok",
     "userTier":"free",
-    "total":1210879,
+    "total":1442171,
     "startIndex":1,
     "pageSize":2,
     "currentPage":1,
-    "pages":605440,
+    "pages":721086,
     "orderBy":"newest",
     "results":[{
-      "id":"edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events",
-      "sectionId":"edinburgh",
-      "sectionName":"Edinburgh",
-      "webPublicationDate":"2010-08-27T10:30:05+01:00",
-      "webTitle":"Map: Things to do across Edinburgh this Bank Holiday weekend",
-      "webUrl":"http://www.guardian.co.uk/edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events",
-      "apiUrl":"http://content.guardianapis.com/edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events",
-      "references": [
-          {
-            "type": "opta-football-team",
-            "id": "opta-football-team/8"
-          }
-      ],
+      "id":"world/middle-east-live/2012/feb/22/syria-yemen",
+      "sectionId":"world",
+      "sectionName":"World news",
+      "webPublicationDate":"2012-02-22T08:55:00Z",
+      "webTitle":"Journalists reported killed in Syria  \u2013 live updates",
+      "webUrl":"http://www.guardian.co.uk/world/middle-east-live/2012/feb/22/syria-yemen",
+      "apiUrl":"http://content.guardianapis.com/world/middle-east-live/2012/feb/22/syria-yemen",
       "fields":{
-        "headline":"Map: Things to do across Edinburgh this Bank Holiday weekend",
-        "trailText":"<p>Explore events for all ages going on in Edinburgh</p>",
-        "shortUrl":"http://gu.com/p/2javn",
-        "standfirst":"Explore events for all ages going on in Edinburgh",
-        "byline":"Michael MacLeod",
-        "publication":"guardian.co.uk"
+        "trailText":"<p>Claim of 500 defectors joining Free Syrian Army<br />Last day of Mubarak's trial in Egypt<br />Nine reported dead in Yemen election violence</p>",
+        "headline":"Journalists reported killed in Syria \u2013 live updates",
+        "showInRelatedContent":"true",
+        "lastModified":"2012-02-22T08:56:42Z",
+        "hasStoryPackage":"false",
+        "standfirst":"Claim of 500 defectors joining Free Syrian Army<br />Last day of Mubarak's trial in Egypt<br />Nine reported dead in Yemen election violence",
+        "shortUrl":"http://gu.com/p/35jmv",
+        "thumbnail":"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2012/2/21/1329868492281/House-in-the-city-of-Homs-002.jpg",
+        "commentable":"true",
+        "byline":"Brian Whitaker and Haroon Siddique",
+        "publication":"guardian.co.uk",
+        "shouldHideAdverts":"false",
+        "liveBloggingNow":"true"
       },
       "tags":[{
-        "id":"edinburgh/edinburgh",
+        "id":"world/middle-east-live",
         "type":"blog",
-        "webTitle":"Edinburgh",
-        "webUrl":"http://www.guardian.co.uk/edinburgh/edinburgh",
-        "apiUrl":"http://content.guardianapis.com/edinburgh/edinburgh",
-        "sectionId":"edinburgh",
-        "sectionName":"Edinburgh"
+        "webTitle":"Middle East Live",
+        "webUrl":"http://www.guardian.co.uk/world/middle-east-live",
+        "apiUrl":"http://content.guardianapis.com/world/middle-east-live",
+        "sectionId":"world",
+        "sectionName":"World news"
       },{
-        "id":"tone/blog",
+        "id":"tone/minutebyminute",
         "type":"tone",
-        "webTitle":"Blogposts",
-        "webUrl":"http://www.guardian.co.uk/tone/blog",
-        "apiUrl":"http://content.guardianapis.com/tone/blog"
+        "webTitle":"Minute by minutes",
+        "webUrl":"http://www.guardian.co.uk/tone/minutebyminute",
+        "apiUrl":"http://content.guardianapis.com/tone/minutebyminute"
       },{
-        "id":"profile/michael-macleod",
-        "type":"contributor",
-        "webTitle":"Michael MacLeod",
-        "webUrl":"http://www.guardian.co.uk/profile/michael-macleod",
-        "apiUrl":"http://content.guardianapis.com/profile/michael-macleod"
-      },{
-        "id":"type/article",
-        "type":"type",
-        "webTitle":"Article",
-        "webUrl":"http://www.guardian.co.uk/articles",
-        "apiUrl":"http://content.guardianapis.com/articles"
-      }]
-    },{
-      "id":"football/2010/aug/27/newcastle-steven-taylor-hatem-ben-arfa",
-      "sectionId":"football",
-      "sectionName":"Football",
-      "webPublicationDate":"2010-08-27T10:26:22+01:00",
-      "webTitle":"Newcastle hopeful over Steven Taylor and Hatem Ben Arfa deals",
-      "webUrl":"http://www.guardian.co.uk/football/2010/aug/27/newcastle-steven-taylor-hatem-ben-arfa",
-      "apiUrl":"http://content.guardianapis.com/football/2010/aug/27/newcastle-steven-taylor-hatem-ben-arfa",
-      "fields":{
-        "headline":"Newcastle hopeful over Steven Taylor and Hatem Ben Arfa deals",
-        "trailText":"Chris Hughton hopes Steven Taylor will stay and says talks are ongoing about bringing Hatem Ben Arfa to the club",
-        "shortUrl":"http://gu.com/p/2ja2h",
-        "standfirst":"\u2022 Chris Hughton confident Steven Taylor will stay<br />\u2022 Talks with Marseille over Hatem Ben Arfa 'ongoing'",
-        "thumbnail":"http://static.guim.co.uk/sys-images/Football/Pix/pictures/2010/3/27/1269708526219/Steven-Taylor-005.jpg",
-        "byline":"Press Association",
-        "publication":"guardian.co.uk"
-      },
-      "tags":[{
-        "id":"football/newcastleunited",
+        "id":"world/syria",
         "type":"keyword",
-        "webTitle":"Newcastle United",
-        "webUrl":"http://www.guardian.co.uk/football/newcastleunited",
-        "apiUrl":"http://content.guardianapis.com/football/newcastleunited",
-        "sectionId":"football",
-        "sectionName":"Football"
+        "webTitle":"Syria",
+        "webUrl":"http://www.guardian.co.uk/world/syria",
+        "apiUrl":"http://content.guardianapis.com/world/syria",
+        "sectionId":"world",
+        "sectionName":"World news"
       },{
-        "id":"football/football",
+        "id":"world/yemen",
         "type":"keyword",
-        "webTitle":"Football",
-        "webUrl":"http://www.guardian.co.uk/football/football",
-        "apiUrl":"http://content.guardianapis.com/football/football",
-        "sectionId":"football",
-        "sectionName":"Football"
+        "webTitle":"Yemen",
+        "webUrl":"http://www.guardian.co.uk/world/yemen",
+        "apiUrl":"http://content.guardianapis.com/world/yemen",
+        "sectionId":"world",
+        "sectionName":"World news"
       },{
-        "id":"football/transfer-window",
+        "id":"world/egypt",
         "type":"keyword",
-        "webTitle":"Transfer window",
-        "webUrl":"http://www.guardian.co.uk/football/transfer-window",
-        "apiUrl":"http://content.guardianapis.com/football/transfer-window",
-        "sectionId":"football",
-        "sectionName":"Football"
+        "webTitle":"Egypt",
+        "webUrl":"http://www.guardian.co.uk/world/egypt",
+        "apiUrl":"http://content.guardianapis.com/world/egypt",
+        "sectionId":"world",
+        "sectionName":"World news"
       },{
-        "id":"sport/sport",
+        "id":"world/bahrain",
         "type":"keyword",
-        "webTitle":"Sport",
-        "webUrl":"http://www.guardian.co.uk/sport/sport",
-        "apiUrl":"http://content.guardianapis.com/sport/sport",
-        "sectionId":"sport",
-        "sectionName":"Sport"
+        "webTitle":"Bahrain",
+        "webUrl":"http://www.guardian.co.uk/world/bahrain",
+        "apiUrl":"http://content.guardianapis.com/world/bahrain",
+        "sectionId":"world",
+        "sectionName":"World news"
       },{
         "id":"tone/news",
         "type":"tone",
@@ -113,24 +84,201 @@
         "webUrl":"http://www.guardian.co.uk/tone/news",
         "apiUrl":"http://content.guardianapis.com/tone/news"
       },{
+        "id":"world/world",
+        "type":"keyword",
+        "webTitle":"World news",
+        "webUrl":"http://www.guardian.co.uk/world/world",
+        "apiUrl":"http://content.guardianapis.com/world/world",
+        "sectionId":"world",
+        "sectionName":"World news"
+      },{
+        "id":"world/arab-and-middle-east-protests",
+        "type":"keyword",
+        "webTitle":"Arab and Middle East unrest",
+        "webUrl":"http://www.guardian.co.uk/world/arab-and-middle-east-protests",
+        "apiUrl":"http://content.guardianapis.com/world/arab-and-middle-east-protests",
+        "sectionId":"world",
+        "sectionName":"World news"
+      },{
+        "id":"world/middleeast",
+        "type":"keyword",
+        "webTitle":"Middle East and North Africa",
+        "webUrl":"http://www.guardian.co.uk/world/middleeast",
+        "apiUrl":"http://content.guardianapis.com/world/middleeast",
+        "sectionId":"world",
+        "sectionName":"World news"
+      },{
+        "id":"tone/blog",
+        "type":"tone",
+        "webTitle":"Blogposts",
+        "webUrl":"http://www.guardian.co.uk/tone/blog",
+        "apiUrl":"http://content.guardianapis.com/tone/blog"
+      },{
+        "id":"profile/brianwhitaker",
+        "type":"contributor",
+        "webTitle":"Brian Whitaker",
+        "webUrl":"http://www.guardian.co.uk/profile/brianwhitaker",
+        "apiUrl":"http://content.guardianapis.com/profile/brianwhitaker",
+        "bio":"<p>Brian Whitaker has done a variety of jobs at the Guardian including, most recently, seven years as Middle East editor. He is currently an editor on Comment is Free. He is the author of <a href=\"http://www.al-bab.com/unspeakablelove/\">Unspeakable Love: Gay and Lesbian Life in the Middle East</a> (Saqi, 2011) and <a href=\"http://www.al-bab.com/whatsreallywrong/\">What's <em>Really</em> Wrong with the Middle East</a> (Saqi, 2009)</p>",
+        "bylineImageUrl":"http://static.guim.co.uk/sys-images/Guardian/Pix/contributor/2007/10/03/brian_whitaker_140x140.jpg"
+      },{
+        "id":"profile/haroonsiddique",
+        "type":"contributor",
+        "webTitle":"Haroon Siddique",
+        "webUrl":"http://www.guardian.co.uk/profile/haroonsiddique",
+        "apiUrl":"http://content.guardianapis.com/profile/haroonsiddique",
+        "bio":"<p>Haroon Siddique is a news reporter on the Guardian website. He previously worked for North London institution the Ham&amp;High, and before pursuing his passion for journalism he was a commodity trader in the City</p>",
+        "bylineImageUrl":"http://static.guim.co.uk/artsblog/authorpics/haroon_siddique.jpg"
+      },{
         "id":"type/article",
         "type":"type",
         "webTitle":"Article",
         "webUrl":"http://www.guardian.co.uk/articles",
         "apiUrl":"http://content.guardianapis.com/articles"
       }]
+    },{
+      "id":"politics/2012/feb/22/staff-welfare-work-company-4ae-arrested",
+      "sectionId":"politics",
+      "sectionName":"Politics",
+      "webPublicationDate":"2012-02-22T08:54:35Z",
+      "webTitle":"Four former staff at welfare-to-work company A4e arrested in fraud inquiry",
+      "webUrl":"http://www.guardian.co.uk/politics/2012/feb/22/staff-welfare-work-company-4ae-arrested",
+      "apiUrl":"http://content.guardianapis.com/politics/2012/feb/22/staff-welfare-work-company-4ae-arrested",
+      "fields":{
+        "trailText":"Two men and two women arrested and bailed by police investigating fraud claims in government's work programme",
+        "headline":"Four former staff at welfare-to-work company A4e arrested in fraud inquiry",
+        "showInRelatedContent":"true",
+        "lastModified":"2012-02-22T08:54:35Z",
+        "hasStoryPackage":"false",
+        "standfirst":"Two men and two women arrested and bailed by police investigating fraud claims in government's work programme",
+        "shortUrl":"http://gu.com/p/35jm3",
+        "thumbnail":"http://static.guim.co.uk/sys-images/Guardian/About/General/2012/2/22/1329900602337/CBI-Conference-003.jpg",
+        "commentable":"false",
+        "byline":"Press Association",
+        "publication":"The Guardian",
+        "newspaperEditionDate":"2012-02-23",
+        "shouldHideAdverts":"false",
+        "liveBloggingNow":"false"
+      },
+      "tags":[{
+        "id":"politics/welfare",
+        "type":"keyword",
+        "webTitle":"Welfare",
+        "webUrl":"http://www.guardian.co.uk/politics/welfare",
+        "apiUrl":"http://content.guardianapis.com/politics/welfare",
+        "sectionId":"politics",
+        "sectionName":"Politics"
+      },{
+        "id":"politics/politics",
+        "type":"keyword",
+        "webTitle":"Politics",
+        "webUrl":"http://www.guardian.co.uk/politics/politics",
+        "apiUrl":"http://content.guardianapis.com/politics/politics",
+        "sectionId":"politics",
+        "sectionName":"Politics"
+      },{
+        "id":"society/unemployment",
+        "type":"keyword",
+        "webTitle":"Unemployment",
+        "webUrl":"http://www.guardian.co.uk/society/unemployment",
+        "apiUrl":"http://content.guardianapis.com/society/unemployment",
+        "sectionId":"society",
+        "sectionName":"Society"
+      },{
+        "id":"society/society",
+        "type":"keyword",
+        "webTitle":"Society",
+        "webUrl":"http://www.guardian.co.uk/society/society",
+        "apiUrl":"http://content.guardianapis.com/society/society",
+        "sectionId":"society",
+        "sectionName":"Society"
+      },{
+        "id":"uk/uk",
+        "type":"keyword",
+        "webTitle":"UK news",
+        "webUrl":"http://www.guardian.co.uk/uk/uk",
+        "apiUrl":"http://content.guardianapis.com/uk/uk",
+        "sectionId":"uk",
+        "sectionName":"UK news"
+      },{
+        "id":"tone/news",
+        "type":"tone",
+        "webTitle":"News",
+        "webUrl":"http://www.guardian.co.uk/tone/news",
+        "apiUrl":"http://content.guardianapis.com/tone/news"
+      },{
+        "id":"theguardian/mainsection/uknews",
+        "type":"newspaper-book-section",
+        "webTitle":"UK news",
+        "webUrl":"http://www.guardian.co.uk/theguardian/mainsection/uknews",
+        "apiUrl":"http://content.guardianapis.com/theguardian/mainsection/uknews",
+        "sectionId":"uk",
+        "sectionName":"UK news"
+      },{
+        "id":"theguardian/mainsection",
+        "type":"newspaper-book",
+        "webTitle":"Main section",
+        "webUrl":"http://www.guardian.co.uk/theguardian/mainsection",
+        "apiUrl":"http://content.guardianapis.com/theguardian/mainsection",
+        "sectionId":"news",
+        "sectionName":"News"
+      },{
+        "id":"type/article",
+        "type":"type",
+        "webTitle":"Article",
+        "webUrl":"http://www.guardian.co.uk/articles",
+        "apiUrl":"http://content.guardianapis.com/articles"
+      },{
+        "id":"publication/theguardian",
+        "type":"publication",
+        "webTitle":"The Guardian",
+        "webUrl":"http://www.guardian.co.uk/theguardian/all",
+        "apiUrl":"http://content.guardianapis.com/theguardian/all",
+        "sectionId":"theguardian",
+        "sectionName":"From the Guardian"
+      }]
     }],
     "refinementGroups":[{
+      "type":"date",
+      "refinements":[{
+        "count":62,
+        "refinedUrl":"http://content.guardianapis.com/search?from-date=2012-02-22&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&to-date=2012-02-22",
+        "displayName":"Today",
+        "id":"date/today",
+        "apiUrl":"http://content.guardianapis.com/search?from-date=2012-02-22&to-date=2012-02-22"
+      },{
+        "count":428,
+        "refinedUrl":"http://content.guardianapis.com/search?from-date=2012-02-21&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&to-date=2012-02-21",
+        "displayName":"Yesterday",
+        "id":"date/yesterday",
+        "apiUrl":"http://content.guardianapis.com/search?from-date=2012-02-21&to-date=2012-02-21"
+      }]
+    },{
+      "type":"section",
+      "refinements":[{
+        "count":169373,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&section=world&show-fields=all&show-refinements=all&show-tags=all",
+        "displayName":"World news",
+        "id":"world",
+        "apiUrl":"http://content.guardianapis.com/world"
+      },{
+        "count":112008,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&section=sport&show-fields=all&show-refinements=all&show-tags=all",
+        "displayName":"Sport",
+        "id":"sport",
+        "apiUrl":"http://content.guardianapis.com/sport"
+      }]
+    },{
       "type":"keyword",
       "refinements":[{
-        "count":256463,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=uk/uk",
+        "count":291129,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=uk/uk",
         "displayName":"UK news",
         "id":"uk/uk",
         "apiUrl":"http://content.guardianapis.com/uk/uk"
       },{
-        "count":207418,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=world/world",
+        "count":245157,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=world/world",
         "displayName":"World news",
         "id":"world/world",
         "apiUrl":"http://content.guardianapis.com/world/world"
@@ -138,92 +286,122 @@
     },{
       "type":"type",
       "refinements":[{
-        "count":1167622,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=type/article",
+        "count":1377904,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=type/article",
         "displayName":"Article",
         "id":"type/article",
         "apiUrl":"http://content.guardianapis.com/articles"
       },{
-        "count":10838,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=type/gallery",
-        "displayName":"Gallery",
-        "id":"type/gallery",
-        "apiUrl":"http://content.guardianapis.com/inpictures"
-      }]
-    },{
-      "type":"contributor",
-      "refinements":[{
-        "count":8300,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=profile/jackschofield",
-        "displayName":"Jack Schofield",
-        "id":"profile/jackschofield",
-        "apiUrl":"http://content.guardianapis.com/profile/jackschofield"
-      },{
-        "count":6724,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=profile/roygreenslade",
-        "displayName":"Roy Greenslade",
-        "id":"profile/roygreenslade",
-        "apiUrl":"http://content.guardianapis.com/profile/roygreenslade"
+        "count":22664,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=type/document",
+        "displayName":"Document",
+        "id":"type/document",
+        "apiUrl":"http://content.guardianapis.com/documents"
       }]
     },{
       "type":"tone",
       "refinements":[{
-        "count":126633,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=tone/news",
+        "count":198265,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=tone/news",
         "displayName":"News",
         "id":"tone/news",
         "apiUrl":"http://content.guardianapis.com/tone/news"
       },{
-        "count":110283,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=tone/comment",
+        "count":131796,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=tone/comment",
         "displayName":"Comment",
         "id":"tone/comment",
         "apiUrl":"http://content.guardianapis.com/tone/comment"
       }]
     },{
-      "type":"section",
+      "type":"newspaper-book",
       "refinements":[{
-        "count":125848,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&section=world&show-fields=all&show-refinements=all&show-tags=all",
-        "displayName":"World news",
-        "id":"world",
-        "apiUrl":"http://content.guardianapis.com/world"
+        "count":159590,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=theguardian/mainsection",
+        "displayName":"Main section",
+        "id":"theguardian/mainsection",
+        "apiUrl":"http://content.guardianapis.com/theguardian/mainsection"
       },{
-        "count":94898,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&section=sport&show-fields=all&show-refinements=all&show-tags=all",
+        "count":60317,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=theguardian/sport",
         "displayName":"Sport",
-        "id":"sport",
-        "apiUrl":"http://content.guardianapis.com/sport"
+        "id":"theguardian/sport",
+        "apiUrl":"http://content.guardianapis.com/theguardian/sport"
       }]
     },{
-      "type":"series",
+      "type":"contributor",
       "refinements":[{
-        "count":3476,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=crosswords/series/quick",
-        "displayName":"Quick",
-        "id":"crosswords/series/quick",
-        "apiUrl":"http://content.guardianapis.com/crosswords/series/quick"
+        "count":8451,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=profile/roygreenslade",
+        "displayName":"Roy Greenslade",
+        "id":"profile/roygreenslade",
+        "apiUrl":"http://content.guardianapis.com/profile/roygreenslade"
       },{
-        "count":3340,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=theguardian/series/correctionsandclarifications",
-        "displayName":"Corrections and clarifications",
-        "id":"theguardian/series/correctionsandclarifications",
-        "apiUrl":"http://content.guardianapis.com/theguardian/series/correctionsandclarifications"
+        "count":8378,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=profile/jackschofield",
+        "displayName":"Jack Schofield",
+        "id":"profile/jackschofield",
+        "apiUrl":"http://content.guardianapis.com/profile/jackschofield"
+      }]
+    },{
+      "type":"newspaper-book-section",
+      "refinements":[{
+        "count":32846,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=theguardian/g2/features",
+        "displayName":"Comment & features",
+        "id":"theguardian/g2/features",
+        "apiUrl":"http://content.guardianapis.com/theguardian/g2/features"
+      },{
+        "count":28761,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=theguardian/mainsection/uknews",
+        "displayName":"UK news",
+        "id":"theguardian/mainsection/uknews",
+        "apiUrl":"http://content.guardianapis.com/theguardian/mainsection/uknews"
       }]
     },{
       "type":"blog",
       "refinements":[{
-        "count":51780,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=commentisfree/commentisfree",
+        "count":67787,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=commentisfree/commentisfree",
         "displayName":"Comment is free",
         "id":"commentisfree/commentisfree",
         "apiUrl":"http://content.guardianapis.com/commentisfree/commentisfree"
       },{
-        "count":15109,
-        "refinedUrl":"http://content.guardianapis.com/search?format=json&page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=sport/blog",
+        "count":20825,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=sport/blog",
         "displayName":"Sportblog",
         "id":"sport/blog",
         "apiUrl":"http://content.guardianapis.com/sport/blog"
+      }]
+    },{
+      "type":"series",
+      "refinements":[{
+        "count":21058,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=world/series/sarah-palin-emails-the-documents",
+        "displayName":"Sarah Palin emails: the documents",
+        "id":"world/series/sarah-palin-emails-the-documents",
+        "apiUrl":"http://content.guardianapis.com/world/series/sarah-palin-emails-the-documents"
+      },{
+        "count":3941,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=crosswords/series/quick",
+        "displayName":"Quick",
+        "id":"crosswords/series/quick",
+        "apiUrl":"http://content.guardianapis.com/crosswords/series/quick"
+      }]
+    },{
+      "type":"publication",
+      "refinements":[{
+        "count":710414,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=publication/theguardian",
+        "displayName":"The Guardian",
+        "id":"publication/theguardian",
+        "apiUrl":"http://content.guardianapis.com/theguardian/all"
+      },{
+        "count":148260,
+        "refinedUrl":"http://content.guardianapis.com/search?page-size=2&refinement-size=2&show-fields=all&show-refinements=all&show-tags=all&tag=publication/theobserver",
+        "displayName":"The Observer",
+        "id":"publication/theobserver",
+        "apiUrl":"http://content.guardianapis.com/theobserver/all"
       }]
     }]
   }

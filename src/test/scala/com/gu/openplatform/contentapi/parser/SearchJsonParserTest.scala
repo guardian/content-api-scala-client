@@ -26,63 +26,76 @@ class SearchJsonParserTest extends FlatSpec with ShouldMatchers {
     searchResponse.startIndex should be (1)
     searchResponse.pageSize should be (2)
     searchResponse.currentPage should be (1)
-    searchResponse.pages should be (605440)
-    searchResponse.total should be (1210879)
+    searchResponse.pages should be (721086)
+    searchResponse.total should be (1442171)
   }
 
   it should "have parse content correctly" in {
     searchResponse.results.size should be (2)
     val content = searchResponse.results.head
-    content.id should be ("edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events")
-    content.sectionId should be (Some("edinburgh"))
-    content.sectionName should be (Some("Edinburgh"))
-    content.webPublicationDate should be (new DateTime(2010, 8, 27, 10, 30, 05, 0))
-    content.webTitle should be ("Map: Things to do across Edinburgh this Bank Holiday weekend")
-    content.webUrl should be ("http://www.guardian.co.uk/edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events")
-    content.apiUrl should be ("http://content.guardianapis.com/edinburgh/2010/aug/27/edinburgh-map-bank-holiday-events")
+    content.id should be ("world/middle-east-live/2012/feb/22/syria-yemen")
+    content.sectionId should be (Some("world"))
+    content.sectionName should be (Some("World news"))
+    content.webPublicationDate should be (new DateTime(2012, 2, 22, 8, 55, 0, 0))
+    content.webTitle should be ("Journalists reported killed in Syria  \u2013 live updates")
+    content.webUrl should be ("http://www.guardian.co.uk/world/middle-east-live/2012/feb/22/syria-yemen")
+    content.apiUrl should be ("http://content.guardianapis.com/world/middle-east-live/2012/feb/22/syria-yemen")
   }
 
   it should "parse fields" in {
     val fields = searchResponse.results.head.fields
 
     fields should be (Some(Map(
-        "headline" -> "Map: Things to do across Edinburgh this Bank Holiday weekend",
-        "trailText" -> "<p>Explore events for all ages going on in Edinburgh</p>",
-        "shortUrl" -> "http://gu.com/p/2javn",
-        "standfirst" -> "Explore events for all ages going on in Edinburgh",
-        "byline" -> "Michael MacLeod",
-        "publication" -> "guardian.co.uk"
+      "trailText"->"<p>Claim of 500 defectors joining Free Syrian Army<br />Last day of Mubarak's trial in Egypt<br />Nine reported dead in Yemen election violence</p>",
+    "headline"->"Journalists reported killed in Syria \u2013 live updates",
+    "showInRelatedContent"->"true",
+    "lastModified"->"2012-02-22T08:56:42Z",
+    "hasStoryPackage"->"false",
+    "standfirst"->"Claim of 500 defectors joining Free Syrian Army<br />Last day of Mubarak's trial in Egypt<br />Nine reported dead in Yemen election violence",
+    "shortUrl"->"http://gu.com/p/35jmv",
+    "thumbnail"->"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2012/2/21/1329868492281/House-in-the-city-of-Homs-002.jpg",
+    "commentable"->"true",
+    "byline"->"Brian Whitaker and Haroon Siddique",
+    "publication"->"guardian.co.uk",
+    "shouldHideAdverts"->"false",
+    "liveBloggingNow"->"true"
       )))
   }
 
   it should "parse tags" in {
     val tags = searchResponse.results.head.tags
 
-    tags.size should be (4)
+    tags.size should be (14)
 
     val edinburgh = tags.head
-    edinburgh.id should be ("edinburgh/edinburgh")
+    edinburgh.id should be ("world/middle-east-live")
     edinburgh.tagType should be ("blog")
-    edinburgh.webTitle should be ("Edinburgh")
-    edinburgh.webUrl should be ("http://www.guardian.co.uk/edinburgh/edinburgh")
-    edinburgh.apiUrl should be ("http://content.guardianapis.com/edinburgh/edinburgh")
-    edinburgh.sectionId should be (Some("edinburgh"))
-    edinburgh.sectionName should be (Some("Edinburgh"))
+    edinburgh.webTitle should be ("Middle East Live")
+    edinburgh.webUrl should be ("http://www.guardian.co.uk/world/middle-east-live")
+    edinburgh.apiUrl should be ("http://content.guardianapis.com/world/middle-east-live")
+    edinburgh.sectionId should be (Some("world"))
+    edinburgh.sectionName should be (Some("World news"))
 
     // and check optional sections work
+    tags(1).id should be ("tone/minutebyminute")
     tags(1).sectionId should be (None)
+
+    // and check optional contributor bios
+    tags(11).id should be ("profile/brianwhitaker")
+    tags(11).bio should be (Some("<p>Brian Whitaker has done a variety of jobs at the Guardian including, most recently, seven years as Middle East editor. He is currently an editor on Comment is Free. He is the author of <a href=\"http://www.al-bab.com/unspeakablelove/\">Unspeakable Love: Gay and Lesbian Life in the Middle East</a> (Saqi, 2011) and <a href=\"http://www.al-bab.com/whatsreallywrong/\">What's <em>Really</em> Wrong with the Middle East</a> (Saqi, 2009)</p>"))
+    tags(11).bylineImageUrl should be (Some("http://static.guim.co.uk/sys-images/Guardian/Pix/contributor/2007/10/03/brian_whitaker_140x140.jpg"))
   }
 
   it should "parse refinement groups" in {
     val refinements = searchResponse.refinementGroups
 
-    refinements.size should be (7)
+    refinements.size should be (11)
     val keywords = refinements.head
-    keywords.`type` should be ("keyword")
+    keywords.`type` should be ("date")
     keywords.refinements.size should be (2)
 
-    keywords.refinements.head.count should be (256463)
-    keywords.refinements.head.displayName should be ("UK news")
+    keywords.refinements.head.count should be (62)
+    keywords.refinements.head.displayName should be ("Today")
   }
 
   it should "parse factboxes" in {
@@ -116,7 +129,6 @@ class SearchJsonParserTest extends FlatSpec with ShouldMatchers {
   }
 
   it should "parse references" in {
-    searchResponse.results.head.references.head.`type` should be ("opta-football-team")
-    searchResponse.results.head.references.head.id should be ("opta-football-team/8")
+    searchResponse.results.head.references.size should be (0)
   }
 }

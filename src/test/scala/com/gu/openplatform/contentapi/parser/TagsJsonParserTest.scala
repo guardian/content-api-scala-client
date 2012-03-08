@@ -20,12 +20,13 @@ class TagsJsonParserTest extends FlatSpec with ShouldMatchers {
     tagsResponse.startIndex should be (1)
     tagsResponse.pageSize should be (2)
     tagsResponse.currentPage should be (1)
-    tagsResponse.pages should be (10367)
-    tagsResponse.total should be (20733)
+    tagsResponse.pages should be (14619)
+    tagsResponse.total should be (29238)
   }
 
   it should "parse the tags" in {
     tagsResponse.results.size should be (2)
-    tagsResponse.results.head.webTitle should be ("South-west")
+    tagsResponse.results.head.webTitle should be ("Mohamed Abdul Malek")
+    tagsResponse.results.head.bio should be (Some("<p>Mohamed Abdul Malek is chairman of Libya Watch</p>"))
   }
 }
