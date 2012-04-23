@@ -1,6 +1,6 @@
 name := "content-api-client"
 
-version := "1.14-SNAPSHOT"
+version := "1.15-SNAPSHOT"
 
 organization := "com.gu.openplatform"
 
