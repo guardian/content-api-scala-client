@@ -177,6 +177,12 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       println("loaded " + item.content.get.webTitle)
     }
 
+    scenario("loading lead content for a tag") {
+      val item = Api.item.itemId("world/iraq")
+      item.leadContent.size should  be > (0)
+      item.leadContent.foreach (item => println(item.webTitle))
+    }
+
     scenario("loading a stories story package") {
 
       // look at the content on the homepage and find the first item that has a package
