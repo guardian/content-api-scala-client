@@ -149,6 +149,7 @@ abstract class Api extends Http with JsonParser {
     object showBestBets extends BoolParameter(self, "show-best-bets")
     object snippetPre extends StringParameter(self, "snippet-pre")
     object snippetPost extends StringParameter(self, "snippet-post")
+    object showInlineElements extends StringParameter(self, "show-inline-elements")
   }
 
   trait RefinementParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
