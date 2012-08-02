@@ -7,9 +7,8 @@ import java.net.{URL, HttpURLConnection}
 import org.apache.commons.httpclient.{MultiThreadedHttpConnectionManager, HttpClient}
 import io.{Codec, Source}
 import dispatch._
-import com.ning.http.client.{Response, ProxyServer, AsyncHttpClientConfig, AsyncHttpClient}
-import com.ning.http.client.Response.ResponseBuilder
-import java.util.zip.GZIPInputStream
+import com.ning.http.client._
+import providers.netty.{NettyAsyncHttpProvider, NettyConnectionsPool}
 
 
 case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
@@ -97,18 +96,22 @@ trait DispatchHttp extends Http {
   val proxy: Option[Proxy] = None
   val compressionEnabled: Boolean = true
 
+  val config = {
+    val c = new AsyncHttpClientConfig.Builder()
+      .setAllowPoolingConnection(true)
+      .setMaximumConnectionsPerHost(maxConnections)
+      .setMaximumConnectionsTotal(maxConnections)
+      .setConnectionTimeoutInMs(connectionTimeoutInMs)
+      .setRequestTimeoutInMs(requestTimeoutInMs)
+      .setCompressionEnabled(compressionEnabled)
+    proxy.foreach(p => c.setProxyServer(new ProxyServer(p.host, p.port)))
+    c.build
+  }
+
   object Client extends dispatch.Http {
     override lazy val client = {
-      val config = new AsyncHttpClientConfig.Builder()
-        .setMaximumConnectionsPerHost(maxConnections)
-        .setMaximumConnectionsTotal(maxConnections)
-        .setConnectionTimeoutInMs(connectionTimeoutInMs)
-        .setRequestTimeoutInMs(requestTimeoutInMs)
-        .setCompressionEnabled(compressionEnabled)
-
-      proxy.foreach(p => config.setProxyServer(new ProxyServer(p.host, p.port)))
-
-      new AsyncHttpClient(config.build)
+      val connectionPool = new NettyConnectionsPool(new NettyAsyncHttpProvider(config))
+      new AsyncHttpClient(new AsyncHttpClientConfig.Builder(config).setConnectionsPool(connectionPool).build)
     }
   }
 
@@ -128,7 +131,6 @@ trait DispatchHttp extends Http {
   )
 
   def close() = Client.client.close()
-
 }
 
 

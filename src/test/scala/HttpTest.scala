@@ -1,8 +1,7 @@
 import com.gu.openplatform.contentapi.Api
 import com.gu.openplatform.contentapi.connection._
-import org.joda.time.DateMidnight
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.{FlatSpec, BeforeAndAfterEach, FeatureSpec}
+import org.scalatest.{FlatSpec, BeforeAndAfterEach}
 
 class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
 
@@ -21,7 +20,8 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
   }
 
   "DispatchHttp" should "be able to call the api" in {
-    testClient(new Api with DispatchHttp)
+    val api = new Api with DispatchHttp
+    testClient(api)
   }
 
   override protected def beforeEach() {
