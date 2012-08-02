@@ -127,6 +127,8 @@ trait DispatchHttp extends Http {
     HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText)
   )
 
+  def close() = Client.client.close()
+
 }
 
 
