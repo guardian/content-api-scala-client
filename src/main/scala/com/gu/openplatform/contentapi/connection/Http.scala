@@ -6,6 +6,11 @@ import org.apache.commons.httpclient.methods.GetMethod
 import java.net.{URL, HttpURLConnection}
 import org.apache.commons.httpclient.{MultiThreadedHttpConnectionManager, HttpClient}
 import io.{Codec, Source}
+import dispatch._
+import com.ning.http.client.{Response, ProxyServer, AsyncHttpClientConfig, AsyncHttpClient}
+import com.ning.http.client.Response.ResponseBuilder
+import java.util.zip.GZIPInputStream
+
 
 case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
 
@@ -15,6 +20,7 @@ trait Http {
   def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse
 }
 
+case class Proxy(host: String, port: Int)
 
 // an implementation using apache http client, note this just uses the default connection manager
 // and does not support multithreaded use.
@@ -81,6 +87,50 @@ trait JavaNetHttp extends Http {
     new HttpResponse(responseBody, connection.getResponseCode, connection.getResponseMessage)
   }
 
+}
+
+trait DispatchGzipHttp extends Http {
+
+  val maxConnections = 10
+  val connectionTimeoutInMs = 1000
+  val requestTimeoutInMs = 2000
+  val proxy: Option[Proxy] = None
+
+  object Client extends dispatch.Http {
+    override lazy val client = {
+      val config = new AsyncHttpClientConfig.Builder()
+        .setMaximumConnectionsPerHost(maxConnections)
+        .setMaximumConnectionsTotal(maxConnections)
+        .setConnectionTimeoutInMs(connectionTimeoutInMs)
+        .setRequestTimeoutInMs(requestTimeoutInMs)
+
+      proxy.foreach(p => config.setProxyServer(new ProxyServer(p.host, p.port)))
+
+      new AsyncHttpClient(config.build)
+    }
+  }
+
+  def GET(urlString: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse = {
+
+    val request = {
+      val r = url(urlString)
+      headers.foreach{case (name, value) => r.setHeader(name, value)}
+      r.setHeader("Accept-Encoding", "gzip")
+      r.build
+    }
+
+    Client(request, new FunctionHandler(gzipHandler))()
+  }
+
+  private def gzipHandler(response: Response) = {
+    val encoding = Option(response.getHeader("Content-Encoding")).getOrElse("")
+    val isGzipped = encoding.equalsIgnoreCase("gzip")
+    val body = if (isGzipped) unzip(response) else response.getResponseBody
+    new HttpResponse(body, response.getStatusCode, response.getStatusText)
+  }
+
+  private def unzip(response: Response) =
+    Source.fromInputStream(new GZIPInputStream(response.getResponseBodyAsStream)).mkString
 }
 
 
