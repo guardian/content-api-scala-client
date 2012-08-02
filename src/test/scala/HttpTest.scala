@@ -1,5 +1,5 @@
 import com.gu.openplatform.contentapi.Api
-import com.gu.openplatform.contentapi.connection.{DispatchGzipHttp, JavaNetHttp, MultiThreadedApacheHttpClient, ApacheHttpClient}
+import com.gu.openplatform.contentapi.connection._
 import org.joda.time.DateMidnight
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{FlatSpec, BeforeAndAfterEach, FeatureSpec}
@@ -20,8 +20,8 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
     testClient(new Api with JavaNetHttp)
   }
 
-  "DispatchGzipHttp" should "be able to call the api" in {
-    testClient(new Api with DispatchGzipHttp)
+  "DispatchHttp" should "be able to call the api" in {
+    testClient(new Api with DispatchHttp)
   }
 
   override protected def beforeEach() {

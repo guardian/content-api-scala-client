@@ -89,12 +89,13 @@ trait JavaNetHttp extends Http {
 
 }
 
-trait DispatchGzipHttp extends Http {
+trait DispatchHttp extends Http {
 
-  val maxConnections = 10
-  val connectionTimeoutInMs = 1000
-  val requestTimeoutInMs = 2000
+  val maxConnections: Int = 10
+  val connectionTimeoutInMs: Int = 1000
+  val requestTimeoutInMs: Int = 2000
   val proxy: Option[Proxy] = None
+  val compressionEnabled: Boolean = true
 
   object Client extends dispatch.Http {
     override lazy val client = {
@@ -103,6 +104,7 @@ trait DispatchGzipHttp extends Http {
         .setMaximumConnectionsTotal(maxConnections)
         .setConnectionTimeoutInMs(connectionTimeoutInMs)
         .setRequestTimeoutInMs(requestTimeoutInMs)
+        .setCompressionEnabled(compressionEnabled)
 
       proxy.foreach(p => config.setProxyServer(new ProxyServer(p.host, p.port)))
 
@@ -115,22 +117,16 @@ trait DispatchGzipHttp extends Http {
     val request = {
       val r = url(urlString)
       headers.foreach{case (name, value) => r.setHeader(name, value)}
-      r.setHeader("Accept-Encoding", "gzip")
       r.build
     }
 
-    Client(request, new FunctionHandler(gzipHandler))()
+    Client(request, httpResponseHandler)()
   }
 
-  private def gzipHandler(response: Response) = {
-    val encoding = Option(response.getHeader("Content-Encoding")).getOrElse("")
-    val isGzipped = encoding.equalsIgnoreCase("gzip")
-    val body = if (isGzipped) unzip(response) else response.getResponseBody
-    new HttpResponse(body, response.getStatusCode, response.getStatusText)
-  }
+  def httpResponseHandler = new FunctionHandler(r =>
+    HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText)
+  )
 
-  private def unzip(response: Response) =
-    Source.fromInputStream(new GZIPInputStream(response.getResponseBodyAsStream)).mkString
 }
 
 
