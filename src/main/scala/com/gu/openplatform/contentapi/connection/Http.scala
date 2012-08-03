@@ -90,13 +90,13 @@ trait JavaNetHttp extends Http {
 
 trait DispatchHttp extends Http {
 
-  val maxConnections: Int = 10
-  val connectionTimeoutInMs: Int = 1000
-  val requestTimeoutInMs: Int = 2000
-  val proxy: Option[Proxy] = None
-  val compressionEnabled: Boolean = true
+  lazy val maxConnections: Int = 10
+  lazy val connectionTimeoutInMs: Int = 1000
+  lazy val requestTimeoutInMs: Int = 2000
+  lazy val proxy: Option[Proxy] = None
+  lazy val compressionEnabled: Boolean = true
 
-  val config = {
+  lazy val config = {
     val c = new AsyncHttpClientConfig.Builder()
       .setAllowPoolingConnection(true)
       .setMaximumConnectionsPerHost(maxConnections)
