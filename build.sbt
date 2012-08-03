@@ -1,6 +1,6 @@
 name := "content-api-client"
 
-version := "1.16-SNAPSHOT"
+version := "1.17-SNAPSHOT"
 
 organization := "com.gu.openplatform"
 
@@ -16,7 +16,8 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
   "commons-httpclient" % "commons-httpclient" % "3.1",
-  "net.liftweb" %% "lift-json" % "2.4-M4"
+  "net.liftweb" %% "lift-json" % "2.4",
+  "net.databinder.dispatch" %% "core" % "0.9.0"
 )
 
 libraryDependencies <<= (scalaVersion, libraryDependencies) { (sv, deps) =>
