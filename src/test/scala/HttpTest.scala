@@ -24,6 +24,13 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
     testClient(api)
   }
 
+  "DispatchHttp" should "follow redirects" in {
+    val api = new Api with DispatchHttp
+
+    //redirects to /video
+    api.item.itemId("type/video").response.tag.get.id should be("type/video")
+  }
+
   override protected def beforeEach() {
     // avoid upsetting rate limit of free tier,
     Thread.sleep(500)

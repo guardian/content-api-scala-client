@@ -104,6 +104,7 @@ trait DispatchHttp extends Http {
       .setConnectionTimeoutInMs(connectionTimeoutInMs)
       .setRequestTimeoutInMs(requestTimeoutInMs)
       .setCompressionEnabled(compressionEnabled)
+      .setFollowRedirects(true)
     proxy.foreach(p => c.setProxyServer(new ProxyServer(p.host, p.port)))
     c.build
   }
