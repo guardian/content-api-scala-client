@@ -6,6 +6,10 @@ import org.apache.commons.httpclient.methods.GetMethod
 import java.net.{URL, HttpURLConnection}
 import org.apache.commons.httpclient.{MultiThreadedHttpConnectionManager, HttpClient}
 import io.{Codec, Source}
+import dispatch._
+import com.ning.http.client._
+import providers.netty.{NettyAsyncHttpProvider, NettyConnectionsPool}
+
 
 case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
 
@@ -15,6 +19,7 @@ trait Http {
   def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse
 }
 
+case class Proxy(host: String, port: Int)
 
 // an implementation using apache http client, note this just uses the default connection manager
 // and does not support multithreaded use.
@@ -81,6 +86,51 @@ trait JavaNetHttp extends Http {
     new HttpResponse(responseBody, connection.getResponseCode, connection.getResponseMessage)
   }
 
+}
+
+trait DispatchHttp extends Http {
+
+  lazy val maxConnections: Int = 10
+  lazy val connectionTimeoutInMs: Int = 1000
+  lazy val requestTimeoutInMs: Int = 2000
+  lazy val proxy: Option[Proxy] = None
+  lazy val compressionEnabled: Boolean = true
+
+  lazy val config = {
+    val c = new AsyncHttpClientConfig.Builder()
+      .setAllowPoolingConnection(true)
+      .setMaximumConnectionsPerHost(maxConnections)
+      .setMaximumConnectionsTotal(maxConnections)
+      .setConnectionTimeoutInMs(connectionTimeoutInMs)
+      .setRequestTimeoutInMs(requestTimeoutInMs)
+      .setCompressionEnabled(compressionEnabled)
+    proxy.foreach(p => c.setProxyServer(new ProxyServer(p.host, p.port)))
+    c.build
+  }
+
+  object Client extends dispatch.Http {
+    override lazy val client = {
+      val connectionPool = new NettyConnectionsPool(new NettyAsyncHttpProvider(config))
+      new AsyncHttpClient(new AsyncHttpClientConfig.Builder(config).setConnectionsPool(connectionPool).build)
+    }
+  }
+
+  def GET(urlString: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse = {
+
+    val request = {
+      val r = url(urlString)
+      headers.foreach{case (name, value) => r.setHeader(name, value)}
+      r.build
+    }
+
+    Client(request, httpResponseHandler)()
+  }
+
+  def httpResponseHandler = new FunctionHandler(r =>
+    HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText)
+  )
+
+  def close() = Client.client.close()
 }
 
 
