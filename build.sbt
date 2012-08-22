@@ -6,7 +6,7 @@ organization := "com.gu.openplatform"
 
 scalaVersion := "2.9.1"
 
-crossScalaVersions ++= Seq("2.9.0-1", "2.8.1", "2.8.0")
+crossScalaVersions ++= Seq("2.9.0-1")
 
 resolvers ++= Seq(
   "Scala Tools Repository" at "http://scala-tools.org/repo-releases",
