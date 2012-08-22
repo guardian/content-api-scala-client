@@ -4,9 +4,9 @@ version := "1.18-SNAPSHOT"
 
 organization := "com.gu.openplatform"
 
-scalaVersion := "2.9.1"
+scalaVersion := "2.9.2"
 
-crossScalaVersions ++= Seq("2.9.0-1")
+crossScalaVersions ++= Seq("2.9.0-1", "2.9.1")
 
 resolvers ++= Seq(
   "Scala Tools Repository" at "http://scala-tools.org/repo-releases",
@@ -17,19 +17,9 @@ libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
   "commons-httpclient" % "commons-httpclient" % "3.1",
   "net.liftweb" %% "lift-json" % "2.4",
-  "net.databinder.dispatch" %% "core" % "0.9.0"
+  "net.databinder.dispatch" %% "core" % "0.9.0",
+  "org.scalatest" %% "scalatest" % "1.8" % "test"
 )
-
-libraryDependencies <<= (scalaVersion, libraryDependencies) { (sv, deps) =>
-    val scalaTestVersion = sv match {
-       case "2.8.0" => "1.3.1.RC2"
-       case "2.8.1" => "1.5.1"
-       case "2.9.0-1" => "1.6.1"
-       case "2.9.1" => "1.6.1"
-       case _ => error("Unsupported Scala version " + sv)
-    }
-    deps :+ ("org.scalatest" %% "scalatest" % scalaTestVersion % "test")
-}
 
 publishTo <<= (version) { version: String =>
     val publishType = if (version.endsWith("SNAPSHOT")) "snapshots" else "releases"
