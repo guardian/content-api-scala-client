@@ -19,16 +19,16 @@ abstract class Parameter[ThisType, OwnerType <: ParameterHolder](owner: OwnerTyp
   owner.register(this)
 }
 
-class StringParameter[OwnerType <: ParameterHolder](owner: OwnerType, name: String)
+case class StringParameter[OwnerType <: ParameterHolder](name: String)(implicit owner: OwnerType)
   extends Parameter[String, OwnerType](owner, name)
-
-class IntParameter[OwnerType <: ParameterHolder](owner: OwnerType, name: String)
+    
+case class IntParameter[OwnerType <: ParameterHolder](name: String)(implicit owner: OwnerType)
   extends Parameter[Int, OwnerType](owner, name)
 
-class DateParameter[OwnerType <: ParameterHolder](owner: OwnerType, name: String)
+case class DateParameter[OwnerType <: ParameterHolder](name: String)(implicit owner: OwnerType)
   extends Parameter[ReadableInstant, OwnerType](owner, name)
 
-class BoolParameter[OwnerType <: ParameterHolder](owner: OwnerType, name: String)
+case class BoolParameter[OwnerType <: ParameterHolder](name: String)(implicit owner: OwnerType)
   extends Parameter[Boolean, OwnerType](owner, name) {
 
   def apply(): OwnerType = apply(true)
