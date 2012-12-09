@@ -53,7 +53,7 @@ abstract class Api extends Http with JsonParser {
           with FilterParameters[TagsQuery]
           with RefererenceParameters[TagsQuery]
           with ShowReferenceParameters[TagsQuery] {
-    object tagType extends StringParameter(self, "type")
+    val tagType = stringParameter("type")
     lazy val response = parseTags(fetch(targetUrl + "/tags", parameters))
   }
 
@@ -115,55 +115,55 @@ abstract class Api extends Http with JsonParser {
   }
 
   trait PaginationParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object pageSize extends IntParameter(self, "page-size")
-    object page extends IntParameter(self, "page")
+    val pageSize = intParameter("page-size")
+    val page = intParameter("page")
   }
 
   trait FilterParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object q extends StringParameter(self, "q")
-    object section extends StringParameter(self, "section")
-    object ids extends StringParameter(self, "ids")
-    object tag extends StringParameter(self, "tag")
-    object folder extends StringParameter(self, "folder")
+    val q = stringParameter("q")
+    val section = stringParameter("section")
+    val ids = stringParameter("ids")
+    val tag = stringParameter("tag")
+    val folder = stringParameter("folder")
   }
 
   trait ContentFilterParameters[OwnerType <: ParameterHolder] extends FilterParameters[OwnerType] {
-    object orderBy extends StringParameter(self, "order-by")
-    object fromDate extends DateParameter(self, "from-date")
-    object toDate extends DateParameter(self, "to-date")
-    object dateId extends StringParameter(self, "date-id")
-    object useDate extends StringParameter(self, "use-date")
+    val orderBy = stringParameter("order-by")
+    val fromDate = dateParameter("from-date")
+    val toDate = dateParameter("to-date")
+    val dateId = stringParameter("date-id")
+    val useDate = stringParameter("use-date")
    }
 
   trait ShowParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object showFields extends StringParameter(self, "show-fields")
-    object showSnippets extends StringParameter(self, "show-snippets")
-    object showTags extends StringParameter(self, "show-tags")
-    object showFactboxes extends StringParameter(self, "show-factboxes")
-    object showMedia extends StringParameter(self, "show-media")
-    object showRelated extends BoolParameter(self, "show-related")
-    object showEditorsPicks extends BoolParameter(self, "show-editors-picks")
-    object edition extends StringParameter(self, "edition")
-    object showMostViewed extends BoolParameter(self, "show-most-viewed")
-    object showStoryPackage extends BoolParameter(self, "show-story-package")
-    object showBestBets extends BoolParameter(self, "show-best-bets")
-    object snippetPre extends StringParameter(self, "snippet-pre")
-    object snippetPost extends StringParameter(self, "snippet-post")
-    object showInlineElements extends StringParameter(self, "show-inline-elements")
+    val showFields = stringParameter("show-fields")
+    val showSnippets = stringParameter("show-snippets")
+    val showTags = stringParameter("show-tags")
+    val showFactboxes = stringParameter("show-factboxes")
+    val showMedia = stringParameter("show-media")
+    val showRelated = boolParameter("show-related")
+    val showEditorsPicks = boolParameter("show-editors-picks")
+    val edition = stringParameter("edition")
+    val showMostViewed = boolParameter("show-most-viewed")
+    val showStoryPackage = boolParameter("show-story-package")
+    val showBestBets = boolParameter("show-best-bets")
+    val snippetPre = stringParameter("snippet-pre")
+    val snippetPost = stringParameter("snippet-post")
+    val showInlineElements = stringParameter("show-inline-elements")
   }
 
   trait RefinementParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object showRefinements extends StringParameter(self, "show-refinements")
-    object refinementSize extends IntParameter(self, "refinement-size")
+    val showRefinements = stringParameter("show-refinements")
+    val refinementSize = intParameter("refinement-size")
   }
 
   trait RefererenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object reference extends StringParameter(self, "reference")
-    object referenceType extends StringParameter(self, "reference-type")
+    val reference = stringParameter("reference")
+    val referenceType = stringParameter("reference-type")
   }
 
   trait ShowReferenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object showReferences extends StringParameter(self, "show-references")
+    val showReferences = stringParameter("show-references")
   }
 
 
