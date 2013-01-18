@@ -101,6 +101,11 @@ case class Content(
         mediaAssets: List[MediaAsset] = Nil,
 
         /**
+         * New representation to elements (assets lists) only returns if show-elements("all") or show-elements("image") is specified
+         */
+        elements: Option[Map[String, Element]],
+
+        /**
          * List of snippets that matched the requested query parameters.
          * This allows google-style highlighting of matches in results.
          *
@@ -330,3 +335,21 @@ case class Reference(
         `type`: String,
         id: String
         )
+
+case class Element(
+            id: String,
+            relation: String,
+            `type`: String,
+            assets: List[Asset]
+          ) {
+  def elementType = `type`
+}
+
+case class Asset(
+            `type`: String,
+            mimeType: Option[String],
+            file: Option[String],
+            typeData: Map[String, String]
+         ) {
+  def assetType = `type`
+}
