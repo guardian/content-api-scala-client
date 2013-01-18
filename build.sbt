@@ -9,14 +9,13 @@ scalaVersion := "2.9.2"
 crossScalaVersions ++= Seq("2.9.0-1", "2.9.1")
 
 resolvers ++= Seq(
-  "Scala Tools Repository" at "http://scala-tools.org/repo-releases",
   "Guardian GitHub" at "http://guardian.github.com/maven/repo-releases"
 )
 
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
   "commons-httpclient" % "commons-httpclient" % "3.1",
-  "net.liftweb" %% "lift-json" % "2.4",
+  "net.liftweb" %% "lift-json" % "2.5-M4",
   "net.databinder.dispatch" %% "core" % "0.9.0",
   "org.scalatest" %% "scalatest" % "1.8" % "test"
 )
