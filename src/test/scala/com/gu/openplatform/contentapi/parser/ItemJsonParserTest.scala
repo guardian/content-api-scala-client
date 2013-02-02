@@ -83,7 +83,6 @@ class ItemJsonParserTest extends FlatSpec with ShouldMatchers {
       val content = contentItemExpiredResponse.content.getOrElse(fail("expected content"))
       content.webTitle should be ("Paris St-Germain 2-0 Toulouse | Ligue 1 match report")
 
-
       content.isExpired should be (Some(true))
     }
 
