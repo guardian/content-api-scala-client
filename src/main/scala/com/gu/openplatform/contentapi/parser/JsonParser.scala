@@ -2,21 +2,27 @@ package com.gu.openplatform.contentapi.parser
 
 import com.gu.openplatform.contentapi.model._
 import net.liftweb.json.JsonParser._
-import net.liftweb.json.{FieldSerializer, DefaultFormats}
-import net.liftweb.json.JsonAST.{JBool, JString, JField}
+import net.liftweb.json.DefaultFormats
+import net.liftweb.json.JsonAST.{JValue, JBool, JString, JField}
 
 
 trait JsonParser {
   implicit val formats = DefaultFormats + new JodaJsonSerializer
 
-  def parseSearch(json: String) = (parse(json) \ "response").extract[SearchResponse]
-  def parseTags(json: String) = (parse(json) \ "response").extract[TagsResponse]
-  def parseSections(json: String) = (parse(json) \ "response").extract[SectionsResponse]
-  def parseFolders(json: String) = (parse(json) \ "response").extract[FoldersResponse]
+  def parseSearch(json: String): SearchResponse = (parse(json) \ "response")
+    .transform{ fixExpired }.extract[SearchResponse]
+  def parseTags(json: String): TagsResponse = (parse(json) \ "response")
+    .transform{ fixExpired }.extract[TagsResponse]
+  def parseSections(json: String): SectionsResponse = (parse(json) \ "response")
+    .transform{ fixExpired }.extract[SectionsResponse]
+  def parseFolders(json: String): FoldersResponse = (parse(json) \ "response")
+    .transform{ fixExpired }.extract[FoldersResponse]
+  def parseItem(json: String):ItemResponse = (parse(json) \ "response")
+    .transform{ fixExpired }.extract[ItemResponse]
 
-  def parseItem(json: String) = (parse(json) \ "response").transform{
+  private def fixExpired: PartialFunction[JValue, JValue] = {
     case JField("isExpired", JString(s)) => JField("isExpired", JBool(s.toBoolean))
-  }.extract[ItemResponse]
+  }
 }
 
 object JsonParser extends JsonParser

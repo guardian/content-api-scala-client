@@ -32,7 +32,8 @@
       "webPublicationDate":"2012-04-19T11:14:00Z",
       "webTitle":"Iraqi cities hit by deadly bomb blasts",
       "webUrl":"http://www.guardian.co.uk/world/2012/apr/19/deadly-bomb-blasts-baghdad-kirkuk",
-      "apiUrl":"http://content.guardianapis.com/world/2012/apr/19/deadly-bomb-blasts-baghdad-kirkuk"
+      "apiUrl":"http://content.guardianapis.com/world/2012/apr/19/deadly-bomb-blasts-baghdad-kirkuk",
+      "isExpired": "true"
     },{
       "id":"commentisfree/cifamerica/2012/apr/16/tarek-mehanna-punished-speaking-truth",
       "sectionId":"commentisfree",
