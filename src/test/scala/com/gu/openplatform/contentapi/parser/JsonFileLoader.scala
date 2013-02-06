@@ -6,7 +6,7 @@ object JsonFileLoader {
   def loadFile(filename: String) = {
     Option(getClass.getResourceAsStream(filename))
             .map(Source.fromInputStream(_, "UTF-8").mkString)
-            .getOrElse(error("could not load file " + filename))
+            .getOrElse(sys.error("could not load file " + filename))
   }
 
 }
