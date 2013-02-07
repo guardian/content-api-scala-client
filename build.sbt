@@ -1,12 +1,12 @@
 name := "content-api-client"
 
-version := "1.19-SNAPSHOT"
+version := "1.22-SNAPSHOT"
 
 organization := "com.gu.openplatform"
 
-scalaVersion := "2.9.2"
+scalaVersion := "2.10.0"
 
-crossScalaVersions ++= Seq("2.9.0-1", "2.9.1")
+crossScalaVersions ++= Seq("2.9.1", "2.9.2")
 
 resolvers ++= Seq(
   "Guardian GitHub" at "http://guardian.github.com/maven/repo-releases"
@@ -16,8 +16,8 @@ libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
   "commons-httpclient" % "commons-httpclient" % "3.1",
   "net.liftweb" %% "lift-json" % "2.5-M4",
-  "net.databinder.dispatch" %% "core" % "0.9.0",
-  "org.scalatest" %% "scalatest" % "1.8" % "test"
+  "net.databinder.dispatch" %% "dispatch-core" % "0.9.5",
+  "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 )
 
 publishTo <<= (version) { version: String =>
