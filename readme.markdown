@@ -22,7 +22,7 @@ To use from maven:
     <dependency>
         <groupId>com.gu.openplatform</groupId>
         <artifactId>content-api-client_${scala.version}</artifactId>
-        <version>1.19</version>
+        <version>1.21</version>
     </dependency>
 
     ...
