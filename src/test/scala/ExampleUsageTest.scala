@@ -1,4 +1,6 @@
 import com.gu.openplatform.contentapi.Api
+import com.gu.openplatform.contentapi.model.ItemResponse
+import java.io.IOException
 import org.joda.time.{DateMidnight, LocalDate, DateTime}
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{BeforeAndAfterEach, FeatureSpec}
@@ -219,6 +221,18 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       politicsSection.mostViewed.foreach (c => println("\t" + c.webTitle))
     }
   }
+
+  feature("getting expired content") {
+
+      scenario("cannot load expired content if I am not an internal user") {
+
+        val expiredArticle = Api.item.itemId("football/2012/sep/14/zlatan-ibrahimovic-paris-st-germain-toulouse")
+          .showExpired()
+
+        val error = intercept[IOException]{ expiredArticle.content }
+        error.getMessage should include("400")
+      }
+    }
 
   feature("refining search results") {
 

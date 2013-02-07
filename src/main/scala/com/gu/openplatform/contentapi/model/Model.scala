@@ -132,7 +132,13 @@ case class Content(
          * Use showReferences passing in the the type of reference you want to
          * see or 'all' to see all references.
          */
-        references: List[Reference] = Nil
+        references: List[Reference] = Nil,
+
+        /**
+         * Set to true if the rights to this content have expired. Expired
+         * content is only available to internal users.
+         */
+        isExpired: Option[Boolean] = None
 ) {
   // Unfortunately lift-json (as of 2.1) requires a Map to be wrapped in an
   // Option if the json field that contains it is optional. (This is unlike a list
