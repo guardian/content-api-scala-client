@@ -5,7 +5,7 @@ Introduction
 ------------
 
 This library provides a simple client wrapper round the [guardian.co.uk][g.co.uk]
-[Open Platform][openplatform] [Content API][api], for scala 2.8.0, 2.8.1, 2.9.0-1 and 2.9.1.
+[Open Platform][openplatform] [Content API][api], for scala 2.10.0, 2.9.2 and 2.9.1.
 
 [g.co.uk]: http://guardian.co.uk
 [openplatform]: http://www.guardian.co.uk/open-platform
@@ -15,14 +15,14 @@ This library provides a simple client wrapper round the [guardian.co.uk][g.co.uk
 To use from sbt:
 
     resolvers += "Guardian Github Releases" at "http://guardian.github.com/maven/repo-releases"
-    libraryDependencies += "com.gu.openplatform" %% "content-api-client" % "1.17"
+    libraryDependencies += "com.gu.openplatform" %% "content-api-client" % "1.19"
 
 To use from maven:
 
     <dependency>
         <groupId>com.gu.openplatform</groupId>
         <artifactId>content-api-client_${scala.version}</artifactId>
-        <version>1.13</version>
+        <version>1.19</version>
     </dependency>
 
     ...
