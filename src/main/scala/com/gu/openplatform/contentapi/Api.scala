@@ -53,7 +53,7 @@ abstract class Api extends Http with JsonParser {
           with FilterParameters[TagsQuery]
           with RefererenceParameters[TagsQuery]
           with ShowReferenceParameters[TagsQuery] {
-    object tagType extends StringParameter(self, "type")
+    lazy val tagType = new StringParameter(self, "type")
     lazy val response = parseTags(fetch(targetUrl + "/tags", parameters))
   }
 
@@ -115,56 +115,56 @@ abstract class Api extends Http with JsonParser {
   }
 
   trait PaginationParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object pageSize extends IntParameter(self, "page-size")
-    object page extends IntParameter(self, "page")
+    lazy val pageSize = new IntParameter(self, "page-size")
+    lazy val page = new IntParameter(self, "page")
   }
 
   trait FilterParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object q extends StringParameter(self, "q")
-    object section extends StringParameter(self, "section")
-    object ids extends StringParameter(self, "ids")
-    object tag extends StringParameter(self, "tag")
-    object folder extends StringParameter(self, "folder")
+    lazy val q = new StringParameter(self, "q")
+    lazy val section = new StringParameter(self, "section")
+    lazy val ids = new StringParameter(self, "ids")
+    lazy val tag = new StringParameter(self, "tag")
+    lazy val folder = new StringParameter(self, "folder")
   }
 
   trait ContentFilterParameters[OwnerType <: ParameterHolder] extends FilterParameters[OwnerType] {
-    object orderBy extends StringParameter(self, "order-by")
-    object fromDate extends DateParameter(self, "from-date")
-    object toDate extends DateParameter(self, "to-date")
-    object dateId extends StringParameter(self, "date-id")
-    object useDate extends StringParameter(self, "use-date")
+    lazy val orderBy = new StringParameter(self, "order-by")
+    lazy val fromDate = new DateParameter(self, "from-date")
+    lazy val toDate = new DateParameter(self, "to-date")
+    lazy val dateId = new StringParameter(self, "date-id")
+    lazy val useDate = new StringParameter(self, "use-date")
    }
 
   trait ShowParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object showFields extends StringParameter(self, "show-fields")
-    object showSnippets extends StringParameter(self, "show-snippets")
-    object showTags extends StringParameter(self, "show-tags")
-    object showFactboxes extends StringParameter(self, "show-factboxes")
-    object showMedia extends StringParameter(self, "show-media")
-    object showRelated extends BoolParameter(self, "show-related")
-    object showEditorsPicks extends BoolParameter(self, "show-editors-picks")
-    object edition extends StringParameter(self, "edition")
-    object showMostViewed extends BoolParameter(self, "show-most-viewed")
-    object showStoryPackage extends BoolParameter(self, "show-story-package")
-    object showBestBets extends BoolParameter(self, "show-best-bets")
-    object snippetPre extends StringParameter(self, "snippet-pre")
-    object snippetPost extends StringParameter(self, "snippet-post")
-    object showInlineElements extends StringParameter(self, "show-inline-elements")
-    object showExpired extends BoolParameter(self, "show-expired")
+    lazy val showFields = new StringParameter(self, "show-fields")
+    lazy val showSnippets = new StringParameter(self, "show-snippets")
+    lazy val showTags = new StringParameter(self, "show-tags")
+    lazy val showFactboxes = new StringParameter(self, "show-factboxes")
+    lazy val showMedia = new StringParameter(self, "show-media")
+    lazy val showRelated = new BoolParameter(self, "show-related")
+    lazy val showEditorsPicks = new BoolParameter(self, "show-editors-picks")
+    lazy val edition = new StringParameter(self, "edition")
+    lazy val showMostViewed = new BoolParameter(self, "show-most-viewed")
+    lazy val showStoryPackage = new BoolParameter(self, "show-story-package")
+    lazy val showBestBets = new BoolParameter(self, "show-best-bets")
+    lazy val snippetPre = new StringParameter(self, "snippet-pre")
+    lazy val snippetPost = new StringParameter(self, "snippet-post")
+    lazy val showInlineElements = new StringParameter(self, "show-inline-elements")
+    lazy val showExpired = new BoolParameter(self, "show-expired")
   }
 
   trait RefinementParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object showRefinements extends StringParameter(self, "show-refinements")
-    object refinementSize extends IntParameter(self, "refinement-size")
+    lazy val showRefinements = new StringParameter(self, "show-refinements")
+    lazy val refinementSize = new IntParameter(self, "refinement-size")
   }
 
   trait RefererenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object reference extends StringParameter(self, "reference")
-    object referenceType extends StringParameter(self, "reference-type")
+    lazy val reference = new StringParameter(self, "reference")
+    lazy val referenceType = new StringParameter(self, "reference-type")
   }
 
   trait ShowReferenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
-    object showReferences extends StringParameter(self, "show-references")
+    lazy val showReferences = new StringParameter(self, "show-references")
   }
 
 
