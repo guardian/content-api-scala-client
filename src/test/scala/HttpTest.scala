@@ -1,5 +1,5 @@
-import com.gu.openplatform.contentapi.model.Content
-import com.gu.openplatform.contentapi.{SyncApi, Api}
+import com.gu.openplatform.contentapi.model.{ItemResponse, Content}
+import com.gu.openplatform.contentapi.{ApiError, SyncApi, Api}
 import com.gu.openplatform.contentapi.connection._
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{FlatSpec, BeforeAndAfterEach}
@@ -33,8 +33,9 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
     api.item.itemId("type/video").response.tag.get.id should be("type/video")
   }
 
+  import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
+
   "DispatchAsyncHttp" should "be able to call the api" in {
-    import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
     val api = new Api[dispatch.Promise] with DispatchAsyncHttp
 
     val promisedContent: dispatch.Promise[Content] = for {
@@ -42,6 +43,12 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
     } yield response.content.get
 
     promisedContent.apply.id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+  }
+
+  "DispatchAsyncHttp" should "return API errors as a broken promise" in {
+    val api = new Api[dispatch.Promise] with DispatchAsyncHttp
+    val brokenPromise: dispatch.Promise[ItemResponse] = api.item.itemId("fdsfgs").response
+    brokenPromise.recover { case error => error should be (ApiError(404, "Not Found")) } apply()
   }
 
   override protected def beforeEach() {
