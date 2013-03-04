@@ -2,7 +2,7 @@ package com.gu.openplatform.contentapi.util
 
 import com.gu.openplatform.contentapi.ApiError
 
-/** Monad trait with failure specialized to ApiError
+/** Monad typeclass with failure specialized to ApiError
   */
 trait Monad[F[_]] {
   def point[A](a: A): F[A]

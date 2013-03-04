@@ -51,7 +51,7 @@ trait ApacheSyncHttpClient extends SyncHttp {
               .map(Source.fromInputStream(_).mkString)
               .getOrElse("")
 
-      new HttpResponse(responseBody, statusLine.getStatusCode, statusLine.getReasonPhrase)
+      Id(new HttpResponse(responseBody, statusLine.getStatusCode, statusLine.getReasonPhrase))
     } finally {
       method.releaseConnection
     }
@@ -91,7 +91,7 @@ trait JavaNetSyncHttp extends SyncHttp {
     val responseBody = src.mkString
     src.close
 
-    new HttpResponse(responseBody, connection.getResponseCode, connection.getResponseMessage)
+    Id(new HttpResponse(responseBody, connection.getResponseCode, connection.getResponseMessage))
   }
 
 }
@@ -143,7 +143,7 @@ trait Dispatch {
 trait DispatchSyncHttp extends SyncHttp with Dispatch {
 
   def GET(urlString: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse] =
-    get(urlString, headers)()
+    Id(get(urlString, headers)())
 
 }
 
