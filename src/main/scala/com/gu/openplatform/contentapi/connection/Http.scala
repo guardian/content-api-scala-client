@@ -22,10 +22,7 @@ trait Http[F[_]] {
 
 /** Base trait for Synchronous Http clients
   */
-trait SyncHttp extends Http[Id] {
-  // this is what the Api client requires of an http connection
-  def GET(url: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse]
-}
+trait SyncHttp extends Http[Id]
 
 case class Proxy(host: String, port: Int)
 
