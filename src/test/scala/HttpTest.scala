@@ -1,34 +1,47 @@
-import com.gu.openplatform.contentapi.Api
+import com.gu.openplatform.contentapi.model.Content
+import com.gu.openplatform.contentapi.{SyncApi, Api}
 import com.gu.openplatform.contentapi.connection._
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{FlatSpec, BeforeAndAfterEach}
+
 
 class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
 
   info("Tests that each type of client can actually perform a call to the api")
 
-  "ApacheHttpClient" should "be able to call the api" in {
-    testClient(new Api with ApacheHttpClient)
+  "ApacheSyncHttpClient" should "be able to call the api" in {
+    testClient(new SyncApi with ApacheSyncHttpClient)
   }
 
-  "MultiThreadedApacheHttpClient" should "be able to call the api" in {
-    testClient(new Api with MultiThreadedApacheHttpClient)
+  "MultiThreadedApacheSyncHttpClient" should "be able to call the api" in {
+    testClient(new SyncApi with MultiThreadedApacheSyncHttpClient)
   }
 
-  "JavaNetHttp" should "be able to call the api" in {
-    testClient(new Api with JavaNetHttp)
+  "JavaNetSyncHttp" should "be able to call the api" in {
+    testClient(new SyncApi with JavaNetSyncHttp)
   }
 
-  "DispatchHttp" should "be able to call the api" in {
-    val api = new Api with DispatchHttp
+  "DispatchSyncHttp" should "be able to call the api" in {
+    val api = new SyncApi with DispatchSyncHttp
     testClient(api)
   }
 
-  "DispatchHttp" should "follow redirects" in {
-    val api = new Api with DispatchHttp
+  "DispatchSyncHttp" should "follow redirects" in {
+    val api = new SyncApi with DispatchSyncHttp
 
     //redirects to /video
     api.item.itemId("type/video").response.tag.get.id should be("type/video")
+  }
+
+  "DispatchAsyncHttp" should "be able to call the api" in {
+    import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
+    val api = new Api[dispatch.Promise] with DispatchAsyncHttp
+
+    val promisedContent: dispatch.Promise[Content] = for {
+      response <- api.item.itemId("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry").response
+    } yield response.content.get
+
+    promisedContent.apply.id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
   }
 
   override protected def beforeEach() {
@@ -36,7 +49,7 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
     Thread.sleep(500)
   }
 
-  private def testClient(api: Api) {
+  private def testClient(api: SyncApi) {
     val content = api.item.itemId("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry").response
       .content.get
 

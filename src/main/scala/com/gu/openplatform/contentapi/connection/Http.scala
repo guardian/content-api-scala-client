@@ -9,28 +9,36 @@ import io.{Codec, Source}
 import dispatch._
 import com.ning.http.client._
 import providers.netty.{NettyAsyncHttpProvider, NettyConnectionsPool}
+import com.gu.openplatform.contentapi.util.{Monad, Id}
 
 
 case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
 
-trait Http {
+trait Http[F[_]] {
   implicit val codec = Codec("UTF-8")
   // this is what the Api client requires of an http connection
-  def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse
+  def GET(url: String, headers: Iterable[(String, String)] = Nil): F[HttpResponse]
+}
+
+/** Base trait for Synchronous Http clients
+  */
+trait SyncHttp extends Http[Id] {
+  // this is what the Api client requires of an http connection
+  def GET(url: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse]
 }
 
 case class Proxy(host: String, port: Int)
 
 // an implementation using apache http client, note this just uses the default connection manager
 // and does not support multithreaded use.
-trait ApacheHttpClient extends Http {
+trait ApacheSyncHttpClient extends SyncHttp {
   val httpClient = new HttpClient
 
   def setProxy(host: String, port: Int) {
-    httpClient.getHostConfiguration().setProxy(host, port)
+    httpClient.getHostConfiguration.setProxy(host, port)
   }
 
-  def GET(url: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse = {
+  def GET(url: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse] = {
     val method = new GetMethod(url)
     try {
 
@@ -51,7 +59,7 @@ trait ApacheHttpClient extends Http {
 }
 
 // an implementation using the MultiThreadedHttpConnectionManager
-trait MultiThreadedApacheHttpClient extends ApacheHttpClient {
+trait MultiThreadedApacheSyncHttpClient extends ApacheSyncHttpClient {
   val connectionManager = new MultiThreadedHttpConnectionManager
   override val httpClient = new HttpClient(connectionManager)
 
@@ -73,8 +81,8 @@ trait MultiThreadedApacheHttpClient extends ApacheHttpClient {
 
 
 // an implementation using java.net
-trait JavaNetHttp extends Http {
-  def GET(urlString: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse = {
+trait JavaNetSyncHttp extends SyncHttp {
+  def GET(urlString: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse] = {
 
     val connection = new URL(urlString).openConnection.asInstanceOf[HttpURLConnection]
     headers.foreach { case (k, v) => connection.setRequestProperty(k, v) }
@@ -88,7 +96,7 @@ trait JavaNetHttp extends Http {
 
 }
 
-trait DispatchHttp extends Http {
+trait Dispatch {
 
   lazy val maxConnections: Int = 10
   lazy val connectionTimeoutInMs: Int = 1000
@@ -116,22 +124,32 @@ trait DispatchHttp extends Http {
     }
   }
 
-  def GET(urlString: String, headers: Iterable[ (String, String) ] = Nil): HttpResponse = {
-
+  protected def get(urlString: String, headers: Iterable[(String, String)] = Nil): Promise[HttpResponse] = {
     val request = {
       val r = url(urlString)
       headers.foreach{case (name, value) => r.setHeader(name, value)}
       r.build
     }
-
-    Client(request, httpResponseHandler)()
+    Client(request, httpResponseHandler)
   }
 
-  def httpResponseHandler = new FunctionHandler(r =>
+  protected def httpResponseHandler = new FunctionHandler(r =>
     HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText)
   )
 
   def close() = Client.client.close()
 }
 
+trait DispatchSyncHttp extends SyncHttp with Dispatch {
 
+  def GET(urlString: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse] =
+    get(urlString, headers)()
+
+}
+
+trait DispatchAsyncHttp extends Http[Promise] with Dispatch {
+
+  def GET(urlString: String, headers: Iterable[(String, String)] = Nil): Promise[HttpResponse] =
+    get(urlString, headers)
+
+}
