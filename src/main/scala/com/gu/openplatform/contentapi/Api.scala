@@ -109,17 +109,17 @@ abstract class Api extends Http with JsonParser {
   }
 
 
-
-  trait GeneralParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait GeneralParameters[Owner] extends Parameters[Owner] { this: Owner =>
+    final def self = this
     override def parameters = super.parameters ++ apiKey.map("api-key" -> _)
   }
 
-  trait PaginationParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val pageSize = new IntParameter(self, "page-size")
     lazy val page = new IntParameter(self, "page")
   }
 
-  trait FilterParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val q = new StringParameter(self, "q")
     lazy val section = new StringParameter(self, "section")
     lazy val ids = new StringParameter(self, "ids")
@@ -127,7 +127,7 @@ abstract class Api extends Http with JsonParser {
     lazy val folder = new StringParameter(self, "folder")
   }
 
-  trait ContentFilterParameters[OwnerType <: ParameterHolder] extends FilterParameters[OwnerType] {
+  trait ContentFilterParameters[Owner <: Parameters[Owner]] extends FilterParameters[Owner] {
     lazy val orderBy = new StringParameter(self, "order-by")
     lazy val fromDate = new DateParameter(self, "from-date")
     lazy val toDate = new DateParameter(self, "to-date")
@@ -135,7 +135,7 @@ abstract class Api extends Http with JsonParser {
     lazy val useDate = new StringParameter(self, "use-date")
    }
 
-  trait ShowParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val showFields = new StringParameter(self, "show-fields")
     lazy val showSnippets = new StringParameter(self, "show-snippets")
     lazy val showTags = new StringParameter(self, "show-tags")
@@ -153,17 +153,17 @@ abstract class Api extends Http with JsonParser {
     lazy val showExpired = new BoolParameter(self, "show-expired")
   }
 
-  trait RefinementParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait RefinementParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val showRefinements = new StringParameter(self, "show-refinements")
     lazy val refinementSize = new IntParameter(self, "refinement-size")
   }
 
-  trait RefererenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait RefererenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val reference = new StringParameter(self, "reference")
     lazy val referenceType = new StringParameter(self, "reference-type")
   }
 
-  trait ShowReferenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait ShowReferenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val showReferences = new StringParameter(self, "show-references")
   }
 
