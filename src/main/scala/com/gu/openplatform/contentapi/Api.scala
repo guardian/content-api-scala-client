@@ -33,14 +33,18 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
   class FoldersQuery
     extends GeneralParameters[FoldersQuery]
     with FilterParameters[FoldersQuery] {
+
     lazy val response: F[FoldersResponse] = fetch(targetUrl + "/folders", parameters) map parseFolders
+    lazy val results: F[List[Folder]] = response map (_.results)
   }
 
 
   class SectionsQuery
     extends GeneralParameters[SectionsQuery]
     with FilterParameters[SectionsQuery] {
+
     lazy val response: F[SectionsResponse] = fetch(targetUrl + "/sections", parameters) map parseSections
+    lazy val results: F[List[Section]] = response map (_.results)
   }
 
   class TagsQuery extends GeneralParameters[TagsQuery]
@@ -48,8 +52,10 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
           with FilterParameters[TagsQuery]
           with RefererenceParameters[TagsQuery]
           with ShowReferenceParameters[TagsQuery] {
+
     lazy val tagType = new StringParameter(self, "type")
     lazy val response: F[TagsResponse] = fetch(targetUrl + "/tags", parameters) map parseTags
+    lazy val results: F[List[Tag]] = response map (_.results)
   }
 
 
@@ -61,7 +67,9 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
           with ContentFilterParameters[SearchQuery]
           with RefererenceParameters[SearchQuery]
           with ShowReferenceParameters[SearchQuery] {
+
     lazy val response: F[SearchResponse] = fetch(targetUrl + "/search", parameters) map parseSearch
+    lazy val results: F[List[Content]] = response map (_.results)
   }
 
   class ItemQuery extends GeneralParameters[ItemQuery]
@@ -82,6 +90,7 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
     lazy val response: F[ItemResponse] = fetch(
         _apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
         parameters) map parseItem
+    lazy val results: F[List[Content]] = response map (_.results)
   }
 
   trait GeneralParameters[Owner] extends Parameters[Owner] { this: Owner =>

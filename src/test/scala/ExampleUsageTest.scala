@@ -48,7 +48,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       val search = Api.search.q("tottenham hotspur")
 
       search.response.total should be > (0)
-      search.response.results.foreach (item => println(item.webTitle))
+      search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("ordering free text query results by relevance") {
@@ -57,28 +57,28 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
               .orderBy("relevance")
 
       search.response.total should be > (0)
-      search.response.results.foreach (item => println(item.webTitle))
+      search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content by tag") {
       val search = Api.search.tag("football/tottenham-hotspur")
 
       search.response.total should be > (0)
-      search.response.results.foreach (item => println(item.webTitle))
+      search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content by multiple tags") {
       val search = Api.search.tag("football/tottenham-hotspur,tone/matchreports")
 
       search.response.total should be > (0)
-      search.response.results.foreach (item => println(item.webTitle))
+      search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content in a section") {
       val search = Api.search.section("football")
 
       search.response.total should be > (0)
-      search.response.results.foreach (item => println(item.webTitle))
+      search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content between 2 dates") {
@@ -87,7 +87,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
               .toDate(new DateMidnight(2009, 12, 31))
 
       search.response.total should be > (0)
-      search.response.results.foreach (item => println(item.webTitle))
+      search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("did you mean?") {
@@ -103,7 +103,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     scenario("retrieving all content's tags") {
       val search = Api.search.pageSize(1).showTags("all")
 
-      val tags = search.response.results.head.tags
+      val tags = search.results.head.tags
       tags.length should be > (0)
       tags.foreach (tag => println(tag.tagType + ":" +tag.webTitle))
     }
@@ -111,7 +111,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     scenario("retrieving just the content's keywords") {
       val search = Api.search.pageSize(1).showTags("keyword")
 
-      val tags = search.response.results.head.tags
+      val tags = search.results.head.tags
       tags.foreach (tag => println(tag.tagType + ":" +tag.webTitle))
     }
 
@@ -119,7 +119,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       val search = Api.search.pageSize(1).tag("type/article")
               .showFields("headline,trail-text")
 
-      val fields = search.response.results.head.fields.getOrElse(Map())
+      val fields = search.results.head.fields.getOrElse(Map())
       fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
     }
 
@@ -127,7 +127,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       val search = Api.search.pageSize(1).tag("type/article")
               .showFields("all")
 
-      val fields = search.response.results.head.fields.getOrElse(Map())
+      val fields = search.results.head.fields.getOrElse(Map())
       fields.keys.foreach (fieldKey => println(fieldKey + "->" +fields(fieldKey)))
     }
   }
@@ -137,15 +137,15 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     // pagination and query terms work much like content search
 
     scenario("find some tags") {
-      Api.tags.response.results.foreach(tag => println(tag.webTitle))
+      Api.tags.results.foreach(tag => println(tag.webTitle))
     }
 
     scenario("find tags representing series") {
-      Api.tags.tagType("series").response.results.foreach(tag => println(tag.tagType + ":" + tag.webTitle))
+      Api.tags.tagType("series").results.foreach(tag => println(tag.tagType + ":" + tag.webTitle))
     }
 
     scenario("find tags in the technology section") {
-      Api.tags.section("technology").response.results.foreach(tag => println(tag.webTitle + " (" + tag.sectionName.get + ")"))
+      Api.tags.section("technology").results.foreach(tag => println(tag.webTitle + " (" + tag.sectionName.get + ")"))
     }
   }
 
@@ -156,7 +156,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
     // You can use the query term, q, parameter to restrict your seach, or just use your eyes.
     scenario("listing the sections") {
-      Api.sections.response.results.foreach(section => println(section.id))
+      Api.sections.results.foreach(section => println(section.id))
     }
   }
 
@@ -171,7 +171,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
       val search = Api.search.q("tottenham hotspur").pageSize(1)
 
-      val contentApiUrl = search.response.results.head.apiUrl
+      val contentApiUrl = search.results.head.apiUrl
       println("following api url: " + contentApiUrl)
 
       val item = Api.item.apiUrl(contentApiUrl)
@@ -233,7 +233,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       }
     }
 
-  feature("refining search.response.results") {
+  feature("refining search results") {
 
     scenario("finding the most popular keywords for a seach") {
       val search = Api.search.pageSize(1).section("music")
@@ -250,10 +250,10 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
   feature("contributor bios and pictures") {
     scenario("show contributor bios") {
-      Api.tags.tagType("contributor").response.results.filter(_.bio.isDefined).foreach(tag => println(tag.webTitle + ":" + tag.bio.get))
+      Api.tags.tagType("contributor").results.filter(_.bio.isDefined).foreach(tag => println(tag.webTitle + ":" + tag.bio.get))
     }
     scenario("show contributor byline Pictures") {
-      Api.tags.tagType("contributor").response.results.foreach(tag => println(tag.webTitle + ":" + tag.bylineImageUrl.getOrElse("None")))
+      Api.tags.tagType("contributor").results.foreach(tag => println(tag.webTitle + ":" + tag.bylineImageUrl.getOrElse("None")))
     }
   }
   
@@ -261,18 +261,18 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     scenario("can query for folders") {
       println("Query folders")
 
-      Api.folders.response.results.foreach(folder => println("    "+folder.id+": "+folder.webTitle))
+      Api.folders.results.foreach(folder => println("    "+folder.id+": "+folder.webTitle))
     }
 
     scenario("can query tags by folder") {
       println("Tags by Folder: folder/traveleditorsindex/travelawards")
-      Api.tags.ids("folder/traveleditorsindex/travelawards").response.results.foreach(
+      Api.tags.ids("folder/traveleditorsindex/travelawards").results.foreach(
         tag => println("    "+tag.webTitle))
     }
 
     scenario("can query content by folder") {
       println("Content by Folder: folder/traveleditorsindex/travelawards")
-      Api.item.itemId("folder/traveleditorsindex/travelawards").response.results.foreach(
+      Api.item.itemId("folder/traveleditorsindex/travelawards").results.foreach(
         content => println("    "+content.webTitle))
     }
 
@@ -281,7 +281,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
      */
     scenario("can filter content search by folder") {
       println("Content Search by Folder: folder/traveleditorsindex/travelawards")
-      Api.search.q("sausages").folder("folder/traveleditorsindex/travelawards").response.results.foreach(
+      Api.search.q("sausages").folder("folder/traveleditorsindex/travelawards").results.foreach(
         content => println("    "+content.webTitle))
     }
   }
