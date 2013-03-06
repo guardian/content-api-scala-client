@@ -1,6 +1,6 @@
 package com.gu.openplatform.contentapi
 
-import connection.{Http, JavaNetSyncHttp}
+import connection.{DispatchAsyncHttp, Http, JavaNetSyncHttp}
 import java.net.URLEncoder
 import com.gu.openplatform.contentapi.parser.JsonParser
 import model._
@@ -176,3 +176,9 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
 
 // Default client instance, based on java.net client
 object Api extends SyncApi with JavaNetSyncHttp
+
+import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
+
+/** Async client instance based on Dispatch
+  */
+object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp
