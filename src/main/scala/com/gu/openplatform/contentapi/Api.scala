@@ -4,10 +4,6 @@ import connection.{DispatchAsyncHttp, Http, JavaNetSyncHttp}
 import java.net.URLEncoder
 import com.gu.openplatform.contentapi.parser.JsonParser
 import model._
-import model.FoldersResponse
-import model.SearchResponse
-import model.SectionsResponse
-import model.TagsResponse
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.ReadableInstant
 import util.{Monad, MonadOps, Id}
