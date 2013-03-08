@@ -9,7 +9,8 @@ import io.{Codec, Source}
 import dispatch._
 import com.ning.http.client._
 import providers.netty.{NettyAsyncHttpProvider, NettyConnectionsPool}
-import com.gu.openplatform.contentapi.util.{Monad, Id}
+import com.gu.openplatform.contentapi.util.Id
+import com.gu.openplatform.contentapi.util.IdInstances._
 
 
 case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
@@ -48,7 +49,7 @@ trait ApacheSyncHttpClient extends SyncHttp {
               .map(Source.fromInputStream(_).mkString)
               .getOrElse("")
 
-      Id(new HttpResponse(responseBody, statusLine.getStatusCode, statusLine.getReasonPhrase))
+      new HttpResponse(responseBody, statusLine.getStatusCode, statusLine.getReasonPhrase)
     } finally {
       method.releaseConnection
     }
@@ -88,7 +89,7 @@ trait JavaNetSyncHttp extends SyncHttp {
     val responseBody = src.mkString
     src.close
 
-    Id(new HttpResponse(responseBody, connection.getResponseCode, connection.getResponseMessage))
+    new HttpResponse(responseBody, connection.getResponseCode, connection.getResponseMessage)
   }
 
 }
@@ -140,7 +141,7 @@ trait Dispatch {
 trait DispatchSyncHttp extends SyncHttp with Dispatch {
 
   def GET(urlString: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse] =
-    Id(get(urlString, headers)())
+    get(urlString, headers)()
 
 }
 

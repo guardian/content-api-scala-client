@@ -174,10 +174,11 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
   }
 }
 
+import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
+import com.gu.openplatform.contentapi.util.IdInstances._
+
 // Default client instance, based on java.net client
 object Api extends SyncApi with JavaNetSyncHttp
-
-import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
 
 /** Async client instance based on Dispatch
   */

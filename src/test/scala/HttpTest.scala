@@ -3,6 +3,7 @@ import com.gu.openplatform.contentapi.{ApiError, SyncApi, Api}
 import com.gu.openplatform.contentapi.connection._
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{FlatSpec, BeforeAndAfterEach}
+import com.gu.openplatform.contentapi.util.IdInstances._
 
 
 class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
