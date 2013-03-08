@@ -94,7 +94,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       val search = Api.search.q("the green hills of ingland")
 
       search.total should be (0)
-      println("Did you mean " + search.response.didYouMean + "?")
+      println("Did you mean " + search.didYouMean + "?")
     }
   }
 
@@ -137,15 +137,15 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     // pagination and query terms work much like content search
 
     scenario("find some tags") {
-      Api.tags.results.foreach(tag => println(tag.webTitle))
+      Api.tags.foreach(tag => println(tag.webTitle))
     }
 
     scenario("find tags representing series") {
-      Api.tags.tagType("series").results.foreach(tag => println(tag.tagType + ":" + tag.webTitle))
+      Api.tags.tagType("series").foreach(tag => println(tag.tagType + ":" + tag.webTitle))
     }
 
     scenario("find tags in the technology section") {
-      Api.tags.section("technology").results.foreach(tag => println(tag.webTitle + " (" + tag.sectionName.get + ")"))
+      Api.tags.section("technology").foreach(tag => println(tag.webTitle + " (" + tag.sectionName.get + ")"))
     }
   }
 
@@ -156,7 +156,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
     // You can use the query term, q, parameter to restrict your seach, or just use your eyes.
     scenario("listing the sections") {
-      Api.sections.results.foreach(section => println(section.id))
+      Api.sections.foreach(section => println(section.id))
     }
   }
 
@@ -175,7 +175,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       println("following api url: " + contentApiUrl)
 
       val item = Api.item.apiUrl(contentApiUrl)
-      println("loaded " + item.response.content.get.webTitle)
+      println("loaded " + item.content.get.webTitle)
     }
 
     scenario("loading lead content for a tag") {
@@ -194,7 +194,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       println("following api url: " + contentApiUrl)
 
       val item = Api.item.apiUrl(contentApiUrl).showStoryPackage(true)
-      println("loaded " + item.response.content.get.webTitle)
+      println("loaded " + item.content.get.webTitle)
       item.storyPackage.size should be > 0
 
       println("story package headlines:")
@@ -217,7 +217,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       val politicsSection = Api.item.itemId("politics").showMostViewed()
 
       println("most viewed for politics:")
-      politicsSection.response.mostViewed.foreach (c => println("\t" + c.webTitle))
+      politicsSection.mostViewed.foreach (c => println("\t" + c.webTitle))
     }
   }
 
@@ -228,7 +228,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
         val expiredArticle = Api.item.itemId("football/2012/sep/14/zlatan-ibrahimovic-paris-st-germain-toulouse")
           .showExpired()
 
-        val error = intercept[IOException]{ expiredArticle.response.content }
+        val error = intercept[IOException]{ expiredArticle.content }
         error.getMessage should include("400")
       }
     }
@@ -250,10 +250,10 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
   feature("contributor bios and pictures") {
     scenario("show contributor bios") {
-      Api.tags.tagType("contributor").results.filter(_.bio.isDefined).foreach(tag => println(tag.webTitle + ":" + tag.bio.get))
+      Api.tags.tagType("contributor").filter(_.bio.isDefined).foreach(tag => println(tag.webTitle + ":" + tag.bio.get))
     }
     scenario("show contributor byline Pictures") {
-      Api.tags.tagType("contributor").results.foreach(tag => println(tag.webTitle + ":" + tag.bylineImageUrl.getOrElse("None")))
+      Api.tags.tagType("contributor").foreach(tag => println(tag.webTitle + ":" + tag.bylineImageUrl.getOrElse("None")))
     }
   }
   
@@ -261,12 +261,12 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     scenario("can query for folders") {
       println("Query folders")
 
-      Api.folders.results.foreach(folder => println("    "+folder.id+": "+folder.webTitle))
+      Api.folders.foreach(folder => println("    "+folder.id+": "+folder.webTitle))
     }
 
     scenario("can query tags by folder") {
       println("Tags by Folder: folder/traveleditorsindex/travelawards")
-      Api.tags.ids("folder/traveleditorsindex/travelawards").results.foreach(
+      Api.tags.ids("folder/traveleditorsindex/travelawards").foreach(
         tag => println("    "+tag.webTitle))
     }
 
