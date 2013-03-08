@@ -47,7 +47,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
     scenario("find content by free text query") {
       val search = Api.search.q("tottenham hotspur")
 
-      search.response.total should be > (0)
+      search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
 
@@ -56,28 +56,28 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
               .q("tottenham hotspur white hart lane")
               .orderBy("relevance")
 
-      search.response.total should be > (0)
+      search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content by tag") {
       val search = Api.search.tag("football/tottenham-hotspur")
 
-      search.response.total should be > (0)
+      search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content by multiple tags") {
       val search = Api.search.tag("football/tottenham-hotspur,tone/matchreports")
 
-      search.response.total should be > (0)
+      search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("find content in a section") {
       val search = Api.search.section("football")
 
-      search.response.total should be > (0)
+      search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
 
@@ -86,14 +86,14 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
               .fromDate(new DateMidnight(2009, 1, 1))
               .toDate(new DateMidnight(2009, 12, 31))
 
-      search.response.total should be > (0)
+      search.total should be > (0)
       search.results.foreach (item => println(item.webTitle))
     }
 
     scenario("did you mean?") {
       val search = Api.search.q("the green hills of ingland")
 
-      search.response.total should be (0)
+      search.total should be (0)
       println("Did you mean " + search.response.didYouMean + "?")
     }
   }
@@ -180,25 +180,25 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
 
     scenario("loading lead content for a tag") {
       val item = Api.item.itemId("world/iraq")
-      item.response.leadContent.size should  be > (0)
-      item.response.leadContent.foreach (item => println(item.webTitle))
+      item.leadContent.size should  be > (0)
+      item.leadContent.foreach (item => println(item.webTitle))
     }
 
     scenario("loading a stories story package") {
 
       // look at the content on the homepage and find the first item that has a package
       val networkFront = Api.item.itemId("").showFields("has-story-package").showEditorsPicks(true).pageSize(1)
-      val contentWithPackage = networkFront.response.editorsPicks.filter(_.fields.get("hasStoryPackage") == "true").head
+      val contentWithPackage = networkFront.editorsPicks.filter(_.fields.get("hasStoryPackage") == "true").head
 
       val contentApiUrl = contentWithPackage.apiUrl
       println("following api url: " + contentApiUrl)
 
       val item = Api.item.apiUrl(contentApiUrl).showStoryPackage(true)
       println("loaded " + item.response.content.get.webTitle)
-      item.response.storyPackage.size should be > 0
+      item.storyPackage.size should be > 0
 
       println("story package headlines:")
-      item.response.storyPackage foreach (c => println("\t" + c.webTitle))
+      item.storyPackage foreach (c => println("\t" + c.webTitle))
     }
 
     scenario("loading editors picks for the us homepage") {
@@ -206,7 +206,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       val usNetworkFront = Api.item.itemId("").edition("US").showEditorsPicks(true)
 
       println("US network front editors picks:")
-      usNetworkFront.response.editorsPicks.foreach (c => println("\t" + c.webTitle))
+      usNetworkFront.editorsPicks.foreach (c => println("\t" + c.webTitle))
     }
   }
 
@@ -239,7 +239,7 @@ class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAft
       val search = Api.search.pageSize(1).section("music")
               .showRefinements("keyword").refinementSize(20)
 
-      search.response.refinementGroups foreach { group =>
+      search.refinementGroups foreach { group =>
         println(group.refinementType)
         group.refinements.foreach { refinement =>
           println("\t" + refinement.displayName + " (" + refinement.count + ")")

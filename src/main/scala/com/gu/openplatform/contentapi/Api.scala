@@ -35,16 +35,23 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
     with FilterParameters[FoldersQuery] {
 
     lazy val response: F[FoldersResponse] = fetch(targetUrl + "/folders", parameters) map parseFolders
-    lazy val results: F[List[Folder]] = response map (_.results)
   }
 
+  object FoldersQuery {
+    implicit def asResponse(q: FoldersQuery) = q.response
+    implicit def asFolders(q: FoldersQuery) = q.response map (_.results)
+  }
 
   class SectionsQuery
     extends GeneralParameters[SectionsQuery]
     with FilterParameters[SectionsQuery] {
 
     lazy val response: F[SectionsResponse] = fetch(targetUrl + "/sections", parameters) map parseSections
-    lazy val results: F[List[Section]] = response map (_.results)
+  }
+
+  object SectionsQuery {
+    implicit def asResponse(q: SectionsQuery) = q.response
+    implicit def asSections(q: SectionsQuery) = q.response map (_.results)
   }
 
   class TagsQuery extends GeneralParameters[TagsQuery]
@@ -55,9 +62,12 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
 
     lazy val tagType = new StringParameter(self, "type")
     lazy val response: F[TagsResponse] = fetch(targetUrl + "/tags", parameters) map parseTags
-    lazy val results: F[List[Tag]] = response map (_.results)
   }
 
+  object TagsQuery {
+    implicit def asResponse(q: TagsQuery) = q.response
+    implicit def asTags(q: TagsQuery) = q.response map (_.results)
+  }
 
   class SearchQuery extends GeneralParameters[SearchQuery]
           with PaginationParameters[SearchQuery]
@@ -69,7 +79,11 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
           with ShowReferenceParameters[SearchQuery] {
 
     lazy val response: F[SearchResponse] = fetch(targetUrl + "/search", parameters) map parseSearch
-    lazy val results: F[List[Content]] = response map (_.results)
+  }
+
+  object SearchQuery {
+    implicit def asResponse(q: SearchQuery) = q.response
+    implicit def asContent(q: SearchQuery) = q.response map (_.results)
   }
 
   class ItemQuery extends GeneralParameters[ItemQuery]
@@ -90,7 +104,10 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
     lazy val response: F[ItemResponse] = fetch(
         _apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
         parameters) map parseItem
-    lazy val results: F[List[Content]] = response map (_.results)
+  }
+
+  object ItemQuery {
+    implicit def asResponse(q: ItemQuery) = q.response
   }
 
   trait GeneralParameters[Owner] extends Parameters[Owner] { this: Owner =>
