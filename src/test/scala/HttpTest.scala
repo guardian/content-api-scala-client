@@ -34,8 +34,6 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
     api.item.itemId("type/video").response.tag.get.id should be("type/video")
   }
 
-  import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
-
   "DispatchAsyncHttp" should "be able to call the api" in {
 
     val promisedContent: dispatch.Promise[Content] = for {
