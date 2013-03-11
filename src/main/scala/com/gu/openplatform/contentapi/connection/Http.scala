@@ -36,7 +36,7 @@ trait ApacheSyncHttpClient extends SyncHttp {
     httpClient.getHostConfiguration.setProxy(host, port)
   }
 
-  def GET(url: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse] = {
+  def GET(url: String, headers: Iterable[(String, String)] = Nil): HttpResponse = {
     val method = new GetMethod(url)
     try {
 
@@ -80,7 +80,7 @@ trait MultiThreadedApacheSyncHttpClient extends ApacheSyncHttpClient {
 
 // an implementation using java.net
 trait JavaNetSyncHttp extends SyncHttp {
-  def GET(urlString: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse] = {
+  def GET(urlString: String, headers: Iterable[(String, String)] = Nil): HttpResponse = {
 
     val connection = new URL(urlString).openConnection.asInstanceOf[HttpURLConnection]
     headers.foreach { case (k, v) => connection.setRequestProperty(k, v) }
@@ -140,7 +140,7 @@ trait Dispatch {
 
 trait DispatchSyncHttp extends SyncHttp with Dispatch {
 
-  def GET(urlString: String, headers: Iterable[(String, String)] = Nil): Id[HttpResponse] =
+  def GET(urlString: String, headers: Iterable[(String, String)] = Nil): HttpResponse =
     get(urlString, headers)()
 
 }
