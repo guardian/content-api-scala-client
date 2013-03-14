@@ -9,7 +9,9 @@ object FutureInstances {
 
     def point[A](a: A) = Future.successful(a)
 
-    def bind[A, B](f: (A) => Future[B]) = _ flatMap f
+    override def map[A, B](f: A => B) = _ map f
+
+    def bind[A, B](f: A => Future[B]) = _ flatMap f
 
     def fail[A](error: ApiError) = Future.failed(error)
   }
