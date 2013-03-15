@@ -101,5 +101,4 @@ http://content.guardianapis.com:
 More reading
 ============
 
-Further examples can be found in [ExampleUsageTest.scala](open-platform-content-api-scala-client/src/test/scala/ExampleUsageTest.scala).
-
+Further examples can be found in [ExampleUsageTest.scala](src/test/scala/ExampleUsageTest.scala).
