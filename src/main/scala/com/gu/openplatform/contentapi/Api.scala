@@ -1,19 +1,22 @@
 package com.gu.openplatform.contentapi
 
-
-import connection.{JavaNetHttp, Http}
+import connection.{DispatchAsyncHttp, Http, JavaNetSyncHttp}
 import java.net.URLEncoder
 import com.gu.openplatform.contentapi.parser.JsonParser
+import model._
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.ReadableInstant
+import util.{Monad, MonadOps, Id}
+import MonadOps._
 
 
 // thrown when an "expected" error is thrown by the api
 case class ApiError(httpStatus: Int, httpMessage: String)
         extends Exception(httpMessage)
 
+trait SyncApi extends Api[Id]
 
-abstract class Api extends Http with JsonParser {
+abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
   val targetUrl = "http://content.guardianapis.com"
   var apiKey: Option[String] = None
 
@@ -26,43 +29,41 @@ abstract class Api extends Http with JsonParser {
   class FoldersQuery
     extends GeneralParameters[FoldersQuery]
     with FilterParameters[FoldersQuery] {
-    lazy val response = parseFolders(fetch(targetUrl + "/folders", parameters))
+
+    lazy val response: F[FoldersResponse] = fetch(targetUrl + "/folders", parameters) map parseFolders
   }
 
   object FoldersQuery {
     implicit def asResponse(q: FoldersQuery) = q.response
-    implicit def asSections(q: FoldersQuery) = q.response.results
+    implicit def asFolders(q: FoldersQuery) = q.response map (_.results)
   }
-
 
   class SectionsQuery
     extends GeneralParameters[SectionsQuery]
     with FilterParameters[SectionsQuery] {
-    lazy val response = parseSections(fetch(targetUrl + "/sections", parameters))
+
+    lazy val response: F[SectionsResponse] = fetch(targetUrl + "/sections", parameters) map parseSections
   }
 
   object SectionsQuery {
     implicit def asResponse(q: SectionsQuery) = q.response
-    implicit def asSections(q: SectionsQuery) = q.response.results
+    implicit def asSections(q: SectionsQuery) = q.response map (_.results)
   }
-
-
 
   class TagsQuery extends GeneralParameters[TagsQuery]
           with PaginationParameters[TagsQuery]
           with FilterParameters[TagsQuery]
           with RefererenceParameters[TagsQuery]
           with ShowReferenceParameters[TagsQuery] {
+
     lazy val tagType = new StringParameter(self, "type")
-    lazy val response = parseTags(fetch(targetUrl + "/tags", parameters))
+    lazy val response: F[TagsResponse] = fetch(targetUrl + "/tags", parameters) map parseTags
   }
 
   object TagsQuery {
     implicit def asResponse(q: TagsQuery) = q.response
-    implicit def asTags(q: TagsQuery) = q.response.results
+    implicit def asTags(q: TagsQuery) = q.response map (_.results)
   }
-
-
 
   class SearchQuery extends GeneralParameters[SearchQuery]
           with PaginationParameters[SearchQuery]
@@ -72,16 +73,14 @@ abstract class Api extends Http with JsonParser {
           with ContentFilterParameters[SearchQuery]
           with RefererenceParameters[SearchQuery]
           with ShowReferenceParameters[SearchQuery] {
-    lazy val response = parseSearch(fetch(targetUrl + "/search", parameters))
+
+    lazy val response: F[SearchResponse] = fetch(targetUrl + "/search", parameters) map parseSearch
   }
 
   object SearchQuery {
     implicit def asResponse(q: SearchQuery) = q.response
-    implicit def asContent(q: SearchQuery) = q.response.results
+    implicit def asContent(q: SearchQuery) = q.response map (_.results)
   }
-
-
-
 
   class ItemQuery extends GeneralParameters[ItemQuery]
           with ShowParameters[ItemQuery]
@@ -98,28 +97,26 @@ abstract class Api extends Http with JsonParser {
 
     def itemId(contentId: String): this.type = apiUrl(targetUrl + "/" + contentId)
 
-    lazy val response = parseItem(
-      fetch(
+    lazy val response: F[ItemResponse] = fetch(
         _apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
-        parameters))
+        parameters) map parseItem
   }
 
   object ItemQuery {
     implicit def asResponse(q: ItemQuery) = q.response
   }
 
-
-
-  trait GeneralParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait GeneralParameters[Owner] extends Parameters[Owner] { this: Owner =>
+    final def self = this
     override def parameters = super.parameters ++ apiKey.map("api-key" -> _)
   }
 
-  trait PaginationParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val pageSize = new IntParameter(self, "page-size")
     lazy val page = new IntParameter(self, "page")
   }
 
-  trait FilterParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val q = new StringParameter(self, "q")
     lazy val section = new StringParameter(self, "section")
     lazy val ids = new StringParameter(self, "ids")
@@ -127,7 +124,7 @@ abstract class Api extends Http with JsonParser {
     lazy val folder = new StringParameter(self, "folder")
   }
 
-  trait ContentFilterParameters[OwnerType <: ParameterHolder] extends FilterParameters[OwnerType] {
+  trait ContentFilterParameters[Owner <: Parameters[Owner]] extends FilterParameters[Owner] {
     lazy val orderBy = new StringParameter(self, "order-by")
     lazy val fromDate = new DateParameter(self, "from-date")
     lazy val toDate = new DateParameter(self, "to-date")
@@ -135,7 +132,7 @@ abstract class Api extends Http with JsonParser {
     lazy val useDate = new StringParameter(self, "use-date")
    }
 
-  trait ShowParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val showFields = new StringParameter(self, "show-fields")
     lazy val showSnippets = new StringParameter(self, "show-snippets")
     lazy val showTags = new StringParameter(self, "show-tags")
@@ -153,23 +150,23 @@ abstract class Api extends Http with JsonParser {
     lazy val showExpired = new BoolParameter(self, "show-expired")
   }
 
-  trait RefinementParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait RefinementParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val showRefinements = new StringParameter(self, "show-refinements")
     lazy val refinementSize = new IntParameter(self, "refinement-size")
   }
 
-  trait RefererenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait RefererenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val reference = new StringParameter(self, "reference")
     lazy val referenceType = new StringParameter(self, "reference-type")
   }
 
-  trait ShowReferenceParameters[OwnerType <: ParameterHolder] extends Parameters[OwnerType] {
+  trait ShowReferenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
     lazy val showReferences = new StringParameter(self, "show-references")
   }
 
 
 
-  protected def fetch(url: String, parameters: Map[String, Any] = Map.empty): String = {
+  protected def fetch(url: String, parameters: Map[String, Any] = Map.empty): F[String] = {
     require(!url.contains('?'), "must not specify parameters in url")
 
     def encodeParameter(p: Any): String = p match {
@@ -180,14 +177,22 @@ abstract class Api extends Http with JsonParser {
     val queryString = parameters.map {case (k, v) => k + "=" + encodeParameter(v)}.mkString("&")
     val target = url + "?" + queryString
 
-    val response = GET(target, List("User-Agent" -> "scala-api-client", "Accept" -> "application/json"))
+    for {
+      response <- GET(target, List("User-Agent" -> "scala-api-client", "Accept" -> "application/json"))
+      body <-
+        if (List(200, 302) contains response.statusCode) point(response.body)
+        else fail(new ApiError(response.statusCode, response.statusMessage))
+    } yield body
 
-    if (List(200, 302) contains response.statusCode) {
-      response.body
-    } else {
-      throw new ApiError(response.statusCode, response.statusMessage)
-    }
   }
 }
 
-object Api extends Api with JavaNetHttp
+import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
+import com.gu.openplatform.contentapi.util.IdInstances._
+
+// Default client instance, based on java.net client
+object Api extends SyncApi with JavaNetSyncHttp
+
+/** Async client instance based on Dispatch
+  */
+object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp

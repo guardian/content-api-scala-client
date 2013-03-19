@@ -1,11 +1,12 @@
 package com.gu.openplatform.contentapi
 
-trait ParameterHolder {
-  var parameterList: List[QueryParameter] = Nil
-  def register(param: QueryParameter) = parameterList ::= param
-}
+trait Parameters[Owner] {
 
-trait Parameters[OwnerType <: ParameterHolder] extends ParameterHolder {
+  protected def self: Owner
+
+  private var parameterList: List[QueryParameter] = Nil
+
+  final def register(param: QueryParameter) = parameterList ::= param
+
   def parameters: Map[String, Any] = parameterList.flatMap(_.asTuple).toMap
-  protected def self: OwnerType with ParameterHolder = this.asInstanceOf[OwnerType]
 }

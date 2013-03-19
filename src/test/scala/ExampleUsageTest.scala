@@ -1,7 +1,6 @@
 import com.gu.openplatform.contentapi.Api
-import com.gu.openplatform.contentapi.model.ItemResponse
 import java.io.IOException
-import org.joda.time.{DateMidnight, LocalDate, DateTime}
+import org.joda.time.DateMidnight
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{BeforeAndAfterEach, FeatureSpec}
 
