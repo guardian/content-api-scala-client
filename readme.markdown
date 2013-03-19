@@ -15,14 +15,14 @@ This library provides a simple client wrapper round the [guardian.co.uk][g.co.uk
 To use from sbt:
 
     resolvers += "Guardian Github Releases" at "http://guardian.github.com/maven/repo-releases"
-    libraryDependencies += "com.gu.openplatform" %% "content-api-client" % "1.21"
+    libraryDependencies += "com.gu.openplatform" %% "content-api-client" % "1.22"
 
 To use from maven:
 
     <dependency>
         <groupId>com.gu.openplatform</groupId>
         <artifactId>content-api-client_${scala.version}</artifactId>
-        <version>1.21</version>
+        <version>1.22</version>
     </dependency>
 
     ...
