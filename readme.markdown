@@ -98,6 +98,15 @@ http://content.guardianapis.com:
     Api.item.itemId("/travel/france").results.foreach(c => println(c.webTitle))
 
 
+Asynchronous API
+----------------
+
+As of version 1.22, this library includes an API client instance supporting asychronous requests via
+[Dispatch](http://dispatch.databinder.net/Dispatch.html) (version 0.9.5).
+
+    // returns Promise[Int]
+    DispatchAsyncApi.search.response map (_.total)
+
 More reading
 ============
 
