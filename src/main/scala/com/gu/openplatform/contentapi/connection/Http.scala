@@ -11,6 +11,7 @@ import com.ning.http.client._
 import providers.netty.{NettyAsyncHttpProvider, NettyConnectionsPool}
 import com.gu.openplatform.contentapi.util.Id
 import com.gu.openplatform.contentapi.util.IdInstances._
+import concurrent.ExecutionContext
 
 
 case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
@@ -95,6 +96,8 @@ trait JavaNetSyncHttp extends SyncHttp {
 }
 
 trait Dispatch {
+
+  implicit def executionContext: ExecutionContext
 
   lazy val maxConnections: Int = 10
   lazy val connectionTimeoutInMs: Int = 1000

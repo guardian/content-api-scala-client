@@ -1,12 +1,17 @@
 import com.gu.openplatform.contentapi.model.{ItemResponse, Content}
-import com.gu.openplatform.contentapi.{DispatchAsyncApi, ApiError, SyncApi, Api}
+import com.gu.openplatform.contentapi.{ApiError, SyncApi, Api}
 import com.gu.openplatform.contentapi.connection._
+import concurrent.ExecutionContext
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{FlatSpec, BeforeAndAfterEach}
 import com.gu.openplatform.contentapi.util.IdInstances._
+import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
+import dispatch._
 
 
 class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
+
+  import ExecutionContext.Implicits.global
 
   info("Tests that each type of client can actually perform a call to the api")
 
@@ -22,16 +27,17 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
     testClient(new SyncApi with JavaNetSyncHttp)
   }
 
+  val syncApi = new SyncApi with DispatchSyncHttp {
+    implicit val executionContext = ExecutionContext.global
+  }
+
   "DispatchSyncHttp" should "be able to call the api" in {
-    val api = new SyncApi with DispatchSyncHttp
-    testClient(api)
+    testClient(syncApi)
   }
 
   "DispatchSyncHttp" should "follow redirects" in {
-    val api = new SyncApi with DispatchSyncHttp
-
     //redirects to /video
-    api.item.itemId("type/video").response.tag.get.id should be("type/video")
+    syncApi.item.itemId("type/video").response.tag.get.id should be("type/video")
   }
 
   "DispatchAsyncHttp" should "be able to call the api" in {
@@ -40,7 +46,7 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
       response <- DispatchAsyncApi.item.itemId("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry").response
     } yield response.content.get
 
-    promisedContent.apply.id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+    promisedContent.apply().id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
   }
 
   "DispatchAsyncHttp" should "return API errors as a broken promise" in {
@@ -58,6 +64,10 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
       .content.get
 
     content.id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+  }
+
+  object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp {
+    val executionContext = ExecutionContext.global
   }
 
 }

@@ -195,4 +195,5 @@ object Api extends SyncApi with JavaNetSyncHttp
 
 /** Async client instance based on Dispatch
   */
-object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp
+// TODO this needs an execution context
+// object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp

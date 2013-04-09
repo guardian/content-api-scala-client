@@ -13,8 +13,8 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
   "commons-httpclient" % "commons-httpclient" % "3.1",
-  "net.liftweb" %% "lift-json" % "2.5-M4",
-  "net.databinder.dispatch" %% "dispatch-core" % "0.9.5",
+  "net.liftweb" %% "lift-json" % "2.5-RC2",
+  "net.databinder.dispatch" %% "dispatch-core" % "0.10.0",
   "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 )
 

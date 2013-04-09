@@ -2,10 +2,11 @@ package com.gu.openplatform.contentapi.util
 
 import dispatch.{Http, Promise}
 import com.gu.openplatform.contentapi.ApiError
+import concurrent.{Future, ExecutionContext}
 
 object DispatchPromiseInstances {
 
-  implicit val promiseMonad: Monad[Promise] = new Monad[Promise] {
+  implicit def promiseMonad(implicit ctx: ExecutionContext): Monad[Promise] = new Monad[Promise] {
 
     def point[A](a: A) = Http.promise(a)
 
@@ -13,7 +14,7 @@ object DispatchPromiseInstances {
 
     def bind[A, B](f: A => Promise[B]) = _ flatMap f
 
-    def fail[A](error: ApiError) = Http.promise(throw error)
+    def fail[A](error: ApiError): Promise[A] = Future.failed(error)
   }
 
 }
