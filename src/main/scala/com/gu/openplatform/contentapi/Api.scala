@@ -1,22 +1,31 @@
 package com.gu.openplatform.contentapi
 
-import connection.{DispatchAsyncHttp, Http, JavaNetSyncHttp}
+import scala.concurrent.ExecutionContext
 import java.net.URLEncoder
-import com.gu.openplatform.contentapi.parser.JsonParser
-import model._
+
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.ReadableInstant
-import util.{Monad, MonadOps, Id}
-import MonadOps._
+
+import connection.{DispatchAsyncHttp, Http, JavaNetSyncHttp}
+import com.gu.openplatform.contentapi.parser.JsonParser
+import model._
+import util._
 
 
 // thrown when an "expected" error is thrown by the api
 case class ApiError(httpStatus: Int, httpMessage: String)
         extends Exception(httpMessage)
 
-trait SyncApi extends Api[Id]
+trait SyncApi extends Api[Id] {
+  implicit val M = IdInstances.idMonad
+}
 
-abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
+trait Api[F[_]] extends Http[F] with JsonParser {
+  import MonadOps._
+
+  /** Proof that we can call point, map, flatMap and error for type F */
+  implicit def M: Monad[F]
+
   val targetUrl = "http://content.guardianapis.com"
   var apiKey: Option[String] = None
 
@@ -195,5 +204,7 @@ object Api extends SyncApi with JavaNetSyncHttp
 
 /** Async client instance based on Dispatch
   */
-// TODO this needs an execution context
-// object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp
+object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp {
+  implicit val executionContext = ExecutionContext.global
+  implicit val M = DispatchPromiseInstances.promiseMonad(executionContext)
+}

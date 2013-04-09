@@ -1,11 +1,9 @@
+import scala.concurrent.ExecutionContext
 import com.gu.openplatform.contentapi.model.{ItemResponse, Content}
-import com.gu.openplatform.contentapi.{ApiError, SyncApi, Api}
+import com.gu.openplatform.contentapi.{DispatchAsyncApi, ApiError, SyncApi}
 import com.gu.openplatform.contentapi.connection._
-import concurrent.ExecutionContext
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{FlatSpec, BeforeAndAfterEach}
-import com.gu.openplatform.contentapi.util.IdInstances._
-import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
 import dispatch._
 
 
@@ -64,10 +62,6 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
       .content.get
 
     content.id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
-  }
-
-  object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp {
-    val executionContext = ExecutionContext.global
   }
 
 }
