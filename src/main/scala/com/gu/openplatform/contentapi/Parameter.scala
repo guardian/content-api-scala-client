@@ -1,35 +1,22 @@
 package com.gu.openplatform.contentapi
 
-import org.joda.time.ReadableInstant
+trait Parameter {
 
-trait QueryParameter {
-  def asTuple: Option[(String, Any)]
-}
+  type Self
+  type ParameterOwner <: Parameters[ParameterOwner]
 
-// This class is heavily modelled on net.liftweb.record.Field
-abstract class Parameter[Self, Owner <: Parameters[Owner]](owner: Owner, name: String) extends QueryParameter {
-  var value: Option[Self] = None
+  def owner: ParameterOwner
+  def name: String
+  def value: Option[Self]
 
   def asTuple = value.map(name -> _)
 
-  def apply(newValue: Self) = { value = Some(newValue); owner }
-  def apply(newValue: Option[Self]) = { value = newValue; owner }
-  def reset() = { value = None; owner }
+  def updated(newValue: Option[Self]): Parameter
 
-  owner.register(this)
-}
+  def apply(newValue: Self): ParameterOwner = apply(Some(newValue))
 
-class StringParameter[Owner <: Parameters[Owner]](owner: Owner, name: String)
-  extends Parameter[String, Owner](owner, name)
+  def apply(newValue: Option[Self]): ParameterOwner = owner.updated(name, updated(newValue))
 
-class IntParameter[Owner <: Parameters[Owner]](owner: Owner, name: String)
-  extends Parameter[Int, Owner](owner, name)
+  def reset(): ParameterOwner = owner.updated(Map.empty)
 
-class DateParameter[Owner <: Parameters[Owner]](owner: Owner, name: String)
-  extends Parameter[ReadableInstant, Owner](owner, name)
-
-class BoolParameter[Owner <: Parameters[Owner]](owner: Owner, name: String)
-  extends Parameter[Boolean, Owner](owner, name) {
-
-  def apply(): Owner = apply(true)
 }
