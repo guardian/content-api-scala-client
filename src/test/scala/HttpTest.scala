@@ -40,7 +40,7 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
 
   "DispatchAsyncHttp" should "be able to call the api" in {
 
-    val promisedContent: dispatch.Promise[Content] = for {
+    val promisedContent: Future[Content] = for {
       response <- DispatchAsyncApi.item.itemId("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry").response
     } yield response.content.get
 
@@ -48,7 +48,7 @@ class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
   }
 
   "DispatchAsyncHttp" should "return API errors as a broken promise" in {
-    val brokenPromise: dispatch.Promise[ItemResponse] = DispatchAsyncApi.item.itemId("fdsfgs").response
+    val brokenPromise: Future[ItemResponse] = DispatchAsyncApi.item.itemId("fdsfgs").response
     brokenPromise.recover { case error => error should be (ApiError(404, "Not Found")) } apply()
   }
 

@@ -1,6 +1,6 @@
 package com.gu.openplatform.contentapi
 
-import scala.concurrent.ExecutionContext
+import concurrent.{Future, ExecutionContext}
 import java.net.URLEncoder
 
 import org.joda.time.format.ISODateTimeFormat
@@ -215,7 +215,7 @@ object Api extends SyncApi with JavaNetSyncHttp
 
 /** Async client instance based on Dispatch
   */
-object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp {
+object DispatchAsyncApi extends Api[Future] with DispatchAsyncHttp {
   implicit val executionContext = ExecutionContext.global
-  implicit val M = DispatchPromiseInstances.promiseMonad(executionContext)
+  implicit val M = FutureInstances.futureMonad(executionContext)
 }
