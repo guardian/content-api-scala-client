@@ -7,7 +7,7 @@ import org.joda.time.DateTime
 // on case class constructors doesn't get put anywhere useful.
 //
 // However, it looks like in 2.8.1 or possibly later this will be fixed, see
-// http://scala-programming-language.1934581.n4.nabble.com/scaladoc-and-constructor-parameters-td2328652.html
+// http://scala-programming-language.1934581.n4.nabble.com/scaladoc-and-constructor-parameterHolder-td2328652.html
 case class Content(
 
         /**
@@ -106,7 +106,7 @@ case class Content(
         elements: Option[Map[String, Element]],
 
         /**
-         * List of snippets that matched the requested query parameters.
+         * List of snippets that matched the requested query parameterHolder.
          * This allows google-style highlighting of matches in results.
          *
          * Only returned if you specify showSnippets("xxx") on the request
