@@ -10,7 +10,6 @@ import dispatch._
 import com.ning.http.client._
 import providers.netty.{NettyAsyncHttpProvider, NettyConnectionsPool}
 import com.gu.openplatform.contentapi.util.Id
-import com.gu.openplatform.contentapi.util.IdInstances._
 import concurrent.ExecutionContext
 
 
@@ -125,7 +124,7 @@ trait Dispatch {
     }
   }
 
-  protected def get(urlString: String, headers: Iterable[(String, String)] = Nil): Promise[HttpResponse] = {
+  protected def get(urlString: String, headers: Iterable[(String, String)] = Nil): Future[HttpResponse] = {
     val request = {
       val r = url(urlString)
       headers.foreach{case (name, value) => r.setHeader(name, value)}
@@ -148,9 +147,9 @@ trait DispatchSyncHttp extends SyncHttp with Dispatch {
 
 }
 
-trait DispatchAsyncHttp extends Http[Promise] with Dispatch {
+trait DispatchAsyncHttp extends Http[Future] with Dispatch {
 
-  def GET(urlString: String, headers: Iterable[(String, String)] = Nil): Promise[HttpResponse] =
+  def GET(urlString: String, headers: Iterable[(String, String)] = Nil): Future[HttpResponse] =
     get(urlString, headers)
 
 }
