@@ -16,10 +16,6 @@ import util._
 case class ApiError(httpStatus: Int, httpMessage: String)
         extends Exception(httpMessage)
 
-trait SyncApi extends Api[Id] {
-  implicit val M = IdInstances.idMonad
-}
-
 trait Api[F[_]] extends Http[F] with JsonParser {
   import MonadOps._
 
@@ -209,13 +205,23 @@ trait Api[F[_]] extends Http[F] with JsonParser {
   }
 }
 
+/** Base trait for blocking clients */
+trait SyncApi extends Api[Id] {
+  implicit val M = IdInstances.idMonad
+}
+
+/** Base trait for Future-based async clients */
+trait FutureAsyncApi extends Api[Future] {
+  implicit def executionContext: ExecutionContext
+  implicit def M = FutureInstances.futureMonad(executionContext)
+}
+
 
 // Default client instance, based on java.net client
 object Api extends SyncApi with JavaNetSyncHttp
 
 /** Async client instance based on Dispatch
   */
-object DispatchAsyncApi extends Api[Future] with DispatchAsyncHttp {
+object DispatchAsyncApi extends FutureAsyncApi with DispatchAsyncHttp {
   implicit val executionContext = ExecutionContext.global
-  implicit val M = FutureInstances.futureMonad(executionContext)
 }
