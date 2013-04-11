@@ -194,13 +194,13 @@ trait Api[F[_]] extends Http[F] with JsonParser {
 
 /** Base trait for blocking clients */
 trait SyncApi extends Api[Id] {
-  implicit val M = IdInstances.idMonad
+  implicit val M = MonadInstances.idMonad
 }
 
 /** Base trait for Future-based async clients */
 trait FutureAsyncApi extends Api[Future] {
   implicit def executionContext: ExecutionContext
-  implicit def M = FutureInstances.futureMonad(executionContext)
+  implicit def M = MonadInstances.futureMonad(executionContext)
 }
 
 // Default client instance, based on java.net client
