@@ -1,8 +1,9 @@
 package com.gu.openplatform.contentapi.util
 
 import com.gu.openplatform.contentapi.ApiError
+import scala.concurrent.{Future, ExecutionContext}
 
-/** Monad typeclass with failure specialized to ApiError
+/** Monad typeclass with failure
   */
 trait Monad[F[_]] {
 
@@ -15,7 +16,7 @@ trait Monad[F[_]] {
     * We replicate this historical piece of pragmatism (from Haskell) here, because
     * throwing the exception is the intended behaviour for the blocking client.
     */
-  def fail[A](error: ApiError): F[A]
+  def fail[A](error: Exception): F[A]
 
   def map[A, B](f: A => B): F[A] => F[B] =
     bind(f andThen point)
@@ -37,4 +38,21 @@ object MonadOps {
 
   def point[M[_], A](a: A)(implicit M: Monad[M]): M[A] = M.point(a)
   def fail[M[_], A](error: ApiError)(implicit M: Monad[M]): M[A] = M.fail(error)
+}
+
+object MonadInstances {
+
+  val idMonad: Monad[Id] = new Monad[Id] {
+    def point[A](a: A) = a
+    def bind[A, B](f: A => Id[B]) = f
+    def fail[A](error: Exception) = throw error
+  }
+
+  def futureMonad(implicit ex: ExecutionContext): Monad[Future] = new Monad[Future] {
+    def point[A](a: A) = Future.successful(a)
+    override def map[A, B](f: A => B) = _ map f
+    def bind[A, B](f: A => Future[B]) = _ flatMap f
+    def fail[A](error: Exception) = Future.failed(error)
+  }
+
 }

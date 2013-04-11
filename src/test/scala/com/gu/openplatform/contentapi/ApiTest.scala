@@ -8,10 +8,10 @@ class ApiTest extends FunSuite with ShouldMatchers {
   test("should correctly add api key if present") {
     try {
       Api.apiKey = None
-      Api.search.parameters.get("api-key") should be (None)
+      Api.search.queryParameters.get("api-key") should be (None)
 
       Api.apiKey = Some("abcd")
-      Api.search.parameters.get("api-key") should be (Some("abcd"))
+      Api.search.queryParameters.get("api-key") should be (Some("abcd"))
 
     } finally {
       Api.apiKey = None
