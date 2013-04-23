@@ -103,6 +103,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
   case class ItemQuery(path: Option[String] = None, parameterHolder: Map[String, Parameter] = Map.empty)
     extends GeneralParameters[ItemQuery]
           with ShowParameters[ItemQuery]
+          with FilterParameters[ItemQuery]
           with ContentFilterParameters[ItemQuery]
           with PaginationParameters[ItemQuery]
           with ShowReferenceParameters[ItemQuery] {
