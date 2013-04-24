@@ -1,22 +1,27 @@
 package com.gu.openplatform.contentapi
 
-import connection.{DispatchAsyncHttp, Http, JavaNetSyncHttp}
+import concurrent.{Future, ExecutionContext}
 import java.net.URLEncoder
-import com.gu.openplatform.contentapi.parser.JsonParser
-import model._
+
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.ReadableInstant
-import util.{Monad, MonadOps, Id}
-import MonadOps._
+
+import connection.{DispatchAsyncHttp, Http, JavaNetSyncHttp}
+import com.gu.openplatform.contentapi.parser.JsonParser
+import model._
+import util._
 
 
 // thrown when an "expected" error is thrown by the api
 case class ApiError(httpStatus: Int, httpMessage: String)
         extends Exception(httpMessage)
 
-trait SyncApi extends Api[Id]
+trait Api[F[_]] extends Http[F] with JsonParser {
+  import MonadOps._
 
-abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
+  /** Proof that we can call point, map, flatMap and error for type F */
+  implicit def M: Monad[F]
+
   val targetUrl = "http://content.guardianapis.com"
   var apiKey: Option[String] = None
 
@@ -26,11 +31,13 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
   def search = new SearchQuery
   def item = new ItemQuery
 
-  class FoldersQuery
+  case class FoldersQuery(parameterHolder: Map[String, Parameter] = Map.empty)
     extends GeneralParameters[FoldersQuery]
     with FilterParameters[FoldersQuery] {
 
     lazy val response: F[FoldersResponse] = fetch(targetUrl + "/folders", parameters) map parseFolders
+
+    def updated(parameterMap: Map[String, Parameter]) = copy(parameterMap)
   }
 
   object FoldersQuery {
@@ -38,11 +45,14 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
     implicit def asFolders(q: FoldersQuery) = q.response map (_.results)
   }
 
-  class SectionsQuery
+  case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
     extends GeneralParameters[SectionsQuery]
     with FilterParameters[SectionsQuery] {
 
     lazy val response: F[SectionsResponse] = fetch(targetUrl + "/sections", parameters) map parseSections
+
+    def updated(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
   }
 
   object SectionsQuery {
@@ -50,14 +60,18 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
     implicit def asSections(q: SectionsQuery) = q.response map (_.results)
   }
 
-  class TagsQuery extends GeneralParameters[TagsQuery]
+  case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+    extends GeneralParameters[TagsQuery]
           with PaginationParameters[TagsQuery]
           with FilterParameters[TagsQuery]
           with RefererenceParameters[TagsQuery]
           with ShowReferenceParameters[TagsQuery] {
 
-    lazy val tagType = new StringParameter(self, "type")
+    lazy val tagType = new StringParameter("type")
     lazy val response: F[TagsResponse] = fetch(targetUrl + "/tags", parameters) map parseTags
+
+    def updated(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
   }
 
   object TagsQuery {
@@ -65,7 +79,8 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
     implicit def asTags(q: TagsQuery) = q.response map (_.results)
   }
 
-  class SearchQuery extends GeneralParameters[SearchQuery]
+  case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+    extends GeneralParameters[SearchQuery]
           with PaginationParameters[SearchQuery]
           with ShowParameters[SearchQuery]
           with RefinementParameters[SearchQuery]
@@ -75,6 +90,9 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
           with ShowReferenceParameters[SearchQuery] {
 
     lazy val response: F[SearchResponse] = fetch(targetUrl + "/search", parameters) map parseSearch
+
+    def updated(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
   }
 
   object SearchQuery {
@@ -82,91 +100,92 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
     implicit def asContent(q: SearchQuery) = q.response map (_.results)
   }
 
-  class ItemQuery extends GeneralParameters[ItemQuery]
+  case class ItemQuery(path: Option[String] = None, parameterHolder: Map[String, Parameter] = Map.empty)
+    extends GeneralParameters[ItemQuery]
           with ShowParameters[ItemQuery]
+          with FilterParameters[ItemQuery]
           with ContentFilterParameters[ItemQuery]
           with PaginationParameters[ItemQuery]
           with ShowReferenceParameters[ItemQuery] {
-    var _apiUrl: Option[String] = None
 
-    def apiUrl(newContentPath: String): this.type = {
+    def apiUrl(newContentPath: String): ItemQuery = {
       require(newContentPath startsWith targetUrl, "apiUrl expects a full url; use itemId if you only have an id")
-      _apiUrl = Some(newContentPath)
-      this
+      copy(path = Some(newContentPath))
     }
 
-    def itemId(contentId: String): this.type = apiUrl(targetUrl + "/" + contentId)
+    def itemId(contentId: String): ItemQuery = apiUrl(targetUrl + "/" + contentId)
 
     lazy val response: F[ItemResponse] = fetch(
-        _apiUrl.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
+        path.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
         parameters) map parseItem
+
+    def updated(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
+
   }
 
   object ItemQuery {
     implicit def asResponse(q: ItemQuery) = q.response
   }
 
-  trait GeneralParameters[Owner] extends Parameters[Owner] { this: Owner =>
-    final def self = this
+  trait GeneralParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     override def parameters = super.parameters ++ apiKey.map("api-key" -> _)
   }
 
-  trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
-    lazy val pageSize = new IntParameter(self, "page-size")
-    lazy val page = new IntParameter(self, "page")
+  trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def pageSize = IntParameter("page-size")
+    def page = IntParameter("page")
   }
 
-  trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
-    lazy val q = new StringParameter(self, "q")
-    lazy val section = new StringParameter(self, "section")
-    lazy val ids = new StringParameter(self, "ids")
-    lazy val tag = new StringParameter(self, "tag")
-    lazy val folder = new StringParameter(self, "folder")
+  trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def q = StringParameter("q")
+    def section = StringParameter("section")
+    def ids = StringParameter("ids")
+    def tag = StringParameter("tag")
+    def folder = StringParameter("folder")
   }
 
-  trait ContentFilterParameters[Owner <: Parameters[Owner]] extends FilterParameters[Owner] {
-    lazy val orderBy = new StringParameter(self, "order-by")
-    lazy val fromDate = new DateParameter(self, "from-date")
-    lazy val toDate = new DateParameter(self, "to-date")
-    lazy val dateId = new StringParameter(self, "date-id")
-    lazy val useDate = new StringParameter(self, "use-date")
+  trait ContentFilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def orderBy = StringParameter("order-by")
+    def fromDate = DateParameter("from-date")
+    def toDate = DateParameter("to-date")
+    def dateId = StringParameter("date-id")
+    def useDate = StringParameter("use-date")
    }
 
-  trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
-    lazy val showFields = new StringParameter(self, "show-fields")
-    lazy val showSnippets = new StringParameter(self, "show-snippets")
-    lazy val showTags = new StringParameter(self, "show-tags")
-    lazy val showFactboxes = new StringParameter(self, "show-factboxes")
-    lazy val showMedia = new StringParameter(self, "show-media")
-    lazy val showRelated = new BoolParameter(self, "show-related")
-    lazy val showEditorsPicks = new BoolParameter(self, "show-editors-picks")
-    lazy val edition = new StringParameter(self, "edition")
-    lazy val showMostViewed = new BoolParameter(self, "show-most-viewed")
-    lazy val showStoryPackage = new BoolParameter(self, "show-story-package")
-    lazy val showBestBets = new BoolParameter(self, "show-best-bets")
-    lazy val snippetPre = new StringParameter(self, "snippet-pre")
-    lazy val snippetPost = new StringParameter(self, "snippet-post")
-    lazy val showInlineElements = new StringParameter(self, "show-inline-elements")
-    lazy val showExpired = new BoolParameter(self, "show-expired")
+  trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def showFields = StringParameter("show-fields")
+    def showSnippets = StringParameter("show-snippets")
+    def showTags = StringParameter("show-tags")
+    def showFactboxes = StringParameter("show-factboxes")
+    def showMedia = StringParameter("show-media")
+    def showRelated = BoolParameter("show-related")
+    def showEditorsPicks = BoolParameter("show-editors-picks")
+    def edition = StringParameter("edition")
+    def showMostViewed = BoolParameter("show-most-viewed")
+    def showStoryPackage = BoolParameter("show-story-package")
+    def showBestBets = BoolParameter("show-best-bets")
+    def snippetPre = StringParameter("snippet-pre")
+    def snippetPost = StringParameter("snippet-post")
+    def showInlineElements = StringParameter("show-inline-elements")
+    def showExpired = BoolParameter("show-expired")
   }
 
-  trait RefinementParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
-    lazy val showRefinements = new StringParameter(self, "show-refinements")
-    lazy val refinementSize = new IntParameter(self, "refinement-size")
+  trait RefinementParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def showRefinements = StringParameter("show-refinements")
+    def refinementSize = IntParameter("refinement-size")
   }
 
-  trait RefererenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
-    lazy val reference = new StringParameter(self, "reference")
-    lazy val referenceType = new StringParameter(self, "reference-type")
+  trait RefererenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def reference = StringParameter("reference")
+    def referenceType = StringParameter("reference-type")
   }
 
-  trait ShowReferenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] {
-    lazy val showReferences = new StringParameter(self, "show-references")
+  trait ShowReferenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def showReferences = StringParameter("show-references")
   }
 
 
-
-  protected def fetch(url: String, parameters: Map[String, Any] = Map.empty): F[String] = {
+  protected def fetch(url: String, parameters: Map[String, String]): F[String] = {
     require(!url.contains('?'), "must not specify parameters in url")
 
     def encodeParameter(p: Any): String = p match {
@@ -187,12 +206,22 @@ abstract class Api[F[_] : Monad] extends Http[F] with JsonParser {
   }
 }
 
-import com.gu.openplatform.contentapi.util.DispatchPromiseInstances._
-import com.gu.openplatform.contentapi.util.IdInstances._
+/** Base trait for blocking clients */
+trait SyncApi extends Api[Id] {
+  implicit val M = MonadInstances.idMonad
+}
+
+/** Base trait for Future-based async clients */
+trait FutureAsyncApi extends Api[Future] {
+  implicit def executionContext: ExecutionContext
+  implicit def M = MonadInstances.futureMonad(executionContext)
+}
 
 // Default client instance, based on java.net client
 object Api extends SyncApi with JavaNetSyncHttp
 
 /** Async client instance based on Dispatch
   */
-object DispatchAsyncApi extends Api[dispatch.Promise] with DispatchAsyncHttp
+object DispatchAsyncApi extends FutureAsyncApi with DispatchAsyncHttp {
+  implicit val executionContext = ExecutionContext.global
+}
