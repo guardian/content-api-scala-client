@@ -131,12 +131,12 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     override def parameters = super.parameters ++ apiKey.map("api-key" -> _)
   }
 
-  trait PaginationParameters[Owner <: Parameters[Owner]] { this: Owner =>
+  trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def pageSize = IntParameter("page-size")
     def page = IntParameter("page")
   }
 
-  trait FilterParameters[Owner <: Parameters[Owner]] { this: Owner =>
+  trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def q = StringParameter("q")
     def section = StringParameter("section")
     def ids = StringParameter("ids")
@@ -144,7 +144,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     def folder = StringParameter("folder")
   }
 
-  trait ContentFilterParameters[Owner <: Parameters[Owner]] { this: Owner =>
+  trait ContentFilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def orderBy = StringParameter("order-by")
     def fromDate = DateParameter("from-date")
     def toDate = DateParameter("to-date")
@@ -152,7 +152,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     def useDate = StringParameter("use-date")
    }
 
-  trait ShowParameters[Owner <: Parameters[Owner]] { this: Owner =>
+  trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def showFields = StringParameter("show-fields")
     def showSnippets = StringParameter("show-snippets")
     def showTags = StringParameter("show-tags")
@@ -170,17 +170,17 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     def showExpired = BoolParameter("show-expired")
   }
 
-  trait RefinementParameters[Owner <: Parameters[Owner]] { this: Owner =>
+  trait RefinementParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def showRefinements = StringParameter("show-refinements")
     def refinementSize = IntParameter("refinement-size")
   }
 
-  trait RefererenceParameters[Owner <: Parameters[Owner]] { this: Owner =>
+  trait RefererenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def reference = StringParameter("reference")
     def referenceType = StringParameter("reference-type")
   }
 
-  trait ShowReferenceParameters[Owner <: Parameters[Owner]] { this: Owner =>
+  trait ShowReferenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def showReferences = StringParameter("show-references")
   }
 
