@@ -1,16 +1,15 @@
 name := "content-api-client"
 
-version := "2.1-SNAPSHOT"
-
 organization := "com.gu.openplatform"
 
 scalaVersion := "2.10.1"
 
 crossScalaVersions := Seq("2.10.1", "2.9.3")
 
+releaseSettings
+
 resolvers ++= Seq(
-  "Guardian GitHub" at "http://guardian.github.com/maven/repo-releases"
-)
+    "Guardian GitHub Releases" at "http://guardian.github.io/maven/repo-releases")
 
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
