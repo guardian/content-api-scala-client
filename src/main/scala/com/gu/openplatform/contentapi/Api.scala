@@ -158,6 +158,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     def showTags = StringParameter("show-tags")
     def showFactboxes = StringParameter("show-factboxes")
     def showMedia = StringParameter("show-media")
+    def showElements = StringParameter("show-elements")
     def showRelated = BoolParameter("show-related")
     def showEditorsPicks = BoolParameter("show-editors-picks")
     def edition = StringParameter("edition")
