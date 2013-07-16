@@ -72,6 +72,7 @@ case class ItemResponse(
         pages: Option[Int],
         orderBy: Option[String],
         tag: Option[Tag],
+        edition: Option[Edition],
         section: Option[Section],
         content: Option[Content],
         results: List[Content],
