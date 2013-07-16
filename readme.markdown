@@ -1,14 +1,13 @@
-Scala client for the Guardian's OpenPlatform Content API
-========================================================
+Scala client for the Guardian's Content API
+===========================================
 
 Introduction
 ------------
 
-This library provides a simple client wrapper round the [guardian.co.uk][g.co.uk]
-[Open Platform][openplatform] [Content API][api], for scala 2.10.0, 2.9.2 and 2.9.1.
+This library provides a simple client wrapper round the [Guardian's][gu]
+[Content API][api], for scala 2.10.0, 2.9.2 and 2.9.1.
 
-[g.co.uk]: http://guardian.co.uk
-[openplatform]: http://www.guardian.co.uk/open-platform
+[gu]: http://guardian.co.uk
 [api]: http://content.guardianapis.com
 
 
