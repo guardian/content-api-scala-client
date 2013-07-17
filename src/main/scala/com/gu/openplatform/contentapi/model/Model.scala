@@ -227,6 +227,32 @@ case class Tag(
   def tagType = `type`
 }
 
+case class Edition(
+        /**
+         * The path of the edition, e.g. 'au/business'
+         */
+        id: String,
+
+        /**
+          * The edition code, e.g. 'uk' or 'default'.
+          */
+        code: String,
+
+        /**
+         * Short description of the edition
+         */
+        webTitle: String,
+
+        /**
+         * Edition URL for the main Guardian website
+         */
+        webUrl: String,
+
+        /**
+         * Path from which the edition is available in the Content API
+         */
+        apiUrl: String
+        )
 
 case class Section(
         /**
