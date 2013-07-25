@@ -234,11 +234,6 @@ case class Edition(
         id: String,
 
         /**
-          * The edition code, e.g. 'uk' or 'default'.
-          */
-        code: String,
-
-        /**
          * Short description of the edition
          */
         webTitle: String,
@@ -251,7 +246,12 @@ case class Edition(
         /**
          * Path from which the edition is available in the Content API
          */
-        apiUrl: String
+        apiUrl: String,
+
+        /**
+         * The edition code, e.g. 'uk' or 'default'.
+         */
+        code: String
         )
 
 case class Section(
