@@ -279,7 +279,12 @@ case class Section(
          * mostRead content in the section,
          * and automatically shows the most recent content for the section.
          */
-        apiUrl: String
+        apiUrl: String,
+
+        /**
+         * List of available editions for this section
+         */
+         editions: List[Edition]
         )
 
 case class Folder(
