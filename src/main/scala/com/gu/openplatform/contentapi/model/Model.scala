@@ -284,7 +284,7 @@ case class Section(
         /**
          * List of available editions for this section
          */
-         editions: List[Edition]
+        editions: List[Edition]
         )
 
 case class Folder(
