@@ -11,12 +11,12 @@ trait Parameter {
 
   def asTuple = value.map(name -> _)
 
-  def updated(newValue: Option[Self]): Parameter
+  def withValue(newValue: Option[Self]): Parameter
 
   def apply(newValue: Self): ParameterOwner = apply(Some(newValue))
 
-  def apply(newValue: Option[Self]): ParameterOwner = owner.updated(name, updated(newValue))
+  def apply(newValue: Option[Self]): ParameterOwner = owner.withParameter(this.withValue(newValue))
 
-  def reset(): ParameterOwner = owner.updated(Map.empty)
+  def reset(): ParameterOwner = owner.withParameters(Map.empty)
 
 }
