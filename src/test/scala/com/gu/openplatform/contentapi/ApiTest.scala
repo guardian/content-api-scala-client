@@ -22,10 +22,10 @@ class ApiTest extends FunSuite with ShouldMatchers {
   test("should add custom parameters") {
     val now = new DateTime
     val params = Api.search
-      .stringParam("myStringParam", Some("foo"))
-      .intParam("myIntParam", Some(3))
-      .dateParam("myDateParam", Some(now))
-      .boolParam("myBoolParam", Some(true))
+      .stringParam("myStringParam", "foo")
+      .intParam("myIntParam", 3)
+      .dateParam("myDateParam", now)
+      .boolParam("myBoolParam", true)
       .parameters
 
     params.get("myStringParam") should be (Some("foo"))
