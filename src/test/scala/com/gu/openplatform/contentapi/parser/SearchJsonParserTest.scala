@@ -142,7 +142,7 @@ class SearchJsonParserTest extends FlatSpec with ShouldMatchers {
 
     val elements = elementAssets.get
     elements.size should be(1)
-    val element = elements("gu-image-1234")
+    val element = elements.head
 
 
     element.id should be("gu-image-1234")
