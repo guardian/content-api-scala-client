@@ -103,7 +103,7 @@ case class Content(
         /**
          * New representation to elements (assets lists) only returns if show-elements("all") or show-elements("image") is specified
          */
-        elements: Option[Map[String, Element]],
+        elements: Option[List[Element]],
 
         /**
          * List of snippets that matched the requested query parameters.
