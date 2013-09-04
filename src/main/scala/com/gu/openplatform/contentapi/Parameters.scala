@@ -4,10 +4,22 @@ import org.joda.time.ReadableInstant
 
 trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
 
-  def updated(parameterName: String, parameter: Parameter): Owner =
-    updated(parameterHolder.updated(parameterName, parameter))
+  def stringParam(key: String, value: String): Owner =
+    withParameter(StringParameter(key, Some(value)))
 
-  def updated(parameterMap: Map[String, Parameter]): Owner
+  def intParam(key: String, value: Int): Owner =
+    withParameter(IntParameter(key, Some(value)))
+
+  def boolParam(key: String, value: Boolean): Owner =
+    withParameter(BoolParameter(key, Some(value)))
+
+  def dateParam(key: String, value: ReadableInstant): Owner =
+    withParameter(DateParameter(key, Some(value)))
+
+  def withParameter(parameter: Parameter): Owner =
+    withParameters(parameterHolder.updated(parameter.name, parameter))
+
+  def withParameters(parameterMap: Map[String, Parameter]): Owner
 
   protected def parameterHolder: Map[String, Parameter]
 
@@ -22,22 +34,22 @@ trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
 
   case class StringParameter(name: String, value: Option[String] = None) extends OwnedParameter {
     type Self = String
-    def updated(newValue: Option[String]) = copy(value = newValue)
+    def withValue(newValue: Option[String]) = copy(value = newValue)
   }
 
   case class IntParameter(name: String, value: Option[Int] = None) extends OwnedParameter {
     type Self = Int
-    def updated(newValue: Option[Int]) = copy(value = newValue)
+    def withValue(newValue: Option[Int]) = copy(value = newValue)
   }
 
   case class DateParameter(name: String, value: Option[ReadableInstant] = None) extends OwnedParameter {
     type Self = ReadableInstant
-    def updated(newValue: Option[ReadableInstant]) = copy(value = newValue)
+    def withValue(newValue: Option[ReadableInstant]) = copy(value = newValue)
   }
 
   case class BoolParameter(name: String, value: Option[Boolean] = None) extends OwnedParameter {
     type Self = Boolean
-    def updated(newValue: Option[Boolean]) = copy(value = newValue)
+    def withValue(newValue: Option[Boolean]) = copy(value = newValue)
     def apply(): Owner = apply(true)
   }
 

@@ -37,7 +37,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
 
     lazy val response: F[FoldersResponse] = fetch(targetUrl + "/folders", parameters) map parseFolders
 
-    def updated(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+    def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
   }
 
   object FoldersQuery {
@@ -51,7 +51,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
 
     lazy val response: F[SectionsResponse] = fetch(targetUrl + "/sections", parameters) map parseSections
 
-    def updated(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+    def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   }
 
@@ -70,7 +70,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     lazy val tagType = new StringParameter("type")
     lazy val response: F[TagsResponse] = fetch(targetUrl + "/tags", parameters) map parseTags
 
-    def updated(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+    def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   }
 
@@ -91,7 +91,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
 
     lazy val response: F[SearchResponse] = fetch(targetUrl + "/search", parameters) map parseSearch
 
-    def updated(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+    def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   }
 
@@ -119,7 +119,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
         path.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
         parameters) map parseItem
 
-    def updated(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
+    def withParameters(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
 
   }
 
