@@ -377,6 +377,7 @@ case class Element(
             id: String,
             relation: String,
             `type`: String,
+            galleryIndex : Option[Int] = None,
             assets: List[Asset]
           ) {
   def elementType = `type`
