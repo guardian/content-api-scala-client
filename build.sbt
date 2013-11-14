@@ -2,9 +2,9 @@ name := "content-api-client"
 
 organization := "com.gu.openplatform"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.10.3"
 
-crossScalaVersions := Seq("2.10.1", "2.9.3")
+crossScalaVersions := Seq("2.10.3", "2.9.3")
 
 releaseSettings
 
