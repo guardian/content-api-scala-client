@@ -8,6 +8,8 @@ crossScalaVersions := Seq("2.10.1", "2.9.3")
 
 releaseSettings
 
+ReleaseKeys.crossBuild := true
+
 resolvers ++= Seq(
     "Guardian GitHub Releases" at "http://guardian.github.io/maven/repo-releases")
 
