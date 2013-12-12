@@ -211,14 +211,20 @@ case class Tag(
          */
         bio: Option[String] = None,
 
-          /**
-           * If this tag is a contributor then we *may* have a small byline
-           * picturefor the contributor.
-           *
-           * This field is optional in all cases, even contributors are not
-           * guaranteed to have one.
-           */
-          bylineImageUrl: Option[String] = None
+        /**
+         * If this tag is a contributor then we *may* have a small byline
+         * picturefor the contributor.
+         *
+         * This field is optional in all cases, even contributors are not
+         * guaranteed to have one.
+         */
+        bylineImageUrl: Option[String] = None,
+
+        /**
+         * If this tag is a contributor then we *may* have a large byline
+         * picture for the contributor.
+         */
+        bylineLargeImageUrl: Option[String] = None
         ) {
 
   /**
