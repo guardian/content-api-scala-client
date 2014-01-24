@@ -30,6 +30,12 @@ case class SectionsResponse(
     total: Int,
     results: List[Section])
 
+case class FrontsResponse(
+    status: String,
+    userTier: String,
+    total: Int,
+    results: List[Front])
+
 case class FoldersResponse(
     status: String,
     userTier: String,
@@ -59,3 +65,9 @@ case class ItemResponse(
     mostViewed: List[Content],
     storyPackage: List[Content],
     leadContent: List[Content])
+
+case class CollectionResponse(
+    status: String,
+    userTier: String,
+    total: Int,
+    collection: Collection)

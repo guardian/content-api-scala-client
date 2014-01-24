@@ -2,137 +2,94 @@ package com.gu.openplatform.contentapi.model
 
 import org.joda.time.DateTime
 
-case class Content(
+sealed trait ContentType {
 
-    /**
-    * The id of this item of content: this should always be the path
-    * to the item on www.guardian.co.uk
-    */
-    id: String,
+  /**
+  * The id of this item of content: this should always be the path
+  * to the item on www.guardian.co.uk
+  */
+  val id: String
 
-    /**
-    * Section is usually provided: some content (such as user help information)
-    * does not belong to any section so this will be None
-    */
-    sectionId: Option[String],
+  /**
+  * Section is usually provided: some content (such as user help information)
+  * does not belong to any section so this will be None
+  */
+  val sectionId: Option[String]
 
-    /**
-    * The display name of the section.  Will be None iff sectionId is None.
-    */
-    sectionName: Option[String],
+  /**
+  * The display name of the section.  Will be None iff sectionId is None.
+  */
+  val sectionName: Option[String]
 
-    /**
-    * The date and time when this content was published to the web. Note that
-    * editors can set this field manually so does not necessarily exactly match
-    * when it actually appeared on the web. Current convention is that when
-    * "significant updates" are made to a story the web publication date is
-    * updated.
-    */
-    webPublicationDate: DateTime,
+  /**
+  * The date and time when this content was published to the web. Note that
+  * editors can set this field manually so does not necessarily exactly match
+  * when it actually appeared on the web. Current convention is that when
+  * "significant updates" are made to a story the web publication date is
+  * updated.
+  */
+  val webPublicationDate: DateTime
 
-    /**
-    * Short description of this item of content.
-    */
-    webTitle: String,
+  /**
+  * Short description of this item of content.
+  */
+  val webTitle: String
 
-    /**
-    * Full url on which the content can be found on www.guardian.co.uk
-    */
-    webUrl: String,
+  /**
+  * Full url on which the content can be found on www.guardian.co.uk
+  */
+  val webUrl: String
 
-    /**
-    * Full url on which full information about this content can be found on
-    * the content api. You need to access this to find, e.g. related content
-    * for the item.
-    */
-    apiUrl: String,
+  /**
+  * Full url on which full information about this content can be found on
+  * the content api. You need to access this to find, e.g. related content
+  * for the item.
+  */
+  val apiUrl: String
 
-    /**
-    * Optional field list containing other variable information about this
-    * content. (see safeFields for a more usable accessor).
-    * Fields are only returned if you specify showFields("xxx") on the request
-    * with either a comma separated list of fields or "all".
-    *
-    * Note that the set of fields returned vary per item of content, and may
-    * vary over time as the api evolves (although we will make every effort
-    * to maintain compatibility, we do not promise it).
-    */
-    fields: Option[Map[String, String]] = None,
+  /**
+  * Optional field list containing other variable information about this
+  * content. (see safeFields for a more usable accessor).
+  * Fields are only returned if you specify showFields("xxx") on the request
+  * with either a comma separated list of fields or "all".
+  *
+  * Note that the set of fields returned vary per item of content, and may
+  * vary over time as the api evolves (although we will make every effort
+  * to maintain compatibility, we do not promise it).
+  */
+  val fields: Option[Map[String, String]]
 
-    /**
-    * List of tags associated with this content.
-    *
-    * Only returned if you specify showTags("xxx") on the request
-    * with either a comma separated list of tag types or "all".
-    *
-    * The order of tags is significant; tags towards the top of the list
-    * are considered editorially more important than those towards the end.
-    */
-    tags: List[Tag] = Nil,
+  /**
+  * List of tags associated with this content.
+  *
+  * Only returned if you specify showTags("xxx") on the request
+  * with either a comma separated list of tag types or "all".
+  *
+  * The order of tags is significant; tags towards the top of the list
+  * are considered editorially more important than those towards the end.
+  */
+  val tags: List[Tag]
 
-    /**
-    * List of factboxes associated with this content.
-    *
-    * Only returned if you specify showFactboxes("xxx") on the request
-    * with either a comma separated list of factbox types or "all".
-    *
-    * Factboxes contain arbitary additional information associated with the content
-    * (for example, the ISBN of a reviewed book) and are typically displayed
-    * on the right hand side of the content on the website.
-    */
-    factboxes: List[Factbox] = Nil,
+  /**
+  * New representation to elements (assets lists) only returns if show-elements("all") or show-elements("image") is specified
+  */
+  val elements: Option[List[Element]]
 
-    /**
-    * List of media assets associated with this content.
-    *
-    * Only returned if you specify showMedia("xxx") on the request
-    * with either a comma separated list of media types or "all".
-    *
-    * Note that at time of writing media assets are only available to partners
-    * of guardian.co.uk with Bespoke api keys. See
-    * http://www.guardian.co.uk/open-platform/faq for information.
-    */
-    mediaAssets: List[MediaAsset] = Nil,
+  /**
+  * List of references associated with the content. References are
+  * strings that identify things beyond the content api. A good example
+  * is an isbn number, which associates a piece of content with a book.
+  *
+  * Use showReferences passing in the the type of reference you want to
+  * see or 'all' to see all references.
+  */
+  val references: List[Reference]
 
-    /**
-    * New representation to elements (assets lists) only returns if show-elements("all") or show-elements("image") is specified
-    */
-    elements: Option[List[Element]],
-
-    /**
-    * List of snippets that matched the requested query parameters.
-    * This allows google-style highlighting of matches in results.
-    *
-    * Only returned if you specify showSnippets("xxx") on the request
-    * with either a comma separated list of field names to show snippets
-    * for, or "all".
-    *
-    * Note that at time of writing snippeting is only available
-    * internally to us at guardian.co.uk, while we refine its use case
-    * and operation. Please post to the open platform mailing
-    * list at http://groups.google.com/group/guardian-api-talk/ if
-    * you want to use it.
-    *
-    * (It's included in this client library because we use this
-    * client library internally :)
-    */
-    snippets: Option[Map[String, String]] = None,
-
-    /**
-    * List of references associated with the content. References are
-    * strings that identify things beyond the content api. A good example
-    * is an isbn number, which associates a piece of content with a book.
-    *
-    * Use showReferences passing in the the type of reference you want to
-    * see or 'all' to see all references.
-    */
-    references: List[Reference] = Nil,
-
-    /**
-    * Set to true if the rights to this content have expired. Expired
-    * content is only available to internal users.
-    */
-    isExpired: Option[Boolean] = None) {
+  /**
+  * Set to true if the rights to this content have expired. Expired
+  * content is only available to internal users.
+  */
+  val isExpired: Option[Boolean]
 
   // Unfortunately lift-json (as of 2.1) requires a Map to be wrapped in an
   // Option if the json field that contains it is optional. (This is unlike a list
@@ -143,6 +100,50 @@ case class Content(
 
   def safeSnippets = fields getOrElse Map()
 }
+
+case class Content(
+    id: String,
+    sectionId: Option[String],
+    sectionName: Option[String],
+    webPublicationDate: DateTime,
+    webTitle: String,
+    webUrl: String,
+    apiUrl: String,
+    fields: Option[Map[String, String]] = None,
+    tags: List[Tag] = Nil,
+    elements: Option[List[Element]],
+    references: List[Reference] = Nil,
+    isExpired: Option[Boolean] = None) extends ContentType
+
+case class CuratedContent(
+    id: String,
+    sectionId: Option[String],
+    sectionName: Option[String],
+    webPublicationDate: DateTime,
+    webTitle: String,
+    webUrl: String,
+    apiUrl: String,
+    fields: Option[Map[String, String]] = None,
+    tags: List[Tag] = Nil,
+    elements: Option[List[Element]],
+    references: List[Reference] = Nil,
+    isExpired: Option[Boolean] = None,
+    meta: Option[CuratedMetaData]) extends ContentType
+
+case class SupportingContent(
+    id: String,
+    sectionId: Option[String],
+    sectionName: Option[String],
+    webPublicationDate: DateTime,
+    webTitle: String,
+    webUrl: String,
+    apiUrl: String,
+    fields: Option[Map[String, String]] = None,
+    tags: List[Tag] = Nil,
+    elements: Option[List[Element]],
+    references: List[Reference] = Nil,
+    isExpired: Option[Boolean] = None,
+    meta: Option[SupportingMetaData]) extends ContentType
 
 case class Tag(
 
@@ -287,6 +288,20 @@ case class Section(
     */
     editions: List[Edition])
 
+case class Front(
+    title: String,
+    collections: List[String])
+
+case class Collection(
+    id : String,
+    `type`: String,
+    title: Option[String],
+    groups: List[String],
+    lastModified: DateTime,
+    modifiedBy: String,
+    curated: List[Content],
+    backfill: List[Content])
+
 case class Folder(
 
     /**
@@ -384,3 +399,21 @@ case class Asset(
 
   def assetType = `type`
 }
+
+sealed trait MetaData {
+  val trailtext: Option[String]
+  val headline: Option[String]
+  val imageAdjust: Option[String]
+}
+
+case class CuratedMetaData(
+  trailtext: Option[String],
+  headline: Option[String],
+  imageAdjust: Option[String],
+  group: Option[Int],
+  supporting: List[SupportingContent]) extends MetaData
+
+case class SupportingMetaData(
+  trailtext: Option[String],
+  headline: Option[String],
+  imageAdjust: Option[String]) extends MetaData

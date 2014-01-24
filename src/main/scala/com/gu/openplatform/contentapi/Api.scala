@@ -30,6 +30,8 @@ trait Api[F[_]] extends Http[F] with JsonParser {
   def folders = new FoldersQuery
   def search = new SearchQuery
   def item = new ItemQuery
+  def fronts = new FrontsQuery
+  def collection = new CollectionQuery
 
   case class FoldersQuery(parameterHolder: Map[String, Parameter] = Map.empty)
     extends GeneralParameters[FoldersQuery]
@@ -72,6 +74,20 @@ trait Api[F[_]] extends Http[F] with JsonParser {
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
+  }
+
+  object FrontsQuery {
+    implicit def asResponse(q: FrontsQuery) = q.response
+    implicit def asFronts(q: FrontsQuery) = q.response map (_.results)
+  }
+
+  case class FrontsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+    extends GeneralParameters[FrontsQuery]
+    with PaginationParameters[FrontsQuery] {
+
+    lazy val response: F[FrontsResponse] = fetch(targetUrl + "/fronts", parameters) map parseFronts
+
+    def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
   }
 
   object TagsQuery {
@@ -125,6 +141,32 @@ trait Api[F[_]] extends Http[F] with JsonParser {
 
   object ItemQuery {
     implicit def asResponse(q: ItemQuery) = q.response
+  }
+
+  object CollectionQuery {
+    implicit def asResponse(q: CollectionQuery) = q.response
+    implicit def asCollection(q: CollectionQuery) = q.response map (_.collection)
+  }
+
+  case class CollectionQuery(path: Option[String] = None, parameterHolder: Map[String, Parameter] = Map.empty)
+    extends GeneralParameters[CollectionQuery]
+    with ShowParameters[CollectionQuery]
+    with FilterParameters[CollectionQuery]
+    with PaginationParameters[CollectionQuery]
+    with ShowReferenceParameters[CollectionQuery] {
+
+    def apiUrl(newContentPath: String): CollectionQuery = {
+      require(newContentPath startsWith targetUrl, "apiUrl expects a full url; use itemId if you only have an id")
+      copy(path = Some(newContentPath))
+    }
+
+    def itemId(collectionId: String): CollectionQuery = apiUrl(targetUrl + "/collections/" + collectionId)
+
+    lazy val response: F[CollectionResponse] = fetch(
+        path.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
+        parameters) map parseCollection
+
+    def withParameters(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
   }
 
   trait GeneralParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
