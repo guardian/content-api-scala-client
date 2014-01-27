@@ -111,6 +111,8 @@ case class Content(
     apiUrl: String,
     fields: Option[Map[String, String]] = None,
     tags: List[Tag] = Nil,
+    factboxes: List[Factbox] = Nil,
+    mediaAssets: List[MediaAsset] = Nil,
     elements: Option[List[Element]],
     references: List[Reference] = Nil,
     isExpired: Option[Boolean] = None) extends ContentType
@@ -299,7 +301,7 @@ case class Collection(
     groups: List[String],
     lastModified: DateTime,
     modifiedBy: String,
-    curated: List[Content],
+    curated: List[CuratedContent],
     backfill: List[Content])
 
 case class Folder(

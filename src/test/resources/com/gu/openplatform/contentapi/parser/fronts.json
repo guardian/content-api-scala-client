@@ -1,0 +1,38 @@
+{
+    "response": {
+        "status": "ok",
+        "userTier": "deprecated",
+        "total": 3,
+        "startIndex": 1,
+        "pageSize": 10,
+        "currentPage": 1,
+        "pages": 1,
+        "results": [
+            {
+                "title": "Sport",
+                "collections": [
+                    "http://content.code.dev-guardianapis.com/collections/uk-sport-regular-stories",
+                    "http://content.code.dev-guardianapis.com/collections/uk/sport/the-ashes",
+                    "http://content.code.dev-guardianapis.com/collections/society/drugs"
+                ],
+                "id": "uk/sport"
+            },
+            {
+                "title": "Sport",
+                "collections": [
+                    "http://content.code.dev-guardianapis.com/collections/uk/sport/regular-stories",
+                    "http://content.code.dev-guardianapis.com/collections/uk/sport/the-ashes",
+                    "http://content.code.dev-guardianapis.com/collections/society/drugs"
+                ],
+                "id": "sport"
+            },
+            {
+                "title": "Sport",
+                "collections": [
+                    "http://content.code.dev-guardianapis.com/collections/world/kenya"
+                ],
+                "id": "world/kenya"
+            }
+        ]
+    }
+}

@@ -163,7 +163,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     def itemId(collectionId: String): CollectionQuery = apiUrl(targetUrl + "/collections/" + collectionId)
 
     lazy val response: F[CollectionResponse] = fetch(
-        path.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
+        path.getOrElse(throw new Exception("No api url provided to collection query, ensure withApiUrl is called")),
         parameters) map parseCollection
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
