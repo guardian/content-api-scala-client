@@ -130,7 +130,7 @@ case class CuratedContent(
     elements: Option[List[Element]],
     references: List[Reference] = Nil,
     isExpired: Option[Boolean] = None,
-    meta: Option[CuratedMetaData]) extends ContentType
+    metadata: Option[CuratedMetadata]) extends ContentType
 
 case class SupportingContent(
     id: String,
@@ -145,7 +145,7 @@ case class SupportingContent(
     elements: Option[List[Element]],
     references: List[Reference] = Nil,
     isExpired: Option[Boolean] = None,
-    meta: Option[SupportingMetaData]) extends ContentType
+    metadata: Option[SupportingMetadata]) extends ContentType
 
 case class Tag(
 
@@ -301,7 +301,7 @@ case class Collection(
     groups: List[String],
     lastModified: DateTime,
     modifiedBy: String,
-    curated: List[CuratedContent],
+    curatedContent: List[CuratedContent],
     backfill: List[Content])
 
 case class Folder(
@@ -402,20 +402,20 @@ case class Asset(
   def assetType = `type`
 }
 
-sealed trait MetaData {
-  val trailtext: Option[String]
+sealed trait Metadata {
+  val trailText: Option[String]
   val headline: Option[String]
-  val imageAdjust: Option[String]
+  val imageAdjustment: Option[String]
 }
 
-case class CuratedMetaData(
-  trailtext: Option[String],
+case class CuratedMetadata(
+  trailText: Option[String],
   headline: Option[String],
-  imageAdjust: Option[String],
+  imageAdjustment: Option[String],
   group: Option[Int],
-  supporting: List[SupportingContent]) extends MetaData
+  supportingContent: List[SupportingContent]) extends Metadata
 
-case class SupportingMetaData(
-  trailtext: Option[String],
+case class SupportingMetadata(
+  trailText: Option[String],
   headline: Option[String],
-  imageAdjust: Option[String]) extends MetaData
+  imageAdjustment: Option[String]) extends Metadata
