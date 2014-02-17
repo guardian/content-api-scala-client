@@ -1,71 +1,62 @@
-Scala client for the Guardian's Content API
-===========================================
+Content API Scala Client
+========================
 
-Introduction
-------------
-
-This library provides a simple client wrapper round the [Guardian's][gu]
-[Content API][api], for scala 2.10.0, 2.9.2 and 2.9.1.
-
-[gu]: http://guardian.co.uk
-[api]: http://content.guardianapis.com
+A Scala client for the Guardian's [Content API] (http://explorer.content.guardianapis.com/).
 
 
-To use from sbt:
+Usage
+-----
 
-    resolvers += "Guardian Github Releases" at "http://guardian.github.com/maven/repo-releases"
-    libraryDependencies += "com.gu.openplatform" %% "content-api-client" % "2.0"
+### Adding the dependency
 
-To use from maven:
+Add the following lines to your [SBT build file] (http://www.scala-sbt.org/0.13.0/docs/Getting-Started/Basic-Def.html):
 
-    <dependency>
-        <groupId>com.gu.openplatform</groupId>
-        <artifactId>content-api-client_${scala.version}</artifactId>
-        <version>2.0</version>
-    </dependency>
+    resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases"
+    libraryDependencies += "com.gu.openplatform" %% "content-api-client" % "2.10"
 
-    ...
 
-    <repository>
-        <id>com.gu</id>
-        <name>Guardian Github Releases</name>
-        <url>http://guardian.github.com/maven/repo-releases</url>
-    </repository>
+### Making calls
 
-What calls can I make on the Content API?
-=========================================
+There are four different types of request that can be made: for a single item, or to filter all content, tags, or sections.
 
-There are four different types of request that can be made on the Content API: content search, tag search,
-section search and single item. The best place to look for documentation on these is to visit
-[the API explorer](http://explorer.content.guardianapis.com).
+#### Single item
 
-Content Search
---------------
+Every item on http://www.theguardian.com/ can be retrieved on the same path at http://content.guardianapis.com/. For example:
 
-The content search, on http://content.guardianapis.com/search, allows searching for content:
+    // a content item
+    Api.item.itemId("/commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa").content.get.webTitle
 
-    // return total number of items of content
+    // a tag
+    Api.item.itemId("/travel/france").tag.get.webTitle
+
+    // latest content for a tag
+    Api.item.itemId("/travel/france").results.foreach(content => println(content.webTitle))
+
+#### Content
+
+Filtering or searching for multiple content items happens at http://content.guardianapis.com/search. For example:
+
+    // total number of content items
     Api.search.total
 
-    // display the web titles of the 10 most recent items of content
-    Api.search.foreach(c => println(c.webTitle))
+    // the web titles of the 10 most recent content items
+    Api.search.foreach(content => println(content.webTitle))
 
-    // display the web titles of 11-20th most recent items of content
-    Api.search.page(2).foreach(c => println(c.webTitle))
+    // the web titles of 11-20th most recent items of content
+    Api.search.page(2).foreach(content => println(content.webTitle))
 
-    // get most recent content matching a search term
-    Api.search.q("tottenham hotspur").foreach(c => println(c.webTitle))
+    // the most recent content matching a search term
+    Api.search.q("cheese on toast").foreach(content => println(content.webTitle))
 
-    // get most relevant content matching a search term
-    Api.search.q("tottenham hotspur white hart lane").orderBy("relevance").foreach(c => println(c.webTitle))
+    // the most relevant content matching a search term
+    Api.search.q("cheese on toast").orderBy("relevance").foreach(content => println(content.webTitle))
 
     // content matching multiple tags
-    Api.search.tags("football/tottenham-hotspur,tone/matchreports").foreach(c => println(c.webTitle))
+    Api.search.tags("lifeandstyle/cheese,type/gallery").foreach(content => println(content.webTitle))
 
-Tag Search
-----------
+#### Tag search
 
-The tag search, on http://content.guardianapis.com/tags, allows searching for tags:
+Filtering or searching for multiple tags happens at http://content.guardianapis.com/tags. For example:
 
     // return the first 10 tags
     Api.tags.foreach(tag => println(tag.tagType + ":" + tag.webTitle))
@@ -73,40 +64,15 @@ The tag search, on http://content.guardianapis.com/tags, allows searching for ta
     // return the first 10 series tags
     Api.tags.tagType("series").foreach(tag => println(tag.tagType + ":" + tag.webTitle))
 
-Section Search
---------------
+#### Section search
 
-The section search, on http://content.guardianapis.com/sections, allows searching for sections:
+Filtering or searching for multiple sections happens at http://content.guardianapis.com/sections. For example:
 
     // return all sections
     Api.sections.foreach(section => println(section.id))
 
-Item
-----
-
-Every content item on http://www.guardian.co.uk should be available on the same url on
-http://content.guardianapis.com:
-
-    // content return
-    Api.item.itemId("/politics/2010/sep/20/nick-clegg-conference-speech").content.get.webTitle
-
-    // tag return
-    Api.item.itemId("/travel/france").tag.get.webTitle
-
-    // latest content for tag
-    Api.item.itemId("/travel/france").results.foreach(c => println(c.webTitle))
-
-
-Asynchronous API
-----------------
-
-As of version 1.22, this library includes an API client instance supporting asychronous requests via
-[Dispatch](http://dispatch.databinder.net/Dispatch.html) (version 0.9.5).
-
-    // returns Promise[Int]
-    DispatchAsyncApi.search.response map (_.total)
 
 More reading
-============
+------------
 
-Further examples can be found in [ExampleUsageTest.scala](src/test/scala/ExampleUsageTest.scala).
+Further examples can be found in [ExampleUsageTest.scala] (src/test/scala/ExampleUsageTest.scala).
