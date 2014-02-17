@@ -14,7 +14,6 @@ Add the following lines to your [SBT build file] (http://www.scala-sbt.org/0.13.
     resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases"
     libraryDependencies += "com.gu.openplatform" %% "content-api-client" % "2.10"
 
-
 ### Making calls
 
 There are four different types of request that can be made: for a single item, or to filter all content, tags, or sections.
