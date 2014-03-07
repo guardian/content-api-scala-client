@@ -15,6 +15,9 @@ class CollectionJsonParserTest extends FlatSpec with ShouldMatchers {
     collectionResponse.userTier should be ("deprecated")
     collectionResponse.total should be (1)
     collectionResponse.pages should be (1)
+    collectionResponse.startIndex should be (1)
+    collectionResponse.pageSize should be (10)
+    collectionResponse.currentPage should be (1)
   }
 
   it should "parse the collection" in {
