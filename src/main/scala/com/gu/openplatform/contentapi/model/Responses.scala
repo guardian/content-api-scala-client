@@ -70,4 +70,8 @@ case class CollectionResponse(
     status: String,
     userTier: String,
     total: Int,
+    startIndex: Int,
+    pageSize: Int,
+    currentPage: Int,
+    pages: Int,
     collection: Collection)

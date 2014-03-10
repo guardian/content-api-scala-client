@@ -3,6 +3,10 @@
         "status": "ok",
         "userTier": "deprecated",
         "total": 1,
+        "startIndex": 1,
+        "pageSize": 10,
+        "currentPage": 1,
+        "pages":1, 
         "collection": {
             "id": "uk-sport-regular-stories",
             "type": "features",
