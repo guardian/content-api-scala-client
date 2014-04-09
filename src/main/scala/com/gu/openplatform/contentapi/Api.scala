@@ -16,7 +16,7 @@ import util._
 case class ApiError(httpStatus: Int, httpMessage: String)
         extends Exception(httpMessage)
 
-trait Api[F[_]] extends Http[F] with JsonParser {
+trait Api[F[+_]] extends Http[F] with JsonParser {
   import MonadOps._
 
   /** Proof that we can call point, map, flatMap and error for type F */
@@ -165,6 +165,24 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     lazy val response: F[CollectionResponse] = fetch(
         path.getOrElse(throw new Exception("No api url provided to collection query, ensure withApiUrl is called")),
         parameters) map parseCollection
+
+    def withBackfill: F[(CollectionResponse, ContentResultsResponse)] = response flatMap { collectionResponse =>
+      // val query = collectionResponse.backfillQuery
+
+      // some code here that magically turns this into either an ItemQuery or a SearchQuery, modelled on this thingy--
+      //
+      // https://github.com/guardian/frontend/blob/master/common/app/services/ParseCollection.scala#L206
+      //
+      // It tries to automatically do the 'right thing' with the backfill. Basically, whatever show parameters you've
+      // passed to the collection query are going to be the exact same show parameters that you want to pass to the
+      // backfill. This will figure that out, so you get back what you expect.
+
+      val query: Either[ItemQuery, SearchQuery] = ???
+
+      query.fold[F[ContentResultsResponse]](_.response, _.response) map { backfillResponse: ContentResultsResponse =>
+        (collectionResponse, backfillResponse)
+      }
+    }
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
   }

@@ -1,5 +1,14 @@
 package com.gu.openplatform.contentapi.model
 
+sealed trait ContentResultsResponse {
+  val total: Int
+  val startIndex: Int
+  val pageSize: Int
+  val currentPage: Int
+  val pages: Int
+  val results: List[Content]
+}
+
 case class SearchResponse(
     status: String,
     userTier: String,
@@ -12,7 +21,7 @@ case class SearchResponse(
     didYouMean: Option[String],
     results: List[Content],
     refinementGroups: List[RefinementGroup],
-    bestBets: List[BestBet])
+    bestBets: List[BestBet]) extends ContentResultsResponse
 
 case class TagsResponse(
     status: String,
@@ -64,7 +73,7 @@ case class ItemResponse(
     editorsPicks: List[Content],
     mostViewed: List[Content],
     storyPackage: List[Content],
-    leadContent: List[Content])
+    leadContent: List[Content]) extends ContentResultsResponse
 
 case class CollectionResponse(
     status: String,
