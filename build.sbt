@@ -51,6 +51,26 @@ pomExtra := (
         <name>Jenny Sivapalan</name>
         <url>https://github.com/jennysivapalan</url>
       </developer>
+      <developer>
+        <id>maxharlow</id>
+        <name>Max Harlow</name>
+        <url>https://github.com/maxharlow</url>
+      </developer>
+      <developer>
+        <id>nicl</id>
+        <name>Nic Long</name>
+        <url>https://github.com/nicl</url>
+      </developer>
+      <developer>
+        <id>mchv</id>
+        <name>Mariot Chauvin</name>
+        <url>https://github.com/mchv</url>
+      </developer>
+      <developer>
+        <id>JustinPinner</id>
+        <name>Justin Pinner</name>
+        <url>https://github.com/JustinPinner</url>
+      </developer>
     </developers>
   )
 
