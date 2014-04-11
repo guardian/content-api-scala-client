@@ -1,3 +1,6 @@
+import sbtrelease._
+import ReleaseStateTransformations._
+
 name := "content-api-client"
 
 organization := "com.gu.openplatform"
@@ -6,12 +9,9 @@ scalaVersion := "2.10.3"
 
 crossScalaVersions := Seq("2.10.3", "2.9.3")
 
-releaseSettings
-
-ReleaseKeys.crossBuild := true
-
 resolvers ++= Seq(
-    "Guardian GitHub Releases" at "http://guardian.github.io/maven/repo-releases")
+  "Guardian GitHub Releases" at "http://guardian.github.io/maven/repo-releases"
+)
 
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
@@ -24,18 +24,54 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 )
 
-publishTo <<= (version) { version: String =>
-    val publishType = if (version.endsWith("SNAPSHOT")) "snapshots" else "releases"
-    Some(
-        Resolver.file(
-            "guardian github " + publishType,
-            file(System.getProperty("user.home") + "/guardian.github.com/maven/repo-" + publishType)
-        )
-    )
-}
 
 maxErrors := 20
 
 javacOptions ++= Seq("-source", "1.6", "-target", "1.6")
 
 scalacOptions ++= Seq("-deprecation", "-unchecked")
+
+releaseSettings
+
+sonatypeSettings
+
+description := "Scala client for The Guardian's Content API"
+
+scmInfo := Some(ScmInfo(
+  url("https://github.com/guardian/content-api-scala-client"),
+  "scm:git:git@github.com:guardian/content-api-scala-client.git"
+))
+
+/** TODO add every contributor to Content API client here */
+pomExtra := (
+  <url>https://github.com/guardian/content-api-scala-client</url>
+    <developers>
+      <developer>
+        <id>jennysivapalan</id>
+        <name>Jenny Sivapalan</name>
+        <url>https://github.com/jennysivapalan</url>
+      </developer>
+    </developers>
+  )
+
+licenses := Seq("Apache V2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
+
+ReleaseKeys.crossBuild := true
+
+ReleaseKeys.releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  ReleaseStep(
+    action = state => Project.extract(state).runTask(PgpKeys.publishSigned, state)._1,
+    enableCrossBuild = true
+  ),
+  setNextVersion,
+  commitNextVersion,
+  ReleaseStep(state => Project.extract(state).runTask(SonatypeKeys.sonatypeReleaseAll, state)._1),
+  pushChanges
+)
