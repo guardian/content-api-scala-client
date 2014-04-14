@@ -35,7 +35,7 @@ releaseSettings
 
 sonatypeSettings
 
-description := "Scala client for The Guardian's Content API"
+description := "Scala client for the Guardian's Content API"
 
 scmInfo := Some(ScmInfo(
   url("https://github.com/guardian/content-api-scala-client"),
