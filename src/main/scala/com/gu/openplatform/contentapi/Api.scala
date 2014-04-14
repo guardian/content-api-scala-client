@@ -10,13 +10,14 @@ import connection.{DispatchAsyncHttp, Http, JavaNetSyncHttp}
 import com.gu.openplatform.contentapi.parser.JsonParser
 import model._
 import util._
+import com.gu.openplatform.contentapi.backfill.BackfillQueryBuilding
 
 
 // thrown when an "expected" error is thrown by the api
 case class ApiError(httpStatus: Int, httpMessage: String)
         extends Exception(httpMessage)
 
-trait Api[F[+_]] extends Http[F] with JsonParser {
+trait Api[F[+_]] extends Http[F] with JsonParser with BackfillQueryBuilding[F] {
   import MonadOps._
 
   /** Proof that we can call point, map, flatMap and error for type F */
@@ -166,21 +167,20 @@ trait Api[F[+_]] extends Http[F] with JsonParser {
         path.getOrElse(throw new Exception("No api url provided to collection query, ensure withApiUrl is called")),
         parameters) map parseCollection
 
-    def withBackfill: F[(CollectionResponse, ContentResultsResponse)] = response flatMap { collectionResponse =>
-      // val query = collectionResponse.backfillQuery
+    /** Retrieves the collection, and then if a backfill is defined, retrieves that also, using the same parameters the
+      * user declared for the collection query
+      *
+      * @return A tuple of the collection response and the backfill response if it is defined
+      */
+    def withBackfill: F[(CollectionResponse, Option[WithResults])] = response flatMap { collectionResponse =>
+      collectionResponse.collection.backfill map { backfillQuery =>
+        val query = buildQueryFromString(backfillQuery)
 
-      // some code here that magically turns this into either an ItemQuery or a SearchQuery, modelled on this thingy--
-      //
-      // https://github.com/guardian/frontend/blob/master/common/app/services/ParseCollection.scala#L206
-      //
-      // It tries to automatically do the 'right thing' with the backfill. Basically, whatever show parameters you've
-      // passed to the collection query are going to be the exact same show parameters that you want to pass to the
-      // backfill. This will figure that out, so you get back what you expect.
-
-      val query: Either[ItemQuery, SearchQuery] = ???
-
-      query.fold[F[ContentResultsResponse]](_.response, _.response) map { backfillResponse: ContentResultsResponse =>
-        (collectionResponse, backfillResponse)
+        query.fold[F[WithResults]](_.response, _.response) map { backfillResponse: WithResults =>
+          (collectionResponse, Some(backfillResponse))
+        }
+      } getOrElse {
+        M.point((collectionResponse, None))
       }
     }
 

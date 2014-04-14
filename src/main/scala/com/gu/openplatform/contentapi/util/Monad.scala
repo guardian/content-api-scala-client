@@ -25,7 +25,7 @@ trait Monad[F[+_]] {
 /** Provides monadic operations as method syntax. This enables us to use
   * for-comprehensions over the abstract monad type in the Api implementation.
   */
-final class MonadOps[M[_], A](ma: M[A])(implicit M: Monad[M]) {
+final class MonadOps[M[+_], A](ma: M[A])(implicit M: Monad[M]) {
   def map[B](f: A => B): M[B] = M.map(f)(ma)
   def flatMap[B](f: A => M[B]): M[B] = M.bind(f)(ma)
 }
@@ -34,10 +34,10 @@ final class MonadOps[M[_], A](ma: M[A])(implicit M: Monad[M]) {
   */
 object MonadOps {
 
-  implicit def monadOps[M[_]: Monad, A](ma: M[A]): MonadOps[M, A] = new MonadOps(ma)
+  implicit def monadOps[M[+_]: Monad, A](ma: M[A]): MonadOps[M, A] = new MonadOps(ma)
 
-  def point[M[_], A](a: A)(implicit M: Monad[M]): M[A] = M.point(a)
-  def fail[M[_], A](error: ApiError)(implicit M: Monad[M]): M[A] = M.fail(error)
+  def point[M[+_], A](a: A)(implicit M: Monad[M]): M[A] = M.point(a)
+  def fail[M[+_], A](error: ApiError)(implicit M: Monad[M]): M[A] = M.fail(error)
 }
 
 object MonadInstances {
