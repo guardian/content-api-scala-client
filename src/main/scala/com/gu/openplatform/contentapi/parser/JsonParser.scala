@@ -5,8 +5,7 @@ import net.liftweb.json.JsonParser._
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.JsonAST.{JValue, JBool, JString, JField}
 
-
-trait JsonParser {
+object JsonParser {
   implicit val formats = DefaultFormats + new JodaJsonSerializer
 
   def parseTags(json: String): TagsResponse = (parse(json) \ "response").extract[TagsResponse]
@@ -27,5 +26,3 @@ trait JsonParser {
     case JField("isExpired", JString(s)) => JField("isExpired", JBool(s.toBoolean))
   }
 }
-
-object JsonParser extends JsonParser
