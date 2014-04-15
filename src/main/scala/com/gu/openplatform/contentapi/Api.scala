@@ -23,7 +23,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
   implicit def M: Monad[F]
 
   val targetUrl = "http://content.guardianapis.com"
-  var apiKey: Option[String] = None
+  val apiKey: Option[String] = None
 
   def sections = new SectionsQuery
   def tags = new TagsQuery
