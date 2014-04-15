@@ -302,7 +302,7 @@ case class Collection(
     lastModified: DateTime,
     modifiedBy: String,
     curatedContent: List[CuratedContent],
-    backfill: List[Content])
+    backfill: Option[String])
 
 case class Folder(
 

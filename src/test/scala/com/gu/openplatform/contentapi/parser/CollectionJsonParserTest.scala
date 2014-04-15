@@ -31,8 +31,7 @@ class CollectionJsonParserTest extends FlatSpec with ShouldMatchers {
   }
 
   it should "parse the collection's backfill" in {
-    collectionResponse.collection.backfill.size should be(10)
-    collectionResponse.collection.backfill.head.id should be("sport/2014/jan/20/nga-liveblog-embed-test")
+    collectionResponse.collection.backfill should be(Some("search?q=cats"))
   }
 
   // TODO: Add curated content test when available
