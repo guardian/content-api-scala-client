@@ -1,9 +1,7 @@
 package com.gu.openplatform.contentapi
 
 package object util {
-
-  /** Identity wrapper, which gives rise to a trivial Monad instance
-    */
-  type Id[A] = A
-
+  implicit class RichString(s: String) {
+    def /(s2: String) = s.stripSuffix("/") + "/" + s2.stripPrefix("/")
+  }
 }
