@@ -15,16 +15,17 @@ trait JsonParser {
   def parseFolders(json: String): FoldersResponse = (parse(json) \ "response").extract[FoldersResponse]
 
   def parseItem(json: String): ItemResponse = (parse(json) \ "response")
-    .transform{ fixExpired }.extract[ItemResponse]
+    .transform{ fixFields }.extract[ItemResponse]
 
   def parseSearch(json: String): SearchResponse = (parse(json) \ "response")
-    .transform{ fixExpired }.extract[SearchResponse]
+    .transform{ fixFields }.extract[SearchResponse]
 
   def parseCollection(json: String): CollectionResponse = (parse(json) \ "response")
-    .transform{ fixExpired }.extract[CollectionResponse]
+    .transform{ fixFields }.extract[CollectionResponse]
 
-  private def fixExpired: PartialFunction[JValue, JValue] = {
+  private def fixFields: PartialFunction[JValue, JValue] = {
     case JField("isExpired", JString(s)) => JField("isExpired", JBool(s.toBoolean))
+    case JField("webPublicationDate", JString(s)) => JField("webPublicationDateOption", JString(s))
   }
 }
 
