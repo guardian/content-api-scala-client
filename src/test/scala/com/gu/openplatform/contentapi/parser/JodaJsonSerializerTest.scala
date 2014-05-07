@@ -1,13 +1,12 @@
 package com.gu.openplatform.contentapi.parser
 
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.FlatSpec
+import org.scalatest.{Matchers, FlatSpec}
 import org.json4s.native.JsonMethods.parse
 import org.joda.time.DateTime
 import org.json4s.DefaultFormats
 
 
-class JodaJsonSerializerTest extends FlatSpec with ShouldMatchers {
+class JodaJsonSerializerTest extends FlatSpec with Matchers {
   implicit val formats = DefaultFormats + new JodaJsonSerializer
 
   case class SimpleTest(dt: DateTime)
