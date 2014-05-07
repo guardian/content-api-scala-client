@@ -1,6 +1,10 @@
 import sbtrelease._
 import ReleaseStateTransformations._
 
+releaseSettings
+
+sonatypeSettings
+
 name := "content-api-client"
 
 organization := "com.gu"
@@ -30,10 +34,6 @@ maxErrors := 20
 javacOptions ++= Seq("-source", "1.6", "-target", "1.6")
 
 scalacOptions ++= Seq("-deprecation", "-unchecked")
-
-releaseSettings
-
-sonatypeSettings
 
 description := "Scala client for the Guardian's Content API"
 
