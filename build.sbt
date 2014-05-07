@@ -3,7 +3,7 @@ import ReleaseStateTransformations._
 
 name := "content-api-client"
 
-organization := "com.gu.openplatform"
+organization := "com.gu"
 
 scalaVersion := "2.10.3"
 
