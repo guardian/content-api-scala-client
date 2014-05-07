@@ -2,9 +2,9 @@ package com.gu.openplatform.contentapi.parser
 
 import org.joda.time.DateTime
 import scala.PartialFunction
-import net.liftweb.json.JsonAST._
 import org.joda.time.format.ISODateTimeFormat
-import net.liftweb.json.{MappingException, TypeInfo, Formats, Serializer}
+import org.json4s.{MappingException, TypeInfo, Formats, Serializer}
+import org.json4s.JsonAST._
 
 // Adds Joda DateTime support to the lift-json serializer
 class JodaJsonSerializer extends Serializer[DateTime] {
