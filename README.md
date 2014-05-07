@@ -11,8 +11,7 @@ Usage
 
 Add the following lines to your [SBT build file] (http://www.scala-sbt.org/0.13.0/docs/Getting-Started/Basic-Def.html):
 
-    resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases"
-    libraryDependencies += "com.gu.openplatform" %% "content-api-client" % "2.10"
+    libraryDependencies += "com.gu" %% "content-api-client" % "2.13"
 
 ### Making calls
 
