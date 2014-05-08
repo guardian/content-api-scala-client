@@ -9,23 +9,16 @@ name := "content-api-client"
 
 organization := "com.gu"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.10.4"
 
-crossScalaVersions := Seq("2.10.3", "2.9.3")
-
-resolvers ++= Seq(
-  "Guardian GitHub Releases" at "http://guardian.github.io/maven/repo-releases"
-)
+crossScalaVersions := Seq("2.11.0", "2.10.4")
 
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
   "commons-httpclient" % "commons-httpclient" % "3.1",
-  "net.liftweb" %% "lift-json" % "2.5" cross CrossVersion.binaryMapped {
-    case "2.9.3" => "2.9.2"
-    case x => x
-  },
-  "net.databinder.dispatch" %% "dispatch-core" % "0.10.0",
-  "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+  "org.json4s" %% "json4s-native" % "3.2.9",
+  "net.databinder.dispatch" %% "dispatch-core" % "0.11.1",
+  "org.scalatest" %% "scalatest" % "2.1.5" % "test"
 )
 
 

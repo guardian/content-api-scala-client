@@ -1,11 +1,10 @@
 package com.gu.openplatform.contentapi
 
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.FunSuite
+import org.scalatest.{Matchers, FunSuite}
 import org.joda.time.DateTime
 
 
-class ApiTest extends FunSuite with ShouldMatchers {
+class ApiTest extends FunSuite with Matchers {
   test("should correctly add api key if present") {
     try {
       Api.apiKey = None

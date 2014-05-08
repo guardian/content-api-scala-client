@@ -1,10 +1,9 @@
 import com.gu.openplatform.contentapi.Api
 import java.io.IOException
 import org.joda.time.DateMidnight
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.{BeforeAndAfterEach, FeatureSpec}
+import org.scalatest.{Matchers, BeforeAndAfterEach, FeatureSpec}
 
-class ExampleUsageTest extends FeatureSpec with ShouldMatchers with BeforeAndAfterEach {
+class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach {
 
   override protected def beforeEach() {
     // if you run all these tests they will exceed the rate limit in the free tier,

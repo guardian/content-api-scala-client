@@ -2,12 +2,11 @@ import scala.concurrent.ExecutionContext
 import com.gu.openplatform.contentapi.model.{ItemResponse, Content}
 import com.gu.openplatform.contentapi.{DispatchAsyncApi, ApiError, SyncApi}
 import com.gu.openplatform.contentapi.connection._
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.{FlatSpec, BeforeAndAfterEach}
+import org.scalatest.{Matchers, FlatSpec, BeforeAndAfterEach}
 import dispatch._
 
 
-class HttpTest extends FlatSpec with ShouldMatchers with BeforeAndAfterEach {
+class HttpTest extends FlatSpec with Matchers with BeforeAndAfterEach {
 
   import ExecutionContext.Implicits.global
 

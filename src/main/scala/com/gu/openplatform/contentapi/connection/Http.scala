@@ -11,6 +11,7 @@ import com.ning.http.client._
 import providers.netty.{NettyAsyncHttpProvider, NettyConnectionsPool}
 import com.gu.openplatform.contentapi.util.Id
 import concurrent.ExecutionContext
+import org.jboss.netty.util.HashedWheelTimer
 
 
 case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
@@ -119,7 +120,7 @@ trait Dispatch {
 
   object Client extends dispatch.Http {
     override val client = {
-      val connectionPool = new NettyConnectionsPool(new NettyAsyncHttpProvider(config))
+      val connectionPool = new NettyConnectionsPool(new NettyAsyncHttpProvider(config), new HashedWheelTimer())
       new AsyncHttpClient(new AsyncHttpClientConfig.Builder(config).setConnectionsPool(connectionPool).build)
     }
   }
