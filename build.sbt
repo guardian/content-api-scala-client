@@ -9,9 +9,9 @@ name := "content-api-client"
 
 organization := "com.gu"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.10.4"
 
-crossScalaVersions := Seq("2.11.0", "2.10.3")
+crossScalaVersions := Seq("2.11.0", "2.10.4")
 
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
