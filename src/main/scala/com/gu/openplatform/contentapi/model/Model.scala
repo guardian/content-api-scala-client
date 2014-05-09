@@ -105,7 +105,7 @@ case class Content(
     id: String,
     sectionId: Option[String],
     sectionName: Option[String],
-    webPublicationDate: DateTime,
+    webPublicationDateOption: Option[DateTime],
     webTitle: String,
     webUrl: String,
     apiUrl: String,
@@ -115,7 +115,13 @@ case class Content(
     mediaAssets: List[MediaAsset] = Nil,
     elements: Option[List[Element]],
     references: List[Reference] = Nil,
-    isExpired: Option[Boolean] = None) extends ContentType
+    isExpired: Option[Boolean] = None) extends ContentType {
+
+    // This is here for backwards compatibility. For the vast majority of use cases
+    // there WILL be a webPublicationDate. If this causes problems you should be using
+    // webPublicationDateOption
+    lazy val webPublicationDate: DateTime = webPublicationDateOption.head
+}
 
 case class CuratedContent(
     id: String,
