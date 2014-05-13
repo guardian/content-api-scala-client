@@ -207,6 +207,14 @@ case class Tag(
     references: List[Reference] = Nil,
 
     /**
+     * A tag *may* have a description field.
+     *
+     * Contributor tags never have a description field. They may
+     * instead have a 'bio' field.
+     */
+    description: Option[String] = None,
+
+    /**
     * If this tag is a contributor then we *may* have a small bio
     * for the contributor.
     *
