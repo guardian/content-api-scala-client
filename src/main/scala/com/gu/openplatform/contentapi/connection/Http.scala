@@ -87,7 +87,12 @@ trait JavaNetSyncHttp extends SyncHttp {
     headers.foreach { case (k, v) => connection.setRequestProperty(k, v) }
 
     val src = Source.fromInputStream(connection.getInputStream)
-    val responseBody = src.mkString
+    /*
+     * Starting from Scala 2.10 Source.mkString is very slow has it will used an iterator for each char.
+     * See https://issues.scala-lang.org/browse/SI-7356 for details.
+     * This has been fixed in scala 2.11.
+     */
+    val responseBody = src.getLines.mkString
     src.close
 
     new HttpResponse(responseBody, connection.getResponseCode, connection.getResponseMessage)
