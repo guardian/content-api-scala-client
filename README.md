@@ -11,7 +11,7 @@ Usage
 
 Add the following lines to your [SBT build file] (http://www.scala-sbt.org/0.13.0/docs/Getting-Started/Basic-Def.html):
 
-    libraryDependencies += "com.gu" %% "content-api-client" % "2.16"
+    libraryDependencies += "com.gu" %% "content-api-client" % "2.18"
 
 ### Making calls
 
