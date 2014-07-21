@@ -2,20 +2,18 @@ package com.gu.openplatform.contentapi
 
 import org.scalatest.{Matchers, FunSuite}
 import org.joda.time.DateTime
+import com.gu.openplatform.contentapi.connection.JavaNetSyncHttp
 
 
 class ApiTest extends FunSuite with Matchers {
   test("should correctly add api key if present") {
-    try {
-      Api.apiKey = None
-      Api.search.parameters.get("api-key") should be (None)
+    Api.search.parameters.get("api-key") should be (None)
 
-      Api.apiKey = Some("abcd")
-      Api.search.parameters.get("api-key") should be (Some("abcd"))
-
-    } finally {
-      Api.apiKey = None
+    object ApiWithKey extends SyncApi with JavaNetSyncHttp {
+      override val apiKey = Some("abcd")
     }
+
+    ApiWithKey.search.parameters.get("api-key") should be (Some("abcd"))
   }
 
   test("should add custom parameters") {
