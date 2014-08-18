@@ -21,7 +21,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.1.5" % "test"
 )
 
-
 maxErrors := 20
 
 javacOptions ++= Seq("-source", "1.6", "-target", "1.6")

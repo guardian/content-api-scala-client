@@ -6,21 +6,15 @@ import java.net.URLEncoder
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.ReadableInstant
 
-import connection.{DispatchAsyncHttp, Http, JavaNetSyncHttp}
+import connection.{DispatchAsyncHttp, Http}
 import com.gu.openplatform.contentapi.parser.JsonParser
 import model._
-import util._
-
 
 // thrown when an "expected" error is thrown by the api
-case class ApiError(httpStatus: Int, httpMessage: String)
-        extends Exception(httpMessage)
+case class ApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
-trait Api[F[_]] extends Http[F] with JsonParser {
-  import MonadOps._
-
-  /** Proof that we can call point, map, flatMap and error for type F */
-  implicit def M: Monad[F]
+trait Api extends Http with JsonParser {
+  implicit def executionContext: ExecutionContext
 
   val targetUrl = "http://content.guardianapis.com"
   var apiKey: Option[String] = None
@@ -37,7 +31,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     extends GeneralParameters[FoldersQuery]
     with FilterParameters[FoldersQuery] {
 
-    lazy val response: F[FoldersResponse] = fetch(targetUrl + "/folders", parameters) map parseFolders
+    lazy val response: Future[FoldersResponse] = fetch(targetUrl + "/folders", parameters) map parseFolders
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
   }
@@ -51,7 +45,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     extends GeneralParameters[SectionsQuery]
     with FilterParameters[SectionsQuery] {
 
-    lazy val response: F[SectionsResponse] = fetch(targetUrl + "/sections", parameters) map parseSections
+    lazy val response: Future[SectionsResponse] = fetch(targetUrl + "/sections", parameters) map parseSections
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -70,7 +64,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
           with ShowReferenceParameters[TagsQuery] {
 
     lazy val tagType = new StringParameter("type")
-    lazy val response: F[TagsResponse] = fetch(targetUrl + "/tags", parameters) map parseTags
+    lazy val response: Future[TagsResponse] = fetch(targetUrl + "/tags", parameters) map parseTags
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -85,7 +79,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
     extends GeneralParameters[FrontsQuery]
     with PaginationParameters[FrontsQuery] {
 
-    lazy val response: F[FrontsResponse] = fetch(targetUrl + "/fronts", parameters) map parseFronts
+    lazy val response: Future[FrontsResponse] = fetch(targetUrl + "/fronts", parameters) map parseFronts
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
   }
@@ -105,7 +99,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
           with RefererenceParameters[SearchQuery]
           with ShowReferenceParameters[SearchQuery] {
 
-    lazy val response: F[SearchResponse] = fetch(targetUrl + "/search", parameters) map parseSearch
+    lazy val response: Future[SearchResponse] = fetch(targetUrl + "/search", parameters) map parseSearch
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -131,7 +125,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
 
     def itemId(contentId: String): ItemQuery = apiUrl(targetUrl + "/" + contentId)
 
-    lazy val response: F[ItemResponse] = fetch(
+    lazy val response: Future[ItemResponse] = fetch(
         path.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
         parameters) map parseItem
 
@@ -162,7 +156,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
 
     def itemId(collectionId: String): CollectionQuery = apiUrl(targetUrl + "/collections/" + collectionId)
 
-    lazy val response: F[CollectionResponse] = fetch(
+    lazy val response: Future[CollectionResponse] = fetch(
         path.getOrElse(throw new Exception("No api url provided to collection query, ensure withApiUrl is called")),
         parameters) map parseCollection
 
@@ -228,7 +222,7 @@ trait Api[F[_]] extends Http[F] with JsonParser {
   }
 
 
-  protected def fetch(url: String, parameters: Map[String, String]): F[String] = {
+  protected def fetch(url: String, parameters: Map[String, String]): Future[String] = {
     require(!url.contains('?'), "must not specify parameters in url")
 
     def encodeParameter(p: Any): String = p match {
@@ -241,30 +235,15 @@ trait Api[F[_]] extends Http[F] with JsonParser {
 
     for {
       response <- GET(target, List("User-Agent" -> "scala-api-client", "Accept" -> "application/json"))
-      body <-
-        if (List(200, 302) contains response.statusCode) point(response.body)
-        else fail(new ApiError(response.statusCode, response.statusMessage))
-    } yield body
-
+    } yield if (List(200, 302) contains response.statusCode)
+        response.body
+      else
+        throw new ApiError(response.statusCode, response.statusMessage)
   }
 }
 
-/** Base trait for blocking clients */
-trait SyncApi extends Api[Id] {
-  implicit val M = MonadInstances.idMonad
-}
-
-/** Base trait for Future-based async clients */
-trait FutureAsyncApi extends Api[Future] {
-  implicit def executionContext: ExecutionContext
-  implicit def M = MonadInstances.futureMonad(executionContext)
-}
-
-// Default client instance, based on java.net client
-object Api extends SyncApi with JavaNetSyncHttp
-
 /** Async client instance based on Dispatch
   */
-object DispatchAsyncApi extends FutureAsyncApi with DispatchAsyncHttp {
+object Api extends Api with DispatchAsyncHttp {
   implicit val executionContext = ExecutionContext.global
 }
