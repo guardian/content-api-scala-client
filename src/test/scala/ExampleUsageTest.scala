@@ -1,7 +1,7 @@
 import com.gu.openplatform.contentapi.Api
-import java.io.IOException
 import org.joda.time.DateMidnight
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{Matchers, BeforeAndAfterEach, FeatureSpec}
 
 class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
@@ -12,6 +12,7 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
     Thread.sleep(500)
   }
 
+  override implicit val patienceConfig = PatienceConfig(timeout = Span(2, Seconds))
 
   feature("Pagination:") {
 
@@ -236,10 +237,9 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
         val expiredArticle = Api.item.itemId("football/2012/sep/14/zlatan-ibrahimovic-paris-st-germain-toulouse")
           .showExpired()
           .response
-          .futureValue
 
-        val error = intercept[IOException]{ expiredArticle.content }
-        error.getMessage should include("400")
+        val error = intercept[Exception] { expiredArticle.futureValue.content }
+        error.getMessage should include("Bad Request")
       }
     }
 

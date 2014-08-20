@@ -1,21 +1,21 @@
 package com.gu.openplatform.contentapi
 
+import com.gu.openplatform.contentapi.connection.DispatchAsyncHttp
 import org.scalatest.{Matchers, FunSuite}
 import org.joda.time.DateTime
+
+import scala.concurrent.ExecutionContext
 
 
 class ApiTest extends FunSuite with Matchers {
   test("should correctly add api key if present") {
-    try {
-      Api.apiKey = None
-      Api.search.parameters.get("api-key") should be (None)
+    Api.search.parameters.get("api-key") should be (None)
 
-      Api.apiKey = Some("abcd")
-      Api.search.parameters.get("api-key") should be (Some("abcd"))
+    new Api with DispatchAsyncHttp {
+      override val apiKey = Some("abcd")
 
-    } finally {
-      Api.apiKey = None
-    }
+      override implicit def executionContext: ExecutionContext = ExecutionContext.global
+    }.search.parameters.get("api-key") should be (Some("abcd"))
   }
 
   test("should add custom parameters") {

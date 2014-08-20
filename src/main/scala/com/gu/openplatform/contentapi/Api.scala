@@ -17,7 +17,7 @@ trait Api extends Http with JsonParser {
   implicit def executionContext: ExecutionContext
 
   val targetUrl = "http://content.guardianapis.com"
-  var apiKey: Option[String] = None
+  val apiKey: Option[String] = None
 
   def sections = new SectionsQuery
   def tags = new TagsQuery
