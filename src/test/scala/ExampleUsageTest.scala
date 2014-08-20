@@ -1,8 +1,11 @@
 import com.gu.openplatform.contentapi.Api
+import com.gu.openplatform.contentapi.connection.DispatchAsyncHttp
 import org.joda.time.DateMidnight
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{Matchers, BeforeAndAfterEach, FeatureSpec}
+
+import scala.concurrent.ExecutionContext
 
 class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
 
@@ -245,9 +248,18 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
 
   feature("refining search results") {
 
-    scenario("finding the most popular keywords for a seach") {
-      val search = Api.search.pageSize(1).section("music")
-              .showRefinements("keyword").refinementSize(20).response.futureValue
+    scenario("finding the most popular keywords for a search") {
+      /** This query is SLOW */
+      val PermissiveApi = new Api with DispatchAsyncHttp {
+        override implicit def executionContext: ExecutionContext = ExecutionContext.global
+
+        override lazy val requestTimeoutInMs = 10000
+      }
+
+      implicit val permissivePatienceConfig = PatienceConfig(timeout = Span(10, Seconds))
+
+      val search = PermissiveApi.search.pageSize(1).section("music")
+              .showRefinements("keyword").refinementSize(20).response.futureValue(permissivePatienceConfig)
 
       search.refinementGroups foreach { group =>
         println(group.refinementType)
