@@ -1,4 +1,4 @@
-package com.gu.openplatform.contentapi
+package com.gu.contentapi.client
 
 import concurrent.{Future, ExecutionContext}
 import java.net.URLEncoder
@@ -7,7 +7,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.ReadableInstant
 
 import connection.{DispatchAsyncHttp, Http}
-import com.gu.openplatform.contentapi.parser.JsonParser
+import com.gu.contentapi.client.parser.JsonParser
 import model._
 
 // thrown when an "expected" error is thrown by the api

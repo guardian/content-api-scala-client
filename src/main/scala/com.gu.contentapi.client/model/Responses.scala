@@ -1,4 +1,4 @@
-package com.gu.openplatform.contentapi.model
+package com.gu.contentapi.client.model
 
 case class SearchResponse(
     status: String,

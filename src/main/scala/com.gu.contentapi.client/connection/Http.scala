@@ -1,4 +1,4 @@
-package com.gu.openplatform.contentapi.connection
+package com.gu.contentapi.client.connection
 
 import io.Codec
 import dispatch._

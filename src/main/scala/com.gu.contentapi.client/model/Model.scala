@@ -1,4 +1,4 @@
-package com.gu.openplatform.contentapi.model
+package com.gu.contentapi.client.model
 
 import org.joda.time.DateTime
 

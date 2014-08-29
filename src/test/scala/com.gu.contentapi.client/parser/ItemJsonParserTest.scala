@@ -1,8 +1,8 @@
-package com.gu.openplatform.contentapi.parser
+package com.gu.contentapi.client.parser
 
 import org.scalatest.{Matchers, FlatSpec}
 import JsonFileLoader._
-import com.gu.openplatform.contentapi.model.ItemResponse
+import com.gu.contentapi.client.model.ItemResponse
 
 class ItemJsonParserTest extends FlatSpec with Matchers {
 
