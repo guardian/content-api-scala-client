@@ -1,6 +1,6 @@
-package com.gu.openplatform.contentapi
+package com.gu.contentapi.client
 
-import com.gu.openplatform.contentapi.connection.DispatchAsyncHttp
+import com.gu.contentapi.client.connection.DispatchAsyncHttp
 import org.scalatest.{Matchers, FunSuite}
 import org.joda.time.DateTime
 

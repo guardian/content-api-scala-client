@@ -1,7 +1,7 @@
 import scala.concurrent.ExecutionContext
-import com.gu.openplatform.contentapi.model.{ItemResponse, Content}
-import com.gu.openplatform.contentapi.{Api, ApiError}
-import com.gu.openplatform.contentapi.connection._
+import com.gu.contentapi.client.model.{ItemResponse, Content}
+import com.gu.contentapi.client.{Api, ApiError}
+import com.gu.contentapi.client.connection._
 import org.scalatest.{Matchers, FlatSpec, BeforeAndAfterEach}
 import dispatch._
 

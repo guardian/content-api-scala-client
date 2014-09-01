@@ -1,4 +1,4 @@
-package com.gu.openplatform.contentapi
+package com.gu.contentapi.client
 
 trait Parameter {
 

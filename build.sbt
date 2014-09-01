@@ -11,7 +11,7 @@ organization := "com.gu"
 
 scalaVersion := "2.10.4"
 
-crossScalaVersions := Seq("2.11.0", "2.10.4")
+crossScalaVersions := Seq("2.11.2", "2.10.4")
 
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",

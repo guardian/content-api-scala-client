@@ -1,4 +1,4 @@
-package com.gu.openplatform.contentapi.parser
+package com.gu.contentapi.client.parser
 
 import org.scalatest.{Matchers, FlatSpec}
 import org.joda.time.DateTime

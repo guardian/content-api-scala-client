@@ -1,5 +1,5 @@
-import com.gu.openplatform.contentapi.Api
-import com.gu.openplatform.contentapi.connection.DispatchAsyncHttp
+import com.gu.contentapi.client.Api
+import com.gu.contentapi.client.connection.DispatchAsyncHttp
 import org.joda.time.DateMidnight
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}

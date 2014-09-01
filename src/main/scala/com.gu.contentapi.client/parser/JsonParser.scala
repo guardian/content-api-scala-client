@@ -1,6 +1,6 @@
-package com.gu.openplatform.contentapi.parser
+package com.gu.contentapi.client.parser
 
-import com.gu.openplatform.contentapi.model._
+import com.gu.contentapi.client.model._
 import org.json4s.DefaultFormats
 import org.json4s.JsonAST._
 import org.json4s.native.JsonMethods.parse
