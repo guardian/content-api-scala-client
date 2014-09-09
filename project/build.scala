@@ -29,10 +29,10 @@ object ContentApiClientBuild extends Build {
     javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     libraryDependencies ++= Seq(
-      "joda-time" % "joda-time" % "1.6",
+      "joda-time" % "joda-time" % "1.6.2",
       "org.json4s" %% "json4s-native" % "3.2.9",
-      "net.databinder.dispatch" %% "dispatch-core" % "0.11.1",
-      "org.scalatest" %% "scalatest" % "2.1.5" % "test"
+      "net.databinder.dispatch" %% "dispatch-core" % "0.11.2",
+      "org.scalatest" %% "scalatest" % "2.2.1" % "test"
     ),
     pomExtra := (
       <developers>
