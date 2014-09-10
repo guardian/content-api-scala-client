@@ -36,15 +36,7 @@ case class FrontsResponse(
     total: Int,
     results: List[Front])
 
-case class FoldersResponse(
-    status: String,
-    userTier: String,
-    total: Int,
-    startIndex: Int,
-    pageSize: Int,
-    currentPage: Int,
-    pages: Int,
-    results: List[Folder])
+
 
 case class ItemResponse(
     status: String,

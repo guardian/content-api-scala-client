@@ -21,25 +21,10 @@ trait Api extends Http with JsonParser {
 
   def sections = new SectionsQuery
   def tags = new TagsQuery
-  def folders = new FoldersQuery
   def search = new SearchQuery
   def item = new ItemQuery
   def fronts = new FrontsQuery
   def collection = new CollectionQuery
-
-  case class FoldersQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-    extends GeneralParameters[FoldersQuery]
-    with FilterParameters[FoldersQuery] {
-
-    lazy val response: Future[FoldersResponse] = fetch(targetUrl + "/folders", parameters) map parseFolders
-
-    def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
-  }
-
-  object FoldersQuery {
-    implicit def asResponse(q: FoldersQuery) = q.response
-    implicit def asFolders(q: FoldersQuery) = q.response map (_.results)
-  }
 
   case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
     extends GeneralParameters[SectionsQuery]
@@ -177,7 +162,6 @@ trait Api extends Http with JsonParser {
     def section = StringParameter("section")
     def ids = StringParameter("ids")
     def tag = StringParameter("tag")
-    def folder = StringParameter("folder")
   }
 
   trait ContentFilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>

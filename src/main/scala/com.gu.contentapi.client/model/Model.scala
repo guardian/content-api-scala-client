@@ -318,38 +318,6 @@ case class Collection(
     curatedContent: List[CuratedContent],
     backfill: Option[String])
 
-case class Folder(
-
-    /**
-    * The id of this folder.  Note that folders may not have a
-    * direct representation on the website, they are simply
-    * collections of tags for editorial use.
-    */
-    id: String,
-
-    /**
-    * Short description of this folder.
-    */
-    webTitle: String,
-
-    /**
-    * Full url on which full information about this folder can be found on
-    * the content api.
-    *
-    */
-    apiUrl: String,
-
-    /**
-    * Section is usually provided: some folders do not belong
-    * to any section so this will be None
-    */
-    sectionId: Option[String] = None,
-
-    /**
-    * The display name of the section.  Will be None iff sectionId is None.
-    */
-    sectionName: Option[String] = None)
-
 case class Factbox(
     `type`: String,
     heading: Option[String],

@@ -282,33 +282,5 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
       )
     }
   }
-  
-  feature("editorial folders are available") {
-    scenario("can query for folders") {
-      println("Query folders")
 
-      Api.folders.response.futureValue.results.foreach(folder => println("    "+folder.id+": "+folder.webTitle))
-    }
-
-    scenario("can query tags by folder") {
-      println("Tags by Folder: folder/traveleditorsindex/travelawards")
-      Api.tags.ids("folder/traveleditorsindex/travelawards").response.futureValue.results.foreach(
-        tag => println("    "+tag.webTitle))
-    }
-
-    scenario("can query content by folder") {
-      println("Content by Folder: folder/traveleditorsindex/travelawards")
-      Api.item.itemId("folder/traveleditorsindex/travelawards").response.futureValue.results.foreach(
-        content => println("    "+content.webTitle))
-    }
-
-    /**
-     * Note that this is similar to the above
-     */
-    scenario("can filter content search by folder") {
-      println("Content Search by Folder: folder/traveleditorsindex/travelawards")
-      Api.search.q("sausages").folder("folder/traveleditorsindex/travelawards").response.futureValue.results.foreach(
-        content => println("    "+content.webTitle))
-    }
-  }
 }
