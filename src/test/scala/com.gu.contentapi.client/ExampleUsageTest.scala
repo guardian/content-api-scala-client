@@ -96,12 +96,6 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
       search.results.foreach (item => println(item.webTitle))
     }
 
-    scenario("did you mean?") {
-      val search = Api.search.q("the green hills of ingland").response.futureValue
-
-      search.total should be (0)
-      println("Did you mean " + search.didYouMean + "?")
-    }
   }
 
   feature ("configuring content display:") {
