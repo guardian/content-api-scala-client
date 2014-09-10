@@ -98,7 +98,6 @@ sealed trait ContentType {
   // Use these accessors to ignore the Optionability of the Map itself.
   def safeFields = fields getOrElse Map()
 
-  def safeSnippets = fields getOrElse Map()
 }
 
 case class Content(

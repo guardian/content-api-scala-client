@@ -158,7 +158,6 @@ trait Api extends Http with JsonParser {
 
   trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def showFields = StringParameter("show-fields")
-    def showSnippets = StringParameter("show-snippets")
     def showTags = StringParameter("show-tags")
     def showMedia = StringParameter("show-media")
     def showElements = StringParameter("show-elements")
@@ -167,8 +166,6 @@ trait Api extends Http with JsonParser {
     def edition = StringParameter("edition")
     def showMostViewed = BoolParameter("show-most-viewed")
     def showStoryPackage = BoolParameter("show-story-package")
-    def snippetPre = StringParameter("snippet-pre")
-    def snippetPost = StringParameter("snippet-post")
     def showInlineElements = StringParameter("show-inline-elements")
     def showExpired = BoolParameter("show-expired")
   }
