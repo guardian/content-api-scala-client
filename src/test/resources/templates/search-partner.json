@@ -16,12 +16,6 @@
       "webTitle":"Eyewitness: Wham! rap",
       "webUrl":"http://www.theguardian.com/music/picture/2010/aug/25/georgemichael-ukcrime",
       "apiUrl":"http://content.guardianapis.com/music/picture/2010/aug/25/georgemichael-ukcrime",
-      "factboxes":[{
-        "type":"photography-tip",
-        "fields":{
-          "proTip":"By using auto-focus, continuous shooting mode and holding his camera above the crowd, the photographer has managed to capture the scene"
-        }
-      }],
       "mediaAssets":[{
         "type":"picture",
         "rel":"body",

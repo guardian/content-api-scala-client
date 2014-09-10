@@ -161,7 +161,6 @@ trait Api extends Http with JsonParser {
     def showFields = StringParameter("show-fields")
     def showSnippets = StringParameter("show-snippets")
     def showTags = StringParameter("show-tags")
-    def showFactboxes = StringParameter("show-factboxes")
     def showMedia = StringParameter("show-media")
     def showElements = StringParameter("show-elements")
     def showRelated = BoolParameter("show-related")

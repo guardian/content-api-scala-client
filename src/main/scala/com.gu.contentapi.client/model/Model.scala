@@ -111,7 +111,6 @@ case class Content(
     apiUrl: String,
     fields: Option[Map[String, String]] = None,
     tags: List[Tag] = Nil,
-    factboxes: List[Factbox] = Nil,
     mediaAssets: List[MediaAsset] = Nil,
     elements: Option[List[Element]],
     references: List[Reference] = Nil,
@@ -313,15 +312,6 @@ case class Collection(
     modifiedBy: String,
     curatedContent: List[CuratedContent],
     backfill: Option[String])
-
-case class Factbox(
-    `type`: String,
-    heading: Option[String],
-    picture: Option[String],
-    fields: Option[Map[String, String]]) {
-
-  def factboxType = `type`
-}
 
 case class MediaAsset(
     `type`: String,
