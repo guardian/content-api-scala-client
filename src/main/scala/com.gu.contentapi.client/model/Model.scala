@@ -304,10 +304,6 @@ case class Section(
     */
     editions: List[Edition])
 
-case class Front(
-    title: String,
-    collections: List[String])
-
 case class Collection(
     id : String,
     `type`: String,

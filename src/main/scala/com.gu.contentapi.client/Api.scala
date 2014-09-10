@@ -23,7 +23,6 @@ trait Api extends Http with JsonParser {
   def tags = new TagsQuery
   def search = new SearchQuery
   def item = new ItemQuery
-  def fronts = new FrontsQuery
   def collection = new CollectionQuery
 
   case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
@@ -53,20 +52,6 @@ trait Api extends Http with JsonParser {
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
-  }
-
-  object FrontsQuery {
-    implicit def asResponse(q: FrontsQuery) = q.response
-    implicit def asFronts(q: FrontsQuery) = q.response map (_.results)
-  }
-
-  case class FrontsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-    extends GeneralParameters[FrontsQuery]
-    with PaginationParameters[FrontsQuery] {
-
-    lazy val response: Future[FrontsResponse] = fetch(targetUrl + "/fronts", parameters) map parseFronts
-
-    def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
   }
 
   object TagsQuery {

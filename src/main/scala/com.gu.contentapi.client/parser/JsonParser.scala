@@ -11,7 +11,6 @@ trait JsonParser {
 
   def parseTags(json: String): TagsResponse = (parse(json) \ "response").extract[TagsResponse]
   def parseSections(json: String): SectionsResponse = (parse(json) \ "response").extract[SectionsResponse]
-  def parseFronts(json: String): FrontsResponse = (parse(json) \ "response").extract[FrontsResponse]
 
   def parseItem(json: String): ItemResponse = (parse(json) \ "response")
     .transformField{ fixFields }.extract[ItemResponse]

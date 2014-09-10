@@ -30,14 +30,6 @@ case class SectionsResponse(
     total: Int,
     results: List[Section])
 
-case class FrontsResponse(
-    status: String,
-    userTier: String,
-    total: Int,
-    results: List[Front])
-
-
-
 case class ItemResponse(
     status: String,
     userTier: String,
