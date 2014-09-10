@@ -18,8 +18,14 @@ class TagsJsonParserTest extends FlatSpec with Matchers with ClientTest {
   }
 
   it should "parse the tags" in {
-    tagsResponse.results.size should be(10)
-    tagsResponse.results(1).webTitle should be("Abu Dhabi")
+    tagsResponse.results.size should be (10)
+    tagsResponse.results.head.apiUrl should be ("http://content.guardianapis.com/abu-dhabi/abu-dhabi")
+    tagsResponse.results.head.id should be ("abu-dhabi/abu-dhabi")
+    tagsResponse.results.head.sectionId should be (Some("abu-dhabi"))
+    tagsResponse.results.head.sectionName should be (Some("Abu Dhabi"))
+    tagsResponse.results.head.`type` should be ("keyword")
+    tagsResponse.results.head.webTitle should be ("Abu Dhabi")
+    tagsResponse.results.head.webUrl should be ("http://www.theguardian.com/abu-dhabi/abu-dhabi")
   }
 
 }
