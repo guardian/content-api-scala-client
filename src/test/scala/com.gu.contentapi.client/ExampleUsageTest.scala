@@ -246,30 +246,6 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
       }
     }
 
-  feature("refining search results") {
-
-    scenario("finding the most popular keywords for a search") {
-      /** This query is SLOW */
-      val PermissiveApi = new Api with DispatchAsyncHttp {
-        override implicit def executionContext: ExecutionContext = ExecutionContext.global
-
-        override lazy val requestTimeoutInMs = 10000
-      }
-
-      implicit val permissivePatienceConfig = PatienceConfig(timeout = Span(10, Seconds))
-
-      val search = PermissiveApi.search.pageSize(1).section("music")
-              .showRefinements("keyword").refinementSize(20).response.futureValue(permissivePatienceConfig)
-
-      search.refinementGroups foreach { group =>
-        println(group.refinementType)
-        group.refinements.foreach { refinement =>
-          println("\t" + refinement.displayName + " (" + refinement.count + ")")
-        }
-      }
-    }
-  }
-
   feature("contributor bios and pictures") {
     scenario("show contributor bios") {
       Api.tags.tagType("contributor").response.futureValue.results.filter(_.bio.isDefined).foreach(tag =>

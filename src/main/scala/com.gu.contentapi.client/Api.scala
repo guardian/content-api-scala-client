@@ -63,7 +63,6 @@ trait Api extends Http with JsonParser {
     extends GeneralParameters[SearchQuery]
           with PaginationParameters[SearchQuery]
           with ShowParameters[SearchQuery]
-          with RefinementParameters[SearchQuery]
           with FilterParameters[SearchQuery]
           with ContentFilterParameters[SearchQuery]
           with RefererenceParameters[SearchQuery]
@@ -173,11 +172,6 @@ trait Api extends Http with JsonParser {
     def snippetPost = StringParameter("snippet-post")
     def showInlineElements = StringParameter("show-inline-elements")
     def showExpired = BoolParameter("show-expired")
-  }
-
-  trait RefinementParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-    def showRefinements = StringParameter("show-refinements")
-    def refinementSize = IntParameter("refinement-size")
   }
 
   trait RefererenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>

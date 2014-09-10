@@ -11,7 +11,6 @@ case class SearchResponse(
     orderBy: String,
     didYouMean: Option[String],
     results: List[Content],
-    refinementGroups: List[RefinementGroup],
     bestBets: List[BestBet])
 
 case class TagsResponse(

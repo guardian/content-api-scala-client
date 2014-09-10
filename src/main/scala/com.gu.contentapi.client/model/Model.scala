@@ -316,20 +316,6 @@ case class MediaEncoding(
     format: String,
     file: String)
 
-case class RefinementGroup(
-    `type`: String,
-    refinements: List[Refinement]) {
-
-  def refinementType = `type`
-}
-
-case class Refinement(
-    count: Int,
-    refinedUrl: String,
-    displayName: String,
-    id: String,
-    apiUrl: String)
-
 case class BestBet(
     webTitle: String,
     webUrl: String,
