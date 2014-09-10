@@ -6,7 +6,7 @@ sealed trait ContentType {
 
   /**
   * The id of this item of content: this should always be the path
-  * to the item on www.guardian.co.uk
+  * to the item on www.theguardian.com
   */
   val id: String
 
@@ -36,7 +36,7 @@ sealed trait ContentType {
   val webTitle: String
 
   /**
-  * Full url on which the content can be found on www.guardian.co.uk
+  * Full url on which the content can be found on www.theguardian.com
   */
   val webUrl: String
 
@@ -157,7 +157,7 @@ case class Tag(
 
     /**
     * The id of this tag: this should always be the path
-    * to the tag page on www.guardian.co.uk
+    * to the tag page on www.theguardian.com
     */
     id: String,
 
@@ -183,7 +183,7 @@ case class Tag(
     webTitle: String,
 
     /**
-    * Full url on which tag page can be found on www.guardian.co.uk
+    * Full url on which tag page can be found on www.theguardian.com
     */
     webUrl: String,
 
@@ -275,7 +275,7 @@ case class Section(
 
     /**
     * The id of this section: this should always be the path
-    * to the section front on www.guardian.co.uk
+    * to the section front on www.theguardian.com
     */
     id: String,
 
@@ -285,7 +285,7 @@ case class Section(
     webTitle: String,
 
     /**
-    * Full url on which section front can be found on www.guardian.co.uk
+    * Full url on which section front can be found on www.theguardian.com
     */
     webUrl: String,
 

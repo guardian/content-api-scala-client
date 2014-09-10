@@ -43,7 +43,7 @@ class SearchJsonParserTest extends FlatSpec with Matchers {
     content.sectionName should be (Some("World news"))
     content.webPublicationDate should be (new DateTime(2012, 2, 22, 8, 55, 0, 0))
     content.webTitle should be ("Journalists reported killed in Syria  \u2013 live updates")
-    content.webUrl should be ("http://www.guardian.co.uk/world/middle-east-live/2012/feb/22/syria-yemen")
+    content.webUrl should be ("http://www.theguardian.com/world/middle-east-live/2012/feb/22/syria-yemen")
     content.apiUrl should be ("http://content.guardianapis.com/world/middle-east-live/2012/feb/22/syria-yemen")
   }
 
@@ -61,7 +61,7 @@ class SearchJsonParserTest extends FlatSpec with Matchers {
     "thumbnail"->"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2012/2/21/1329868492281/House-in-the-city-of-Homs-002.jpg",
     "commentable"->"true",
     "byline"->"Brian Whitaker and Haroon Siddique",
-    "publication"->"guardian.co.uk",
+    "publication"->"theguardian.com",
     "shouldHideAdverts"->"false",
     "liveBloggingNow"->"true"
       )))
@@ -76,7 +76,7 @@ class SearchJsonParserTest extends FlatSpec with Matchers {
     edinburgh.id should be ("world/middle-east-live")
     edinburgh.tagType should be ("blog")
     edinburgh.webTitle should be ("Middle East Live")
-    edinburgh.webUrl should be ("http://www.guardian.co.uk/world/middle-east-live")
+    edinburgh.webUrl should be ("http://www.theguardian.com/world/middle-east-live")
     edinburgh.apiUrl should be ("http://content.guardianapis.com/world/middle-east-live")
     edinburgh.sectionId should be (Some("world"))
     edinburgh.sectionName should be (Some("World news"))
