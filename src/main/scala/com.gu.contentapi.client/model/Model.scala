@@ -111,7 +111,6 @@ case class Content(
     apiUrl: String,
     fields: Option[Map[String, String]] = None,
     tags: List[Tag] = Nil,
-    mediaAssets: List[MediaAsset] = Nil,
     elements: Option[List[Element]],
     references: List[Reference] = Nil,
     isExpired: Option[Boolean] = None) extends ContentType {
@@ -312,17 +311,6 @@ case class Collection(
     modifiedBy: String,
     curatedContent: List[CuratedContent],
     backfill: Option[String])
-
-case class MediaAsset(
-    `type`: String,
-    rel: String,
-    index: Int,
-    file: Option[String],
-    fields: Option[Map[String, String]],
-    encodings: List[MediaEncoding] = Nil) {
-
-  def mediaAssetType = `type`
-}
 
 case class MediaEncoding(
     format: String,

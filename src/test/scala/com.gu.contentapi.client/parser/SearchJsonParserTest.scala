@@ -103,25 +103,6 @@ class SearchJsonParserTest extends FlatSpec with Matchers {
     keywords.refinements.head.displayName should be ("Today")
   }
 
-  it should "parse media assets" in {
-    searchResponse.results.head.mediaAssets should be (Nil)
-
-    val mediaAssets = partnerSearchResponse.results.head.mediaAssets
-    mediaAssets.size should be (2)
-    mediaAssets.head.`type` should be ("picture")
-    mediaAssets.head.file should be (Some("http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2010/8/25/1282722354152/george-michael-appears-in-003.jpg"))
-
-    mediaAssets.head.fields should be (Some(Map(
-         "source" -> "Getty Images",
-          "photographer" -> "Peter Macdiarmid",
-          "height" -> "519",
-          "credit" -> "Peter Macdiarmid/Getty Images",
-          "altText" -> "george michael appears in court charged with driving offences",
-          "caption" -> "Singer George Michael leaves  Highbury magistrates court surrounded by press and police. Michael pleaded guilty to driving under the influence of drugs and possessing cannabis after he crashed his car into a  shop in London. The singer has been warned that he may face a custodial sentence after a previous similar offence",
-          "width" -> "780"    
-      )))
-  }
-
   it should "parse element assets" in {
     assert(!searchResponse.results.head.elements.isDefined, "Elements should not be listed when show-elements is not a parameter")
 
