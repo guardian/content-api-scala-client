@@ -233,7 +233,14 @@ case class Tag(
     * If this tag is a contributor then we *may* have a large byline
     * picture for the contributor.
     */
-    bylineLargeImageUrl: Option[String] = None) {
+    bylineLargeImageUrl: Option[String] = None,
+
+    /**
+    * If this tag is a series it could be a podcast.
+    */
+    podcast: Option[Podcast] = None
+
+    ) {
 
   /**
   * Same as `type` but without needing the backticks
@@ -355,3 +362,12 @@ case class SupportingMetadata(
   trailText: Option[String],
   headline: Option[String],
   imageAdjustment: Option[String]) extends Metadata
+
+
+case class Podcast(
+  linkUrl: String,
+  copyright: String,
+  author: String,
+  subscriptionUrl: Option[String],
+  explicit: Boolean
+)

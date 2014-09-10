@@ -28,4 +28,9 @@ class TagsJsonParserTest extends FlatSpec with Matchers {
     tagsResponse.results.head.webTitle should be ("Mohamed Abdul Malek")
     tagsResponse.results.head.bio should be (Some("<p>Mohamed Abdul Malek is chairman of Libya Watch</p>"))
   }
+
+  it should "parse the podcast tag" in {
+    tagsResponse.results.size should be (2)
+    tagsResponse.results(1).podcast should not be None
+  }
 }
