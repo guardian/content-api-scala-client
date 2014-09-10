@@ -4,20 +4,25 @@ import org.joda.time.ReadableInstant
 
 trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
 
-  def stringParam(key: String, value: String): Owner =
+  def stringParam(key: String, value: String): Owner = {
     withParameter(StringParameter(key, Some(value)))
+  }
 
-  def intParam(key: String, value: Int): Owner =
+  def intParam(key: String, value: Int): Owner = {
     withParameter(IntParameter(key, Some(value)))
+  }
 
-  def boolParam(key: String, value: Boolean): Owner =
+  def boolParam(key: String, value: Boolean): Owner = {
     withParameter(BoolParameter(key, Some(value)))
+  }
 
-  def dateParam(key: String, value: ReadableInstant): Owner =
+  def dateParam(key: String, value: ReadableInstant): Owner = {
     withParameter(DateParameter(key, Some(value)))
+  }
 
-  def withParameter(parameter: Parameter): Owner =
+  def withParameter(parameter: Parameter): Owner = {
     withParameters(parameterHolder.updated(parameter.name, parameter))
+  }
 
   def withParameters(parameterMap: Map[String, Parameter]): Owner
 
