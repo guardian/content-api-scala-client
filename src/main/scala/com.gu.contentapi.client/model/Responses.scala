@@ -10,8 +10,7 @@ case class SearchResponse(
     pages: Int,
     orderBy: String,
     didYouMean: Option[String],
-    results: List[Content],
-    bestBets: List[BestBet])
+    results: List[Content])
 
 case class TagsResponse(
     status: String,

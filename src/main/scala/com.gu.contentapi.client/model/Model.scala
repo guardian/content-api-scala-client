@@ -316,11 +316,6 @@ case class MediaEncoding(
     format: String,
     file: String)
 
-case class BestBet(
-    webTitle: String,
-    webUrl: String,
-    trailText: Option[String])
-
 case class Reference(
     `type`: String,
     id: String)
