@@ -233,19 +233,6 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
     }
   }
 
-  feature("getting expired content") {
-
-      scenario("cannot load expired content if I am not an internal user") {
-
-        val expiredArticle = Api.item.itemId("football/2012/sep/14/zlatan-ibrahimovic-paris-st-germain-toulouse")
-          .showExpired()
-          .response
-
-        val error = intercept[Exception] { expiredArticle.futureValue.content }
-        error.getMessage should include("Bad Request")
-      }
-    }
-
   feature("contributor bios and pictures") {
     scenario("show contributor bios") {
       Api.tags.tagType("contributor").response.futureValue.results.filter(_.bio.isDefined).foreach(tag =>

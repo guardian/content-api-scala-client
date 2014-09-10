@@ -152,22 +152,18 @@ trait Api extends Http with JsonParser {
     def orderBy = StringParameter("order-by")
     def fromDate = DateParameter("from-date")
     def toDate = DateParameter("to-date")
-    def dateId = StringParameter("date-id")
     def useDate = StringParameter("use-date")
    }
 
   trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def showFields = StringParameter("show-fields")
     def showTags = StringParameter("show-tags")
-    def showMedia = StringParameter("show-media")
     def showElements = StringParameter("show-elements")
     def showRelated = BoolParameter("show-related")
     def showEditorsPicks = BoolParameter("show-editors-picks")
     def edition = StringParameter("edition")
     def showMostViewed = BoolParameter("show-most-viewed")
     def showStoryPackage = BoolParameter("show-story-package")
-    def showInlineElements = StringParameter("show-inline-elements")
-    def showExpired = BoolParameter("show-expired")
   }
 
   trait RefererenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
