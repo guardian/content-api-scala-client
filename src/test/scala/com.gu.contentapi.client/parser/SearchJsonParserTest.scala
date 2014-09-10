@@ -6,7 +6,7 @@ import com.gu.contentapi.client.ClientTest
 
 class SearchJsonParserTest extends FlatSpec with Matchers with ClientTest {
 
-  lazy val searchResponse = JsonParser.parseSearch(loadJson("search.json"))
+  val searchResponse = JsonParser.parseSearch(loadJson("search.json"))
 
   it should "parse basic response fields" in {
     searchResponse.status should be ("ok")
