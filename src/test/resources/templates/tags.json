@@ -1,34 +1,103 @@
 {
-  "response":{
-    "status":"ok",
-    "userTier":"free",
-    "total":29238,
-    "startIndex":1,
-    "pageSize":2,
-    "currentPage":1,
-    "pages":14619,
-    "results":[{
-      "id":"profile/mohamed-abdul-malek",
-      "type":"contributor",
-      "webTitle":"Mohamed Abdul Malek",
-      "webUrl":"http://www.theguardian.com/profile/mohamed-abdul-malek",
-      "apiUrl":"http://content.guardianapis.com/profile/mohamed-abdul-malek",
-      "bio":"<p>Mohamed Abdul Malek is chairman of Libya Watch</p>",
-      "bylineImageUrl":"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2011/2/21/1298313935126/mohamed_malek.jpg"
-    },{
-      "id":"stage/series/movetube-dance-column",
-      "type":"series",
-      "webTitle":"MoveTube: the best dance on the web",
-      "webUrl":"http://www.theguardian.com/stage/series/movetube-dance-column",
-      "apiUrl":"http://content.guardianapis.com/stage/series/movetube-dance-column",
-      "sectionId":"stage",
-      "sectionName":"Stage",
-      "podcast":{
-        "linkUrl": "http://www.theguardian.com",
-        "copyright": "theguardian.com © 2014",
-        "author": "theguardian.com",
-        "explicit":true
-      }
-    }]
-  }
+    "response": {
+        "status": "ok",
+        "userTier": "developer",
+        "total": 43880,
+        "startIndex": 1,
+        "pageSize": 10,
+        "currentPage": 1,
+        "pages": 4388,
+        "results": [
+            {
+                "id": "aberdeen-grampian/aberdeen-grampian",
+                "webTitle": "Aberdeen-Grampian",
+                "type": "keyword",
+                "sectionId": "aberdeen-grampian",
+                "sectionName": "Aberdeen-Grampian",
+                "webUrl": "http://www.theguardian.com/aberdeen-grampian/aberdeen-grampian",
+                "apiUrl": "http://content.guardianapis.com/aberdeen-grampian/aberdeen-grampian"
+            },
+            {
+                "id": "abu-dhabi/abu-dhabi",
+                "webTitle": "Abu Dhabi",
+                "type": "keyword",
+                "sectionId": "abu-dhabi",
+                "sectionName": "Abu Dhabi",
+                "webUrl": "http://www.theguardian.com/abu-dhabi/abu-dhabi",
+                "apiUrl": "http://content.guardianapis.com/abu-dhabi/abu-dhabi"
+            },
+            {
+                "id": "achievementsaward/achievementsaward",
+                "webTitle": "International Development Achievement award",
+                "type": "keyword",
+                "sectionId": "achievementsaward",
+                "sectionName": "International Development Achievement Award",
+                "webUrl": "http://www.theguardian.com/achievementsaward/achievementsaward",
+                "apiUrl": "http://content.guardianapis.com/achievementsaward/achievementsaward"
+            },
+            {
+                "id": "achievementsaward/international-development-achievement-award-2010",
+                "webTitle": "International Development Achievement award 2010",
+                "type": "keyword",
+                "sectionId": "achievementsaward",
+                "sectionName": "International Development Achievement Award",
+                "webUrl": "http://www.theguardian.com/achievementsaward/international-development-achievement-award-2010",
+                "apiUrl": "http://content.guardianapis.com/achievementsaward/international-development-achievement-award-2010"
+            },
+            {
+                "id": "achievementsaward/international-development-achievement-award-2011",
+                "webTitle": "International development achievement award 2011",
+                "type": "keyword",
+                "sectionId": "achievementsaward",
+                "sectionName": "International Development Achievement Award",
+                "webUrl": "http://www.theguardian.com/achievementsaward/international-development-achievement-award-2011",
+                "apiUrl": "http://content.guardianapis.com/achievementsaward/international-development-achievement-award-2011"
+            },
+            {
+                "id": "achievementsaward/judges",
+                "webTitle": "Judges",
+                "type": "keyword",
+                "sectionId": "achievementsaward",
+                "sectionName": "International Development Achievement Award",
+                "webUrl": "http://www.theguardian.com/achievementsaward/judges",
+                "apiUrl": "http://content.guardianapis.com/achievementsaward/judges"
+            },
+            {
+                "id": "action-for-children/action-for-children",
+                "webTitle": "Action for Children",
+                "type": "keyword",
+                "sectionId": "action-for-children",
+                "sectionName": "Action for Children",
+                "webUrl": "http://www.theguardian.com/action-for-children/action-for-children",
+                "apiUrl": "http://content.guardianapis.com/action-for-children/action-for-children"
+            },
+            {
+                "id": "actionaid-feeling/actionaid-feeling",
+                "webTitle": "ActionAid - What a feeling",
+                "type": "keyword",
+                "sectionId": "actionaid-feeling",
+                "sectionName": "ActionAid - What a feeling",
+                "webUrl": "http://www.theguardian.com/actionaid-feeling/actionaid-feeling",
+                "apiUrl": "http://content.guardianapis.com/actionaid-feeling/actionaid-feeling"
+            },
+            {
+                "id": "actionaid-feeling/rwanda-blog",
+                "webTitle": "Rwanda blog",
+                "type": "keyword",
+                "sectionId": "actionaid-feeling",
+                "sectionName": "ActionAid - What a feeling",
+                "webUrl": "http://www.theguardian.com/actionaid-feeling/rwanda-blog",
+                "apiUrl": "http://content.guardianapis.com/actionaid-feeling/rwanda-blog"
+            },
+            {
+                "id": "activate/activate",
+                "webTitle": "Activate",
+                "type": "keyword",
+                "sectionId": "activate",
+                "sectionName": "Activate",
+                "webUrl": "http://www.theguardian.com/activate/activate",
+                "apiUrl": "http://content.guardianapis.com/activate/activate"
+            }
+        ]
+    }
 }
