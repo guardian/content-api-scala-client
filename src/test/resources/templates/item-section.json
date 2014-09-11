@@ -323,6 +323,44 @@
                 "webUrl": "http://www.theguardian.com/commentisfree/2014/sep/10/nfl-watch-ray-rice-beat-wife-cover-up",
                 "apiUrl": "http://content.guardianapis.com/commentisfree/2014/sep/10/nfl-watch-ray-rice-beat-wife-cover-up"
             }
+        ],
+        "editorsPicks": [
+            {
+                "webTitle": "Salmond’s Scotland won’t be an escape from Tory Britain | Seumas Milne",
+                "webPublicationDate": "2014-09-11T05:00:02Z",
+                "sectionName": "Comment is free",
+                "sectionId": "commentisfree",
+                "id": "commentisfree/2014/sep/11/salmond-scotland-no-escape-tory-britain",
+                "webUrl": "http://www.theguardian.com/commentisfree/2014/sep/11/salmond-scotland-no-escape-tory-britain",
+                "apiUrl": "http://content.guardianapis.com/commentisfree/2014/sep/11/salmond-scotland-no-escape-tory-britain"
+            },
+            {
+                "webTitle": "The Great Naked Celebrity Photo Leak of 2014 is just the beginning | Roxane Gay",
+                "webPublicationDate": "2014-09-04T12:30:58Z",
+                "sectionName": "Comment is free",
+                "sectionId": "commentisfree",
+                "id": "commentisfree/2014/sep/01/celebrity-naked-photo-leak-2014-nude-women",
+                "webUrl": "http://www.theguardian.com/commentisfree/2014/sep/01/celebrity-naked-photo-leak-2014-nude-women",
+                "apiUrl": "http://content.guardianapis.com/commentisfree/2014/sep/01/celebrity-naked-photo-leak-2014-nude-women"
+            },
+            {
+                "webTitle": "Google has sleep pods, Yelp has beer – why don’t we just live at work? | Michael Moran",
+                "webPublicationDate": "2014-09-11T10:57:13Z",
+                "sectionName": "Comment is free",
+                "sectionId": "commentisfree",
+                "id": "commentisfree/2014/sep/11/google-sleep-pods-yelp-beer-work-leisure-offices",
+                "webUrl": "http://www.theguardian.com/commentisfree/2014/sep/11/google-sleep-pods-yelp-beer-work-leisure-offices",
+                "apiUrl": "http://content.guardianapis.com/commentisfree/2014/sep/11/google-sleep-pods-yelp-beer-work-leisure-offices"
+            },
+            {
+                "webTitle": "Why it’s so much harder to think like a Conservative | Roger Scruton",
+                "webPublicationDate": "2014-09-10T18:09:46Z",
+                "sectionName": "Comment is free",
+                "sectionId": "commentisfree",
+                "id": "commentisfree/2014/sep/10/why-its-harder-to-think-like-a-conservative",
+                "webUrl": "http://www.theguardian.com/commentisfree/2014/sep/10/why-its-harder-to-think-like-a-conservative",
+                "apiUrl": "http://content.guardianapis.com/commentisfree/2014/sep/10/why-its-harder-to-think-like-a-conservative"
+            }
         ]
     }
 }

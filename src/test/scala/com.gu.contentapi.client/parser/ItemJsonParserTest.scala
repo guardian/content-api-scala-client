@@ -28,6 +28,7 @@ class ItemJsonParserTest extends FlatSpec with Matchers with ClientTest {
     contentItemResponse.results.length should be (0)
     contentItemResponse.leadContent.length should be (0)
     contentItemResponse.mostViewed.length should be (0)
+    contentItemResponse.editorsPicks.length should be (0)
   }
 
   it should "parse content fields" in {
@@ -119,6 +120,7 @@ class ItemJsonParserTest extends FlatSpec with Matchers with ClientTest {
     tagItemResponse.results.length should not be (0)
     tagItemResponse.leadContent.length should not be (0)
     tagItemResponse.mostViewed.length should be (0)
+    tagItemResponse.editorsPicks.length should be (0)
   }
 
   it should "parse tag" in {
@@ -165,6 +167,7 @@ class ItemJsonParserTest extends FlatSpec with Matchers with ClientTest {
     sectionItemResponse.results.length should not be (0)
     sectionItemResponse.leadContent.length should be (0)
     sectionItemResponse.mostViewed.length should not be (0)
+    sectionItemResponse.editorsPicks.length should not be (0)
   }
 
   it should "parse section" in {
