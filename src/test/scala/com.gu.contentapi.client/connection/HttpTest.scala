@@ -1,10 +1,11 @@
+package com.gu.contentapi.client.connection
+
 import scala.concurrent.ExecutionContext
 import com.gu.contentapi.client.model.{ItemResponse, Content}
 import com.gu.contentapi.client.{Api, ApiError}
 import com.gu.contentapi.client.connection._
 import org.scalatest.{Matchers, FlatSpec, BeforeAndAfterEach}
 import dispatch._
-
 
 class HttpTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   import ExecutionContext.Implicits.global
