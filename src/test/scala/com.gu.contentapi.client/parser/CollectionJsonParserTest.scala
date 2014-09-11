@@ -8,7 +8,7 @@ class CollectionJsonParserTest extends FlatSpec with Matchers with ClientTest {
 
   val collectionResponse = JsonParser.parseCollection(loadJson("a-collection.json"))
 
-  it should "parse basic response fields" in {
+  "collection parser" should "parse basic response fields" in {
     collectionResponse.status should be ("ok")
     collectionResponse.userTier should be ("developer")
     collectionResponse.total should be (1)

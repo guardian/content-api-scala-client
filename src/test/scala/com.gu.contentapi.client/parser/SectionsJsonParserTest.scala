@@ -7,7 +7,7 @@ class SectionsJsonParserTest extends FlatSpec with Matchers with ClientTest {
 
   val sectionsResponse = JsonParser.parseSections(loadJson("sections.json"))
 
-  it should "parse basic response fields" in {
+  "sections parser" should "parse basic response fields" in {
     sectionsResponse.status should be ("ok")
     sectionsResponse.userTier should be ("developer")
     sectionsResponse.total should be (65)
