@@ -84,6 +84,5 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   ),
   setNextVersion,
   commitNextVersion,
-  ReleaseStep(state => Project.extract(state).runTask(SonatypeKeys.sonatypeReleaseAll, state)._1),
-  pushChanges
+  ReleaseStep(state => Project.extract(state).runTask(SonatypeKeys.sonatypeReleaseAll, state)._1)
 )
