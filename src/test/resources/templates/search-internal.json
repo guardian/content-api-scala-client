@@ -15,48 +15,8 @@
                 "sectionName": "Music",
                 "webPublicationDate": "2010-08-25T11:08:53+01:00",
                 "webTitle": "Eyewitness: Wham! rap",
-                "webUrl": "http://www.guardian.co.uk/music/picture/2010/aug/25/georgemichael-ukcrime",
+                "webUrl": "http://www.theguardian.com/music/picture/2010/aug/25/georgemichael-ukcrime",
                 "apiUrl": "http://content.guardianapis.com/music/picture/2010/aug/25/georgemichael-ukcrime",
-                "factboxes": [
-                    {
-                        "type": "photography-tip",
-                        "fields": {
-                            "proTip": "By using auto-focus, continuous shooting mode and holding his camera above the crowd, the photographer has managed to capture the scene"
-                        }
-                    }
-                ],
-                "mediaAssets": [
-                    {
-                        "type": "picture",
-                        "rel": "body",
-                        "index": 1,
-                        "file": "http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2010/8/25/1282722354152/george-michael-appears-in-003.jpg",
-                        "fields": {
-                            "source": "Getty Images",
-                            "photographer": "Peter Macdiarmid",
-                            "height": "519",
-                            "credit": "Peter Macdiarmid/Getty Images",
-                            "altText": "george michael appears in court charged with driving offences",
-                            "caption": "Singer George Michael leaves  Highbury magistrates court surrounded by press and police. Michael pleaded guilty to driving under the influence of drugs and possessing cannabis after he crashed his car into a  shop in London. The singer has been warned that he may face a custodial sentence after a previous similar offence",
-                            "width": "780"
-                        }
-                    },
-                    {
-                        "type": "picture",
-                        "rel": "big-picture",
-                        "index": 1,
-                        "file": "http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2010/8/25/1282722355694/george-michael-appears-in-004.jpg",
-                        "fields": {
-                            "source": "Getty Images",
-                            "photographer": "Peter Macdiarmid",
-                            "height": "768",
-                            "credit": "Peter Macdiarmid/Getty Images",
-                            "altText": "george michael appears in court charged with driving offences",
-                            "caption": "Singer George Michael leaves  Highbury magistrates court surrounded by press and police. Michael pleaded guilty to driving under the influence of drugs and possessing cannabis after he crashed his car into a  shop in London. The singer has been warned that he may face a custodial sentence after a previous similar offence",
-                            "width": "1024"
-                        }
-                    }
-                ],
                 "elements": [
                     {
                         "id": "gu-image-1234",

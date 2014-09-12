@@ -6,197 +6,197 @@
     "results":[{
       "id":"artanddesign",
       "webTitle":"Art and design",
-      "webUrl":"http://www.guardian.co.uk/artanddesign",
+      "webUrl":"http://www.theguardian.com/artanddesign",
       "apiUrl":"http://content.guardianapis.com/artanddesign"
     },{
       "id":"cardiff",
       "webTitle":"Cardiff",
-      "webUrl":"http://www.guardian.co.uk/cardiff",
+      "webUrl":"http://www.theguardian.com/cardiff",
       "apiUrl":"http://content.guardianapis.com/cardiff"
     },{
       "id":"community",
       "webTitle":"Community",
-      "webUrl":"http://www.guardian.co.uk/community",
+      "webUrl":"http://www.theguardian.com/community",
       "apiUrl":"http://content.guardianapis.com/community"
     },{
       "id":"crosswords",
       "webTitle":"Crosswords",
-      "webUrl":"http://www.guardian.co.uk/crosswords",
+      "webUrl":"http://www.theguardian.com/crosswords",
       "apiUrl":"http://content.guardianapis.com/crosswords"
     },{
       "id":"edinburgh",
       "webTitle":"Edinburgh",
-      "webUrl":"http://www.guardian.co.uk/edinburgh",
+      "webUrl":"http://www.theguardian.com/edinburgh",
       "apiUrl":"http://content.guardianapis.com/edinburgh"
     },{
       "id":"extra",
       "webTitle":"Extra",
-      "webUrl":"http://www.guardian.co.uk/extra",
+      "webUrl":"http://www.theguardian.com/extra",
       "apiUrl":"http://content.guardianapis.com/extra"
     },{
       "id":"global-development",
       "webTitle":"Global development",
-      "webUrl":"http://www.guardian.co.uk/global-development",
+      "webUrl":"http://www.theguardian.com/global-development",
       "apiUrl":"http://content.guardianapis.com/global-development"
     },{
       "id":"help",
       "webTitle":"Help",
-      "webUrl":"http://www.guardian.co.uk/help",
+      "webUrl":"http://www.theguardian.com/help",
       "apiUrl":"http://content.guardianapis.com/help"
     },{
       "id":"info",
       "webTitle":"Info",
-      "webUrl":"http://www.guardian.co.uk/info",
+      "webUrl":"http://www.theguardian.com/info",
       "apiUrl":"http://content.guardianapis.com/info"
     },{
       "id":"leeds",
       "webTitle":"Leeds",
-      "webUrl":"http://www.guardian.co.uk/leeds",
+      "webUrl":"http://www.theguardian.com/leeds",
       "apiUrl":"http://content.guardianapis.com/leeds"
     },{
       "id":"local",
       "webTitle":"Local",
-      "webUrl":"http://www.guardian.co.uk/local",
+      "webUrl":"http://www.theguardian.com/local",
       "apiUrl":"http://content.guardianapis.com/local"
     },{
       "id":"news",
       "webTitle":"News",
-      "webUrl":"http://www.guardian.co.uk/news",
+      "webUrl":"http://www.theguardian.com/news",
       "apiUrl":"http://content.guardianapis.com/news"
     },{
       "id":"theguardian",
       "webTitle":"From the Guardian",
-      "webUrl":"http://www.guardian.co.uk/theguardian",
+      "webUrl":"http://www.theguardian.com/theguardian",
       "apiUrl":"http://content.guardianapis.com/theguardian"
     },{
       "id":"theobserver",
       "webTitle":"From the Observer",
-      "webUrl":"http://www.guardian.co.uk/theobserver",
+      "webUrl":"http://www.theguardian.com/theobserver",
       "apiUrl":"http://content.guardianapis.com/theobserver"
     },{
       "id":"uk",
       "webTitle":"UK news",
-      "webUrl":"http://www.guardian.co.uk/uk",
+      "webUrl":"http://www.theguardian.com/uk",
       "apiUrl":"http://content.guardianapis.com/uk"
     },{
       "id":"weather",
       "webTitle":"Weather",
-      "webUrl":"http://www.guardian.co.uk/weather",
+      "webUrl":"http://www.theguardian.com/weather",
       "apiUrl":"http://content.guardianapis.com/weather"
     },{
       "id":"education",
       "webTitle":"Education",
-      "webUrl":"http://www.guardian.co.uk/education",
+      "webUrl":"http://www.theguardian.com/education",
       "apiUrl":"http://content.guardianapis.com/education"
     },{
       "id":"katine",
       "webTitle":"Katine",
-      "webUrl":"http://www.guardian.co.uk/katine",
+      "webUrl":"http://www.theguardian.com/katine",
       "apiUrl":"http://content.guardianapis.com/katine"
     },{
       "id":"tv-and-radio",
       "webTitle":"Television &amp; radio",
-      "webUrl":"http://www.guardian.co.uk/tv-and-radio",
+      "webUrl":"http://www.theguardian.com/tv-and-radio",
       "apiUrl":"http://content.guardianapis.com/tv-and-radio"
     },{
       "id":"books",
       "webTitle":"Books",
-      "webUrl":"http://www.guardian.co.uk/books",
+      "webUrl":"http://www.theguardian.com/books",
       "apiUrl":"http://content.guardianapis.com/books"
     },{
       "id":"law",
       "webTitle":"Law",
-      "webUrl":"http://www.guardian.co.uk/law",
+      "webUrl":"http://www.theguardian.com/law",
       "apiUrl":"http://content.guardianapis.com/law"
     },{
       "id":"business",
       "webTitle":"Business",
-      "webUrl":"http://www.guardian.co.uk/business",
+      "webUrl":"http://www.theguardian.com/business",
       "apiUrl":"http://content.guardianapis.com/business"
     },{
       "id":"stage",
       "webTitle":"Stage",
-      "webUrl":"http://www.guardian.co.uk/stage",
+      "webUrl":"http://www.theguardian.com/stage",
       "apiUrl":"http://content.guardianapis.com/stage"
     },{
       "id":"travel",
       "webTitle":"Travel",
-      "webUrl":"http://www.guardian.co.uk/travel",
+      "webUrl":"http://www.theguardian.com/travel",
       "apiUrl":"http://content.guardianapis.com/travel"
     },{
       "id":"lifeandstyle",
       "webTitle":"Life and style",
-      "webUrl":"http://www.guardian.co.uk/lifeandstyle",
+      "webUrl":"http://www.theguardian.com/lifeandstyle",
       "apiUrl":"http://content.guardianapis.com/lifeandstyle"
     },{
       "id":"commentisfree",
       "webTitle":"Comment is free",
-      "webUrl":"http://www.guardian.co.uk/commentisfree",
+      "webUrl":"http://www.theguardian.com/commentisfree",
       "apiUrl":"http://content.guardianapis.com/commentisfree"
     },{
       "id":"technology",
       "webTitle":"Technology",
-      "webUrl":"http://www.guardian.co.uk/technology",
+      "webUrl":"http://www.theguardian.com/technology",
       "apiUrl":"http://content.guardianapis.com/technology"
     },{
       "id":"world",
       "webTitle":"World news",
-      "webUrl":"http://www.guardian.co.uk/world",
+      "webUrl":"http://www.theguardian.com/world",
       "apiUrl":"http://content.guardianapis.com/world"
     },{
       "id":"money",
       "webTitle":"Money",
-      "webUrl":"http://www.guardian.co.uk/money",
+      "webUrl":"http://www.theguardian.com/money",
       "apiUrl":"http://content.guardianapis.com/money"
     },{
       "id":"politics",
       "webTitle":"Politics",
-      "webUrl":"http://www.guardian.co.uk/politics",
+      "webUrl":"http://www.theguardian.com/politics",
       "apiUrl":"http://content.guardianapis.com/politics"
     },{
       "id":"film",
       "webTitle":"Film",
-      "webUrl":"http://www.guardian.co.uk/film",
+      "webUrl":"http://www.theguardian.com/film",
       "apiUrl":"http://content.guardianapis.com/film"
     },{
       "id":"football",
       "webTitle":"Football",
-      "webUrl":"http://www.guardian.co.uk/football",
+      "webUrl":"http://www.theguardian.com/football",
       "apiUrl":"http://content.guardianapis.com/football"
     },{
       "id":"environment",
       "webTitle":"Environment",
-      "webUrl":"http://www.guardian.co.uk/environment",
+      "webUrl":"http://www.theguardian.com/environment",
       "apiUrl":"http://content.guardianapis.com/environment"
     },{
       "id":"media",
       "webTitle":"Media",
-      "webUrl":"http://www.guardian.co.uk/media",
+      "webUrl":"http://www.theguardian.com/media",
       "apiUrl":"http://content.guardianapis.com/media"
     },{
       "id":"sport",
       "webTitle":"Sport",
-      "webUrl":"http://www.guardian.co.uk/sport",
+      "webUrl":"http://www.theguardian.com/sport",
       "apiUrl":"http://content.guardianapis.com/sport"
     },{
       "id":"music",
       "webTitle":"Music",
-      "webUrl":"http://www.guardian.co.uk/music",
+      "webUrl":"http://www.theguardian.com/music",
       "apiUrl":"http://content.guardianapis.com/music"
     },{
       "id":"culture",
       "webTitle":"Culture",
-      "webUrl":"http://www.guardian.co.uk/culture",
+      "webUrl":"http://www.theguardian.com/culture",
       "apiUrl":"http://content.guardianapis.com/culture"
     },{
       "id":"science",
       "webTitle":"Science",
-      "webUrl":"http://www.guardian.co.uk/science",
+      "webUrl":"http://www.theguardian.com/science",
       "apiUrl":"http://content.guardianapis.com/science"
     },{
       "id":"society",
       "webTitle":"Society",
-      "webUrl":"http://www.guardian.co.uk/society",
+      "webUrl":"http://www.theguardian.com/society",
       "apiUrl":"http://content.guardianapis.com/society"
     }]
   }

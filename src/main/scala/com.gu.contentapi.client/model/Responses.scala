@@ -9,10 +9,7 @@ case class SearchResponse(
     currentPage: Int,
     pages: Int,
     orderBy: String,
-    didYouMean: Option[String],
-    results: List[Content],
-    refinementGroups: List[RefinementGroup],
-    bestBets: List[BestBet])
+    results: List[Content])
 
 case class TagsResponse(
     status: String,
@@ -29,22 +26,6 @@ case class SectionsResponse(
     userTier: String,
     total: Int,
     results: List[Section])
-
-case class FrontsResponse(
-    status: String,
-    userTier: String,
-    total: Int,
-    results: List[Front])
-
-case class FoldersResponse(
-    status: String,
-    userTier: String,
-    total: Int,
-    startIndex: Int,
-    pageSize: Int,
-    currentPage: Int,
-    pages: Int,
-    results: List[Folder])
 
 case class ItemResponse(
     status: String,

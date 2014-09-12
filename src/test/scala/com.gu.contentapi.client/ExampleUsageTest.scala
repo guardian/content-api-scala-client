@@ -96,12 +96,6 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
       search.results.foreach (item => println(item.webTitle))
     }
 
-    scenario("did you mean?") {
-      val search = Api.search.q("the green hills of ingland").response.futureValue
-
-      search.total should be (0)
-      println("Did you mean " + search.didYouMean + "?")
-    }
   }
 
   feature ("configuring content display:") {
@@ -233,43 +227,6 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
     }
   }
 
-  feature("getting expired content") {
-
-      scenario("cannot load expired content if I am not an internal user") {
-
-        val expiredArticle = Api.item.itemId("football/2012/sep/14/zlatan-ibrahimovic-paris-st-germain-toulouse")
-          .showExpired()
-          .response
-
-        val error = intercept[Exception] { expiredArticle.futureValue.content }
-        error.getMessage should include("Bad Request")
-      }
-    }
-
-  feature("refining search results") {
-
-    scenario("finding the most popular keywords for a search") {
-      /** This query is SLOW */
-      val PermissiveApi = new Api with DispatchAsyncHttp {
-        override implicit def executionContext: ExecutionContext = ExecutionContext.global
-
-        override lazy val requestTimeoutInMs = 10000
-      }
-
-      implicit val permissivePatienceConfig = PatienceConfig(timeout = Span(10, Seconds))
-
-      val search = PermissiveApi.search.pageSize(1).section("music")
-              .showRefinements("keyword").refinementSize(20).response.futureValue(permissivePatienceConfig)
-
-      search.refinementGroups foreach { group =>
-        println(group.refinementType)
-        group.refinements.foreach { refinement =>
-          println("\t" + refinement.displayName + " (" + refinement.count + ")")
-        }
-      }
-    }
-  }
-
   feature("contributor bios and pictures") {
     scenario("show contributor bios") {
       Api.tags.tagType("contributor").response.futureValue.results.filter(_.bio.isDefined).foreach(tag =>
@@ -282,33 +239,5 @@ class ExampleUsageTest extends FeatureSpec with Matchers with BeforeAndAfterEach
       )
     }
   }
-  
-  feature("editorial folders are available") {
-    scenario("can query for folders") {
-      println("Query folders")
 
-      Api.folders.response.futureValue.results.foreach(folder => println("    "+folder.id+": "+folder.webTitle))
-    }
-
-    scenario("can query tags by folder") {
-      println("Tags by Folder: folder/traveleditorsindex/travelawards")
-      Api.tags.ids("folder/traveleditorsindex/travelawards").response.futureValue.results.foreach(
-        tag => println("    "+tag.webTitle))
-    }
-
-    scenario("can query content by folder") {
-      println("Content by Folder: folder/traveleditorsindex/travelawards")
-      Api.item.itemId("folder/traveleditorsindex/travelawards").response.futureValue.results.foreach(
-        content => println("    "+content.webTitle))
-    }
-
-    /**
-     * Note that this is similar to the above
-     */
-    scenario("can filter content search by folder") {
-      println("Content Search by Folder: folder/traveleditorsindex/travelawards")
-      Api.search.q("sausages").folder("folder/traveleditorsindex/travelawards").response.futureValue.results.foreach(
-        content => println("    "+content.webTitle))
-    }
-  }
 }

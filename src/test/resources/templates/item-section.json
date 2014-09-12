@@ -11,7 +11,7 @@
     "section":{
       "id":"travel",
       "webTitle":"Travel",
-      "webUrl":"http://www.guardian.co.uk/travel",
+      "webUrl":"http://www.theguardian.com/travel",
       "apiUrl":"http://content.guardianapis.com/travel"
     },
     "results":[{
@@ -20,7 +20,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-27T11:29:44+01:00",
       "webTitle":"Oxford's top 10 budget eats",
-      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/27/britains-best-budget-eats-oxford",
+      "webUrl":"http://www.theguardian.com/travel/2010/aug/27/britains-best-budget-eats-oxford",
       "apiUrl":"http://content.guardianapis.com/travel/2010/aug/27/britains-best-budget-eats-oxford"
     },{
       "id":"travel/2010/aug/27/top-10-uk-walks-rhossili-beach-wales",
@@ -28,7 +28,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-27T10:07:22+01:00",
       "webTitle":"Top 10 UK walks: Rhossili Downs and Bay, Swansea",
-      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/27/top-10-uk-walks-rhossili-beach-wales",
+      "webUrl":"http://www.theguardian.com/travel/2010/aug/27/top-10-uk-walks-rhossili-beach-wales",
       "apiUrl":"http://content.guardianapis.com/travel/2010/aug/27/top-10-uk-walks-rhossili-beach-wales"
     },{
       "id":"travel/2010/aug/27/blackpool",
@@ -36,7 +36,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-27T08:00:07+01:00",
       "webTitle":"Blackpool: profile of a ghost town",
-      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/27/blackpool",
+      "webUrl":"http://www.theguardian.com/travel/2010/aug/27/blackpool",
       "apiUrl":"http://content.guardianapis.com/travel/2010/aug/27/blackpool"
     },{
       "id":"travel/video/2010/aug/26/alhambra-palace-granada-spain",
@@ -44,7 +44,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-26T10:59:00+01:00",
       "webTitle":"Video: Granada's Alhambra palace",
-      "webUrl":"http://www.guardian.co.uk/travel/video/2010/aug/26/alhambra-palace-granada-spain",
+      "webUrl":"http://www.theguardian.com/travel/video/2010/aug/26/alhambra-palace-granada-spain",
       "apiUrl":"http://content.guardianapis.com/travel/video/2010/aug/26/alhambra-palace-granada-spain"
     },{
       "id":"travel/2010/aug/26/1",
@@ -52,7 +52,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-26T10:58:00+01:00",
       "webTitle":"Getting there information for Granada",
-      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/26/1",
+      "webUrl":"http://www.theguardian.com/travel/2010/aug/26/1",
       "apiUrl":"http://content.guardianapis.com/travel/2010/aug/26/1"
     },{
       "id":"travel/2010/aug/26/top-10-uk-walks-somerset-brean-down",
@@ -60,7 +60,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-26T09:27:35+01:00",
       "webTitle":"Top 10 UK walks: Brean Down, Somerset",
-      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/26/top-10-uk-walks-somerset-brean-down",
+      "webUrl":"http://www.theguardian.com/travel/2010/aug/26/top-10-uk-walks-somerset-brean-down",
       "apiUrl":"http://content.guardianapis.com/travel/2010/aug/26/top-10-uk-walks-somerset-brean-down"
     },{
       "id":"travel/blog/2010/aug/24/ask-tom-live-holiday-clinic",
@@ -68,7 +68,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-25T10:33:00+01:00",
       "webTitle":"Ask Tom: live Q&amp;A",
-      "webUrl":"http://www.guardian.co.uk/travel/blog/2010/aug/24/ask-tom-live-holiday-clinic",
+      "webUrl":"http://www.theguardian.com/travel/blog/2010/aug/24/ask-tom-live-holiday-clinic",
       "apiUrl":"http://content.guardianapis.com/travel/blog/2010/aug/24/ask-tom-live-holiday-clinic"
     },{
       "id":"travel/2010/aug/25/top-10-uk-walks-morte-point-devon",
@@ -76,7 +76,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-25T10:24:53+01:00",
       "webTitle":"Top 10 UK walks: Morte Point, Devon",
-      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/25/top-10-uk-walks-morte-point-devon",
+      "webUrl":"http://www.theguardian.com/travel/2010/aug/25/top-10-uk-walks-morte-point-devon",
       "apiUrl":"http://content.guardianapis.com/travel/2010/aug/25/top-10-uk-walks-morte-point-devon"
     },{
       "id":"travel/2010/aug/24/top-10-uk-walks-ringmore-devon",
@@ -84,7 +84,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-24T11:29:40+01:00",
       "webTitle":"Top 10 UK walks: Ringmore,&nbsp;South Devon ",
-      "webUrl":"http://www.guardian.co.uk/travel/2010/aug/24/top-10-uk-walks-ringmore-devon",
+      "webUrl":"http://www.theguardian.com/travel/2010/aug/24/top-10-uk-walks-ringmore-devon",
       "apiUrl":"http://content.guardianapis.com/travel/2010/aug/24/top-10-uk-walks-ringmore-devon"
     },{
       "id":"lifeandstyle/2010/aug/24/martin-parr-take-holiday-photographs",
@@ -92,7 +92,7 @@
       "sectionName":"Travel",
       "webPublicationDate":"2010-08-24T00:07:06+01:00",
       "webTitle":"Martin Parr: how to take better holiday photographs",
-      "webUrl":"http://www.guardian.co.uk/lifeandstyle/2010/aug/24/martin-parr-take-holiday-photographs",
+      "webUrl":"http://www.theguardian.com/lifeandstyle/2010/aug/24/martin-parr-take-holiday-photographs",
       "apiUrl":"http://content.guardianapis.com/lifeandstyle/2010/aug/24/martin-parr-take-holiday-photographs"
     }]
   }

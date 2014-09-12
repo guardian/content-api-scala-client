@@ -21,25 +21,9 @@ trait Api extends Http with JsonParser {
 
   def sections = new SectionsQuery
   def tags = new TagsQuery
-  def folders = new FoldersQuery
   def search = new SearchQuery
   def item = new ItemQuery
-  def fronts = new FrontsQuery
   def collection = new CollectionQuery
-
-  case class FoldersQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-    extends GeneralParameters[FoldersQuery]
-    with FilterParameters[FoldersQuery] {
-
-    lazy val response: Future[FoldersResponse] = fetch(targetUrl + "/folders", parameters) map parseFolders
-
-    def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
-  }
-
-  object FoldersQuery {
-    implicit def asResponse(q: FoldersQuery) = q.response
-    implicit def asFolders(q: FoldersQuery) = q.response map (_.results)
-  }
 
   case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
     extends GeneralParameters[SectionsQuery]
@@ -70,20 +54,6 @@ trait Api extends Http with JsonParser {
 
   }
 
-  object FrontsQuery {
-    implicit def asResponse(q: FrontsQuery) = q.response
-    implicit def asFronts(q: FrontsQuery) = q.response map (_.results)
-  }
-
-  case class FrontsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-    extends GeneralParameters[FrontsQuery]
-    with PaginationParameters[FrontsQuery] {
-
-    lazy val response: Future[FrontsResponse] = fetch(targetUrl + "/fronts", parameters) map parseFronts
-
-    def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
-  }
-
   object TagsQuery {
     implicit def asResponse(q: TagsQuery) = q.response
     implicit def asTags(q: TagsQuery) = q.response map (_.results)
@@ -93,7 +63,6 @@ trait Api extends Http with JsonParser {
     extends GeneralParameters[SearchQuery]
           with PaginationParameters[SearchQuery]
           with ShowParameters[SearchQuery]
-          with RefinementParameters[SearchQuery]
           with FilterParameters[SearchQuery]
           with ContentFilterParameters[SearchQuery]
           with RefererenceParameters[SearchQuery]
@@ -177,39 +146,24 @@ trait Api extends Http with JsonParser {
     def section = StringParameter("section")
     def ids = StringParameter("ids")
     def tag = StringParameter("tag")
-    def folder = StringParameter("folder")
   }
 
   trait ContentFilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def orderBy = StringParameter("order-by")
     def fromDate = DateParameter("from-date")
     def toDate = DateParameter("to-date")
-    def dateId = StringParameter("date-id")
     def useDate = StringParameter("use-date")
    }
 
   trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def showFields = StringParameter("show-fields")
-    def showSnippets = StringParameter("show-snippets")
     def showTags = StringParameter("show-tags")
-    def showFactboxes = StringParameter("show-factboxes")
-    def showMedia = StringParameter("show-media")
     def showElements = StringParameter("show-elements")
     def showRelated = BoolParameter("show-related")
     def showEditorsPicks = BoolParameter("show-editors-picks")
     def edition = StringParameter("edition")
     def showMostViewed = BoolParameter("show-most-viewed")
     def showStoryPackage = BoolParameter("show-story-package")
-    def showBestBets = BoolParameter("show-best-bets")
-    def snippetPre = StringParameter("snippet-pre")
-    def snippetPost = StringParameter("snippet-post")
-    def showInlineElements = StringParameter("show-inline-elements")
-    def showExpired = BoolParameter("show-expired")
-  }
-
-  trait RefinementParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-    def showRefinements = StringParameter("show-refinements")
-    def refinementSize = IntParameter("refinement-size")
   }
 
   trait RefererenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>

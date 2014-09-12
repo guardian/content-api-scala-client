@@ -6,7 +6,7 @@ sealed trait ContentType {
 
   /**
   * The id of this item of content: this should always be the path
-  * to the item on www.guardian.co.uk
+  * to the item on www.theguardian.com
   */
   val id: String
 
@@ -36,7 +36,7 @@ sealed trait ContentType {
   val webTitle: String
 
   /**
-  * Full url on which the content can be found on www.guardian.co.uk
+  * Full url on which the content can be found on www.theguardian.com
   */
   val webUrl: String
 
@@ -98,7 +98,6 @@ sealed trait ContentType {
   // Use these accessors to ignore the Optionability of the Map itself.
   def safeFields = fields getOrElse Map()
 
-  def safeSnippets = fields getOrElse Map()
 }
 
 case class Content(
@@ -111,8 +110,6 @@ case class Content(
     apiUrl: String,
     fields: Option[Map[String, String]] = None,
     tags: List[Tag] = Nil,
-    factboxes: List[Factbox] = Nil,
-    mediaAssets: List[MediaAsset] = Nil,
     elements: Option[List[Element]],
     references: List[Reference] = Nil,
     isExpired: Option[Boolean] = None) extends ContentType {
@@ -157,7 +154,7 @@ case class Tag(
 
     /**
     * The id of this tag: this should always be the path
-    * to the tag page on www.guardian.co.uk
+    * to the tag page on www.theguardian.com
     */
     id: String,
 
@@ -183,7 +180,7 @@ case class Tag(
     webTitle: String,
 
     /**
-    * Full url on which tag page can be found on www.guardian.co.uk
+    * Full url on which tag page can be found on www.theguardian.com
     */
     webUrl: String,
 
@@ -275,7 +272,7 @@ case class Section(
 
     /**
     * The id of this section: this should always be the path
-    * to the section front on www.guardian.co.uk
+    * to the section front on www.theguardian.com
     */
     id: String,
 
@@ -285,7 +282,7 @@ case class Section(
     webTitle: String,
 
     /**
-    * Full url on which section front can be found on www.guardian.co.uk
+    * Full url on which section front can be found on www.theguardian.com
     */
     webUrl: String,
 
@@ -304,10 +301,6 @@ case class Section(
     */
     editions: List[Edition])
 
-case class Front(
-    title: String,
-    collections: List[String])
-
 case class Collection(
     id : String,
     `type`: String,
@@ -318,80 +311,9 @@ case class Collection(
     curatedContent: List[CuratedContent],
     backfill: Option[String])
 
-case class Folder(
-
-    /**
-    * The id of this folder.  Note that folders may not have a
-    * direct representation on the website, they are simply
-    * collections of tags for editorial use.
-    */
-    id: String,
-
-    /**
-    * Short description of this folder.
-    */
-    webTitle: String,
-
-    /**
-    * Full url on which full information about this folder can be found on
-    * the content api.
-    *
-    */
-    apiUrl: String,
-
-    /**
-    * Section is usually provided: some folders do not belong
-    * to any section so this will be None
-    */
-    sectionId: Option[String] = None,
-
-    /**
-    * The display name of the section.  Will be None iff sectionId is None.
-    */
-    sectionName: Option[String] = None)
-
-case class Factbox(
-    `type`: String,
-    heading: Option[String],
-    picture: Option[String],
-    fields: Option[Map[String, String]]) {
-
-  def factboxType = `type`
-}
-
-case class MediaAsset(
-    `type`: String,
-    rel: String,
-    index: Int,
-    file: Option[String],
-    fields: Option[Map[String, String]],
-    encodings: List[MediaEncoding] = Nil) {
-
-  def mediaAssetType = `type`
-}
-
 case class MediaEncoding(
     format: String,
     file: String)
-
-case class RefinementGroup(
-    `type`: String,
-    refinements: List[Refinement]) {
-
-  def refinementType = `type`
-}
-
-case class Refinement(
-    count: Int,
-    refinedUrl: String,
-    displayName: String,
-    id: String,
-    apiUrl: String)
-
-case class BestBet(
-    webTitle: String,
-    webUrl: String,
-    trailText: Option[String])
 
 case class Reference(
     `type`: String,
