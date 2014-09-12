@@ -17,7 +17,7 @@ There are four different types of request that can be made: for a single item, o
 
 ### Single item
 
-Every item on http://www.theguardian.com/ can be retrieved on the same path at http://content.guardianapis.com/. For example:
+Every item on http://www.theguardian.com/ can be retrieved on the same path at http://content.guardianapis.com/. They can be either content items, tags, or sections. For example:
 
 ```scala
 // print the web title of a content item
@@ -36,6 +36,36 @@ yield for (tag <- response.tag) {
 for (response <- Api.item.itemId("environment").response)
 yield for (section <- response.section) {
   println(section.webTitle)
+}
+```
+
+Individual content items contain information not available from the `/search` endpoint described below. For example:
+
+```scala
+// print the web titles for the most recent content item published with a story package
+for (searchResponse <- Api.search.showFields("hasStoryPackage").response)
+yield for (firstItem <- searchResponse.results.find(_.fields.get("hasStoryPackage") == "true"))
+yield for (itemResponse <- Api.item.itemId(firstItem.id).showStoryPackage().response)
+yield for (result <- itemResponse.storyPackage) {
+  println(result.webTitle)
+}
+```
+
+Individual tags:
+
+```scala
+// print the web title of each item of content in the editor's picks for the `film/film` tag
+Api.item.itemId("film/film").showEditorsPicks().response map { response =>
+  for (result <- response.editorsPicks) println(result.webTitle)
+}
+```
+
+Individual sections:
+
+```scala
+// print the web title of the most viewed content items from the world section
+Api.item.itemId("world").showMostViewed().response map { response =>
+  for (result <- response.mostViewed) println(result.webTitle)
 }
 ```
 
@@ -78,6 +108,11 @@ Api.tags.response map { response =>
 // print the web titles of the first 10 tags
 Api.tags.response map { response =>
   for (result <- response.results) println(result.webTitle)
+}
+
+// print the web titles and bios of the first 10 contributor tags which have them
+Api.tags.tagType("contributor").response map { response =>
+  for (result <- response.results.filter(_.bio.isDefined)) println(s"${result.webTitle}\n${result.bio.get}\n")
 }
 
 // print the web titles and numbers of the first 10 tags in the books section with ISBN references
