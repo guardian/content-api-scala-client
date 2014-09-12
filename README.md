@@ -7,72 +7,92 @@ A Scala client for the Guardian's [Content API] (http://explorer.content.guardia
 Usage
 -----
 
-### Adding the dependency
+Add the following to your SBT build definition:
 
-Add the following lines to your [SBT build file] (http://www.scala-sbt.org/0.13.0/docs/Getting-Started/Basic-Def.html):
-
-    libraryDependencies += "com.gu" %% "content-api-client" % "2.19"
-
-### Making calls
+```scala
+libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
+```
 
 There are four different types of request that can be made: for a single item, or to filter all content, tags, or sections.
 
-#### Single item
+### Single item
 
 Every item on http://www.theguardian.com/ can be retrieved on the same path at http://content.guardianapis.com/. For example:
 
-    // a content item
-    Api.item.itemId("/commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa").response map { response =>
-      response.content.get.webTitle
-    }
+```scala
+// print the web title of a content item
+for (response <- Api.item.itemId("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa").response)
+yield for (content <- response.content) {
+  println(content.webTitle)
+}
 
-    // a tag
-    Api.item.itemId("/travel/france").tag.response.map(_.webTitle)
+// print the web title of a tag
+for (response <- Api.item.itemId("travel/france").response)
+yield for (tag <- response.tag) {
+  println(tag.webTitle)
+}
 
-    // latest content for a tag
-    Api.item.itemId("/travel/france").response.foreach(_.results.foreach(content => println(content.webTitle)))
+// print the web title of a section
+for (response <- Api.item.itemId("environment").response)
+yield for (section <- response.section) {
+  println(section.webTitle)
+}
+```
 
-#### Content
+### Content
 
 Filtering or searching for multiple content items happens at http://content.guardianapis.com/search. For example:
 
-    // total number of content items
-    Api.search.response.map(_.total)
+```scala
+// print the total number of content items
+Api.search.response map { response =>
+  println(response.total)
+}
 
-    // the web titles of the 10 most recent content items
-    Api.search.response.map(_.foreach(content => println(content.webTitle)))
+// print the web titles of the 10 most recent content items
+Api.search.response map { response =>
+  for (result <- response.results) println(result.webTitle)
+}
 
-    // the web titles of 11-20th most recent items of content
-    Api.search.page(2).response.foreach(_.foreach(content => println(content.webTitle)))
+// print the web titles of the 10 most recent content items matching a search term
+Api.search.q("cheese on toast").response map { response =>
+  for (result <- response.results) println(result.webTitle)
+}
 
-    // the most recent content matching a search term
-    Api.search.q("cheese on toast").response.foreach(_.foreach(content => println(content.webTitle)))
+// print the web titles of the 10 most recent content items with certain tags
+Api.search.tag("lifeandstyle/cheese,type/gallery").response map { response =>
+  for (result <- response.results) println(result.webTitle)
+}
+```
 
-    // the most relevant content matching a search term
-    Api.search.q("cheese on toast").orderBy("relevance").response.foreach(_.foreach(content => println(content.webTitle)))
-
-    // content matching multiple tags
-    Api.search.tags("lifeandstyle/cheese,type/gallery").response.foreach(_.foreach(content => println(content.webTitle)))
-
-#### Tag search
+### Tags
 
 Filtering or searching for multiple tags happens at http://content.guardianapis.com/tags. For example:
 
-    // return the first 10 tags
-    Api.tags.response.foreach(_.foreach(tag => println(tag.tagType + ":" + tag.webTitle)))
+```scala
+// print the total number of tags
+Api.tags.response map { response =>
+  println(response.total)
+}
 
-    // return the first 10 series tags
-    Api.tags.tagType("series").response.foreach(_.foreach(tag => println(tag.tagType + ":" + tag.webTitle)))
+// print the web titles of the first 10 tags
+Api.tags.response map { response =>
+  for (result <- response.results) println(result.webTitle)
+}
 
-#### Section search
+// print the web titles and numbers of the first 10 tags in the books section with ISBN references
+Api.tags.section("books").referenceType("isbn").showReferences("isbn").response map { response =>
+  for (result <- response.results) println(result.webTitle + " -- " + result.references.head.id)
+}
+```
+
+### Sections
 
 Filtering or searching for multiple sections happens at http://content.guardianapis.com/sections. For example:
 
-    // return all sections
-    Api.sections.foreach(_.foreach(section => println(section.id)))
-
-
-More reading
-------------
-
-Further examples can be found in [ExampleUsageTest.scala] (src/test/scala/ExampleUsageTest.scala).
+```scala
+// print the web title of each section
+Api.sections.response map { response =>
+  for (result <- response.results) println(result.webTitle)
+}
+```
