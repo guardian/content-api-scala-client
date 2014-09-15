@@ -39,6 +39,14 @@ Api.item.itemId("environment").response map { response =>
 Individual content items contain information not available from the `/search` endpoint described below. For example:
 
 ```scala
+// print the body of a given content item
+Api.item
+    .itemId("politics/2014/sep/15/putin-bad-as-stalin-former-defence-secretary")
+    .showFields("body")
+    .response map { response =>
+  for (fields <- response.content.get.fields) println(fields("body"))
+}
+
 // print the web title of every tag a content item has
 Api.item
     .itemId("environment/2014/sep/14/invest-in-monitoring-and-tagging-sharks-to-prevent-attacks")
@@ -121,8 +129,8 @@ Api.tags.response map { response =>
   println(response.total)
 }
 
-// print the web titles of the first 10 tags
-Api.tags.response map { response =>
+// print the web titles of the first 50 tags
+Api.tags.pageSize(50).response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
