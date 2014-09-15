@@ -21,28 +21,25 @@ Every item on http://www.theguardian.com/ can be retrieved on the same path at h
 
 ```scala
 // print the web title of a content item
-for (response <- Api.item.itemId("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa").response)
-yield for (content <- response.content) {
-  println(content.webTitle)
+Api.item.itemId("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa").response map { response =>
+  println(response.content.get.webTitle)
 }
 
 // print the web title of a tag
-for (response <- Api.item.itemId("travel/france").response)
-yield for (tag <- response.tag) {
-  println(tag.webTitle)
+Api.item.itemId("travel/france").response map { response =>
+  println(response.tag.get.webTitle)
 }
 
 // print the web title of a section
-for (response <- Api.item.itemId("environment").response)
-yield for (section <- response.section) {
-  println(section.webTitle)
+Api.item.itemId("environment").response map { response =>
+  println(response.section.get.webTitle)
 }
 ```
 
 Individual content items contain information not available from the `/search` endpoint described below. For example:
 
 ```scala
-// print the web titles for the most recent content item published with a story package
+// print the web titles of each content item in the most recent story package
 for (searchResponse <- Api.search.showFields("hasStoryPackage").response)
 yield for (firstItem <- searchResponse.results.find(_.fields.get("hasStoryPackage") == "true"))
 yield for (itemResponse <- Api.item.itemId(firstItem.id).showStoryPackage().response)
@@ -54,7 +51,7 @@ yield for (result <- itemResponse.storyPackage) {
 Individual tags:
 
 ```scala
-// print the web title of each item of content in the editor's picks for the `film/film` tag
+// print the web title of each content item in the editor's picks for the film tag
 Api.item.itemId("film/film").showEditorsPicks().response map { response =>
   for (result <- response.editorsPicks) println(result.webTitle)
 }
@@ -112,12 +109,20 @@ Api.tags.response map { response =>
 
 // print the web titles and bios of the first 10 contributor tags which have them
 Api.tags.tagType("contributor").response map { response =>
-  for (result <- response.results.filter(_.bio.isDefined)) println(s"${result.webTitle}\n${result.bio.get}\n")
+  for (result <- response.results.filter(_.bio.isDefined)) {
+    println(result.webTitle + "\n" + result.bio.get + "\n")
+  }
 }
 
-// print the web titles and numbers of the first 10 tags in the books section with ISBN references
-Api.tags.section("books").referenceType("isbn").showReferences("isbn").response map { response =>
-  for (result <- response.results) println(result.webTitle + " -- " + result.references.head.id)
+// print the web titles and numbers of the first 10 books tags with ISBNs
+Api.tags
+    .section("books")
+    .referenceType("isbn")
+    .showReferences("isbn")
+    .response map { response =>
+  for (result <- response.results) {
+    println(result.webTitle + " -- " + result.references.head.id)
+  }
 }
 ```
 
@@ -128,6 +133,11 @@ Filtering or searching for multiple sections happens at http://content.guardiana
 ```scala
 // print the web title of each section
 Api.sections.response map { response =>
+  for (result <- response.results) println(result.webTitle)
+}
+
+// print the web title of each section with 'network' in the title
+Api.sections.q("network").response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 ```
