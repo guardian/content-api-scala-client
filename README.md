@@ -39,6 +39,14 @@ Api.item.itemId("environment").response map { response =>
 Individual content items contain information not available from the `/search` endpoint described below. For example:
 
 ```scala
+// print the web title of every tag a content item has
+Api.item
+    .itemId("environment/2014/sep/14/invest-in-monitoring-and-tagging-sharks-to-prevent-attacks")
+    .showTags("all")
+    .response map { response =>
+  for (tag <- response.content.get.tags) println(tag.webTitle)
+}
+
 // print the web titles of each content item in the most recent story package
 for (searchResponse <- Api.search.showFields("hasStoryPackage").response)
 yield for (firstItem <- searchResponse.results.find(_.fields.get("hasStoryPackage") == "true"))
@@ -88,6 +96,17 @@ Api.search.q("cheese on toast").response map { response =>
 
 // print the web titles of the 10 most recent content items with certain tags
 Api.search.tag("lifeandstyle/cheese,type/gallery").response map { response =>
+  for (result <- response.results) println(result.webTitle)
+}
+
+// print the web titles of the 10 most recent content items in the world section
+Api.search.section("world").response map { response =>
+  for (result <- response.results) println(result.webTitle)
+}
+
+// print the web titles of the last 10 content items published a week ago
+import org.joda.time.DateTime
+Api.search.toDate(new DateTime().minusDays(7)).response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 ```
