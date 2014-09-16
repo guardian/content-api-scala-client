@@ -6,20 +6,20 @@ import org.scalatest.{FlatSpec, Matchers}
 import dispatch.enrichFuture
 import com.gu.contentapi.client.connection.DispatchAsyncHttp
 
-class ApiTest extends FlatSpec with Matchers {
+class ApiTest extends FlatSpec with Matchers with ClientTest {
 
   implicit def executionContext = ExecutionContext.global
 
   "client interface" should "successfully call the Content API" in {
     val content = for {
-      response <- Api.item.itemId("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry").response
+      response <- api.item.itemId("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry").response
     }
     yield response.content.get
     content.apply().id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
   }
 
   it should "return errors as a broken promise" in {
-    val errorResponse = Api.item.itemId("something-that-does-not-exist").response
+    val errorResponse = api.item.itemId("something-that-does-not-exist").response
     val errorTest = errorResponse recover { case error =>
       error should be (ApiError(404, "Not Found"))
     }
@@ -28,10 +28,7 @@ class ApiTest extends FlatSpec with Matchers {
 
   it should "correctly add API key to request if present" in {
     Api.search.parameters.get("api-key") should be (None)
-    val api = new Api with DispatchAsyncHttp {
-      override val apiKey = Some("example-key")
-    }
-    api.search.parameters.get("api-key") should be (Some("example-key"))
+    api.search.parameters.get("api-key") should be (Some("none"))
   }
 
   it should "understand custom parameters" in {
