@@ -28,7 +28,7 @@ class ApiTest extends FlatSpec with Matchers with ClientTest {
 
   it should "correctly add API key to request if present" in {
     Api.search.parameters.get("api-key") should be (None)
-    api.search.parameters.get("api-key") should be (Some("none"))
+    api.search.parameters.get("api-key") should be (Some("test"))
   }
 
   it should "understand custom parameters" in {
