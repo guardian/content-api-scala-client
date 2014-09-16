@@ -1,0 +1,21 @@
+{
+    "response": {
+        "status": "ok",
+        "userTier": "developer",
+        "total": 1,
+        "startIndex": 1,
+        "pageSize": 10,
+        "currentPage": 1,
+        "pages": 1,
+        "collection": {
+            "id": "754c-8e8c-fad9-a927",
+            "type": "news/special",
+            "title": "sport",
+            "groups": [],
+            "lastModified": "2014-09-10T16:13:37Z",
+            "modifiedBy": "somebody@theguardian.com",
+            "curatedContent": [],
+            "backfill": "search?tag=tone/reviews"
+        }
+    }
+}

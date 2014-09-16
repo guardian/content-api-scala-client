@@ -238,15 +238,7 @@ case class Tag(
     /**
     * If this tag is a series it could be a podcast.
     */
-    podcast: Option[Podcast] = None
-
-    ) {
-
-  /**
-  * Same as `type` but without needing the backticks
-  */
-  def tagType = `type`
-}
+    podcast: Option[Podcast] = None)
 
 case class Edition(
 
@@ -331,19 +323,13 @@ case class Element(
     relation: String,
     `type`: String,
     galleryIndex : Option[Int] = None,
-    assets: List[Asset]) {
-
-  def elementType = `type`
-}
+    assets: List[Asset])
 
 case class Asset(
     `type`: String,
     mimeType: Option[String],
     file: Option[String],
-    typeData: Map[String, String]) {
-
-  def assetType = `type`
-}
+    typeData: Map[String, String])
 
 sealed trait Metadata {
   val trailText: Option[String]
@@ -352,22 +338,20 @@ sealed trait Metadata {
 }
 
 case class CuratedMetadata(
-  trailText: Option[String],
-  headline: Option[String],
-  imageAdjustment: Option[String],
-  group: Option[Int],
-  supportingContent: List[SupportingContent]) extends Metadata
+    trailText: Option[String],
+    headline: Option[String],
+    imageAdjustment: Option[String],
+    group: Option[Int],
+    supportingContent: List[SupportingContent]) extends Metadata
 
 case class SupportingMetadata(
-  trailText: Option[String],
-  headline: Option[String],
-  imageAdjustment: Option[String]) extends Metadata
-
+    trailText: Option[String],
+    headline: Option[String],
+    imageAdjustment: Option[String]) extends Metadata
 
 case class Podcast(
-  linkUrl: String,
-  copyright: String,
-  author: String,
-  subscriptionUrl: Option[String],
-  explicit: Boolean
-)
+    linkUrl: String,
+    copyright: String,
+    author: String,
+    subscriptionUrl: Option[String],
+    explicit: Boolean)

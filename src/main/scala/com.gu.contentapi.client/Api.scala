@@ -14,7 +14,7 @@ import model._
 case class ApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
 trait Api extends Http with JsonParser {
-  implicit def executionContext: ExecutionContext
+  implicit def executionContext = ExecutionContext.global
 
   val targetUrl = "http://content.guardianapis.com"
   val apiKey: Option[String] = None
@@ -198,6 +198,4 @@ trait Api extends Http with JsonParser {
 
 /** Async client instance based on Dispatch
   */
-object Api extends Api with DispatchAsyncHttp {
-  implicit val executionContext = ExecutionContext.global
-}
+object Api extends Api with DispatchAsyncHttp

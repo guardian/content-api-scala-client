@@ -1,97 +1,405 @@
 {
-  "response":{
-    "status":"ok",
-    "userTier":"free",
-    "total":1,
-    "content":{
-      "id":"travel/2010/aug/27/britains-best-budget-eats-oxford",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2010-08-27T11:29:44+01:00",
-      "webTitle":"Oxford's top 10 budget eats",
-      "webUrl":"http://www.theguardian.com/travel/2010/aug/27/britains-best-budget-eats-oxford",
-      "apiUrl":"http://content.guardianapis.com/travel/2010/aug/27/britains-best-budget-eats-oxford"
-    },
-    "relatedContent":[{
-      "id":"travel/2009/sep/16/nottingham-top-10-restaurants-budget",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2009-09-16T09:14:00+01:00",
-      "webTitle":"Nottingham's top 10 budget eats",
-      "webUrl":"http://www.theguardian.com/travel/2009/sep/16/nottingham-top-10-restaurants-budget",
-      "apiUrl":"http://content.guardianapis.com/travel/2009/sep/16/nottingham-top-10-restaurants-budget"
-    },{
-      "id":"travel/2010/jun/02/sheffield-top-10-budget-food",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2010-06-02T09:46:00+01:00",
-      "webTitle":"Sheffield's top 10 budget places to eat",
-      "webUrl":"http://www.theguardian.com/travel/2010/jun/02/sheffield-top-10-budget-food",
-      "apiUrl":"http://content.guardianapis.com/travel/2010/jun/02/sheffield-top-10-budget-food"
-    },{
-      "id":"travel/2010/jul/02/bath-top-10-budget-restaurants",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2010-07-02T10:50:10+01:00",
-      "webTitle":"Bath's top 10 budget eats",
-      "webUrl":"http://www.theguardian.com/travel/2010/jul/02/bath-top-10-budget-restaurants",
-      "apiUrl":"http://content.guardianapis.com/travel/2010/jul/02/bath-top-10-budget-restaurants"
-    },{
-      "id":"travel/2010/apr/06/glasgow-top-10-budget-restaurants",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2010-04-06T11:33:00+01:00",
-      "webTitle":"Glasgow's top 10 budget eats",
-      "webUrl":"http://www.theguardian.com/travel/2010/apr/06/glasgow-top-10-budget-restaurants",
-      "apiUrl":"http://content.guardianapis.com/travel/2010/apr/06/glasgow-top-10-budget-restaurants"
-    },{
-      "id":"travel/2010/may/18/cardiff-top-10-budget-food",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2010-05-18T10:35:28+01:00",
-      "webTitle":"Top 10 budget places to eat in Cardiff",
-      "webUrl":"http://www.theguardian.com/travel/2010/may/18/cardiff-top-10-budget-food",
-      "apiUrl":"http://content.guardianapis.com/travel/2010/may/18/cardiff-top-10-budget-food"
-    },{
-      "id":"travel/2010/jan/22/chester-top-10-budget-eats",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2010-01-22T10:00:00Z",
-      "webTitle":"Chester's top 10 budget eats",
-      "webUrl":"http://www.theguardian.com/travel/2010/jan/22/chester-top-10-budget-eats",
-      "apiUrl":"http://content.guardianapis.com/travel/2010/jan/22/chester-top-10-budget-eats"
-    },{
-      "id":"travel/2008/dec/10/liverpool-restaurants-budget-culture-uk",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2008-12-10T10:09:53Z",
-      "webTitle":"Ten top cheap places to eat in Liverpool ",
-      "webUrl":"http://www.theguardian.com/travel/2008/dec/10/liverpool-restaurants-budget-culture-uk",
-      "apiUrl":"http://content.guardianapis.com/travel/2008/dec/10/liverpool-restaurants-budget-culture-uk"
-    },{
-      "id":"travel/2009/nov/24/york-10-best-budget-eats",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2009-11-24T16:03:00Z",
-      "webTitle":"York's top 10 budget eats",
-      "webUrl":"http://www.theguardian.com/travel/2009/nov/24/york-10-best-budget-eats",
-      "apiUrl":"http://content.guardianapis.com/travel/2009/nov/24/york-10-best-budget-eats"
-    },{
-      "id":"travel/2009/aug/14/edinburgh-cafes-restaurants-budget-food",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2009-08-14T12:32:00+01:00",
-      "webTitle":"Edinburgh's 10 best budget eateries",
-      "webUrl":"http://www.theguardian.com/travel/2009/aug/14/edinburgh-cafes-restaurants-budget-food",
-      "apiUrl":"http://content.guardianapis.com/travel/2009/aug/14/edinburgh-cafes-restaurants-budget-food"
-    },{
-      "id":"travel/2010/aug/06/lancashire-best-budget-eats",
-      "sectionId":"travel",
-      "sectionName":"Travel",
-      "webPublicationDate":"2010-08-06T10:54:00+01:00",
-      "webTitle":"Lancashire coast's top 10 budget eats",
-      "webUrl":"http://www.theguardian.com/travel/2010/aug/06/lancashire-best-budget-eats",
-      "apiUrl":"http://content.guardianapis.com/travel/2010/aug/06/lancashire-best-budget-eats"
-    }]
-  }
+    "response": {
+        "status": "ok",
+        "userTier": "internal",
+        "total": 1,
+        "content": {
+            "apiUrl": "http://content.guardianapis.com/commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa",
+            "webTitle": "Can vegans stomach the unpalatable truth about quinoa? | Joanna Blythman",
+            "webPublicationDate": "2013-01-16T10:14:31Z",
+            "webUrl": "http://www.theguardian.com/commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa",
+            "sectionId": "commentisfree",
+            "sectionName": "Comment is free",
+            "id": "commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa",
+            "fields": {
+                "shortUrl": "http://gu.com/p/3d55c",
+                "standfirst": "Ethical consumers should be aware poor Bolivians can no longer afford their staple grain, due to western demand raising prices",
+                "hasStoryPackage": "true",
+                "lastModified": "2014-05-21T13:40:59Z",
+                "body": "<p>Not long ago, quinoa was just an obscure Peruvian grain you could only buy in wholefood shops. We struggled to pronounce it (it's keen-wa, not qui-no-a), yet it was feted by food lovers as a novel addition to the familiar ranks of couscous and rice. Dieticians clucked over quinoa approvingly because it ticked the low-fat box and fitted in with government healthy eating advice to \"base your meals on starchy foods\".</p><p>Adventurous eaters liked its slightly bitter taste and the little white curls that formed around the grains. Vegans embraced quinoa as a credibly nutritious substitute for meat. Unusual among grains, quinoa has a high protein content (between 14%-18%), and it contains all those pesky, yet essential, amino acids needed for good health that can prove so elusive to vegetarians who prefer not to pop food supplements.</p><p>Sales took off. Quinoa was, in marketing speak, the \"miracle grain of the Andes\", a healthy, right-on, ethical addition to the meat avoider's larder (no dead animals, just a crop that doesn't feel pain). Consequently, the price shot up – it has tripled since 2006 – with more rarified black, red and \"royal\" types commanding particularly handsome premiums.</p><p>But there is an unpalatable truth to face for those of us with a bag of quinoa in the larder. The appetite of countries such as ours for this grain <a href=\"http://www.guardian.co.uk/world/2013/jan/14/quinoa-andes-bolivia-peru-crop\" title=\"\">has pushed up prices to such an extent</a> that poorer people in Peru and Bolivia, for whom it was once a nourishing staple food, can no longer afford to eat it. Imported junk food is cheaper. In Lima, quinoa now costs more than chicken. Outside the cities, and fuelled by overseas demand, the pressure is on to turn land that once produced a portfolio of diverse crops into quinoa monoculture.</p><p>In fact, the quinoa trade is yet another troubling example of a damaging north-south exchange, with well-intentioned health and ethics-led consumers here unwittingly driving poverty there. It's beginning to look like a cautionary tale of how a focus on exporting premium foods can damage the producer country's food security. Feeding our apparently insatiable 365-day-a-year hunger for this luxury vegetable, Peru has also cornered the world market in asparagus. Result? In the arid Ica region where Peruvian asparagus production is concentrated, <a href=\"http://www.guardian.co.uk/environment/2010/sep/15/peru-asparagus-british-wells\" title=\"\">this thirsty export vegetable has depleted the water resources</a> on which local people depend. NGOs report that asparagus labourers toil in sub-standard conditions and cannot afford to feed their children while fat cat exporters and foreign supermarkets cream off the profits. That's the pedigree of all those bunches of pricy spears on supermarket shelves.</p><p>Soya, a foodstuff beloved of the vegan lobby as an alternative to dairy products, is another problematic import, one that drives environmental destruction [see footnote]. Embarrassingly, for those who portray it as a progressive alternative to planet-destroying meat, soya production is now one of the two main causes of deforestation in South America, along with cattle ranching, where vast expanses of forest and grassland have been felled to make way for huge plantations.</p><p>Three years ago, the pioneering <a href=\"http://www.fifediet.co.uk/\" title=\"\">Fife Diet</a>, Europe's biggest local food-eating project, sowed an experimental crop of quinoa. It failed, and the experiment has not been repeated. But the attempt at least recognised the need to strengthen our own food security by lessening our reliance on imported foods, and looking first and foremost to what can be grown, or reared, on our doorstep.</p><p>In this respect, omnivores have it easy. Britain excels in producing meat and dairy foods for them to enjoy. However, a rummage through the shopping baskets of vegetarians and vegans swiftly clocks up the food miles, a consequence of their higher dependency on products imported from faraway places. From tofu and tamari to carob and chickpeas, the axis of the vegetarian shopping list is heavily skewed to global.</p><p>There are promising initiatives: <a href=\"http://hodmedods.co.uk/about/our-products/\" title=\"\">one enterprising Norfolk company</a>, for instance, has just started marketing UK-grown fava beans (the sort used to make falafel) as a protein-rich alternative to meat. But in the case of quinoa, there's a ghastly irony when the Andean peasant's staple grain becomes too expensive at home because it has acquired hero product status among affluent foreigners preoccupied with personal health, animal welfare and reducing their carbon \"foodprint\". Viewed through a lens of food security, our current enthusiasm for quinoa looks increasingly misplaced.</p><p>• This footnote was appended on 17 January 2013. To clarify: while soya is found in a variety of health products, the majority of production - 97% according to the UN report of 2006 - is used for animal feed.</p>",
+                "headline": "Can vegans stomach the unpalatable truth about quinoa?",
+                "trailText": "<p><strong>Joanna Blythman: </strong>Ethical consumers should be aware poor Bolivians can no longer afford their staple grain, due to western demand raising prices</p>",
+                "shouldHideAdverts": "false",
+                "publication": "theguardian.com",
+                "showInRelatedContent": "true",
+                "wordcount": "750",
+                "commentable": "true",
+                "allowUgc": "false",
+                "isPremoderated": "false",
+                "byline": "Joanna Blythman",
+                "productionOffice": "UK",
+                "liveBloggingNow": "false",
+                "commentCloseDate": "2013-01-19T10:14:00Z"
+            },
+            "tags": [
+                {
+                    "id": "commentisfree/commentisfree",
+                    "webTitle": "Comment is free",
+                    "type": "blog",
+                    "sectionId": "commentisfree",
+                    "sectionName": "Comment is free",
+                    "webUrl": "http://www.theguardian.com/commentisfree/commentisfree",
+                    "apiUrl": "http://content.guardianapis.com/commentisfree/commentisfree",
+                    "references": []
+                },
+                {
+                    "id": "environment/food",
+                    "webTitle": "Food",
+                    "type": "keyword",
+                    "sectionId": "environment",
+                    "sectionName": "Environment",
+                    "webUrl": "http://www.theguardian.com/environment/food",
+                    "apiUrl": "http://content.guardianapis.com/environment/food",
+                    "references": []
+                },
+                {
+                    "id": "tone/comment",
+                    "webTitle": "Comment",
+                    "type": "tone",
+                    "webUrl": "http://www.theguardian.com/tone/comment",
+                    "apiUrl": "http://content.guardianapis.com/tone/comment",
+                    "references": []
+                },
+                {
+                    "id": "profile/joannablythman",
+                    "webTitle": "Joanna Blythman",
+                    "bylineImageUrl": "http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2008/10/02/joannablythman_140x140.jpg",
+                    "type": "contributor",
+                    "bio": "<p>Joanna Blythman is an food writer, investigative journalist and broadcaster</p>",
+                    "webUrl": "http://www.theguardian.com/profile/joannablythman",
+                    "apiUrl": "http://content.guardianapis.com/profile/joannablythman",
+                    "references": []
+                },
+                {
+                    "id": "lifeandstyle/vegan",
+                    "webTitle": "Vegan food and drink",
+                    "type": "keyword",
+                    "sectionId": "lifeandstyle",
+                    "sectionName": "Life and style",
+                    "webUrl": "http://www.theguardian.com/lifeandstyle/vegan",
+                    "apiUrl": "http://content.guardianapis.com/lifeandstyle/vegan",
+                    "references": []
+                },
+                {
+                    "id": "lifeandstyle/lifeandstyle",
+                    "webTitle": "Life and style",
+                    "type": "keyword",
+                    "sectionId": "lifeandstyle",
+                    "sectionName": "Life and style",
+                    "webUrl": "http://www.theguardian.com/lifeandstyle/lifeandstyle",
+                    "apiUrl": "http://content.guardianapis.com/lifeandstyle/lifeandstyle",
+                    "references": []
+                },
+                {
+                    "id": "lifeandstyle/veganism",
+                    "webTitle": "Veganism",
+                    "type": "keyword",
+                    "sectionId": "lifeandstyle",
+                    "sectionName": "Life and style",
+                    "webUrl": "http://www.theguardian.com/lifeandstyle/veganism",
+                    "apiUrl": "http://content.guardianapis.com/lifeandstyle/veganism",
+                    "references": []
+                },
+                {
+                    "id": "lifeandstyle/vegetarian",
+                    "webTitle": "Vegetarian food and drink",
+                    "type": "keyword",
+                    "sectionId": "lifeandstyle",
+                    "sectionName": "Life and style",
+                    "webUrl": "http://www.theguardian.com/lifeandstyle/vegetarian",
+                    "apiUrl": "http://content.guardianapis.com/lifeandstyle/vegetarian",
+                    "references": []
+                },
+                {
+                    "id": "lifeandstyle/vegetarianism",
+                    "webTitle": "Vegetarianism",
+                    "type": "keyword",
+                    "sectionId": "lifeandstyle",
+                    "sectionName": "Life and style",
+                    "webUrl": "http://www.theguardian.com/lifeandstyle/vegetarianism",
+                    "apiUrl": "http://content.guardianapis.com/lifeandstyle/vegetarianism",
+                    "references": []
+                },
+                {
+                    "id": "environment/environment",
+                    "webTitle": "Environment",
+                    "type": "keyword",
+                    "sectionId": "environment",
+                    "sectionName": "Environment",
+                    "webUrl": "http://www.theguardian.com/environment/environment",
+                    "apiUrl": "http://content.guardianapis.com/environment/environment",
+                    "references": []
+                },
+                {
+                    "id": "lifeandstyle/food-and-drink",
+                    "webTitle": "Food & drink",
+                    "type": "keyword",
+                    "sectionId": "lifeandstyle",
+                    "sectionName": "Life and style",
+                    "webUrl": "http://www.theguardian.com/lifeandstyle/food-and-drink",
+                    "apiUrl": "http://content.guardianapis.com/lifeandstyle/food-and-drink",
+                    "references": []
+                },
+                {
+                    "id": "world/world",
+                    "webTitle": "World news",
+                    "type": "keyword",
+                    "sectionId": "world",
+                    "sectionName": "World news",
+                    "webUrl": "http://www.theguardian.com/world/world",
+                    "apiUrl": "http://content.guardianapis.com/world/world",
+                    "references": []
+                },
+                {
+                    "id": "uk/uk",
+                    "webTitle": "UK news",
+                    "type": "keyword",
+                    "sectionId": "uk-news",
+                    "sectionName": "UK news",
+                    "webUrl": "http://www.theguardian.com/uk/uk",
+                    "apiUrl": "http://content.guardianapis.com/uk/uk",
+                    "references": []
+                },
+                {
+                    "id": "world/bolivia",
+                    "webTitle": "Bolivia",
+                    "type": "keyword",
+                    "sectionId": "world",
+                    "sectionName": "World news",
+                    "webUrl": "http://www.theguardian.com/world/bolivia",
+                    "apiUrl": "http://content.guardianapis.com/world/bolivia",
+                    "references": []
+                },
+                {
+                    "id": "world/americas",
+                    "webTitle": "Americas",
+                    "type": "keyword",
+                    "sectionId": "world",
+                    "sectionName": "World news",
+                    "webUrl": "http://www.theguardian.com/world/americas",
+                    "apiUrl": "http://content.guardianapis.com/world/americas",
+                    "references": []
+                },
+                {
+                    "id": "environment/ethical-living",
+                    "webTitle": "Ethical and green living",
+                    "description": "Tips on ethical and green living",
+                    "type": "keyword",
+                    "sectionId": "environment",
+                    "sectionName": "Environment",
+                    "webUrl": "http://www.theguardian.com/environment/ethical-living",
+                    "apiUrl": "http://content.guardianapis.com/environment/ethical-living",
+                    "references": []
+                },
+                {
+                    "id": "world/ethics",
+                    "webTitle": "Ethics",
+                    "type": "keyword",
+                    "sectionId": "world",
+                    "sectionName": "World news",
+                    "webUrl": "http://www.theguardian.com/world/ethics",
+                    "apiUrl": "http://content.guardianapis.com/world/ethics",
+                    "references": []
+                },
+                {
+                    "id": "type/article",
+                    "webTitle": "Article",
+                    "type": "type",
+                    "webUrl": "http://www.theguardian.com/articles",
+                    "apiUrl": "http://content.guardianapis.com/type/article",
+                    "references": []
+                }
+            ],
+            "elements": [
+                {
+                    "id": "gu-image-402807041",
+                    "relation": "main",
+                    "type": "image",
+                    "assets": [
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330705646/Bolivian-woman-harvesting-002.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "54",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "54"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330706811/Bolivian-woman-harvesting-003.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "340",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "480"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330707947/Bolivian-woman-harvesting-004.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "130",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "140"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330709222/Bolivian-woman-harvesting-005.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "84",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "140"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330710408/Bolivian-woman-harvesting-006.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "132",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "220"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330711624/Bolivian-woman-harvesting-007.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "168",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "280"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330712794/Bolivian-woman-harvesting-008.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "180",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "300"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330713990/Bolivian-woman-harvesting-009.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "228",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "380"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330715208/Bolivian-woman-harvesting-010.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "276",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "460"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330716439/Bolivian-woman-harvesting-011.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "372",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "620"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330715208/Bolivian-woman-harvesting-010.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "276",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/Corbis",
+                                "width": "460"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "gu-image-402807042",
+                    "relation": "thumbnail",
+                    "type": "image",
+                    "assets": [
+                        {
+                            "type": "image",
+                            "mimeType": "image/jpeg",
+                            "file": "http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330709222/Bolivian-woman-harvesting-005.jpg",
+                            "typeData": {
+                                "source": " George Steinmetz/Corbis",
+                                "photographer": "George Steinmetz",
+                                "altText": "Bolivian woman harvesting Quinoa",
+                                "height": "84",
+                                "credit": "George Steinmetz/ George Steinmetz/Corbis",
+                                "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
+                                "width": "140"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "references": [],
+            "rights": {
+                "syndicatable": "true",
+                "subscriptionDatabases": "true",
+                "developerCommunity": "true"
+            }
+        }
+    }
 }
