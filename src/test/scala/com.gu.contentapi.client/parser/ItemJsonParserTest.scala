@@ -129,6 +129,10 @@ class ItemJsonParserTest extends FlatSpec with Matchers with ClientTest {
     tagItemResponse.tag.get.`type` should be ("keyword")
     tagItemResponse.tag.get.sectionId should be (Some("world"))
     tagItemResponse.tag.get.sectionName should be (Some("World news"))
+    tagItemResponse.tag.get.podcast.get.linkUrl should be ("http://www.theguardian.com/")
+    tagItemResponse.tag.get.podcast.get.author should be ("theguardian.com")
+    tagItemResponse.tag.get.podcast.get.copyright should be ("theguardian.com © 2014")
+    tagItemResponse.tag.get.podcast.get.explicit should be (true)
     tagItemResponse.tag.get.webUrl should be ("http://www.theguardian.com/world/france")
     tagItemResponse.tag.get.apiUrl should be ("http://content.guardianapis.com/world/france")
   }

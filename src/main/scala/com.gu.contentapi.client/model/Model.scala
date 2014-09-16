@@ -338,22 +338,20 @@ sealed trait Metadata {
 }
 
 case class CuratedMetadata(
-  trailText: Option[String],
-  headline: Option[String],
-  imageAdjustment: Option[String],
-  group: Option[Int],
-  supportingContent: List[SupportingContent]) extends Metadata
+    trailText: Option[String],
+    headline: Option[String],
+    imageAdjustment: Option[String],
+    group: Option[Int],
+    supportingContent: List[SupportingContent]) extends Metadata
 
 case class SupportingMetadata(
-  trailText: Option[String],
-  headline: Option[String],
-  imageAdjustment: Option[String]) extends Metadata
-
+    trailText: Option[String],
+    headline: Option[String],
+    imageAdjustment: Option[String]) extends Metadata
 
 case class Podcast(
-  linkUrl: String,
-  copyright: String,
-  author: String,
-  subscriptionUrl: Option[String],
-  explicit: Boolean
-)
+    linkUrl: String,
+    copyright: String,
+    author: String,
+    subscriptionUrl: Option[String],
+    explicit: Boolean)
