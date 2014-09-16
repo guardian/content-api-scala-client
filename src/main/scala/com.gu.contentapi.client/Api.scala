@@ -13,7 +13,7 @@ import model._
 // thrown when an "expected" error is thrown by the api
 case class ApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
-trait Api extends Http with JsonParser {
+trait Api extends Http {
   implicit def executionContext = ExecutionContext.global
 
   val targetUrl = "http://content.guardianapis.com"
@@ -29,7 +29,7 @@ trait Api extends Http with JsonParser {
     extends GeneralParameters[SectionsQuery]
     with FilterParameters[SectionsQuery] {
 
-    lazy val response: Future[SectionsResponse] = fetch(targetUrl + "/sections", parameters) map parseSections
+    lazy val response: Future[SectionsResponse] = fetch(targetUrl + "/sections", parameters) map JsonParser.parseSections
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -48,7 +48,7 @@ trait Api extends Http with JsonParser {
           with ShowReferenceParameters[TagsQuery] {
 
     lazy val tagType = new StringParameter("type")
-    lazy val response: Future[TagsResponse] = fetch(targetUrl + "/tags", parameters) map parseTags
+    lazy val response: Future[TagsResponse] = fetch(targetUrl + "/tags", parameters) map JsonParser.parseTags
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -68,7 +68,7 @@ trait Api extends Http with JsonParser {
           with RefererenceParameters[SearchQuery]
           with ShowReferenceParameters[SearchQuery] {
 
-    lazy val response: Future[SearchResponse] = fetch(targetUrl + "/search", parameters) map parseSearch
+    lazy val response: Future[SearchResponse] = fetch(targetUrl + "/search", parameters) map JsonParser.parseSearch
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -96,7 +96,7 @@ trait Api extends Http with JsonParser {
 
     lazy val response: Future[ItemResponse] = fetch(
         path.getOrElse(throw new Exception("No api url provided to item query, ensure withApiUrl is called")),
-        parameters) map parseItem
+        parameters) map JsonParser.parseItem
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
 
@@ -127,7 +127,7 @@ trait Api extends Http with JsonParser {
 
     lazy val response: Future[CollectionResponse] = fetch(
         path.getOrElse(throw new Exception("No api url provided to collection query, ensure withApiUrl is called")),
-        parameters) map parseCollection
+        parameters) map JsonParser.parseCollection
 
     def withParameters(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
   }

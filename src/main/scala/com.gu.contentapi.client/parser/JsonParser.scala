@@ -5,7 +5,7 @@ import org.json4s.JsonAST.{JField, JString, JBool}
 import org.json4s.native.JsonMethods
 import com.gu.contentapi.client.model._
 
-trait JsonParser {
+object JsonParser {
 
   implicit val formats = DefaultFormats + new JodaJsonSerializer
 
@@ -35,5 +35,3 @@ trait JsonParser {
   }
 
 }
-
-object JsonParser extends JsonParser
