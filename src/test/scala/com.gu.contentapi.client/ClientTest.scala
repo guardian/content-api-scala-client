@@ -5,7 +5,7 @@ import scala.io.Source
 trait ClientTest {
 
   val api = new Api {
-    override val apiKey = Some("none")
+    override val apiKey = Some("test")
   }
 
   def loadJson(filename: String): String = {
