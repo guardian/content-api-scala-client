@@ -13,7 +13,15 @@ Add the following to your SBT build definition:
 libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 ```
 
-There are four different types of request that can be made: for a single item, or to filter all content, tags, or sections.
+There are four different types of request that can be made: for a single item, or to filter all content, tags, or sections. You will first need to create a new instance of the client and set your API key:
+
+```scala
+val api = new Api {
+  override val apiKey = Some("your-api-key")
+}
+```
+
+If you don't have an API key, go to [guardian.mashery.com] (http://guardian.mashery.com/) to get one.
 
 ### Single item
 
@@ -21,17 +29,17 @@ Every item on http://www.theguardian.com/ can be retrieved on the same path at h
 
 ```scala
 // print the web title of a content item
-Api.item.itemId("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa").response map { response =>
+api.item.itemId("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa").response map { response =>
   println(response.content.get.webTitle)
 }
 
 // print the web title of a tag
-Api.item.itemId("travel/france").response map { response =>
+api.item.itemId("travel/france").response map { response =>
   println(response.tag.get.webTitle)
 }
 
 // print the web title of a section
-Api.item.itemId("environment").response map { response =>
+api.item.itemId("environment").response map { response =>
   println(response.section.get.webTitle)
 }
 ```
@@ -40,7 +48,7 @@ Individual content items contain information not available from the `/search` en
 
 ```scala
 // print the body of a given content item
-Api.item
+api.item
     .itemId("politics/2014/sep/15/putin-bad-as-stalin-former-defence-secretary")
     .showFields("body")
     .response map { response =>
@@ -48,7 +56,7 @@ Api.item
 }
 
 // print the web title of every tag a content item has
-Api.item
+api.item
     .itemId("environment/2014/sep/14/invest-in-monitoring-and-tagging-sharks-to-prevent-attacks")
     .showTags("all")
     .response map { response =>
@@ -56,9 +64,9 @@ Api.item
 }
 
 // print the web titles of each content item in the most recent story package
-for (searchResponse <- Api.search.showFields("hasStoryPackage").response)
+for (searchResponse <- api.search.showFields("hasStoryPackage").response)
 yield for (firstItem <- searchResponse.results.find(_.fields.get("hasStoryPackage") == "true"))
-yield for (itemResponse <- Api.item.itemId(firstItem.id).showStoryPackage().response)
+yield for (itemResponse <- api.item.itemId(firstItem.id).showStoryPackage().response)
 yield for (result <- itemResponse.storyPackage) {
   println(result.webTitle)
 }
@@ -68,7 +76,7 @@ Individual tags:
 
 ```scala
 // print the web title of each content item in the editor's picks for the film tag
-Api.item.itemId("film/film").showEditorsPicks().response map { response =>
+api.item.itemId("film/film").showEditorsPicks().response map { response =>
   for (result <- response.editorsPicks) println(result.webTitle)
 }
 ```
@@ -77,7 +85,7 @@ Individual sections:
 
 ```scala
 // print the web title of the most viewed content items from the world section
-Api.item.itemId("world").showMostViewed().response map { response =>
+api.item.itemId("world").showMostViewed().response map { response =>
   for (result <- response.mostViewed) println(result.webTitle)
 }
 ```
@@ -88,33 +96,33 @@ Filtering or searching for multiple content items happens at http://content.guar
 
 ```scala
 // print the total number of content items
-Api.search.response map { response =>
+api.search.response map { response =>
   println(response.total)
 }
 
 // print the web titles of the 10 most recent content items
-Api.search.response map { response =>
+api.search.response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles of the 10 most recent content items matching a search term
-Api.search.q("cheese on toast").response map { response =>
+api.search.q("cheese on toast").response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles of the 10 most recent content items with certain tags
-Api.search.tag("lifeandstyle/cheese,type/gallery").response map { response =>
+api.search.tag("lifeandstyle/cheese,type/gallery").response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles of the 10 most recent content items in the world section
-Api.search.section("world").response map { response =>
+api.search.section("world").response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles of the last 10 content items published a week ago
 import org.joda.time.DateTime
-Api.search.toDate(new DateTime().minusDays(7)).response map { response =>
+api.search.toDate(new DateTime().minusDays(7)).response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 ```
@@ -125,24 +133,24 @@ Filtering or searching for multiple tags happens at http://content.guardianapis.
 
 ```scala
 // print the total number of tags
-Api.tags.response map { response =>
+api.tags.response map { response =>
   println(response.total)
 }
 
 // print the web titles of the first 50 tags
-Api.tags.pageSize(50).response map { response =>
+api.tags.pageSize(50).response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles and bios of the first 10 contributor tags which have them
-Api.tags.tagType("contributor").response map { response =>
+api.tags.tagType("contributor").response map { response =>
   for (result <- response.results.filter(_.bio.isDefined)) {
     println(result.webTitle + "\n" + result.bio.get + "\n")
   }
 }
 
 // print the web titles and numbers of the first 10 books tags with ISBNs
-Api.tags
+api.tags
     .section("books")
     .referenceType("isbn")
     .showReferences("isbn")
@@ -159,12 +167,12 @@ Filtering or searching for multiple sections happens at http://content.guardiana
 
 ```scala
 // print the web title of each section
-Api.sections.response map { response =>
+api.sections.response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web title of each section with 'network' in the title
-Api.sections.q("network").response map { response =>
+api.sections.q("network").response map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 ```
