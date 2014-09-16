@@ -3,7 +3,7 @@ package com.gu.contentapi.client.parser
 import org.scalatest.{FlatSpec, Matchers}
 import com.gu.contentapi.client.ClientTest
 
-class SectionsJsonParserTest extends FlatSpec with Matchers with ClientTest {
+class JsonParserSectionsTest extends FlatSpec with Matchers with ClientTest {
 
   val sectionsResponse = JsonParser.parseSections(loadJson("sections.json"))
 
