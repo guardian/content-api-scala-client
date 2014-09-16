@@ -13,7 +13,7 @@ import model._
 // thrown when an "expected" error is thrown by the api
 case class ApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
-trait Api extends Http {
+trait Api extends DispatchAsyncHttp {
   implicit def executionContext = ExecutionContext.global
 
   val targetUrl = "http://content.guardianapis.com"
@@ -198,4 +198,4 @@ trait Api extends Http {
 
 /** Async client instance based on Dispatch
   */
-object Api extends Api with DispatchAsyncHttp
+object Api extends Api

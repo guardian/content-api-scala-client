@@ -1,11 +1,10 @@
 package com.gu.contentapi.client
 
 import scala.io.Source
-import com.gu.contentapi.client.connection.DispatchAsyncHttp
 
 trait ClientTest {
 
-  val api = new Api with DispatchAsyncHttp {
+  val api = new Api {
     override val apiKey = Some("none")
   }
 
