@@ -4,7 +4,7 @@ import scala.io.Source
 
 trait ClientTest {
 
-  val api = new Api("test")
+  val api = new GuardianContentClient("test")
 
   def loadJson(filename: String): String = {
     Source.fromFile("src/test/resources/templates/" + filename).mkString

@@ -6,7 +6,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import dispatch.enrichFuture
 import com.gu.contentapi.client.connection.DispatchAsyncHttp
 
-class ApiTest extends FlatSpec with Matchers with ClientTest {
+class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest {
 
   implicit def executionContext = ExecutionContext.global
 
