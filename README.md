@@ -16,9 +16,7 @@ libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 If you don't have an API key, go to [guardian.mashery.com] (http://guardian.mashery.com/) to get one. You will then need to create a new instance of the client and set the key:
 
 ```scala
-val guardian = new Api {
-  override val apiKey = Some("your-api-key")
-}
+val guardian = new Api("your-api-key")
 ```
 
 There are then four different types of request that can be made: for a single item, or to filter through content, tags, or sections.

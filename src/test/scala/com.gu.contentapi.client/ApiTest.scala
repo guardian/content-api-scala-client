@@ -27,13 +27,12 @@ class ApiTest extends FlatSpec with Matchers with ClientTest {
   }
 
   it should "correctly add API key to request if present" in {
-    Api.search.parameters.get("api-key") should be (None)
     api.search.parameters.get("api-key") should be (Some("test"))
   }
 
   it should "understand custom parameters" in {
     val now = new DateTime
-    val params = Api.search
+    val params = api.search
       .stringParam("aStringParam", "foo")
       .intParam("aIntParam", 3)
       .dateParam("aDateParam", now)

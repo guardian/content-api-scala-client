@@ -13,11 +13,10 @@ import model._
 // thrown when an "expected" error is thrown by the api
 case class ApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
-trait Api extends DispatchAsyncHttp {
+class Api(apiKey: String) extends DispatchAsyncHttp {
   implicit def executionContext = ExecutionContext.global
 
   val targetUrl = "http://content.guardianapis.com"
-  val apiKey: Option[String] = None
 
   def sections = new SectionsQuery
   def tags = new TagsQuery
@@ -133,7 +132,7 @@ trait Api extends DispatchAsyncHttp {
   }
 
   trait GeneralParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-    override def parameters = super.parameters ++ apiKey.map("api-key" -> _)
+    override def parameters = super.parameters + ("api-key" -> apiKey)
   }
 
   trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
@@ -195,7 +194,3 @@ trait Api extends DispatchAsyncHttp {
         throw new ApiError(response.statusCode, response.statusMessage)
   }
 }
-
-/** Async client instance based on Dispatch
-  */
-object Api extends Api
