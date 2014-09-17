@@ -21,7 +21,7 @@ val guardian = new Api {
 }
 ```
 
-There are four different types of request that can be made: for a single item, or to filter all content, tags, or sections.
+There are then four different types of request that can be made: for a single item, or to filter through content, tags, or sections.
 
 ### Single item
 
