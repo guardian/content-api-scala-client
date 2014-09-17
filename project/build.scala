@@ -14,6 +14,8 @@ object ContentApiClientBuild extends Build {
     id = "content-api-client",
     base = file(".")
   )
+  .settings(releaseSettings: _*)
+  .settings(sonatypeSettings: _*)
   .settings(
     scalaVersion := "2.10.4",
     crossScalaVersions := Seq("2.11.2", "2.10.4"),
@@ -35,6 +37,7 @@ object ContentApiClientBuild extends Build {
       "org.scalatest" %% "scalatest" % "2.2.1" % "test"
     ),
     pomExtra := (
+      <url>https://github.com/guardian/content-api-scala-client</url>
       <developers>
         <developer>
           <id>jennysivapalan</id>
@@ -77,7 +80,4 @@ object ContentApiClientBuild extends Build {
       pushChanges
     )
   )
-  .settings(releaseSettings: _*)
-  .settings(sonatypeSettings: _*)
-
 }
