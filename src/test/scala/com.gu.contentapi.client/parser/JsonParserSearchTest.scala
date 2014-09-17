@@ -4,7 +4,7 @@ import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, Matchers}
 import com.gu.contentapi.client.ClientTest
 
-class SearchJsonParserTest extends FlatSpec with Matchers with ClientTest {
+class JsonParserSearchTest extends FlatSpec with Matchers with ClientTest {
 
   val searchResponse = JsonParser.parseSearch(loadJson("search.json"))
 

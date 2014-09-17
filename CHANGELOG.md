@@ -3,6 +3,8 @@
 * Only provide an asyncronous future-based interface
 * Move to the `com.gu.contentapi.client` package
 * Remove various features no longer present in the API
+* Using an API key is no-longer optional
+* Rename main client object to `GuardianContentClient`
 * Start a changelog
 * Other internal changes (eg. updating most of the tests)
 

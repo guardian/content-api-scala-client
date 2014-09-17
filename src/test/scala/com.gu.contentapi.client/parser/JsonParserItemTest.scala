@@ -4,7 +4,7 @@ import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, Matchers}
 import com.gu.contentapi.client.ClientTest
 
-class ItemJsonParserTest extends FlatSpec with Matchers with ClientTest {
+class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
 
   val contentItemResponse = JsonParser.parseItem(loadJson("item-content.json"))
   val tagItemResponse = JsonParser.parseItem(loadJson("item-tag.json"))
