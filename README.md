@@ -7,7 +7,7 @@ A Scala client for the Guardian's [Content API] (http://explorer.content.guardia
 Usage
 -----
 
-Add the following to your SBT build definition:
+Add the following line to your SBT build definition, and set the version number to be the latest from the [releases page] (https://github.com/guardian/content-api-scala-client/releases):
 
 ```scala
 libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
