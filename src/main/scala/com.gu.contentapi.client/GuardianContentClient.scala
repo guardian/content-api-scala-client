@@ -58,7 +58,7 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
       with ShowParameters[SearchQuery]
       with FilterParameters[SearchQuery]
       with ContentFilterParameters[SearchQuery]
-      with RefererenceParameters[SearchQuery]
+      with ReferenceParameters[SearchQuery]
       with ShowReferenceParameters[SearchQuery] {
 
     lazy val response: Future[SearchResponse] = {
@@ -78,7 +78,7 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
       extends GeneralParameters[TagsQuery]
       with PaginationParameters[TagsQuery]
       with FilterParameters[TagsQuery]
-      with RefererenceParameters[TagsQuery]
+      with ReferenceParameters[TagsQuery]
       with ShowReferenceParameters[TagsQuery] {
 
     lazy val response: Future[TagsResponse] = {
@@ -175,7 +175,7 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
     def showStoryPackage = BoolParameter("show-story-package")
   }
 
-  trait RefererenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  trait ReferenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def reference = StringParameter("reference")
     def referenceType = StringParameter("reference-type")
   }
