@@ -32,7 +32,8 @@ object ContentApiClientBuild extends Build {
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     libraryDependencies ++= Seq(
       "joda-time" % "joda-time" % "1.6.2",
-      "org.json4s" %% "json4s-native" % "3.2.9",
+      "org.json4s" %% "json4s-native" % "3.2.10",
+      "org.json4s" %% "json4s-ext" % "3.2.10",
       "net.databinder.dispatch" %% "dispatch-core" % "0.11.2",
       "org.scalatest" %% "scalatest" % "2.2.1" % "test"
     ),
@@ -80,4 +81,5 @@ object ContentApiClientBuild extends Build {
       pushChanges
     )
   )
+
 }

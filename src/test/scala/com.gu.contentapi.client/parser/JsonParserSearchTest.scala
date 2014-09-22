@@ -22,7 +22,7 @@ class JsonParserSearchTest extends FlatSpec with Matchers with ClientTest {
   it should "parse the content" in {
     searchResponse.results.size should be (10)
     searchResponse.results.head.webTitle should be ("County cricket – live!")
-    searchResponse.results.head.webPublicationDate should be (new DateTime(2014, 9, 10, 17, 10, 21, 0))
+    searchResponse.results.head.webPublicationDate should be (new DateTime(2014, 9, 10, 16, 10, 21, 0))
     searchResponse.results.head.sectionName should be (Some("Sport"))
     searchResponse.results.head.sectionId should be (Some("sport"))
     searchResponse.results.head.id should be ("sport/blog/live/2014/sep/10/county-cricket-live-blog-notts-yorkshire-surrey")
