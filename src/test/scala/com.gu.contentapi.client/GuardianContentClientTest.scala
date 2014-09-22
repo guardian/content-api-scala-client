@@ -4,7 +4,6 @@ import scala.concurrent.ExecutionContext
 import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, Matchers}
 import dispatch.enrichFuture
-import com.gu.contentapi.client.connection.DispatchAsyncHttp
 
 class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest {
 
@@ -21,7 +20,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest {
   it should "return errors as a broken promise" in {
     val errorResponse = api.item.itemId("something-that-does-not-exist").response
     val errorTest = errorResponse recover { case error =>
-      error should be (ApiError(404, "Not Found"))
+      error should be (GuardianContentApiError(404, "Not Found"))
     }
     errorTest.apply()
   }
