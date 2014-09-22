@@ -23,12 +23,17 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
   def collection = new CollectionQuery
 
   case class ItemQuery(path: Option[String] = None, parameterHolder: Map[String, Parameter] = Map.empty)
-      extends GeneralParameters[ItemQuery]
+      extends KeyParameters[ItemQuery]
+      with EditionParameters[ItemQuery]
+      with ContentParameters[ItemQuery]
       with ShowParameters[ItemQuery]
-      with FilterParameters[ItemQuery]
-      with ContentFilterParameters[ItemQuery]
+      with ShowReferencesParameters[ItemQuery]
+      with ShowExtendedParameters[ItemQuery]
       with PaginationParameters[ItemQuery]
-      with ShowReferenceParameters[ItemQuery] {
+      with OrderingParameters[ItemQuery]
+      with FilterParameters[ItemQuery]
+      with FilterExtendedParameters[ItemQuery]
+      with FilterSearchParameters[ItemQuery] {
 
     def apiUrl(newContentPath: String): ItemQuery = {
       require(newContentPath startsWith targetUrl, "apiUrl expects a full URL, use itemId if you only have an ID")
@@ -53,13 +58,15 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
   }
 
   case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-      extends GeneralParameters[SearchQuery]
-      with PaginationParameters[SearchQuery]
+      extends KeyParameters[SearchQuery]
+      with ContentParameters[SearchQuery]
       with ShowParameters[SearchQuery]
+      with ShowReferencesParameters[SearchQuery]
+      with OrderingParameters[SearchQuery]
+      with PaginationParameters[SearchQuery]
       with FilterParameters[SearchQuery]
-      with ContentFilterParameters[SearchQuery]
-      with ReferenceParameters[SearchQuery]
-      with ShowReferenceParameters[SearchQuery] {
+      with FilterExtendedParameters[SearchQuery]
+      with FilterSearchParameters[SearchQuery] {
 
     lazy val response: Future[SearchResponse] = {
       fetch(targetUrl + "/search", parameters) map JsonParser.parseSearch
@@ -75,11 +82,12 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
   }
 
   case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-      extends GeneralParameters[TagsQuery]
+      extends KeyParameters[TagsQuery]
+      with ShowReferencesParameters[TagsQuery]
       with PaginationParameters[TagsQuery]
       with FilterParameters[TagsQuery]
-      with ReferenceParameters[TagsQuery]
-      with ShowReferenceParameters[TagsQuery] {
+      with FilterTagParameters[TagsQuery]
+      with FilterSearchParameters[TagsQuery] {
 
     lazy val response: Future[TagsResponse] = {
       fetch(targetUrl + "/tags", parameters) map JsonParser.parseTags
@@ -95,8 +103,8 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
   }
 
   case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-      extends GeneralParameters[SectionsQuery]
-      with FilterParameters[SectionsQuery] {
+      extends KeyParameters[SectionsQuery]
+      with FilterSearchParameters[SectionsQuery] {
 
     lazy val response: Future[SectionsResponse] = {
       fetch(targetUrl + "/sections", parameters) map JsonParser.parseSections
@@ -111,24 +119,18 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
     implicit def asSections(q: SectionsQuery) = q.response.map(_.results)
   }
 
-  object CollectionQuery {
-    implicit def asResponse(q: CollectionQuery) = q.response
-    implicit def asCollection(q: CollectionQuery) = q.response.map(_.collection)
-  }
-
   case class CollectionQuery(path: Option[String] = None, parameterHolder: Map[String, Parameter] = Map.empty)
-      extends GeneralParameters[CollectionQuery]
+      extends KeyParameters[CollectionQuery]
       with ShowParameters[CollectionQuery]
-      with FilterParameters[CollectionQuery]
-      with PaginationParameters[CollectionQuery]
-      with ShowReferenceParameters[CollectionQuery] {
+      with ShowReferencesParameters[CollectionQuery]
+      with FilterParameters[CollectionQuery] {
 
     def apiUrl(newContentPath: String): CollectionQuery = {
-      require(newContentPath startsWith targetUrl, "apiUrl expects a full URI: use itemId if you only have an ID")
+      require(newContentPath startsWith targetUrl, "apiUrl expects a full URI: use collectionId if you only have an ID")
       copy(path = Some(newContentPath))
     }
 
-    def itemId(collectionId: String): CollectionQuery = {
+    def collectionId(collectionId: String): CollectionQuery = {
       apiUrl(targetUrl + "/collections/" + collectionId)
     }
 
@@ -141,47 +143,72 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
 
   }
 
-  trait GeneralParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  object CollectionQuery {
+    implicit def asResponse(q: CollectionQuery) = q.response
+    implicit def asCollection(q: CollectionQuery) = q.response.map(_.collection)
+  }
+
+  trait KeyParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     override def parameters = super.parameters + ("api-key" -> apiKey)
   }
 
-  trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-    def pageSize = IntParameter("page-size")
-    def page = IntParameter("page")
+  trait ContentParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def contentSet = StringParameter("content-set")
   }
 
-  trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-    def q = StringParameter("q")
-    def section = StringParameter("section")
-    def ids = StringParameter("ids")
-    def tag = StringParameter("tag")
+  trait EditionParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def edition = StringParameter("edition")
   }
-
-  trait ContentFilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-    def orderBy = StringParameter("order-by")
-    def fromDate = DateParameter("from-date")
-    def toDate = DateParameter("to-date")
-    def useDate = StringParameter("use-date")
-   }
 
   trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
     def showFields = StringParameter("show-fields")
     def showTags = StringParameter("show-tags")
     def showElements = StringParameter("show-elements")
-    def showRelated = BoolParameter("show-related")
-    def showEditorsPicks = BoolParameter("show-editors-picks")
-    def edition = StringParameter("edition")
-    def showMostViewed = BoolParameter("show-most-viewed")
-    def showStoryPackage = BoolParameter("show-story-package")
+    def showRights = StringParameter("show-rights")
   }
 
-  trait ReferenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  trait ShowReferencesParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def showReferences = StringParameter("show-references")
+  }
+
+  trait ShowExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def showStoryPackage = BoolParameter("show-story-package")
+    def showRelated = BoolParameter("show-related")
+    def showMostViewed = BoolParameter("show-most-viewed")
+    def showEditorsPicks = BoolParameter("show-editors-picks")
+  }
+
+  trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def page = IntParameter("page")
+    def pageSize = IntParameter("page-size")
+  }
+
+  trait OrderingParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def orderBy = StringParameter("order-by")
+    def useDate = StringParameter("use-date")
+  }
+
+  trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def section = StringParameter("section")
     def reference = StringParameter("reference")
     def referenceType = StringParameter("reference-type")
   }
 
-  trait ShowReferenceParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-    def showReferences = StringParameter("show-references")
+  trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def tag = StringParameter("tag")
+    def ids = StringParameter("ids")
+    def rights = StringParameter("rights")
+    def leadContent = StringParameter("lead-content")
+    def fromDate = DateParameter("from-date")
+    def toDate = DateParameter("to-date")
+  }
+
+  trait FilterTagParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def tagType = StringParameter("tag-type")
+  }
+
+  trait FilterSearchParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+    def q = StringParameter("q")
   }
 
   protected def fetch(url: String, parameters: Map[String, String]): Future[String] = {
