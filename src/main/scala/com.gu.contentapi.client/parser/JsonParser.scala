@@ -3,11 +3,12 @@ package com.gu.contentapi.client.parser
 import org.json4s.DefaultFormats
 import org.json4s.JsonAST.{JField, JString, JBool}
 import org.json4s.native.JsonMethods
-import com.gu.contentapi.client.model._
+import org.json4s.ext.DateTimeSerializer
+import com.gu.contentapi.client.model.{ItemResponse, SearchResponse, TagsResponse, SectionsResponse, CollectionResponse}
 
 object JsonParser {
 
-  implicit val formats = DefaultFormats + new JodaJsonSerializer
+  implicit val formats = DefaultFormats + DateTimeSerializer
 
   def parseItem(json: String): ItemResponse = {
     (JsonMethods.parse(json) \ "response").transformField(fixFields).extract[ItemResponse]
