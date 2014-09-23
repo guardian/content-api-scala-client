@@ -4,15 +4,25 @@ import scala.concurrent.{Future, ExecutionContext}
 import java.net.URLEncoder
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.ReadableInstant
-import com.gu.contentapi.client.connection.DispatchAsyncHttp
+import dispatch.{Http, FunctionHandler}
 import com.gu.contentapi.client.parser.JsonParser
 import com.gu.contentapi.client.model._
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
-class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
+class GuardianContentClient(apiKey: String) {
 
   implicit def executionContext = ExecutionContext.global
+
+  val http = Http configure { _
+    .setAllowPoolingConnection(true)
+    .setMaximumConnectionsPerHost(10)
+    .setMaximumConnectionsTotal(10)
+    .setConnectionTimeoutInMs(1000)
+    .setRequestTimeoutInMs(2000)
+    .setCompressionEnabled(true)
+    .setFollowRedirects(true)
+  }
 
   val targetUrl = "http://content.guardianapis.com"
 
@@ -211,23 +221,39 @@ class GuardianContentClient(apiKey: String) extends DispatchAsyncHttp {
     def q = StringParameter("q")
   }
 
-  protected def fetch(url: String, parameters: Map[String, String]): Future[String] = {
-    require(!url.contains('?'), "must not specify parameters in url")
+  case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
+
+  private def fetch(location: String, parameters: Map[String, String]): Future[String] = {
+    require(!location.contains('?'), "must not specify parameters in URL")
 
     def encodeParameter(p: Any): String = p match {
       case dt: ReadableInstant => URLEncoder.encode(ISODateTimeFormat.dateTimeNoMillis.print(dt), "UTF-8")
       case other => URLEncoder.encode(other.toString, "UTF-8")
     }
 
-    val queryString = parameters.map {case (k, v) => k + "=" + encodeParameter(v)}.mkString("&")
-    val target = url + "?" + queryString
+    val queryString = {
+      val pairs = parameters map {
+        case (k, v) => k + "=" + encodeParameter(v)
+      }
+      pairs mkString "&"
+    }
 
-    for {
-      response <- GET(target, List("User-Agent" -> "scala-api-client", "Accept" -> "application/json"))
-    } yield if (List(200, 302) contains response.statusCode)
-        response.body
-      else
-        throw new GuardianContentApiError(response.statusCode, response.statusMessage)
+    val url = location + "?" + queryString
+    val headers = Map("User-Agent" -> "scala-client", "Accept" -> "application/json")
+
+    for (response <- get(url, headers))
+    yield if (List(200, 302) contains response.statusCode) response.body
+    else throw new GuardianContentApiError(response.statusCode, response.statusMessage)
+  }
+
+  private def get(url: String, headers: Map[String, String]): Future[HttpResponse] = {
+    val req = dispatch.url(url)
+    headers foreach {
+      case (name, value) => req.setHeader(name, value)
+    }
+    val request = req.toRequest
+    def handler = new FunctionHandler(r => HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText))
+    http(request, handler)
   }
 
 }
