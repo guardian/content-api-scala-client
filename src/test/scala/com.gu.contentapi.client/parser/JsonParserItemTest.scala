@@ -140,7 +140,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
   it should "parse tag results" in {
     tagItemResponse.results.size should be (10)
     tagItemResponse.results.head.webTitle should be ("An awkward interview with Le Corbusier: from the archive, 11 September 1965")
-    tagItemResponse.results.head.webPublicationDate should be (new DateTime(2014, 9, 11, 4, 30, 0, 0))
+    tagItemResponse.results.head.webPublicationDate should be (new DateTime(2014, 9, 11, 5, 30, 0, 0))
     tagItemResponse.results.head.sectionName should be (Some("Art and design"))
     tagItemResponse.results.head.sectionId should be (Some("artanddesign"))
     tagItemResponse.results.head.id should be ("artanddesign/2014/sep/11/le-corbusier-india-architecture-1965")
