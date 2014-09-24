@@ -17,7 +17,7 @@ object ContentApiClientBuild extends Build {
   .settings(releaseSettings: _*)
   .settings(sonatypeSettings: _*)
   .settings(
-    scalaVersion := "2.11.2",
+    scalaVersion := "2.10.4",
     crossScalaVersions := Seq("2.11.2", "2.10.4"),
     organization := "com.gu",
     name := "content-api-client",
