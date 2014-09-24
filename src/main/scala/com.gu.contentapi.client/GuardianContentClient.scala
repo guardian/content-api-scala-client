@@ -14,7 +14,7 @@ class GuardianContentClient(apiKey: String) {
 
   implicit def executionContext = ExecutionContext.global
 
-  val http = Http configure { _
+  private val http = Http configure { _
     .setAllowPoolingConnection(true)
     .setMaximumConnectionsPerHost(10)
     .setMaximumConnectionsTotal(10)
