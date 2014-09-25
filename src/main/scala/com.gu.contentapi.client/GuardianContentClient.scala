@@ -202,6 +202,7 @@ class GuardianContentClient(apiKey: String) {
     def section = StringParameter("section")
     def reference = StringParameter("reference")
     def referenceType = StringParameter("reference-type")
+    def productionOffice = StringParameter("production-office")
   }
 
   trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
