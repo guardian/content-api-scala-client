@@ -1,6 +1,7 @@
 ## 3.1
 
 * Use Json4s-ext for date parsing
+* Add productionOffice filter for content search
 
 
 ## 3.0
