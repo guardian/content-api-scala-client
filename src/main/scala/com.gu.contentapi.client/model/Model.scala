@@ -238,7 +238,14 @@ case class Tag(
     /**
     * If this tag is a series it could be a podcast.
     */
-    podcast: Option[Podcast] = None)
+    podcast: Option[Podcast] = None,
+
+    /**
+     * If the tag is a contributor it may have a first name and last name.
+     */
+    firstName: Option[String] = None,
+
+    lastName: Option[String] = None)
 
 case class Edition(
 
