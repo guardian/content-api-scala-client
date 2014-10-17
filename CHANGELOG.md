@@ -2,6 +2,7 @@
 
 * Use Json4s-ext for date parsing
 * Add productionOffice filter for content search
+* Add first name and last name to tag (only available for contributors tag)
 
 
 ## 3.0
