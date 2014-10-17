@@ -17,7 +17,7 @@ object ContentApiClientBuild extends Build {
   .settings(releaseSettings: _*)
   .settings(sonatypeSettings: _*)
   .settings(
-    scalaVersion := "2.10.4",
+    scalaVersion := "2.11.2",
     crossScalaVersions := Seq("2.11.2", "2.10.4"),
     organization := "com.gu",
     name := "content-api-client",
@@ -31,9 +31,9 @@ object ContentApiClientBuild extends Build {
     javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     libraryDependencies ++= Seq(
-      "joda-time" % "joda-time" % "1.6.2",
-      "org.json4s" %% "json4s-native" % "3.2.8",
-      "org.json4s" %% "json4s-ext" % "3.2.8",
+      "joda-time" % "joda-time" % "2.3",
+      "org.json4s" %% "json4s-native" % "3.2.10",
+      "org.json4s" %% "json4s-ext" % "3.2.10",
       "net.databinder.dispatch" %% "dispatch-core" % "0.11.2",
       "org.scalatest" %% "scalatest" % "2.2.1" % "test"
     ),
