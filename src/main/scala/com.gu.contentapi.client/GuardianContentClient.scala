@@ -10,7 +10,8 @@ import com.gu.contentapi.client.model._
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
-class GuardianContentClient(apiKey: String) {
+trait ContentApiClientLogic {
+  val apiKey: String
 
   implicit def executionContext = ExecutionContext.global
 
@@ -224,7 +225,7 @@ class GuardianContentClient(apiKey: String) {
 
   case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
 
-  private def fetch(location: String, parameters: Map[String, String]): Future[String] = {
+  protected def fetch(location: String, parameters: Map[String, String]): Future[String] = {
     require(!location.contains('?'), "must not specify parameters in URL")
 
     def encodeParameter(p: Any): String = p match {
@@ -247,7 +248,7 @@ class GuardianContentClient(apiKey: String) {
     else throw new GuardianContentApiError(response.statusCode, response.statusMessage)
   }
 
-  private def get(url: String, headers: Map[String, String]): Future[HttpResponse] = {
+  protected def get(url: String, headers: Map[String, String]): Future[HttpResponse] = {
     val req = dispatch.url(url)
     headers foreach {
       case (name, value) => req.setHeader(name, value)
@@ -256,5 +257,6 @@ class GuardianContentClient(apiKey: String) {
     def handler = new FunctionHandler(r => HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText))
     http(request, handler)
   }
-
 }
+
+class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic

@@ -1,3 +1,6 @@
+## 3.2
+* Add back trait to ease extending
+
 ## 3.1
 
 * Use Json4s-ext for date parsing
