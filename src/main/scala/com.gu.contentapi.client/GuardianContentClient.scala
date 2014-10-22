@@ -15,7 +15,7 @@ trait ContentApiClientLogic {
 
   implicit def executionContext = ExecutionContext.global
 
-  private val http = Http configure { _
+  protected val http = Http configure { _
     .setAllowPoolingConnection(true)
     .setMaximumConnectionsPerHost(10)
     .setMaximumConnectionsTotal(10)
