@@ -216,7 +216,7 @@ trait ContentApiClientLogic {
   }
 
   trait FilterTagParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-    def tagType = StringParameter("tag-type")
+    def tagType = StringParameter("type")
   }
 
   trait FilterSearchParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
