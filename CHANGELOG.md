@@ -1,3 +1,6 @@
+## 3.4
+* Fix bug with filtering tags on tag pages
+
 ## 3.3
 * Allow http client to be overridden
 
