@@ -1,8 +1,6 @@
-## 3.4
-* Fix bug with filtering tags on tag pages
-
 ## 3.3
 * Allow http client to be overridden
+* Fix bug with filtering tags on tag pages
 
 ## 3.2
 * Add back trait to ease extending
