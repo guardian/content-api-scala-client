@@ -134,7 +134,8 @@ trait ContentApiClientLogic {
       extends KeyParameters[CollectionQuery]
       with ShowParameters[CollectionQuery]
       with ShowReferencesParameters[CollectionQuery]
-      with FilterParameters[CollectionQuery] {
+      with FilterParameters[CollectionQuery]
+      with FilterExtendedParameters[CollectionQuery] {
 
     def apiUrl(newContentPath: String): CollectionQuery = {
       require(newContentPath startsWith targetUrl, "apiUrl expects a full URI: use collectionId if you only have an ID")
