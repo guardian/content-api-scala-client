@@ -1,3 +1,6 @@
+## 3.5
+* Add back extended filtering on collections
+
 ## 3.4
 * Fix bug with filtering tags on tag pages
 
