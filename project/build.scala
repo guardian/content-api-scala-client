@@ -28,7 +28,7 @@ object ContentApiClientBuild extends Build {
       "scm:git:git@github.com:guardian/content-api-scala-client.git"
     )),
     maxErrors := 20,
-    javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
+    javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     libraryDependencies ++= Seq(
       "joda-time" % "joda-time" % "2.3",
