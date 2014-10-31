@@ -339,9 +339,13 @@ case class Asset(
     typeData: Map[String, String])
 
 sealed trait Metadata {
-  val trailText: Option[String]
-  val headline: Option[String]
-  val imageAdjustment: Option[String]
+    val trailText: Option[String]
+    val headline: Option[String]
+    val imageAdjustment: Option[String]
+    val showKickerTag: Option[Boolean]
+    val showKickerSection: Option[Boolean]
+    val showKickerCustom: Option[Boolean]
+    val customKicker: Option[String]
 }
 
 case class CuratedMetadata(
@@ -349,12 +353,20 @@ case class CuratedMetadata(
     headline: Option[String],
     imageAdjustment: Option[String],
     group: Option[Int],
-    supportingContent: List[SupportingContent]) extends Metadata
+    supportingContent: List[SupportingContent],
+    showKickerTag: Option[Boolean],
+    showKickerSection: Option[Boolean],
+    showKickerCustom: Option[Boolean],
+    customKicker: Option[String]) extends Metadata
 
 case class SupportingMetadata(
     trailText: Option[String],
     headline: Option[String],
-    imageAdjustment: Option[String]) extends Metadata
+    imageAdjustment: Option[String],
+    showKickerTag: Option[Boolean],
+    showKickerSection: Option[Boolean],
+    showKickerCustom: Option[Boolean],
+    customKicker: Option[String]) extends Metadata
 
 case class Podcast(
     linkUrl: String,
