@@ -1,3 +1,6 @@
+## 3.6
+* Add new kicker fields on collections
+
 ## 3.5
 * Add back extended filtering on collections
 
