@@ -11,6 +11,7 @@ import com.gu.contentapi.client.model._
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
 trait ContentApiClientLogic {
+
   val apiKey: String
 
   implicit def executionContext = ExecutionContext.global
@@ -258,6 +259,7 @@ trait ContentApiClientLogic {
     def handler = new FunctionHandler(r => HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText))
     http(request, handler)
   }
+
 }
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
