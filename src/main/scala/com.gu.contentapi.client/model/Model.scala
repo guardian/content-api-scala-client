@@ -339,13 +339,13 @@ case class Asset(
     typeData: Map[String, String])
 
 sealed trait Metadata {
-    val trailText: Option[String]
-    val headline: Option[String]
-    val imageAdjustment: Option[String]
-    val showKickerTag: Option[Boolean]
-    val showKickerSection: Option[Boolean]
-    val showKickerCustom: Option[Boolean]
-    val customKicker: Option[String]
+  val trailText: Option[String]
+  val headline: Option[String]
+  val imageAdjustment: Option[String]
+  val showKickerTag: Option[Boolean]
+  val showKickerSection: Option[Boolean]
+  val showKickerCustom: Option[Boolean]
+  val customKicker: Option[String]
 }
 
 case class CuratedMetadata(
