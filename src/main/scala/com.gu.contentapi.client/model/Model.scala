@@ -241,11 +241,13 @@ case class Tag(
     podcast: Option[Podcast] = None,
 
     /**
-     * If the tag is a contributor it may have a first name and last name.
+     * If the tag is a contributor it may have a first name, a last name and a twitter handle.
      */
     firstName: Option[String] = None,
 
-    lastName: Option[String] = None)
+    lastName: Option[String] = None,
+
+    twitterHandle: Option[String] = None)
 
 case class Edition(
 
