@@ -1,3 +1,6 @@
+## 3.7
+* Add twitter handle field to tag (only available for contributors tag)
+
 ## 3.6
 * Add new kicker fields on collections
 
