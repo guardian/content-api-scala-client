@@ -30,7 +30,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest w
   }
 
   it should "correctly add API key to request" in {
-    api.url("localtion", Map.empty) should include("api-key=test")
+    api.url("location", Map.empty) should include("api-key=test")
   }
 
   it should "understand custom parameters" in {
