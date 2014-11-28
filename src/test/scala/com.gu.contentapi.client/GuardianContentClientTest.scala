@@ -1,20 +1,24 @@
 package com.gu.contentapi.client
 
-import scala.concurrent.ExecutionContext
+import com.gu.contentapi.client.model.ItemQuery
 import org.joda.time.DateTime
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.time.{Seconds, Span, Millis}
 import org.scalatest.{FlatSpec, Matchers}
-import dispatch.enrichFuture
 
-class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest {
+import scala.concurrent.ExecutionContext
+
+class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest with ScalaFutures {
 
   implicit def executionContext = ExecutionContext.global
+  implicit override val patienceConfig = PatienceConfig(timeout = Span(2, Seconds))
+  import api.Results._
 
   "client interface" should "successfully call the Content API" in {
     val content = for {
       response <- api.item.itemId("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry").response
-    }
-    yield response.content.get
-    content.apply().id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+    } yield response.content.get
+    content.futureValue.id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
   }
 
   it should "return errors as a broken promise" in {
@@ -22,11 +26,11 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest {
     val errorTest = errorResponse recover { case error =>
       error should be (GuardianContentApiError(404, "Not Found"))
     }
-    errorTest.apply()
+    errorTest.futureValue
   }
 
-  it should "correctly add API key to request if present" in {
-    api.search.parameters.get("api-key") should be (Some("test"))
+  it should "correctly add API key to request" in {
+    api.url("localtion", Map.empty) should include("api-key=test")
   }
 
   it should "understand custom parameters" in {
@@ -44,4 +48,11 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest {
     params.get("aBoolParam") should be (Some("true"))
   }
 
+  it should "execute a given item query" in {
+    val query = ItemQuery().itemId("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+    val content = for {
+      response <- api.executeItemQuery(query)
+    } yield response.content.get
+    content.futureValue.id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+  }
 }
