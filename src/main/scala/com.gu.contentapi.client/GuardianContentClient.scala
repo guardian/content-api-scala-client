@@ -76,6 +76,21 @@ trait ContentApiClientLogic {
     http(request, handler)
   }
 
+  def getResponse(itemQuery: ItemQuery): Future[ItemResponse] = {
+    val location = itemQuery.path.getOrElse(throw new Exception("No API URL provided to item query, ensure apiUrl/itemId is called"))
+    fetch(s"$targetUrl/$location", itemQuery.parameters) map JsonParser.parseItem
+  }
+  def getResponse(searchQuery: SearchQuery): Future[SearchResponse] =
+    fetch(s"$targetUrl/search", searchQuery.parameters) map JsonParser.parseSearch
+  def getResponse(tagsQuery: TagsQuery): Future[TagsResponse] =
+    fetch(s"$targetUrl/tags", tagsQuery.parameters) map JsonParser.parseTags
+  def getResponse(sectionsQuery: SectionsQuery): Future[SectionsResponse] =
+    fetch(s"$targetUrl/sections", sectionsQuery.parameters) map JsonParser.parseSections
+  def getResponse(collectionQuery: CollectionQuery): Future[CollectionResponse] = {
+    val location = collectionQuery.path.getOrElse(throw new Exception("No API URL provided to collection query, ensure apiUrl/collectionId is called"))
+    fetch(s"$targetUrl/collections/$location", collectionQuery.parameters) map JsonParser.parseCollection
+  }
+
   /**
    * Contains implicits to maintain `query.response` behaviour, along with
    * other methods that require a configured client
@@ -91,13 +106,11 @@ trait ContentApiClientLogic {
       def asResponse = response
     }
 
-
     implicit class SearchQueryResult(searchQuery: SearchQuery) {
       lazy val response: Future[SearchResponse] = getResponse(searchQuery)
       def asResponse = response
       def asContent = response.map(_.results)
     }
-
 
     implicit class TagsQueryResult(tagsQuery: TagsQuery) {
       lazy val response: Future[TagsResponse] = getResponse(tagsQuery)
@@ -105,13 +118,11 @@ trait ContentApiClientLogic {
       def asTags = response.map(_.results)
     }
 
-
     implicit class SectionsQueryResult(sectionsQuery: SectionsQuery) {
       lazy val response: Future[SectionsResponse] = getResponse(sectionsQuery)
       def asResponse = response
       def asSections = response.map(_.results)
     }
-
 
     implicit class CollectionQueryResult(collectionQuery: CollectionQuery) {
       def apiUrl(newContentPath: String): CollectionQuery = {
@@ -123,21 +134,6 @@ trait ContentApiClientLogic {
       def asResponse = response
       def asCollection = response.map(_.collection)
     }
-  }
-
-  def getResponse(itemQuery: ItemQuery): Future[ItemResponse] = {
-    val location = itemQuery.path.getOrElse(throw new Exception("No API URL provided to item query, ensure apiUrl/itemId is called"))
-    fetch(s"$targetUrl/$location", itemQuery.parameters) map JsonParser.parseItem
-  }
-  def getResponse(searchQuery: SearchQuery): Future[SearchResponse] =
-    fetch(s"$targetUrl/search", searchQuery.parameters) map JsonParser.parseSearch
-  def getResponse(tagsQuery: TagsQuery): Future[TagsResponse] =
-    fetch(s"$targetUrl/tags", tagsQuery.parameters) map JsonParser.parseTags
-  def getResponse(sectionsQuery: SectionsQuery): Future[SectionsResponse] =
-    fetch(s"$targetUrl/sections", sectionsQuery.parameters) map JsonParser.parseSections
-  def getResponse(collectionQuery: CollectionQuery): Future[CollectionResponse] = {
-    val location = collectionQuery.path.getOrElse(throw new Exception("No API URL provided to collection query, ensure apiUrl/collectionId is called"))
-    fetch(s"$targetUrl/collections/$location", collectionQuery.parameters) map JsonParser.parseCollection
   }
 }
 
