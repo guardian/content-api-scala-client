@@ -60,8 +60,10 @@ trait ContentApiClientLogic {
     val headers = Map("User-Agent" -> "scala-client", "Accept" -> "application/json")
 
     for (response <- get(url(location, parameters), headers))
-    yield if (List(200, 302) contains response.statusCode) response.body
-    else throw new GuardianContentApiError(response.statusCode, response.statusMessage)
+    yield {
+      if (List(200, 302) contains response.statusCode) response.body
+      else throw new GuardianContentApiError(response.statusCode, response.statusMessage)
+    }
   }
 
   protected def get(url: String, headers: Map[String, String]): Future[HttpResponse] = {
@@ -78,51 +80,34 @@ trait ContentApiClientLogic {
    * Contains implicits to maintain `query.response` behaviour, along with
    * other methods that require a configured client
    */
-  object Results {
-    implicit class ItemQueryResult(itemQuery: ItemQuery) extends ItemQuery {
+  object implicits {
+    implicit class ItemQueryResult(itemQuery: ItemQuery) {
       def apiUrl(newContentPath: String): ItemQuery = {
-        require(newContentPath startsWith targetUrl, "apiUrl expects a full URL, use itemId if you only have an ID")
-        itemQuery.copy(path = Some(newContentPath))
+        require(newContentPath startsWith s"$targetUrl/", "apiUrl expects a full URL, use itemId if you only have an ID")
+        itemQuery.itemId(newContentPath.stripPrefix(s"$targetUrl/"))
       }
 
-      def itemId(contentId: String): ItemQuery = {
-        apiUrl(targetUrl + "/" + contentId)
-      }
-
-      lazy val response: Future[ItemResponse] = {
-        val location = itemQuery.path.getOrElse(throw new Exception("No API URL provided to item query, ensure withApiUrl is called"))
-        fetch(location, itemQuery.parameters) map JsonParser.parseItem
-      }
-
+      lazy val response: Future[ItemResponse] = getResponse(itemQuery)
       def asResponse = response
     }
 
 
     implicit class SearchQueryResult(searchQuery: SearchQuery) {
-      lazy val response: Future[SearchResponse] = {
-        fetch(targetUrl + "/search", searchQuery.parameters) map JsonParser.parseSearch
-      }
-
+      lazy val response: Future[SearchResponse] = getResponse(searchQuery)
       def asResponse = response
       def asContent = response.map(_.results)
     }
 
 
     implicit class TagsQueryResult(tagsQuery: TagsQuery) {
-      lazy val response: Future[TagsResponse] = {
-        fetch(targetUrl + "/tags", tagsQuery.parameters) map JsonParser.parseTags
-      }
-
+      lazy val response: Future[TagsResponse] = getResponse(tagsQuery)
       def asResponse = response
       def asTags = response.map(_.results)
     }
 
 
     implicit class SectionsQueryResult(sectionsQuery: SectionsQuery) {
-      lazy val response: Future[SectionsResponse] = {
-        fetch(targetUrl + "/sections", sectionsQuery.parameters) map JsonParser.parseSections
-      }
-
+      lazy val response: Future[SectionsResponse] = getResponse(sectionsQuery)
       def asResponse = response
       def asSections = response.map(_.results)
     }
@@ -130,29 +115,30 @@ trait ContentApiClientLogic {
 
     implicit class CollectionQueryResult(collectionQuery: CollectionQuery) {
       def apiUrl(newContentPath: String): CollectionQuery = {
-        require(newContentPath startsWith targetUrl, "apiUrl expects a full URI: use collectionId if you only have an ID")
-        collectionQuery.copy(path = Some(newContentPath))
+        require(newContentPath startsWith s"$targetUrl/collections/", "apiUrl expects a full URI: use collectionId if you only have an ID")
+        collectionQuery.collectionId(newContentPath.stripPrefix(s"$targetUrl/collections/"))
       }
 
-      def collectionId(collectionId: String): CollectionQuery = {
-        apiUrl(targetUrl + "/collections/" + collectionId)
-      }
-
-      lazy val response: Future[CollectionResponse] = {
-        val location = collectionQuery.path.getOrElse(throw new Exception("No API URL provided to collection query, ensure withApiUrl is called"))
-        fetch(location, collectionQuery.parameters) map JsonParser.parseCollection
-      }
-
+      lazy val response: Future[CollectionResponse] = getResponse(collectionQuery)
       def asResponse = response
       def asCollection = response.map(_.collection)
     }
   }
 
-  def executeItemQuery(itemQuery: ItemQuery): Future[ItemResponse] = Results.ItemQueryResult(itemQuery).response
-  def executeSearchQuery(searchQuery: SearchQuery): Future[SearchResponse] = Results.SearchQueryResult(searchQuery).response
-  def executeTagsQuery(tagsQuery: TagsQuery): Future[TagsResponse] = Results.TagsQueryResult(tagsQuery).response
-  def executeSectionsQuery(sectionsQuery: SectionsQuery): Future[SectionsResponse] = Results.SectionsQueryResult(sectionsQuery).response
-  def executeCollectionQuery(collectionQuery: CollectionQuery): Future[CollectionResponse] = Results.CollectionQueryResult(collectionQuery).response
+  def getResponse(itemQuery: ItemQuery): Future[ItemResponse] = {
+    val location = itemQuery.path.getOrElse(throw new Exception("No API URL provided to item query, ensure apiUrl/itemId is called"))
+    fetch(s"$targetUrl/$location", itemQuery.parameters) map JsonParser.parseItem
+  }
+  def getResponse(searchQuery: SearchQuery): Future[SearchResponse] =
+    fetch(s"$targetUrl/search", searchQuery.parameters) map JsonParser.parseSearch
+  def getResponse(tagsQuery: TagsQuery): Future[TagsResponse] =
+    fetch(s"$targetUrl/tags", tagsQuery.parameters) map JsonParser.parseTags
+  def getResponse(sectionsQuery: SectionsQuery): Future[SectionsResponse] =
+    fetch(s"$targetUrl/sections", sectionsQuery.parameters) map JsonParser.parseSections
+  def getResponse(collectionQuery: CollectionQuery): Future[CollectionResponse] = {
+    val location = collectionQuery.path.getOrElse(throw new Exception("No API URL provided to collection query, ensure apiUrl/collectionId is called"))
+    fetch(s"$targetUrl/collections/$location", collectionQuery.parameters) map JsonParser.parseCollection
+  }
 }
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic

@@ -2,8 +2,11 @@ package com.gu.contentapi.client.model
 
 import com.gu.contentapi.client.{Parameter, Parameters}
 
+sealed trait ContentApiQuery
+
 case class ItemQuery(path: Option[String] = None, parameterHolder: Map[String, Parameter] = Map.empty)
-  extends EditionParameters[ItemQuery]
+  extends ContentApiQuery
+  with EditionParameters[ItemQuery]
   with ContentParameters[ItemQuery]
   with ShowParameters[ItemQuery]
   with ShowReferencesParameters[ItemQuery]
@@ -15,10 +18,14 @@ case class ItemQuery(path: Option[String] = None, parameterHolder: Map[String, P
   with FilterSearchParameters[ItemQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
+
+  def itemId(contentId: String): ItemQuery =
+    copy(path = Some(contentId))
 }
 
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentParameters[SearchQuery]
+  extends ContentApiQuery
+  with ContentParameters[SearchQuery]
   with ShowParameters[SearchQuery]
   with ShowReferencesParameters[SearchQuery]
   with OrderingParameters[SearchQuery]
@@ -30,7 +37,8 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ShowReferencesParameters[TagsQuery]
+  extends ContentApiQuery
+  with ShowReferencesParameters[TagsQuery]
   with PaginationParameters[TagsQuery]
   with FilterParameters[TagsQuery]
   with FilterTagParameters[TagsQuery]
@@ -40,18 +48,23 @@ case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends FilterSearchParameters[SectionsQuery] {
+  extends ContentApiQuery
+  with FilterSearchParameters[SectionsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 }
 
 case class CollectionQuery(path: Option[String] = None, parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ShowParameters[CollectionQuery]
+  extends ContentApiQuery
+  with ShowParameters[CollectionQuery]
   with ShowReferencesParameters[CollectionQuery]
   with FilterParameters[CollectionQuery]
   with FilterExtendedParameters[CollectionQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(path, parameterMap)
+
+  def collectionId(collectionId: String): CollectionQuery =
+    copy(path = Some(collectionId))
 }
 
 trait ContentParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
