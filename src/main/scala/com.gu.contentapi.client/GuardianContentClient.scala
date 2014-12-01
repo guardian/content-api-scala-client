@@ -77,7 +77,7 @@ trait ContentApiClientLogic {
   }
 
   def getResponse(itemQuery: ItemQuery): Future[ItemResponse] = {
-    val location = itemQuery.path.getOrElse(throw new Exception("No API URL provided to item query, ensure apiUrl/itemId is called"))
+    val location = itemQuery.id.getOrElse(throw new Exception("No API URL provided to item query, ensure apiUrl/itemId is called"))
     fetch(s"$targetUrl/$location", itemQuery.parameters) map JsonParser.parseItem
   }
   def getResponse(searchQuery: SearchQuery): Future[SearchResponse] =
@@ -87,7 +87,7 @@ trait ContentApiClientLogic {
   def getResponse(sectionsQuery: SectionsQuery): Future[SectionsResponse] =
     fetch(s"$targetUrl/sections", sectionsQuery.parameters) map JsonParser.parseSections
   def getResponse(collectionQuery: CollectionQuery): Future[CollectionResponse] = {
-    val location = collectionQuery.path.getOrElse(throw new Exception("No API URL provided to collection query, ensure apiUrl/collectionId is called"))
+    val location = collectionQuery.collectionId.getOrElse(throw new Exception("No API URL provided to collection query, ensure apiUrl/collectionId is called"))
     fetch(s"$targetUrl/collections/$location", collectionQuery.parameters) map JsonParser.parseCollection
   }
 

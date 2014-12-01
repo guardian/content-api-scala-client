@@ -56,7 +56,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest w
 
   it should "support itemQuery's apiUrl" in {
     val query = ItemQuery().apiUrl(s"${api.targetUrl}/commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
-    query.path.value should equal("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+    query.id.value should equal("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
   }
 
   it should "perform a given collection query" in {
@@ -67,6 +67,6 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest w
 
   it should "support collectionQuery's apiUrl method" in {
     val query = CollectionQuery().apiUrl(s"${api.targetUrl}/collections/41cc-b696-db2e-0156")
-    query.path.value should equal("41cc-b696-db2e-0156")
+    query.collectionId.value should equal("41cc-b696-db2e-0156")
   }
 }
