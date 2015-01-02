@@ -4,11 +4,13 @@ import java.net.URLEncoder
 
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.parser.JsonParser
+import com.gu.contentapi.client.utils.Futures
 import dispatch.{FunctionHandler, Http}
 import org.joda.time.ReadableInstant
 import org.joda.time.format.ISODateTimeFormat
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
@@ -56,10 +58,10 @@ trait ContentApiClientLogic {
     location + "?" + queryString
   }
 
-  protected def fetch(location: String, parameters: Map[String, String]): Future[String] = {
+  protected def fetch(url: String): Future[String] = {
     val headers = Map("User-Agent" -> "scala-client", "Accept" -> "application/json")
 
-    for (response <- get(url(location, parameters), headers))
+    for (response <- get(url, headers))
     yield {
       if (List(200, 302) contains response.statusCode) response.body
       else throw new GuardianContentApiError(response.statusCode, response.statusMessage)
@@ -76,20 +78,46 @@ trait ContentApiClientLogic {
     http(request, handler)
   }
 
-  def getResponse(itemQuery: ItemQuery): Future[ItemResponse] = {
-    val location = itemQuery.id.getOrElse(throw new Exception("No API URL provided to item query, ensure apiUrl/itemId is called"))
-    fetch(s"$targetUrl/$location", itemQuery.parameters) map JsonParser.parseItem
+  def getUrl(contentApiQuery: ContentApiQuery): Try[String] = Try {
+    contentApiQuery match {
+      case itemQuery: ItemQuery =>
+        val location = itemQuery.id.getOrElse(throw new Exception("No API URL provided to item query, ensure apiUrl/itemId is called"))
+        url(s"$targetUrl/$location", itemQuery.parameters)
+
+      case searchQuery: SearchQuery =>
+        url(s"$targetUrl/search", searchQuery.parameters)
+
+      case tagsQuery: TagsQuery =>
+        url(s"$targetUrl/tags", tagsQuery.parameters)
+
+      case sectionsQuery: SectionsQuery =>
+        url(s"$targetUrl/sections", sectionsQuery.parameters)
+
+      case collectionQuery: CollectionQuery =>
+        val location = collectionQuery.collectionId.getOrElse(throw new Exception("No API URL provided to collection query, ensure apiUrl/collectionId is called"))
+        url(s"$targetUrl/collections/$location", collectionQuery.parameters)
+    }
   }
+
+  private def fetchResponse(contentApiQuery: ContentApiQuery): Future[String] = for {
+    url <- Futures.fromTry(getUrl(contentApiQuery))
+    body <- fetch(url)
+  } yield body
+
+  def getResponse(itemQuery: ItemQuery): Future[ItemResponse] =
+    fetchResponse(itemQuery) map JsonParser.parseItem
+
   def getResponse(searchQuery: SearchQuery): Future[SearchResponse] =
-    fetch(s"$targetUrl/search", searchQuery.parameters) map JsonParser.parseSearch
+    fetchResponse(searchQuery) map JsonParser.parseSearch
+
   def getResponse(tagsQuery: TagsQuery): Future[TagsResponse] =
-    fetch(s"$targetUrl/tags", tagsQuery.parameters) map JsonParser.parseTags
+    fetchResponse(tagsQuery) map JsonParser.parseTags
+
   def getResponse(sectionsQuery: SectionsQuery): Future[SectionsResponse] =
-    fetch(s"$targetUrl/sections", sectionsQuery.parameters) map JsonParser.parseSections
-  def getResponse(collectionQuery: CollectionQuery): Future[CollectionResponse] = {
-    val location = collectionQuery.collectionId.getOrElse(throw new Exception("No API URL provided to collection query, ensure apiUrl/collectionId is called"))
-    fetch(s"$targetUrl/collections/$location", collectionQuery.parameters) map JsonParser.parseCollection
-  }
+    fetchResponse(sectionsQuery) map JsonParser.parseSections
+
+  def getResponse(collectionQuery: CollectionQuery): Future[CollectionResponse] =
+    fetchResponse(collectionQuery) map JsonParser.parseCollection
 }
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
