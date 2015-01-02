@@ -1,5 +1,5 @@
 package com.gu.contentapi.client
 
 object Limits {
-  val urlSize = 2048
+  val UrlSize = 2048
 }
