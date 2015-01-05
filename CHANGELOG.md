@@ -1,3 +1,11 @@
+## 4.1
+* Expose generated URL to clients
+* Add a parameter for the maximum url size that Content API will accept
+
+## 4.0
+* Large refactor to logically separate queries from the client itself. This makes queries themselves more reusable as
+  they're now just datatypes.
+
 ## 3.7
 * Add twitter handle field to tag (only available for contributors tag)
 
