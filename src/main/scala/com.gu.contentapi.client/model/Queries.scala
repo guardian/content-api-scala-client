@@ -6,7 +6,7 @@ import com.gu.contentapi.client.{Parameter, Parameters}
 sealed trait ContentApiQuery {
   def parameters: Map[String, String]
 
-  protected def pathSegment: String
+  def pathSegment: String
 
   override def toString = s"/${getClass.getSimpleName}($pathSegment?${QueryStringParams(parameters)})"
 }

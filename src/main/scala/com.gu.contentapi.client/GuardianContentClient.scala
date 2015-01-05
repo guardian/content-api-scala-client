@@ -2,11 +2,10 @@ package com.gu.contentapi.client
 
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.parser.JsonParser
-import com.gu.contentapi.client.utils.{QueryStringParams, Futures}
+import com.gu.contentapi.client.utils.QueryStringParams
 import dispatch.{FunctionHandler, Http}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
@@ -14,7 +13,7 @@ trait ContentApiClientLogic {
 
   val apiKey: String
 
-  implicit def executionContext = ExecutionContext.global
+  implicit def executionContext: ExecutionContext = ExecutionContext.global
 
   protected val http = Http configure { _
     .setAllowPoolingConnection(true)
@@ -32,7 +31,7 @@ trait ContentApiClientLogic {
   def search = new SearchQuery
   def tags = new TagsQuery
   def sections = new SectionsQuery
-  def collection = new CollectionQuery
+  def collection(id: String) = new CollectionQuery(id)
 
   case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
 
@@ -61,31 +60,10 @@ trait ContentApiClientLogic {
     http(request, handler)
   }
 
-  def getUrl(contentApiQuery: ContentApiQuery): Try[String] = Try {
-    contentApiQuery match {
-      case itemQuery: ItemQuery =>
-        val location = itemQuery.id
-        url(s"$targetUrl/$location", itemQuery.parameters)
+  def getUrl(contentApiQuery: ContentApiQuery): String =
+    url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
 
-      case searchQuery: SearchQuery =>
-        url(s"$targetUrl/search", searchQuery.parameters)
-
-      case tagsQuery: TagsQuery =>
-        url(s"$targetUrl/tags", tagsQuery.parameters)
-
-      case sectionsQuery: SectionsQuery =>
-        url(s"$targetUrl/sections", sectionsQuery.parameters)
-
-      case collectionQuery: CollectionQuery =>
-        val location = collectionQuery.collectionId.getOrElse(throw new Exception("No API URL provided to collection query, ensure apiUrl/collectionId is called"))
-        url(s"$targetUrl/collections/$location", collectionQuery.parameters)
-    }
-  }
-
-  private def fetchResponse(contentApiQuery: ContentApiQuery): Future[String] = for {
-    url <- Futures.fromTry(getUrl(contentApiQuery))
-    body <- fetch(url)
-  } yield body
+  private def fetchResponse(contentApiQuery: ContentApiQuery): Future[String] = fetch(getUrl(contentApiQuery))
 
   def getResponse(itemQuery: ItemQuery): Future[ItemResponse] =
     fetchResponse(itemQuery) map JsonParser.parseItem
