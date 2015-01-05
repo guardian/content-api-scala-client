@@ -37,19 +37,19 @@ Every item on http://www.theguardian.com/ can be retrieved on the same path at h
 
 ```scala
 // query for a single content item and print its web title
-val itemQuery = ItemQuery().itemId("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa")
+val itemQuery = ItemQuery("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa")
 client.getResponse(itemQuery).foreach { itemResponse =>
   println(itemResponse.content.get.webTitle)
 }
 
 // print web title for a tag
-val tagQuery = ItemQuery().itemId("music/metal")
+val tagQuery = ItemQuery("music/metal")
 client.getResponse(tagQuery).foreach { tagResponse =>
   println(tagResponse.content.get.webTitle)
 }
 
 // print web title for a section
-val sectionQuery = ItemQuery().itemId("environment")
+val sectionQuery = ItemQuery("environment")
 client.getResponse(sectionQuery).foreach { sectionResponse =>
   println(sectionResponse.content.get.webTitle)
 }
