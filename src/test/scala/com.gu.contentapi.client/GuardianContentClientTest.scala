@@ -6,11 +6,9 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{OptionValues, FlatSpec, Matchers}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest with ScalaFutures with OptionValues {
-
-  implicit def executionContext: ExecutionContext = ExecutionContext.global
   implicit override val patienceConfig = PatienceConfig(timeout = Span(2, Seconds))
 
   "client interface" should "successfully call the Content API" in {
