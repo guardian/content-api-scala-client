@@ -37,7 +37,7 @@ trait ContentApiClientLogic {
 
   protected[client] def url(location: String, parameters: Map[String, String]): String = {
     require(!location.contains('?'), "must not specify parameters in URL")
-    location + "?" + QueryStringParams(parameters + ("api-key" -> apiKey))
+    location + QueryStringParams(parameters + ("api-key" -> apiKey))
   }
 
   protected def fetch(url: String): Future[String] = {

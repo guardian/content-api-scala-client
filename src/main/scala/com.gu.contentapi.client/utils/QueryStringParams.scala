@@ -12,8 +12,10 @@ object QueryStringParams {
       case other => URLEncoder.encode(other.toString, "UTF-8")
     }
 
-    parameters map {
+    if (parameters.isEmpty) {
+      ""
+    } else "?" + (parameters map {
       case (k, v) => k + "=" + encodeParameter(v)
-    } mkString "&"
+    } mkString "&")
   }
 }

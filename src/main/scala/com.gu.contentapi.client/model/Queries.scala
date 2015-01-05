@@ -8,7 +8,9 @@ sealed trait ContentApiQuery {
 
   def pathSegment: String
 
-  override def toString = s"/${getClass.getSimpleName}($pathSegment?${QueryStringParams(parameters)})"
+  override def toString = {
+    s"${getClass.getSimpleName}(/$pathSegment${QueryStringParams(parameters)})"
+  }
 }
 
 case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty)
@@ -29,7 +31,7 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   def itemId(contentId: String): ItemQuery =
     copy(id = contentId)
 
-  override protected def pathSegment: String = s"$id"
+  override def pathSegment: String = s"$id"
 }
 
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
@@ -44,7 +46,7 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   with FilterSearchParameters[SearchQuery] {
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
-  override protected def pathSegment: String = "search"
+  override def pathSegment: String = "search"
 }
 
 case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
@@ -57,7 +59,7 @@ case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
-  override protected def pathSegment: String = "tags"
+  override def pathSegment: String = "tags"
 }
 
 case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
@@ -66,7 +68,7 @@ case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
-  override protected def pathSegment: String = "sections"
+  override def pathSegment: String = "sections"
 }
 
 case class CollectionQuery(collectionId: String, parameterHolder: Map[String, Parameter] = Map.empty)
@@ -81,7 +83,7 @@ case class CollectionQuery(collectionId: String, parameterHolder: Map[String, Pa
   def collectionId(collectionId: String): CollectionQuery =
     copy(collectionId = collectionId)
 
-  override protected def pathSegment: String = s"collections/$collectionId"
+  override def pathSegment: String = s"collections/$collectionId"
 }
 
 trait ContentParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
