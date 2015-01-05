@@ -3,7 +3,6 @@ package com.gu.contentapi.client
 import org.joda.time.ReadableInstant
 
 trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
-
   def stringParam(key: String, value: String): Owner = {
     withParameter(StringParameter(key, Some(value)))
   }
@@ -31,7 +30,6 @@ trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
   def parameters: Map[String, String] =
     parameterHolder.mapValues(_.value).collect { case (k, Some(v)) => (k, v.toString) }
 
-
   protected trait OwnedParameter extends Parameter {
     type ParameterOwner = Owner
     def owner = self
@@ -57,5 +55,4 @@ trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
     def withValue(newValue: Option[Boolean]) = copy(value = newValue)
     def apply(): Owner = apply(true)
   }
-
 }
