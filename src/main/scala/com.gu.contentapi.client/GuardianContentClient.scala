@@ -10,10 +10,7 @@ import scala.concurrent.{ExecutionContext, Future}
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
 trait ContentApiClientLogic {
-
   val apiKey: String
-
-  implicit def executionContext: ExecutionContext = ExecutionContext.global
 
   protected val http = Http configure { _
     .setAllowPoolingConnection(true)
@@ -40,17 +37,16 @@ trait ContentApiClientLogic {
     location + QueryStringParams(parameters + ("api-key" -> apiKey))
   }
 
-  protected def fetch(url: String): Future[String] = {
+  protected def fetch(url: String)(implicit context: ExecutionContext): Future[String] = {
     val headers = Map("User-Agent" -> "scala-client", "Accept" -> "application/json")
 
-    for (response <- get(url, headers))
-    yield {
+    for (response <- get(url, headers)) yield {
       if (List(200, 302) contains response.statusCode) response.body
       else throw new GuardianContentApiError(response.statusCode, response.statusMessage)
     }
   }
 
-  protected def get(url: String, headers: Map[String, String]): Future[HttpResponse] = {
+  protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
     val req = dispatch.url(url)
     headers foreach {
       case (name, value) => req.setHeader(name, value)
@@ -63,21 +59,22 @@ trait ContentApiClientLogic {
   def getUrl(contentApiQuery: ContentApiQuery): String =
     url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
 
-  private def fetchResponse(contentApiQuery: ContentApiQuery): Future[String] = fetch(getUrl(contentApiQuery))
+  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[String] =
+    fetch(getUrl(contentApiQuery))
 
-  def getResponse(itemQuery: ItemQuery): Future[ItemResponse] =
+  def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
     fetchResponse(itemQuery) map JsonParser.parseItem
 
-  def getResponse(searchQuery: SearchQuery): Future[SearchResponse] =
+  def getResponse(searchQuery: SearchQuery)(implicit context: ExecutionContext): Future[SearchResponse] =
     fetchResponse(searchQuery) map JsonParser.parseSearch
 
-  def getResponse(tagsQuery: TagsQuery): Future[TagsResponse] =
+  def getResponse(tagsQuery: TagsQuery)(implicit context: ExecutionContext): Future[TagsResponse] =
     fetchResponse(tagsQuery) map JsonParser.parseTags
 
-  def getResponse(sectionsQuery: SectionsQuery): Future[SectionsResponse] =
+  def getResponse(sectionsQuery: SectionsQuery)(implicit context: ExecutionContext): Future[SectionsResponse] =
     fetchResponse(sectionsQuery) map JsonParser.parseSections
 
-  def getResponse(collectionQuery: CollectionQuery): Future[CollectionResponse] =
+  def getResponse(collectionQuery: CollectionQuery)(implicit context: ExecutionContext): Future[CollectionResponse] =
     fetchResponse(collectionQuery) map JsonParser.parseCollection
 }
 
