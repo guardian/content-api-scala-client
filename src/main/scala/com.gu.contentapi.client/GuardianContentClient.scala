@@ -1,13 +1,9 @@
 package com.gu.contentapi.client
 
-import java.net.URLEncoder
-
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.parser.JsonParser
-import com.gu.contentapi.client.utils.Futures
+import com.gu.contentapi.client.utils.{QueryStringParams, Futures}
 import dispatch.{FunctionHandler, Http}
-import org.joda.time.ReadableInstant
-import org.joda.time.format.ISODateTimeFormat
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
@@ -32,7 +28,7 @@ trait ContentApiClientLogic {
 
   val targetUrl = "http://content.guardianapis.com"
 
-  def item = new ItemQuery
+  def item(id: String) = new ItemQuery(id)
   def search = new SearchQuery
   def tags = new TagsQuery
   def sections = new SectionsQuery
@@ -42,20 +38,7 @@ trait ContentApiClientLogic {
 
   protected[client] def url(location: String, parameters: Map[String, String]): String = {
     require(!location.contains('?'), "must not specify parameters in URL")
-
-    def encodeParameter(p: Any): String = p match {
-      case dt: ReadableInstant => URLEncoder.encode(ISODateTimeFormat.dateTimeNoMillis.print(dt), "UTF-8")
-      case other => URLEncoder.encode(other.toString, "UTF-8")
-    }
-
-    val queryString = {
-      val pairs = (parameters + ("api-key" -> apiKey)) map {
-        case (k, v) => k + "=" + encodeParameter(v)
-      }
-      pairs mkString "&"
-    }
-
-    location + "?" + queryString
+    location + "?" + QueryStringParams(parameters + ("api-key" -> apiKey))
   }
 
   protected def fetch(url: String): Future[String] = {
@@ -81,7 +64,7 @@ trait ContentApiClientLogic {
   def getUrl(contentApiQuery: ContentApiQuery): Try[String] = Try {
     contentApiQuery match {
       case itemQuery: ItemQuery =>
-        val location = itemQuery.id.getOrElse(throw new Exception("No API URL provided to item query, ensure apiUrl/itemId is called"))
+        val location = itemQuery.id
         url(s"$targetUrl/$location", itemQuery.parameters)
 
       case searchQuery: SearchQuery =>
