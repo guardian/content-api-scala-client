@@ -59,29 +59,27 @@ Individual content items contain information not available from the `/search` en
 
 ```scala
 // print the body of a given content item
-val itemBodyQuery = ItemQuery()
-  .itemId("politics/2014/sep/15/putin-bad-as-stalin-former-defence-secretary")
+val itemBodyQuery = ItemQuery("politics/2014/sep/15/putin-bad-as-stalin-former-defence-secretary")
   .showFields("body")
 client.getResponse(itemBodyQuery) map { response =>
   for (fields <- response.content.get.fields) println(fields("body"))
 }
 
 // print the web title of every tag a content item has
-val itemWebTitleQuery = ItemQuery()
-  .itemId("environment/2014/sep/14/invest-in-monitoring-and-tagging-sharks-to-prevent-attacks")
+val itemWebTitleQuery = ItemQuery("environment/2014/sep/14/invest-in-monitoring-and-tagging-sharks-to-prevent-attacks")
   .showTags("all")
 client.getResponse(itemWebTitleQuery) map { response =>
   for (tag <- response.content.get.tags) println(tag.webTitle)
 }
 
 // print the web title of each content item in the editor's picks for the film tag
-val editorsFilmsQuery = ItemQuery().itemId("film/film").showEditorsPicks()
+val editorsFilmsQuery = ItemQuery("film/film").showEditorsPicks()
 client.getResponse(editorsFilmsQuery) map { response =>
   for (result <- response.editorsPicks) println(result.webTitle)
 }
 
 // print the web title of the most viewed content items from the world section
-val mostViewedTitleQuery = ItemQuery().itemId("world").showMostViewed()
+val mostViewedTitleQuery = ItemQuery("world").showMostViewed()
 client.getResponse(mostViewedTitleQuery) map { response =>
   for (result <- response.mostViewed) println(result.webTitle)
 }
