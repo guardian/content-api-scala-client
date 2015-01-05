@@ -1,24 +1,16 @@
 package com.gu.contentapi.client
 
-import java.net.URLEncoder
-
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.parser.JsonParser
-import com.gu.contentapi.client.utils.Futures
+import com.gu.contentapi.client.utils.QueryStringParams
 import dispatch.{FunctionHandler, Http}
-import org.joda.time.ReadableInstant
-import org.joda.time.format.ISODateTimeFormat
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
 trait ContentApiClientLogic {
-
   val apiKey: String
-
-  implicit def executionContext = ExecutionContext.global
 
   protected val http = Http configure { _
     .setAllowPoolingConnection(true)
@@ -32,43 +24,29 @@ trait ContentApiClientLogic {
 
   val targetUrl = "http://content.guardianapis.com"
 
-  def item = new ItemQuery
+  def item(id: String) = new ItemQuery(id)
   def search = new SearchQuery
   def tags = new TagsQuery
   def sections = new SectionsQuery
-  def collection = new CollectionQuery
+  def collection(id: String) = new CollectionQuery(id)
 
   case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
 
   protected[client] def url(location: String, parameters: Map[String, String]): String = {
     require(!location.contains('?'), "must not specify parameters in URL")
-
-    def encodeParameter(p: Any): String = p match {
-      case dt: ReadableInstant => URLEncoder.encode(ISODateTimeFormat.dateTimeNoMillis.print(dt), "UTF-8")
-      case other => URLEncoder.encode(other.toString, "UTF-8")
-    }
-
-    val queryString = {
-      val pairs = (parameters + ("api-key" -> apiKey)) map {
-        case (k, v) => k + "=" + encodeParameter(v)
-      }
-      pairs mkString "&"
-    }
-
-    location + "?" + queryString
+    location + QueryStringParams(parameters + ("api-key" -> apiKey))
   }
 
-  protected def fetch(url: String): Future[String] = {
+  protected def fetch(url: String)(implicit context: ExecutionContext): Future[String] = {
     val headers = Map("User-Agent" -> "scala-client", "Accept" -> "application/json")
 
-    for (response <- get(url, headers))
-    yield {
+    for (response <- get(url, headers)) yield {
       if (List(200, 302) contains response.statusCode) response.body
       else throw new GuardianContentApiError(response.statusCode, response.statusMessage)
     }
   }
 
-  protected def get(url: String, headers: Map[String, String]): Future[HttpResponse] = {
+  protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
     val req = dispatch.url(url)
     headers foreach {
       case (name, value) => req.setHeader(name, value)
@@ -78,45 +56,25 @@ trait ContentApiClientLogic {
     http(request, handler)
   }
 
-  def getUrl(contentApiQuery: ContentApiQuery): Try[String] = Try {
-    contentApiQuery match {
-      case itemQuery: ItemQuery =>
-        val location = itemQuery.id.getOrElse(throw new Exception("No API URL provided to item query, ensure apiUrl/itemId is called"))
-        url(s"$targetUrl/$location", itemQuery.parameters)
+  def getUrl(contentApiQuery: ContentApiQuery): String =
+    url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
 
-      case searchQuery: SearchQuery =>
-        url(s"$targetUrl/search", searchQuery.parameters)
+  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[String] =
+    fetch(getUrl(contentApiQuery))
 
-      case tagsQuery: TagsQuery =>
-        url(s"$targetUrl/tags", tagsQuery.parameters)
-
-      case sectionsQuery: SectionsQuery =>
-        url(s"$targetUrl/sections", sectionsQuery.parameters)
-
-      case collectionQuery: CollectionQuery =>
-        val location = collectionQuery.collectionId.getOrElse(throw new Exception("No API URL provided to collection query, ensure apiUrl/collectionId is called"))
-        url(s"$targetUrl/collections/$location", collectionQuery.parameters)
-    }
-  }
-
-  private def fetchResponse(contentApiQuery: ContentApiQuery): Future[String] = for {
-    url <- Futures.fromTry(getUrl(contentApiQuery))
-    body <- fetch(url)
-  } yield body
-
-  def getResponse(itemQuery: ItemQuery): Future[ItemResponse] =
+  def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
     fetchResponse(itemQuery) map JsonParser.parseItem
 
-  def getResponse(searchQuery: SearchQuery): Future[SearchResponse] =
+  def getResponse(searchQuery: SearchQuery)(implicit context: ExecutionContext): Future[SearchResponse] =
     fetchResponse(searchQuery) map JsonParser.parseSearch
 
-  def getResponse(tagsQuery: TagsQuery): Future[TagsResponse] =
+  def getResponse(tagsQuery: TagsQuery)(implicit context: ExecutionContext): Future[TagsResponse] =
     fetchResponse(tagsQuery) map JsonParser.parseTags
 
-  def getResponse(sectionsQuery: SectionsQuery): Future[SectionsResponse] =
+  def getResponse(sectionsQuery: SectionsQuery)(implicit context: ExecutionContext): Future[SectionsResponse] =
     fetchResponse(sectionsQuery) map JsonParser.parseSections
 
-  def getResponse(collectionQuery: CollectionQuery): Future[CollectionResponse] =
+  def getResponse(collectionQuery: CollectionQuery)(implicit context: ExecutionContext): Future[CollectionResponse] =
     fetchResponse(collectionQuery) map JsonParser.parseCollection
 }
 

@@ -1,3 +1,8 @@
+## 5.0
+* Do not allow partial item or collection queries that throw exceptions
+* Require ExecutionContext when running queries, not when constructing the client
+* Add decent toString method to queries
+
 ## 4.1
 * Expose generated URL to clients
 * Add a parameter for the maximum url size that Content API will accept

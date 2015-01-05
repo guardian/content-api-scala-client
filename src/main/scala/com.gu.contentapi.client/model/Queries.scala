@@ -1,10 +1,19 @@
 package com.gu.contentapi.client.model
 
+import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentapi.client.{Parameter, Parameters}
 
-sealed trait ContentApiQuery
+sealed trait ContentApiQuery {
+  def parameters: Map[String, String]
 
-case class ItemQuery(id: Option[String] = None, parameterHolder: Map[String, Parameter] = Map.empty)
+  def pathSegment: String
+
+  override def toString = {
+    s"${getClass.getSimpleName}(/$pathSegment${QueryStringParams(parameters)})"
+  }
+}
+
+case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery
   with EditionParameters[ItemQuery]
   with ContentParameters[ItemQuery]
@@ -20,7 +29,9 @@ case class ItemQuery(id: Option[String] = None, parameterHolder: Map[String, Par
   def withParameters(parameterMap: Map[String, Parameter]) = copy(id, parameterMap)
 
   def itemId(contentId: String): ItemQuery =
-    copy(id = Some(contentId))
+    copy(id = contentId)
+
+  override def pathSegment: String = id
 }
 
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
@@ -34,6 +45,8 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   with FilterExtendedParameters[SearchQuery]
   with FilterSearchParameters[SearchQuery] {
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "search"
 }
 
 case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
@@ -45,6 +58,8 @@ case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   with FilterSearchParameters[TagsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "tags"
 }
 
 case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
@@ -52,9 +67,11 @@ case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   with FilterSearchParameters[SectionsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "sections"
 }
 
-case class CollectionQuery(collectionId: Option[String] = None, parameterHolder: Map[String, Parameter] = Map.empty)
+case class CollectionQuery(collectionId: String, parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery
   with ShowParameters[CollectionQuery]
   with ShowReferencesParameters[CollectionQuery]
@@ -64,7 +81,9 @@ case class CollectionQuery(collectionId: Option[String] = None, parameterHolder:
   def withParameters(parameterMap: Map[String, Parameter]) = copy(collectionId, parameterMap)
 
   def collectionId(collectionId: String): CollectionQuery =
-    copy(collectionId = Some(collectionId))
+    copy(collectionId = collectionId)
+
+  override def pathSegment: String = s"collections/$collectionId"
 }
 
 trait ContentParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
