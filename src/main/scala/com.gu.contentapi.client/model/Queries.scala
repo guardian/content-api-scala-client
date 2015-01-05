@@ -31,7 +31,7 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   def itemId(contentId: String): ItemQuery =
     copy(id = contentId)
 
-  override def pathSegment: String = s"$id"
+  override def pathSegment: String = id
 }
 
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
