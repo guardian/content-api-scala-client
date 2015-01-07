@@ -1,3 +1,6 @@
+## 5.1
+* Add email address field to tag
+
 ## 5.0
 * Do not allow partial item or collection queries that throw exceptions
 * Require ExecutionContext when running queries, not when constructing the client
@@ -30,14 +33,11 @@
 * Add back trait to ease extending
 
 ## 3.1
-
 * Use Json4s-ext for date parsing
 * Add productionOffice filter for content search
 * Add first name and last name to tag (only available for contributors tag)
 
-
 ## 3.0
-
 * Only provide an asynchronous future-based interface
 * Move to the `com.gu.contentapi.client` package
 * Remove various features no longer present in the API
