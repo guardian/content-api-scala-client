@@ -247,6 +247,8 @@ case class Tag(
 
     lastName: Option[String] = None,
 
+    emailAddress: Option[String] = None,
+
     twitterHandle: Option[String] = None)
 
 case class Edition(
