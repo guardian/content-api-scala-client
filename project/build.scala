@@ -17,8 +17,8 @@ object ContentApiClientBuild extends Build {
   .settings(releaseSettings: _*)
   .settings(sonatypeSettings: _*)
   .settings(
-    scalaVersion := "2.11.2",
-    crossScalaVersions := Seq("2.11.2", "2.10.4"),
+    scalaVersion := "2.11.4",
+    crossScalaVersions := Seq("2.11.4", "2.10.4"),
     organization := "com.gu",
     name := "content-api-client",
     description := "Scala client for the Guardian's Content API",
