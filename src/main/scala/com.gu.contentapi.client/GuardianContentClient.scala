@@ -4,6 +4,8 @@ import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.parser.JsonParser
 import com.gu.contentapi.client.utils.QueryStringParams
 import dispatch.{FunctionHandler, Http}
+import com.ning.http.client._
+import com.ning.http.client.providers.jdk._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -12,14 +14,23 @@ case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends
 trait ContentApiClientLogic {
   val apiKey: String
 
-  protected val http = Http configure { _
-    .setAllowPoolingConnection(true)
-    .setMaximumConnectionsPerHost(10)
-    .setMaximumConnectionsTotal(10)
-    .setConnectionTimeoutInMs(1000)
-    .setRequestTimeoutInMs(2000)
-    .setCompressionEnabled(true)
-    .setFollowRedirects(true)
+  protected val http = {
+    val providerConfig = new JDKAsyncHttpProviderConfig()
+    providerConfig.addProperty("bufferResponseInMemory", "true")
+
+    val asyncClientConfig = new AsyncHttpClientConfig.Builder()
+      .setAllowPoolingConnection(true)
+      .setMaximumConnectionsPerHost(10)
+      .setMaximumConnectionsTotal(10)
+      .setConnectionTimeoutInMs(1000)
+      .setRequestTimeoutInMs(2000)
+      .setCompressionEnabled(true)
+      .setFollowRedirects(true)
+      .setAsyncHttpClientProviderConfig(providerConfig)
+      .build()
+    val asyncClient = new AsyncHttpClient(new JDKAsyncHttpProvider(asyncClientConfig), asyncClientConfig)
+
+    Http(asyncClient)
   }
 
   val targetUrl = "http://content.guardianapis.com"
