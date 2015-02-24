@@ -20,6 +20,7 @@ trait ContentApiClientLogic {
     .setRequestTimeoutInMs(2000)
     .setCompressionEnabled(true)
     .setFollowRedirects(true)
+    .setMaxConnectionLifeTimeInMs(60000) // to respect DNS TTLs
   }
 
   val targetUrl = "http://content.guardianapis.com"
