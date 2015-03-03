@@ -65,6 +65,11 @@ object ContentApiClientBuild extends Build {
           <name>Luke Taylor</name>
           <url>https://github.com/LATaylor-guardian</url>
         </developer>
+        <developer>
+          <id>cb372</id>
+          <name>Chris Birchall</name>
+          <url>https://github.com/cb372</url>
+        </developer>
       </developers>
     ),
     crossBuild := true,
