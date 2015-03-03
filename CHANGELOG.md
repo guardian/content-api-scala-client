@@ -1,3 +1,6 @@
+## 5.2
+* Respect DNS short TTL by setting the connection lifetime maximum to 60 seconds.
+
 ## 5.1
 * Add email address field to tag
 
