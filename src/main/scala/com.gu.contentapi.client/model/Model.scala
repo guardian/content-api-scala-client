@@ -112,7 +112,8 @@ case class Content(
     tags: List[Tag] = Nil,
     elements: Option[List[Element]],
     references: List[Reference] = Nil,
-    isExpired: Option[Boolean] = None) extends ContentType {
+    isExpired: Option[Boolean] = None,
+    blocks: Option[Blocks] = None) extends ContentType {
 
     // This is here for backwards compatibility. For the vast majority of use cases
     // there WILL be a webPublicationDate. If this causes problems you should be using
@@ -378,3 +379,37 @@ case class Podcast(
     author: String,
     subscriptionUrl: Option[String],
     explicit: Boolean)
+
+/**
+ * The blocks that make up a piece of content.
+ * @param main The main block, which will include the main image and other furniture
+ * @param body The block(s) that make up the body of the content.
+ *             For a liveblog there may be multiple blocks. Any other content will have only one block.
+ */
+case class Blocks(main: Option[Block],
+                  body: Option[Seq[Block]])
+
+/**
+ * A block of content.
+ * @param id a unique ID
+ * @param bodyHtml the HTML body of the block
+ * @param bodyTextSummary the textual content of the block, with HTML tags stripped.
+ *                        This will not include any non-textual content such as pullquotes, tweet embeds, etc.
+ * @param title the block's title, if it has one
+ * @param attributes metadata about the block
+ *                   e.g. this will contain "keyEvent" -> "true" if the block is a key event,
+ *                   or "summary" -> "true" if it is a summary
+ * @param published whether this block is currently live
+ * @param firstPublishedDate the first time this block was published
+ * @param publishedDate the last time this block was published
+ * @param contributors people who contributed to this block
+ */
+case class Block(id: String,
+                 bodyHtml: String,
+                 bodyTextSummary: String,
+                 title: Option[String],
+                 attributes: Map[String, String],
+                 published: Boolean,
+                 firstPublishedDate: Option[DateTime],
+                 publishedDate: Option[DateTime],
+                 contributors: Seq[String])
