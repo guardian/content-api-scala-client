@@ -1,3 +1,8 @@
+## 5.3
+* Add content blocks 
+* Fix request headers not being sent correctly
+
+
 ## 5.2
 * Respect DNS short TTL by setting the connection lifetime maximum to 60 seconds.
 
