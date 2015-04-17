@@ -48,13 +48,11 @@ trait ContentApiClientLogic {
   }
 
   protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
-    val req = dispatch.url(url)
-    headers foreach {
-      case (name, value) => req.setHeader(name, value)
+    val req = headers.foldLeft(dispatch.url(url)) {
+      case (r, (name, value)) => r.setHeader(name, value)
     }
-    val request = req.toRequest
     def handler = new FunctionHandler(r => HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText))
-    http(request, handler)
+    http(req.toRequest, handler)
   }
 
   def getUrl(contentApiQuery: ContentApiQuery): String =
