@@ -7,6 +7,7 @@ import com.gu.contentapi.client.ClientTest
 class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
 
   val contentItemResponse = JsonParser.parseItem(loadJson("item-content.json"))
+  val contentItemWithBlocksResponse = JsonParser.parseItem(loadJson("item-content-with-blocks.json"))
   val tagItemResponse = JsonParser.parseItem(loadJson("item-tag.json"))
   val sectionItemResponse = JsonParser.parseItem(loadJson("item-section.json"))
 
@@ -193,6 +194,15 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     sectionItemResponse.edition.get.code should be ("default")
     sectionItemResponse.edition.get.webUrl should be ("http://www.theguardian.com/commentisfree")
     sectionItemResponse.edition.get.apiUrl should be ("http://content.guardianapis.com/commentisfree")
+  }
+
+
+  it should "parse the publication date of content" in {
+    contentItemWithBlocksResponse.content.get.webPublicationDateOption should be(Some(new DateTime("2015-04-17T10:21:49Z")))
+  }
+
+  it should "parse the publication dates of blocks" in {
+    contentItemWithBlocksResponse.content.get.blocks.get.main.get.firstPublishedDate should be(Some(new DateTime("2015-04-09T14:27:28.486+01:00")))
   }
 
 }
