@@ -99,6 +99,7 @@ trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { thi
   def showTags = StringParameter("show-tags")
   def showElements = StringParameter("show-elements")
   def showRights = StringParameter("show-rights")
+  def showBlocks = StringParameter("show-blocks")
 }
 
 trait ShowReferencesParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
