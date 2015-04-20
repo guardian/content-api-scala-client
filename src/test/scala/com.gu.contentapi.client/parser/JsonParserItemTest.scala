@@ -103,6 +103,13 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     contentItemResponse.content.get.references.size should be (0)
   }
 
+  it should "parse content rights" in {
+    contentItemResponse.content.get.rights.get.syndicatable should be (true)
+    contentItemResponse.content.get.rights.get.subscriptionDatabases should be (true)
+    contentItemResponse.content.get.rights.get.developerCommunity should be (true)
+  }
+
+
   "tag item parser" should "parse basic response fields" in {
     tagItemResponse.status should be ("ok")
     tagItemResponse.userTier should be ("internal")

@@ -113,7 +113,9 @@ case class Content(
     elements: Option[List[Element]],
     references: List[Reference] = Nil,
     isExpired: Option[Boolean] = None,
-    blocks: Option[Blocks] = None) extends ContentType {
+    blocks: Option[Blocks] = None,
+    rights: Option[Rights] = None
+    ) extends ContentType {
 
     // This is here for backwards compatibility. For the vast majority of use cases
     // there WILL be a webPublicationDate. If this causes problems you should be using
@@ -343,3 +345,9 @@ case class Block(id: String,
                  firstPublishedDate: Option[DateTime],
                  publishedDate: Option[DateTime],
                  contributors: Seq[String])
+
+case class Rights(subscriptionDatabases: Boolean = false,
+                  developerCommunity: Boolean = false,
+                  syndicatable: Boolean = false)
+  
+

@@ -30,6 +30,9 @@ object JsonParser {
   private def fixFields: PartialFunction[JField, JField] = {
     case JField("isExpired", JString(s)) => JField("isExpired", JBool(s.toBoolean))
     case JField("webPublicationDate", JString(s)) => JField("webPublicationDateOption", JString(s))
+    case JField("syndicatable", JString(s)) => JField("syndicatable", JBool(s.toBoolean))
+    case JField("subscriptionDatabases", JString(s)) => JField("subscriptionDatabases", JBool(s.toBoolean))
+    case JField("developerCommunity", JString(s)) => JField("developerCommunity", JBool(s.toBoolean))
   }
 
 }
