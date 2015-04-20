@@ -46,13 +46,3 @@ case class ItemResponse(
     mostViewed: List[Content],
     storyPackage: List[Content],
     leadContent: List[Content])
-
-case class CollectionResponse(
-    status: String,
-    userTier: String,
-    total: Int,
-    startIndex: Int,
-    pageSize: Int,
-    currentPage: Int,
-    pages: Int,
-    collection: Collection)

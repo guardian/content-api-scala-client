@@ -5,7 +5,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.json4s.{CustomSerializer, DefaultFormats}
 import org.json4s.JsonAST.{JNull, JField, JString, JBool}
 import org.json4s.native.JsonMethods
-import com.gu.contentapi.client.model.{ItemResponse, SearchResponse, TagsResponse, SectionsResponse, CollectionResponse}
+import com.gu.contentapi.client.model.{ItemResponse, SearchResponse, TagsResponse, SectionsResponse}
 
 object JsonParser {
 
@@ -27,13 +27,12 @@ object JsonParser {
     (JsonMethods.parse(json) \ "response").extract[SectionsResponse]
   }
 
-  def parseCollection(json: String): CollectionResponse = {
-    (JsonMethods.parse(json) \ "response").extract[CollectionResponse]
-  }
-
   private def fixFields: PartialFunction[JField, JField] = {
     case JField("isExpired", JString(s)) => JField("isExpired", JBool(s.toBoolean))
     case JField("webPublicationDate", JString(s)) => JField("webPublicationDateOption", JString(s))
+    case JField("syndicatable", JString(s)) => JField("syndicatable", JBool(s.toBoolean))
+    case JField("subscriptionDatabases", JString(s)) => JField("subscriptionDatabases", JBool(s.toBoolean))
+    case JField("developerCommunity", JString(s)) => JField("developerCommunity", JBool(s.toBoolean))
   }
 
 }
