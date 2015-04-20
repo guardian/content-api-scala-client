@@ -5,7 +5,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.json4s.{CustomSerializer, DefaultFormats}
 import org.json4s.JsonAST.{JNull, JField, JString, JBool}
 import org.json4s.native.JsonMethods
-import com.gu.contentapi.client.model.{ItemResponse, SearchResponse, TagsResponse, SectionsResponse, CollectionResponse}
+import com.gu.contentapi.client.model.{ItemResponse, SearchResponse, TagsResponse, SectionsResponse}
 
 object JsonParser {
 
@@ -25,10 +25,6 @@ object JsonParser {
 
   def parseSections(json: String): SectionsResponse = {
     (JsonMethods.parse(json) \ "response").extract[SectionsResponse]
-  }
-
-  def parseCollection(json: String): CollectionResponse = {
-    (JsonMethods.parse(json) \ "response").extract[CollectionResponse]
   }
 
   private def fixFields: PartialFunction[JField, JField] = {

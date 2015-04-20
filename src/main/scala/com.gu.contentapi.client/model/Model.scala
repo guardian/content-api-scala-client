@@ -121,36 +121,6 @@ case class Content(
     lazy val webPublicationDate: DateTime = webPublicationDateOption.head
 }
 
-case class CuratedContent(
-    id: String,
-    sectionId: Option[String],
-    sectionName: Option[String],
-    webPublicationDate: DateTime,
-    webTitle: String,
-    webUrl: String,
-    apiUrl: String,
-    fields: Option[Map[String, String]] = None,
-    tags: List[Tag] = Nil,
-    elements: Option[List[Element]],
-    references: List[Reference] = Nil,
-    isExpired: Option[Boolean] = None,
-    metadata: Option[CuratedMetadata]) extends ContentType
-
-case class SupportingContent(
-    id: String,
-    sectionId: Option[String],
-    sectionName: Option[String],
-    webPublicationDate: DateTime,
-    webTitle: String,
-    webUrl: String,
-    apiUrl: String,
-    fields: Option[Map[String, String]] = None,
-    tags: List[Tag] = Nil,
-    elements: Option[List[Element]],
-    references: List[Reference] = Nil,
-    isExpired: Option[Boolean] = None,
-    metadata: Option[SupportingMetadata]) extends ContentType
-
 case class Tag(
 
     /**
@@ -312,16 +282,6 @@ case class Section(
     */
     editions: List[Edition])
 
-case class Collection(
-    id : String,
-    `type`: String,
-    title: Option[String],
-    groups: List[String],
-    lastModified: DateTime,
-    modifiedBy: String,
-    curatedContent: List[CuratedContent],
-    backfill: Option[String])
-
 case class MediaEncoding(
     format: String,
     file: String)
@@ -342,36 +302,6 @@ case class Asset(
     mimeType: Option[String],
     file: Option[String],
     typeData: Map[String, String])
-
-sealed trait Metadata {
-  val trailText: Option[String]
-  val headline: Option[String]
-  val imageAdjustment: Option[String]
-  val showKickerTag: Option[Boolean]
-  val showKickerSection: Option[Boolean]
-  val showKickerCustom: Option[Boolean]
-  val customKicker: Option[String]
-}
-
-case class CuratedMetadata(
-    trailText: Option[String],
-    headline: Option[String],
-    imageAdjustment: Option[String],
-    group: Option[Int],
-    supportingContent: List[SupportingContent],
-    showKickerTag: Option[Boolean],
-    showKickerSection: Option[Boolean],
-    showKickerCustom: Option[Boolean],
-    customKicker: Option[String]) extends Metadata
-
-case class SupportingMetadata(
-    trailText: Option[String],
-    headline: Option[String],
-    imageAdjustment: Option[String],
-    showKickerTag: Option[Boolean],
-    showKickerSection: Option[Boolean],
-    showKickerCustom: Option[Boolean],
-    customKicker: Option[String]) extends Metadata
 
 case class Podcast(
     linkUrl: String,

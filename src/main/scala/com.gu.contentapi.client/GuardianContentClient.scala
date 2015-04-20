@@ -29,7 +29,6 @@ trait ContentApiClientLogic {
   def search = new SearchQuery
   def tags = new TagsQuery
   def sections = new SectionsQuery
-  def collection(id: String) = new CollectionQuery(id)
 
   case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
 
@@ -72,9 +71,6 @@ trait ContentApiClientLogic {
 
   def getResponse(sectionsQuery: SectionsQuery)(implicit context: ExecutionContext): Future[SectionsResponse] =
     fetchResponse(sectionsQuery) map JsonParser.parseSections
-
-  def getResponse(collectionQuery: CollectionQuery)(implicit context: ExecutionContext): Future[CollectionResponse] =
-    fetchResponse(collectionQuery) map JsonParser.parseCollection
 }
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
