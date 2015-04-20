@@ -1,4 +1,4 @@
-## 5.4
+## 6.0
 * Add rights in response 
 * Remove collections
 
