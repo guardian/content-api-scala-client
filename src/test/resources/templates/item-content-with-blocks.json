@@ -14,9 +14,19 @@
           "attributes": {},
           "id": "55267e40e4b06299e97da385",
           "published": true,
+          "createdDate": "2015-04-09T14:27:28.486+01:00",
           "firstPublishedDate": "2015-04-09T14:27:28.486+01:00",
           "publishedDate": "2015-04-09T14:27:35.492+01:00",
-          "contributors": []
+          "lastModifiedDate": "2015-04-09T14:27:35.492+01:00",
+          "contributors": [],
+          "createdBy": {
+            "email": "mariot.chauvin@theguardian.com"
+          },
+          "lastModifiedBy": {
+            "email": "david.blishen@theguardian.com",
+            "firstName": "David",   
+            "lastName": "Blishen"
+          }
         },
         "body": [{
           "bodyTextSummary": "hi",

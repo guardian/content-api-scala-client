@@ -332,9 +332,13 @@ case class Blocks(main: Option[Block],
  *                   e.g. this will contain "keyEvent" -> "true" if the block is a key event,
  *                   or "summary" -> "true" if it is a summary
  * @param published whether this block is currently live
+ * @param createdDate the first time this block was created
  * @param firstPublishedDate the first time this block was published
  * @param publishedDate the last time this block was published
+ * @param lastModifiedDate the last time this block was modified
  * @param contributors people who contributed to this block
+ * @param createdBy person who created this block
+ * @param lastModifiedBy person who last modified this block
  */
 case class Block(id: String,
                  bodyHtml: String,
@@ -342,9 +346,18 @@ case class Block(id: String,
                  title: Option[String],
                  attributes: Map[String, String],
                  published: Boolean,
+                 createdDate: Option[DateTime],
                  firstPublishedDate: Option[DateTime],
                  publishedDate: Option[DateTime],
-                 contributors: Seq[String])
+                 lastModifiedDate: Option[DateTime],
+                 contributors: Seq[String],
+                 createdBy: Option[User],
+                 lastModifiedBy: Option[User])
+
+case class User(
+  email: String,
+  firstName: Option[String],
+  lastName: Option[String])
 
 case class Rights(subscriptionDatabases: Boolean = false,
                   developerCommunity: Boolean = false,

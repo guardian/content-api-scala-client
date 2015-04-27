@@ -210,6 +210,18 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
 
   it should "parse the publication dates of blocks" in {
     contentItemWithBlocksResponse.content.get.blocks.get.main.get.firstPublishedDate should be(Some(new DateTime("2015-04-09T14:27:28.486+01:00")))
+    contentItemWithBlocksResponse.content.get.blocks.get.main.get.createdDate should be(Some(new DateTime("2015-04-09T14:27:28.486+01:00")))
+    contentItemWithBlocksResponse.content.get.blocks.get.main.get.lastModifiedDate should be(Some(new DateTime("2015-04-09T14:27:35.492+01:00")))
+  }
+
+  it should "parse the users of blocks" in {
+    val mainBlock = contentItemWithBlocksResponse.content.get.blocks.get.main.get
+    mainBlock.createdBy.get.email should be("mariot.chauvin@theguardian.com")
+    mainBlock.createdBy.get.firstName should be (None)
+    mainBlock.createdBy.get.lastName should be (None)
+    mainBlock.lastModifiedBy.get.email should be("david.blishen@theguardian.com")
+    mainBlock.lastModifiedBy.get.firstName should be(Some("David"))
+    mainBlock.lastModifiedBy.get.lastName should be(Some("Blishen"))
   }
 
 }
