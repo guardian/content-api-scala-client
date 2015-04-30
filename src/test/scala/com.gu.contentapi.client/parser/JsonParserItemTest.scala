@@ -58,35 +58,43 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
 
   it should "parse content tags" in {
     contentItemResponse.content.get.tags.size should be (18)
-    contentItemResponse.content.get.tags.head.id should be ("commentisfree/commentisfree")
-    contentItemResponse.content.get.tags.head.webTitle should be ("Comment is free")
-    contentItemResponse.content.get.tags.head.`type` should be ("blog")
-    contentItemResponse.content.get.tags.head.sectionId should be (Some("commentisfree"))
-    contentItemResponse.content.get.tags.head.sectionName should be (Some("Comment is free"))
-    contentItemResponse.content.get.tags.head.webUrl should be ("http://www.theguardian.com/commentisfree/commentisfree")
-    contentItemResponse.content.get.tags.head.apiUrl should be ("http://content.guardianapis.com/commentisfree/commentisfree")
+
+    val tag = contentItemResponse.content.get.tags.head
+    tag.id should be ("commentisfree/commentisfree")
+    tag.webTitle should be ("Comment is free")
+    tag.`type` should be ("blog")
+    tag.sectionId should be (Some("commentisfree"))
+    tag.sectionName should be (Some("Comment is free"))
+    tag.webUrl should be ("http://www.theguardian.com/commentisfree/commentisfree")
+    tag.apiUrl should be ("http://content.guardianapis.com/commentisfree/commentisfree")
 
     // check sections can be optional
-    contentItemResponse.content.get.tags(2).id should be ("tone/comment")
-    contentItemResponse.content.get.tags(2).sectionId should be (None)
+    val secondTag = contentItemResponse.content.get.tags(2)
+    secondTag.id should be ("tone/comment")
+    secondTag.sectionId should be (None)
 
     // check bios and byline images can be optional
-    contentItemResponse.content.get.tags(3).id should be ("profile/joannablythman")
-    contentItemResponse.content.get.tags(3).bio should be (Some("<p>Joanna Blythman is an food writer, investigative journalist and broadcaster</p>"))
-    contentItemResponse.content.get.tags(3).bylineImageUrl should be (Some("http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2008/10/02/joannablythman_140x140.jpg"))
+    val thirdTag = contentItemResponse.content.get.tags(3)
+    thirdTag.id should be ("profile/joannablythman")
+    thirdTag.bio should be (Some("<p>Joanna Blythman is an food writer, investigative journalist and broadcaster</p>"))
+    thirdTag.bylineImageUrl should be (Some("http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2008/10/02/joannablythman_140x140.jpg"))
   }
 
   it should "parse content elements" in {
     contentItemResponse.content.get.elements.get.size should be (2)
-    contentItemResponse.content.get.elements.get.head.id should be ("gu-image-402807041")
-    contentItemResponse.content.get.elements.get.head.relation should be ("main")
-    contentItemResponse.content.get.elements.get.head.`type` should be ("image")
-    contentItemResponse.content.get.elements.get.head.assets.size should be (11)
+
+    val element = contentItemResponse.content.get.elements.get.head
+    element.id should be ("gu-image-402807041")
+    element.relation should be ("main")
+    element.`type` should be ("image")
+    element.assets.size should be (11)
 
     // check an asset too
-    contentItemResponse.content.get.elements.get.head.assets.head.`type` should be ("image")
-    contentItemResponse.content.get.elements.get.head.assets.head.mimeType should be (Some("image/jpeg"))
-    contentItemResponse.content.get.elements.get.head.assets.head.file should be (Some("http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330705646/Bolivian-woman-harvesting-002.jpg"))
+    val elementAsset = contentItemResponse.content.get.elements.get.head.assets.head
+    elementAsset.`type` should be ("image")
+    elementAsset.mimeType should be (Some("image/jpeg"))
+    elementAsset.file should be (Some("http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330705646/Bolivian-woman-harvesting-002.jpg"))
+
     val expectedAssetTypeData = Map(
       "source" -> " George Steinmetz/Corbis",
       "photographer" -> "George Steinmetz",
@@ -96,7 +104,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
       "caption" -> "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
       "width" -> "54"
     )
-    contentItemResponse.content.get.elements.get.head.assets.head.typeData should be (expectedAssetTypeData)
+    elementAsset.typeData should be (expectedAssetTypeData)
   }
 
   it should "parse content references" in {
@@ -104,11 +112,11 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
   }
 
   it should "parse content rights" in {
-    contentItemResponse.content.get.rights.get.syndicatable should be (true)
-    contentItemResponse.content.get.rights.get.subscriptionDatabases should be (true)
-    contentItemResponse.content.get.rights.get.developerCommunity should be (true)
+    val rights = contentItemResponse.content.get.rights.get
+    rights.syndicatable should be (true)
+    rights.subscriptionDatabases should be (true)
+    rights.developerCommunity should be (true)
   }
-
 
   "tag item parser" should "parse basic response fields" in {
     tagItemResponse.status should be ("ok")
@@ -132,33 +140,37 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
   }
 
   it should "parse tag" in {
-    tagItemResponse.tag.get.id should be ("world/france")
-    tagItemResponse.tag.get.webTitle should be ("France")
-    tagItemResponse.tag.get.`type` should be ("keyword")
-    tagItemResponse.tag.get.sectionId should be (Some("world"))
-    tagItemResponse.tag.get.sectionName should be (Some("World news"))
-    tagItemResponse.tag.get.podcast.get.linkUrl should be ("http://www.theguardian.com/")
-    tagItemResponse.tag.get.podcast.get.author should be ("theguardian.com")
-    tagItemResponse.tag.get.podcast.get.copyright should be ("theguardian.com © 2014")
-    tagItemResponse.tag.get.podcast.get.explicit should be (true)
-    tagItemResponse.tag.get.webUrl should be ("http://www.theguardian.com/world/france")
-    tagItemResponse.tag.get.apiUrl should be ("http://content.guardianapis.com/world/france")
+    val tag =  tagItemResponse.tag.get
+    tag.id should be ("world/france")
+    tag.webTitle should be ("France")
+    tag.`type` should be ("keyword")
+    tag.sectionId should be (Some("world"))
+    tag.sectionName should be (Some("World news"))
+    tag.podcast.get.linkUrl should be ("http://www.theguardian.com/")
+    tag.podcast.get.author should be ("theguardian.com")
+    tag.podcast.get.copyright should be ("theguardian.com © 2014")
+    tag.podcast.get.explicit should be (true)
+    tag.webUrl should be ("http://www.theguardian.com/world/france")
+    tag.apiUrl should be ("http://content.guardianapis.com/world/france")
   }
 
   it should "parse tag results" in {
     tagItemResponse.results.size should be (10)
-    tagItemResponse.results.head.webTitle should be ("An awkward interview with Le Corbusier: from the archive, 11 September 1965")
-    tagItemResponse.results.head.webPublicationDate should be (new DateTime(2014, 9, 11, 5, 30, 0, 0))
-    tagItemResponse.results.head.sectionName should be (Some("Art and design"))
-    tagItemResponse.results.head.sectionId should be (Some("artanddesign"))
-    tagItemResponse.results.head.id should be ("artanddesign/2014/sep/11/le-corbusier-india-architecture-1965")
-    tagItemResponse.results.head.webUrl should be ("http://www.theguardian.com/artanddesign/2014/sep/11/le-corbusier-india-architecture-1965")
-    tagItemResponse.results.head.apiUrl should be ("http://content.guardianapis.com/artanddesign/2014/sep/11/le-corbusier-india-architecture-1965")
+
+    val tagResult = tagItemResponse.results.head
+    tagResult.webTitle should be ("An awkward interview with Le Corbusier: from the archive, 11 September 1965")
+    tagResult.webPublicationDate should be (new DateTime(2014, 9, 11, 5, 30, 0, 0))
+    tagResult.sectionName should be (Some("Art and design"))
+    tagResult.sectionId should be (Some("artanddesign"))
+    tagResult.id should be ("artanddesign/2014/sep/11/le-corbusier-india-architecture-1965")
+    tagResult.webUrl should be ("http://www.theguardian.com/artanddesign/2014/sep/11/le-corbusier-india-architecture-1965")
+    tagResult.apiUrl should be ("http://content.guardianapis.com/artanddesign/2014/sep/11/le-corbusier-india-architecture-1965")
   }
 
   it should "parse tag lead content" in {
-    tagItemResponse.leadContent.size should be (10)
-    tagItemResponse.leadContent.head.webTitle should be ("Former French trade minister failed to pay rent or taxes")
+    val leadContent = tagItemResponse.leadContent
+    leadContent.size should be (10)
+    leadContent.head.webTitle should be ("Former French trade minister failed to pay rent or taxes")
   }
 
   "section item parser" should "parse basic response fields" in {
@@ -183,24 +195,30 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
   }
 
   it should "parse section" in {
-    sectionItemResponse.section.get.id should be ("commentisfree")
-    sectionItemResponse.section.get.webTitle should be ("Comment is free")
-    sectionItemResponse.section.get.webUrl should be ("http://www.theguardian.com/commentisfree")
-    sectionItemResponse.section.get.apiUrl should be ("http://content.guardianapis.com/commentisfree")
-    sectionItemResponse.section.get.editions.length should be (4)
-    sectionItemResponse.section.get.editions.last.id should be ("au/commentisfree")
-    sectionItemResponse.section.get.editions.last.webTitle should be ("Comment is free")
-    sectionItemResponse.section.get.editions.last.code should be ("au")
-    sectionItemResponse.section.get.editions.last.webUrl should be ("http://www.theguardian.com/au/commentisfree")
-    sectionItemResponse.section.get.editions.last.apiUrl should be ("http://content.guardianapis.com/au/commentisfree")
+    val section = sectionItemResponse.section.get
+    section.id should be ("commentisfree")
+    section.webTitle should be ("Comment is free")
+    section.webUrl should be ("http://www.theguardian.com/commentisfree")
+    section.apiUrl should be ("http://content.guardianapis.com/commentisfree")
+
+
+    section.editions.length should be (4)
+
+    val sectionEdition = section.editions.last
+    sectionEdition.id should be ("au/commentisfree")
+    sectionEdition.webTitle should be ("Comment is free")
+    sectionEdition.code should be ("au")
+    sectionEdition.webUrl should be ("http://www.theguardian.com/au/commentisfree")
+    sectionEdition.apiUrl should be ("http://content.guardianapis.com/au/commentisfree")
   }
 
   it should "parse section edition" in {
-    sectionItemResponse.edition.get.id should be ("commentisfree")
-    sectionItemResponse.edition.get.webTitle should be ("Comment is free")
-    sectionItemResponse.edition.get.code should be ("default")
-    sectionItemResponse.edition.get.webUrl should be ("http://www.theguardian.com/commentisfree")
-    sectionItemResponse.edition.get.apiUrl should be ("http://content.guardianapis.com/commentisfree")
+    val sectionEdition = sectionItemResponse.edition.get
+    sectionEdition.id should be ("commentisfree")
+    sectionEdition.webTitle should be ("Comment is free")
+    sectionEdition.code should be ("default")
+    sectionEdition.webUrl should be ("http://www.theguardian.com/commentisfree")
+    sectionEdition.apiUrl should be ("http://content.guardianapis.com/commentisfree")
   }
 
 
@@ -209,9 +227,10 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
   }
 
   it should "parse the publication dates of blocks" in {
-    contentItemWithBlocksResponse.content.get.blocks.get.main.get.firstPublishedDate should be(Some(new DateTime("2015-04-09T14:27:28.486+01:00")))
-    contentItemWithBlocksResponse.content.get.blocks.get.main.get.createdDate should be(Some(new DateTime("2015-04-09T14:27:28.486+01:00")))
-    contentItemWithBlocksResponse.content.get.blocks.get.main.get.lastModifiedDate should be(Some(new DateTime("2015-04-09T14:27:35.492+01:00")))
+    val mainBlock = contentItemWithBlocksResponse.content.get.blocks.get.main.get
+    mainBlock.firstPublishedDate should be(Some(new DateTime("2015-04-09T14:27:28.486+01:00")))
+    mainBlock.createdDate should be(Some(new DateTime("2015-04-09T14:27:28.486+01:00")))
+    mainBlock.lastModifiedDate should be(Some(new DateTime("2015-04-09T14:27:35.492+01:00")))
   }
 
   it should "parse the users of blocks" in {
