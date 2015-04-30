@@ -182,6 +182,24 @@ client.getResponse(networkSectionsQuery) map { response =>
 }
 ```
 
+### Editions
+
+Filtering or searching for multiple Editions happens at http://content.guardianapis.com/editions. For example:
+
+```scala
+// print the apiUrl of each edition
+val allEditionsQuery = EditionsQuery()
+client.getResponse(allEditionsQuery) map { response =>
+  for (result <- response.results) println(result.apiUrl)
+}
+
+// print the webUrl of the edition with 'US' in edition field.
+val usEditionsQuery = EditionsQuery().q("US")
+client.getResponse(usEditionsQuery) map { response =>
+  for (result <- response.results) println(result.webUrl)
+}
+```
+
 ## Troubleshooting
 
 If you have any problems you can speak to other developers at the [Guardian API talk group] (http://groups.google.com/group/guardian-api-talk).
