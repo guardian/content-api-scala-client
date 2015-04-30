@@ -27,6 +27,12 @@ case class SectionsResponse(
     total: Int,
     results: List[Section])
 
+case class EditionsResponse(
+     status: String,
+     userTier: String,
+     total: Int,
+     results: List[NetworkFront])
+
 case class ItemResponse(
     status: String,
     userTier: String,

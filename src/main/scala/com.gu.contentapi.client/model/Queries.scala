@@ -71,6 +71,15 @@ case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   override def pathSegment: String = "sections"
 }
 
+case class EditionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+  with FilterSearchParameters[EditionsQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "editions"
+}
+
 trait ContentParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def contentSet = StringParameter("content-set")
 }

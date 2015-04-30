@@ -251,6 +251,39 @@ case class Edition(
     */
     code: String)
 
+
+case class NetworkFront(
+
+    /**
+     * The id of the network front, e.g. 'au'
+     */
+    id: String,
+
+    /**
+     * The path of the network front, e.g. 'au'
+     */
+    path: String,
+
+    /**
+     * The edition code of the network front, e.g. 'AU'
+     */
+    edition: String,
+
+    /**
+     * Short description of the edition
+     */
+    webTitle: String,
+
+    /**
+     * Edition URL for the main Guardian website
+     */
+    webUrl: String,
+
+    /**
+     * Path from which the edition is available in the Content API
+     */
+    apiUrl: String)
+
 case class Section(
 
     /**
