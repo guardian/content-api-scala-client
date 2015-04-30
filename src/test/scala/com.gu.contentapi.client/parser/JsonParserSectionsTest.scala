@@ -15,10 +15,12 @@ class JsonParserSectionsTest extends FlatSpec with Matchers with ClientTest {
 
   it should "parse the sections" in {
     sectionsResponse.results.size should be (65)
-    sectionsResponse.results.head.id should be ("community")
-    sectionsResponse.results.head.webTitle should be ("Community")
-    sectionsResponse.results.head.webUrl should be ("http://www.theguardian.com/community")
-    sectionsResponse.results.head.apiUrl should be ("http://content.guardianapis.com/community")
+
+    val section = sectionsResponse.results.head
+    section.id should be ("community")
+    section.webTitle should be ("Community")
+    section.webUrl should be ("http://www.theguardian.com/community")
+    section.apiUrl should be ("http://content.guardianapis.com/community")
   }
 
 }
