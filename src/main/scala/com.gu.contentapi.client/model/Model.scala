@@ -317,10 +317,6 @@ case class Section(
     */
     editions: List[Edition])
 
-case class MediaEncoding(
-    format: String,
-    file: String)
-
 case class Reference(
     `type`: String,
     id: String)
@@ -385,12 +381,43 @@ case class Block(id: String,
                  lastModifiedDate: Option[DateTime],
                  contributors: Seq[String],
                  createdBy: Option[User],
-                 lastModifiedBy: Option[User])
+                 lastModifiedBy: Option[User]
+                 elements: Seq[BlockElement] = Nil)
 
 case class User(
   email: String,
   firstName: Option[String],
   lastName: Option[String])
+
+
+case class BlockElement(
+  `type`: String,
+  assets: Seq[BlockAsset] = Nil
+  /* typeData a mandatory ElementTypeData   --> TODO we should have specific type data for each element type (image, video, text, etc..)*/
+)
+
+case class BlockAsset(
+ `type`: String,
+  mimeType: String,
+  file: String,
+  typeData: AssetTypeData
+)
+
+case class AssetTypeData(
+  aspectRatio: Option[String],
+  altText: Option[String],
+  isInappropriateForAdverts: Option[Boolean],
+  caption: Option[String],
+  credit: Option[String],
+  embeddable: Option[Boolean],
+  photographer: Option[String],
+  source: Option[String],
+  stillImageUrl: Option[String],
+  width: Option[Int],
+  height: Option[Int],
+  name: Option[String],
+  secureFile: Option[String]
+)
 
 case class Rights(subscriptionDatabases: Boolean = false,
                   developerCommunity: Boolean = false,
