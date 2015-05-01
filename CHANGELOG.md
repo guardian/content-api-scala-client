@@ -1,3 +1,7 @@
+## 6.1
+* Add editions 
+* Add block elements and date fields
+
 ## 6.0
 * Add rights in response 
 * Remove collections

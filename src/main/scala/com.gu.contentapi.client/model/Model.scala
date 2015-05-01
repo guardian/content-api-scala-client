@@ -381,7 +381,7 @@ case class Block(id: String,
                  lastModifiedDate: Option[DateTime],
                  contributors: Seq[String],
                  createdBy: Option[User],
-                 lastModifiedBy: Option[User]
+                 lastModifiedBy: Option[User],
                  elements: Seq[BlockElement] = Nil)
 
 case class User(
