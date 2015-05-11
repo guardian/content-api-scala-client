@@ -36,7 +36,8 @@
           "published": true,
           "firstPublishedDate": "2015-04-17T11:21:49.661+01:00",
           "publishedDate": "2015-04-17T11:21:49.661+01:00",
-          "contributors": []
+          "contributors": [],
+          "elements" : []
         }, {
           "bodyTextSummary": "more stuff",
           "bodyHtml": "<p>more stuff</p>",
@@ -45,7 +46,36 @@
           "published": true,
           "firstPublishedDate": "2015-04-17T10:31:27.699+01:00",
           "publishedDate": "2015-04-17T10:31:27.699+01:00",
-          "contributors": []
+          "contributors": [],
+          "elements" : [
+              {
+                  "assets": [],
+                  "textTypeData": {
+                      "html": "<h2>Embed block</h2>"
+                  },
+                  "type": "text"
+              },
+              {
+                  "assets": [],
+                  "videoTypeData": {
+                      "description": "Uploaded by FunkItBlog on 2012-01-03.",
+                      "title": "The Roots (5 of 5) 2011 Lowlands Festival, Netherlands",
+                      "url": "http://www.youtube.com/watch?v=p0jSGkf4DQc"
+                  },
+                  "type": "video"
+              },
+              {
+                  "assets": [],
+                  "tweetTypeData": {
+                      "html": "<p>Some html </p>",
+                      "source": "Twitter",
+                      "id": "596605887244083201",
+                      "originalUrl": "https://twitter.com/elenacresci/status/596605887244083201",
+                      "url": "https://twitter.com/elenacresci/statuses/596605887244083201"
+                  },
+                  "type": "tweet"
+              }
+          ]
         }, {
           "bodyTextSummary": "",
           "bodyHtml": "<figure class=\"element element-image\" data-media-id=\"251c09468a6373e52398964b2b3dd81ffedf1432\"> <img src=\"http://media-origin.test.dev-guim.co.uk/251c09468a6373e52398964b2b3dd81ffedf1432/0_0_2934_1759/1000.jpg\" alt=\"sdafasdf\" width=\"1000\" height=\"600\" class=\"gu-image\" /> <figcaption> <span class=\"element-image__caption\">Workers stand on scaffolding around the top of the Kremlin’s Spasskaya Tower to renovate it, in Moscow, Russia, Tuesday, April 7, 2015. The Spasskaya Tower has been hidden from view for repairs since December 2014. (AP Photo/Pavel Golovkin)</span> <span class=\"element-image__credit\">Photograph: Pavel Golovkin/AP</span> </figcaption> </figure>",
@@ -54,7 +84,8 @@
           "published": true,
           "firstPublishedDate": "2015-04-10T13:12:22.026+01:00",
           "publishedDate": "2015-04-10T13:12:22.026+01:00",
-          "contributors": []
+          "contributors": [],
+          "elements" : []
         }, {
           "bodyTextSummary": "normal block here’s some stuff",
           "bodyHtml": "<p>normal block</p> <p>here’s some stuff</p>",
@@ -63,7 +94,8 @@
           "published": true,
           "firstPublishedDate": "2015-04-09T14:30:57.770+01:00",
           "publishedDate": "2015-04-09T14:30:57.770+01:00",
-          "contributors": []
+          "contributors": [],
+          "elements" : []
         }, {
           "bodyTextSummary": "key event text",
           "bodyHtml": "<p>key event text</p>",
@@ -76,7 +108,8 @@
           "firstPublishedDate": "2015-04-09T14:30:55.124+01:00",
           "publishedDate": "2015-04-09T14:30:55.124+01:00",
           "contributors": [],
-          "title": "key event title"
+          "title": "key event title",
+          "elements" : []
         }, {
           "bodyTextSummary": "summary text",
           "bodyHtml": "<p>summary text</p>",
@@ -87,7 +120,8 @@
           "published": true,
           "firstPublishedDate": "2015-04-09T14:30:51.832+01:00",
           "publishedDate": "2015-04-09T14:30:51.832+01:00",
-          "contributors": []
+          "contributors": [],
+          "elements" : []
         }]
       },
       "webPublicationDate": "2015-04-17T10:21:49Z",

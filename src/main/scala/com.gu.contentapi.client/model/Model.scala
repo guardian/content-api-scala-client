@@ -392,8 +392,10 @@ case class User(
 
 case class BlockElement(
   `type`: String,
-  assets: Seq[BlockAsset] = Nil
-  /* typeData a mandatory ElementTypeData   --> TODO we should have specific type data for each element type (image, video, text, etc..)*/
+  assets: Seq[BlockAsset] = Nil,
+  textTypeData: Option[TextTypeData] = None,
+  videoTypeData: Option[VideoTypeData] = None,
+  tweetTypeData: Option[TweetTypeData] = None
 )
 
 case class BlockAsset(
@@ -401,6 +403,24 @@ case class BlockAsset(
   mimeType: String,
   file: String,
   typeData: AssetTypeData
+)
+
+case class TextTypeData(
+  html: Option[String]
+)
+
+case class TweetTypeData(
+  source: Option[String],
+  url: Option[String],
+  id: Option[String],
+  html: Option[String],
+  originalUrl: Option[String]
+)
+
+case class VideoTypeData(
+  url: Option[String],
+  description: Option[String],
+  title: Option[String]
 )
 
 case class AssetTypeData(
