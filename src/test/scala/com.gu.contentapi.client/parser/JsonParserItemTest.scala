@@ -1,5 +1,6 @@
 package com.gu.contentapi.client.parser
 
+import com.gu.contentapi.client.model.{ItemResponse, BlockElement}
 import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, Matchers}
 import com.gu.contentapi.client.ClientTest
@@ -241,6 +242,65 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     mainBlock.lastModifiedBy.get.email should be("david.blishen@theguardian.com")
     mainBlock.lastModifiedBy.get.firstName should be(Some("David"))
     mainBlock.lastModifiedBy.get.lastName should be(Some("Blishen"))
+  }
+
+  it should "parse the blocks elements" in {
+    val bodyBlock = contentItemWithBlocksResponse.content.get.blocks.get.body.get
+    val blockElements = bodyBlock.filter(!_.elements.isEmpty).head.elements
+
+    blockElements.size should be (3)
+  }
+
+  it should "parse a text element for a block" in {
+    val textElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "text")
+
+    textElement should not be empty
+  }
+
+  it should "parse a video element for a block" in {
+    val videoElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "video")
+
+    videoElement should not be empty
+  }
+
+  it should "parse a tweet element for a block" in {
+    val tweetElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "tweet")
+
+    tweetElement should not be empty
+  }
+
+  it should "have the correct typeData for a text element for a block" in {
+    val textElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "text")
+    val textTypeData = textElement.head.textTypeData.get
+
+    textTypeData.html.get should be ("<h2>Embed block</h2>")
+
+  }
+
+  it should "have the correct typeData for a video element for a block" in {
+    val videoElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "video")
+    val videoTypeData = videoElement.head.videoTypeData.get
+
+    videoTypeData.url.get should be ("http://www.youtube.com/watch?v=p0jSGkf4DQc")
+    videoTypeData.title.get should be ("The Roots (5 of 5) 2011 Lowlands Festival, Netherlands")
+    videoTypeData.description.get should be ("Uploaded by FunkItBlog on 2012-01-03.")
+  }
+
+  it should "have the correct typeData for a tweet element for a block" in {
+    val tweetElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "tweet")
+    val tweetTypeData = tweetElement.head.tweetTypeData.get
+
+    tweetTypeData.id.get should be ("596605887244083201")
+    tweetTypeData.html.get should be ("<p>Some html </p>")
+    tweetTypeData.originalUrl.get should be ("https://twitter.com/elenacresci/status/596605887244083201")
+    tweetTypeData.source.get should be ("Twitter")
+    tweetTypeData.url.get should be ("https://twitter.com/elenacresci/statuses/596605887244083201")
+  }
+
+  private def getBlockElementsOfType(response: ItemResponse, `type`: String): Seq[BlockElement] = {
+    val bodyBlock = response.content.get.blocks.get.body.get
+    val blockElements = bodyBlock.filter(!_.elements.isEmpty).head.elements
+    blockElements.filter(`type` == _.`type`)
   }
 
 }
