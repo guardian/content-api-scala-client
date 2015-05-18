@@ -395,7 +395,8 @@ case class BlockElement(
   assets: Seq[BlockAsset] = Nil,
   textTypeData: Option[TextTypeData] = None,
   videoTypeData: Option[VideoTypeData] = None,
-  tweetTypeData: Option[TweetTypeData] = None
+  tweetTypeData: Option[TweetTypeData] = None,
+  imageTypeData: Option[ImageTypeData] = None
 )
 
 case class BlockAsset(
@@ -420,7 +421,17 @@ case class TweetTypeData(
 case class VideoTypeData(
   url: Option[String],
   description: Option[String],
-  title: Option[String]
+  title: Option[String],
+  html: Option[String]
+)
+
+case class ImageTypeData(
+  caption: Option[String],
+  copyright: Option[String],
+  displayCredit: Option[Boolean],
+  source: Option[String],
+  photographer: Option[String],
+  alt: Option[String]
 )
 
 case class AssetTypeData(
