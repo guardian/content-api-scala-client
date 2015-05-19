@@ -308,6 +308,11 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     imageTypeData.source.get should be ("AFP/Getty Images")
     imageTypeData.photographer.get should be ("MIKE")
     imageTypeData.alt.get should be ("Sepp Blatter")
+    imageTypeData.mediaId.get should be ("e38889cd5697318e26258f29e0036cd9633f2dbf")
+    imageTypeData.mediaApiUri.get should be ("https://api.media.test.dev-gutools.co.uk/images/e38889cd5697318e26258f29e0036cd9633f2dbf")
+    imageTypeData.picdarUrn.get should be ("GD*52757191")
+    imageTypeData.suppliersReference.get should be ("Nic6447359")
+    imageTypeData.imageType.get should be ("Photograph")
   }
 
   private def getBlockElementsOfType(response: ItemResponse, `type`: String): Seq[BlockElement] = {

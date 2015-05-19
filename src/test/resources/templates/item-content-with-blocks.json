@@ -84,7 +84,12 @@
                   "displayCredit": true,
                   "source": "AFP/Getty Images",
                   "photographer": "MIKE",
-                  "alt": "Sepp Blatter"
+                  "alt": "Sepp Blatter",
+                  "mediaId":"e38889cd5697318e26258f29e0036cd9633f2dbf",
+                  "mediaApiUri":"https://api.media.test.dev-gutools.co.uk/images/e38889cd5697318e26258f29e0036cd9633f2dbf",
+                  "picdarUrn":"GD*52757191",
+                  "suppliersReference":"Nic6447359",
+                  "imageType":"Photograph"
                 },
                 "type": "image"
               }

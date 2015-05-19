@@ -431,7 +431,12 @@ case class ImageTypeData(
   displayCredit: Option[Boolean],
   source: Option[String],
   photographer: Option[String],
-  alt: Option[String]
+  alt: Option[String],
+  mediaId: Option[String],
+  mediaApiUri: Option[String],
+  picdarUrn: Option[String],
+  suppliersReference: Option[String],
+  imageType: Option[String]
 )
 
 case class AssetTypeData(
