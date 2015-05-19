@@ -1,3 +1,10 @@
+## 6.3
+* Add type data for image block elements.
+* Add additional field (html) to type data of video block element.
+
+## 6.2
+* Add type data for video, text and tweet block elements.
+
 ## 6.1
 * Add editions 
 * Add block elements and date fields

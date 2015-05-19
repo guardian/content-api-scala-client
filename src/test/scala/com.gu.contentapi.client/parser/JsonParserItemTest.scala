@@ -248,7 +248,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     val bodyBlock = contentItemWithBlocksResponse.content.get.blocks.get.body.get
     val blockElements = bodyBlock.filter(!_.elements.isEmpty).head.elements
 
-    blockElements.size should be (3)
+    blockElements.size should be (4)
   }
 
   it should "parse a text element for a block" in {
@@ -284,6 +284,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     videoTypeData.url.get should be ("http://www.youtube.com/watch?v=p0jSGkf4DQc")
     videoTypeData.title.get should be ("The Roots (5 of 5) 2011 Lowlands Festival, Netherlands")
     videoTypeData.description.get should be ("Uploaded by FunkItBlog on 2012-01-03.")
+    videoTypeData.html.get should be ("<p>Some html for the video</p>")
   }
 
   it should "have the correct typeData for a tweet element for a block" in {
@@ -295,6 +296,23 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     tweetTypeData.originalUrl.get should be ("https://twitter.com/elenacresci/status/596605887244083201")
     tweetTypeData.source.get should be ("Twitter")
     tweetTypeData.url.get should be ("https://twitter.com/elenacresci/statuses/596605887244083201")
+  }
+
+  it should "have the correct typeData for a image element for a block" in {
+    val imageElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "image")
+    val imageTypeData = imageElement.head.imageTypeData.get
+
+    imageTypeData.caption.get should be ("FIFA chief Sepp Blatter leaves at the end of the Asian Football Confederation (AFC) regional Congress on April 30, 2015 in the Bahraini capital Manama. Sepp Blatter closed on a fifth term as FIFA president as a key ally, Asia’s soccer boss, won new powers and silenced dissent at a regional congress in Bahrain. AFP PHOTO / MOHAMMED AL-SHAIKHMOHAMMED AL-SHAIKH/AFP/Getty Images")
+    imageTypeData.copyright.get should be ("copyright text")
+    imageTypeData.displayCredit.get should be (true)
+    imageTypeData.source.get should be ("AFP/Getty Images")
+    imageTypeData.photographer.get should be ("MIKE")
+    imageTypeData.alt.get should be ("Sepp Blatter")
+    imageTypeData.mediaId.get should be ("e38889cd5697318e26258f29e0036cd9633f2dbf")
+    imageTypeData.mediaApiUri.get should be ("https://api.media.test.dev-gutools.co.uk/images/e38889cd5697318e26258f29e0036cd9633f2dbf")
+    imageTypeData.picdarUrn.get should be ("GD*52757191")
+    imageTypeData.suppliersReference.get should be ("Nic6447359")
+    imageTypeData.imageType.get should be ("Photograph")
   }
 
   private def getBlockElementsOfType(response: ItemResponse, `type`: String): Seq[BlockElement] = {
