@@ -13,14 +13,14 @@ trait ContentApiClientLogic {
   val apiKey: String
 
   protected val http = Http configure { _
-    .setAllowPoolingConnection(true)
-    .setMaximumConnectionsPerHost(10)
-    .setMaximumConnectionsTotal(10)
-    .setConnectionTimeoutInMs(1000)
-    .setRequestTimeoutInMs(2000)
-    .setCompressionEnabled(true)
-    .setFollowRedirects(true)
-    .setMaxConnectionLifeTimeInMs(60000) // to respect DNS TTLs
+    .setAllowPoolingConnections(true)
+    .setMaxConnectionsPerHost(10)
+    .setMaxConnections(10)
+    .setConnectTimeout(1000)
+    .setRequestTimeout(2000)
+    .setCompressionEnforced(true)
+    .setFollowRedirect(true)
+    .setConnectionTTL(60000) // to respect DNS TTLs
   }
 
   val targetUrl = "http://content.guardianapis.com"
