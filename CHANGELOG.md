@@ -1,3 +1,6 @@
+## 6.4
+* Update to dispatch v0.11.3, to avoid clashes when using Play v2.4.0 - see [#77](https://github.com/guardian/content-api-scala-client/pull/77)
+
 ## 6.3
 * Add type data for image block elements.
 * Add additional field (html) to type data of video block element.
