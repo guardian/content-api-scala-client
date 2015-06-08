@@ -56,6 +56,14 @@
                   "type": "text"
               },
               {
+                "assets": [],
+                "pullquoteTypeData": {
+                  "html": "<h2>text of the pullquote</h2>",
+                  "attribution":"Joe Bloggs"
+                },
+                "type": "pullquote"
+              },
+              {
                   "assets": [],
                   "videoTypeData": {
                       "description": "Uploaded by FunkItBlog on 2012-01-03.",
@@ -64,6 +72,18 @@
                       "html":"<p>Some html for the video</p>"
                   },
                   "type": "video"
+              },
+              {
+                "assets": [],
+                "audioTypeData": {
+                  "html": "<p>html for the audio</p>",
+                  "source": "Soundcloud",
+                  "description": "Listen to user48736353001 | Explore the largest community of artists, bands, podcasters and creators of music & audio.",
+                  "title":"user48736353001",
+                  "credit":"Audio credit",
+                  "caption":"Audio caption"
+                },
+                "type": "audio"
               },
               {
                   "assets": [],
@@ -82,6 +102,7 @@
                   "caption": "FIFA chief Sepp Blatter leaves at the end of the Asian Football Confederation (AFC) regional Congress on April 30, 2015 in the Bahraini capital Manama. Sepp Blatter closed on a fifth term as FIFA president as a key ally, Asia’s soccer boss, won new powers and silenced dissent at a regional congress in Bahrain. AFP PHOTO / MOHAMMED AL-SHAIKHMOHAMMED AL-SHAIKH/AFP/Getty Images",
                   "copyright": "copyright text",
                   "displayCredit": true,
+                  "credit":"Image credit",
                   "source": "AFP/Getty Images",
                   "photographer": "MIKE",
                   "alt": "Sepp Blatter",

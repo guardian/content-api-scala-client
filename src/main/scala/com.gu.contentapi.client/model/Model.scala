@@ -396,7 +396,9 @@ case class BlockElement(
   textTypeData: Option[TextTypeData] = None,
   videoTypeData: Option[VideoTypeData] = None,
   tweetTypeData: Option[TweetTypeData] = None,
-  imageTypeData: Option[ImageTypeData] = None
+  imageTypeData: Option[ImageTypeData] = None,
+  audioTypeData: Option[AudioTypeData] = None,
+  pullquoteTypeData: Option[PullquoteTypeData] = None
 )
 
 case class BlockAsset(
@@ -410,12 +412,26 @@ case class TextTypeData(
   html: Option[String]
 )
 
+case class PullquoteTypeData(
+ html: Option[String],
+ attribution: Option[String]
+)
+
 case class TweetTypeData(
   source: Option[String],
   url: Option[String],
   id: Option[String],
   html: Option[String],
   originalUrl: Option[String]
+)
+
+case class AudioTypeData(
+  html: Option[String],
+  source: Option[String],
+  description: Option[String],
+  title: Option[String],
+  credit: Option[String],
+  caption: Option[String]
 )
 
 case class VideoTypeData(
@@ -429,6 +445,7 @@ case class ImageTypeData(
   caption: Option[String],
   copyright: Option[String],
   displayCredit: Option[Boolean],
+  credit: Option[String],
   source: Option[String],
   photographer: Option[String],
   alt: Option[String],
