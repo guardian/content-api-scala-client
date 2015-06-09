@@ -248,7 +248,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     val bodyBlock = contentItemWithBlocksResponse.content.get.blocks.get.body.get
     val blockElements = bodyBlock.filter(!_.elements.isEmpty).head.elements
 
-    blockElements.size should be (4)
+    blockElements.size should be (6)
   }
 
   it should "parse a text element for a block" in {
@@ -305,6 +305,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     imageTypeData.caption.get should be ("FIFA chief Sepp Blatter leaves at the end of the Asian Football Confederation (AFC) regional Congress on April 30, 2015 in the Bahraini capital Manama. Sepp Blatter closed on a fifth term as FIFA president as a key ally, Asia’s soccer boss, won new powers and silenced dissent at a regional congress in Bahrain. AFP PHOTO / MOHAMMED AL-SHAIKHMOHAMMED AL-SHAIKH/AFP/Getty Images")
     imageTypeData.copyright.get should be ("copyright text")
     imageTypeData.displayCredit.get should be (true)
+    imageTypeData.credit.get should be ("Image credit")
     imageTypeData.source.get should be ("AFP/Getty Images")
     imageTypeData.photographer.get should be ("MIKE")
     imageTypeData.alt.get should be ("Sepp Blatter")
@@ -313,6 +314,26 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     imageTypeData.picdarUrn.get should be ("GD*52757191")
     imageTypeData.suppliersReference.get should be ("Nic6447359")
     imageTypeData.imageType.get should be ("Photograph")
+  }
+
+  it should "have the correct typeData for a audio element for a block" in {
+    val audioElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "audio")
+    val audioTypeData = audioElement.head.audioTypeData.get
+
+    audioTypeData.html.get should be ("<p>html for the audio</p>")
+    audioTypeData.caption.get should be ("Audio caption")
+    audioTypeData.description.get should be ("Listen to user48736353001 | Explore the largest community of artists, bands, podcasters and creators of music & audio.")
+    audioTypeData.credit.get should be ("Audio credit")
+    audioTypeData.source.get should be ("Soundcloud")
+    audioTypeData.title.get should be ("user48736353001")
+  }
+
+  it should "have the correct typeData for a pull quote element for a block" in {
+    val pullquoteElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "pullquote")
+    val pullquoteTypeData = pullquoteElement.head.pullquoteTypeData.get
+
+    pullquoteTypeData.html.get should be ("<h2>text of the pullquote</h2>")
+    pullquoteTypeData.attribution.get should be ("Joe Bloggs")
   }
 
   private def getBlockElementsOfType(response: ItemResponse, `type`: String): Seq[BlockElement] = {

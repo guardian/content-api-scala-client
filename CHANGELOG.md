@@ -1,5 +1,10 @@
+## 6.5
+* Add audio and pull quote type data for block level elements.
+* Add additional field (credit) to type data of image block elements.
+
 ## 6.4
 * Update to dispatch v0.11.3, to avoid clashes when using Play v2.4.0 - see [#77](https://github.com/guardian/content-api-scala-client/pull/77)
+
 
 ## 6.3
 * Add type data for image block elements.
