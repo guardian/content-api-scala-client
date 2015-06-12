@@ -1,0 +1,446 @@
+{
+  "response": {
+    "status": "ok",
+    "userTier": "internal",
+    "total": 1,
+    "content": {
+      "sectionId": "crosswords",
+      "webTitle": "Cryptic crossword No 24,623",
+      "webPublicationDate": "2015-06-09T23:00:00Z",
+      "id": "crosswords/cryptic/24623",
+      "webUrl": "http://www.theguardian.com/crosswords/cryptic/24623",
+      "apiUrl": "http://content.guardianapis.com/crosswords/cryptic/24623",
+      "sectionName": "Crosswords",
+      "crossword": {
+        "name": "Cryptic crossword No 24,623",
+        "type": "cryptic",
+        "number": 24623,
+        "date": "2015-06-10",
+        "dimensions": {
+          "cols": 15,
+          "rows": 15
+        },
+        "entries": [{
+          "id": "8-across",
+          "number": 8,
+          "humanNumber": "8",
+          "direction": "across",
+          "position": {
+            "x": 0,
+            "y": 1
+          },
+          "separatorLocations": {
+            ",": [4]
+          },
+          "length": 8,
+          "clue": "Players collectively demolish extra food (4,4)",
+          "group": ["8-across"],
+          "solution": "SIDEDISH",
+          "format": "4,4"
+        }, {
+          "id": "9-across",
+          "number": 9,
+          "humanNumber": "9",
+          "direction": "across",
+          "position": {
+            "x": 9,
+            "y": 1
+          },
+          "separatorLocations": {},
+          "length": 6,
+          "clue": "Old king's literary pseudonym (6)",
+          "group": ["9-across"],
+          "solution": "OHENRY",
+          "format": "6"
+        }, {
+          "id": "10-across",
+          "number": 10,
+          "humanNumber": "10",
+          "direction": "across",
+          "position": {
+            "x": 0,
+            "y": 3
+          },
+          "separatorLocations": {},
+          "length": 4,
+          "clue": "Name of man backing another in Spanish city (4)",
+          "group": ["10-across"],
+          "solution": "LEON",
+          "format": "4"
+        }, {
+          "id": "11-across",
+          "number": 11,
+          "humanNumber": "11",
+          "direction": "across",
+          "position": {
+            "x": 5,
+            "y": 3
+          },
+          "separatorLocations": {},
+          "length": 10,
+          "clue": "Solitary types disoriented in chain store (10)",
+          "group": ["11-across"],
+          "solution": "ANCHORITES",
+          "format": "10"
+        }, {
+          "id": "12-across",
+          "number": 12,
+          "humanNumber": "12,24down",
+          "direction": "across",
+          "position": {
+            "x": 0,
+            "y": 5
+          },
+          "separatorLocations": {
+            ",": [6]
+          },
+          "length": 6,
+          "clue": "Mother has to purchase, we hear, dear kind of fish (6,4)",
+          "group": ["12-across", "24-down"],
+          "solution": "MUMBAI",
+          "format": "6,4"
+        }, {
+          "id": "14-across",
+          "number": 14,
+          "humanNumber": "14",
+          "direction": "across",
+          "position": {
+            "x": 7,
+            "y": 5
+          },
+          "separatorLocations": {},
+          "length": 8,
+          "clue": "Fit for match between the Spanish and the French, one great back (8)",
+          "group": ["14-across"],
+          "solution": "ELIGIBLE",
+          "format": "8"
+        }, {
+          "id": "15-across",
+          "number": 15,
+          "humanNumber": "15,17",
+          "direction": "across",
+          "position": {
+            "x": 0,
+            "y": 7
+          },
+          "separatorLocations": {
+            ",": [7]
+          },
+          "length": 7,
+          "clue": "No real alterations seen in 2, 7, 9, 10, 12, 13, 19, 22 across and 22 down (7,7)",
+          "group": ["15-across", "17-across"],
+          "solution": "NOMINAL",
+          "format": "7,7"
+        }, {
+          "id": "17-across",
+          "number": 17,
+          "humanNumber": "17",
+          "direction": "across",
+          "position": {
+            "x": 8,
+            "y": 7
+          },
+          "separatorLocations": {},
+          "length": 7,
+          "clue": "See 15",
+          "group": ["15-across", "17-across"],
+          "solution": "CHANGES"
+        }, {
+          "id": "20-across",
+          "number": 20,
+          "humanNumber": "20",
+          "direction": "across",
+          "position": {
+            "x": 0,
+            "y": 9
+          },
+          "separatorLocations": {},
+          "length": 8,
+          "clue": "It's bad, tucking into something to eat — very bad (8)",
+          "group": ["20-across"],
+          "solution": "DEVILISH",
+          "format": "8"
+        }, {
+          "id": "22-across",
+          "number": 22,
+          "humanNumber": "22",
+          "direction": "across",
+          "position": {
+            "x": 9,
+            "y": 9
+          },
+          "separatorLocations": {},
+          "length": 6,
+          "clue": "Name Dianne differently (6)",
+          "group": ["22-across"],
+          "solution": "NADINE",
+          "format": "6"
+        }, {
+          "id": "23-across",
+          "number": 23,
+          "humanNumber": "23",
+          "direction": "across",
+          "position": {
+            "x": 0,
+            "y": 11
+          },
+          "separatorLocations": {},
+          "length": 10,
+          "clue": "Scary thing, Frenchman turning on fellow conservative (10)",
+          "group": ["23-across"],
+          "solution": "FRIGHTENER",
+          "format": "10"
+        }, {
+          "id": "24-across",
+          "number": 24,
+          "humanNumber": "24",
+          "direction": "across",
+          "position": {
+            "x": 11,
+            "y": 11
+          },
+          "separatorLocations": {},
+          "length": 4,
+          "clue": "Money deposited in bank safe, but only to begin with (4)",
+          "group": ["24-across"],
+          "solution": "DIBS",
+          "format": "4"
+        }, {
+          "id": "25-across",
+          "number": 25,
+          "humanNumber": "25",
+          "direction": "across",
+          "position": {
+            "x": 0,
+            "y": 13
+          },
+          "separatorLocations": {},
+          "length": 6,
+          "clue": "Article by informal relative becoming academic test (6)",
+          "group": ["25-across"],
+          "solution": "THESIS",
+          "format": "6"
+        }, {
+          "id": "26-across",
+          "number": 26,
+          "humanNumber": "26",
+          "direction": "across",
+          "position": {
+            "x": 7,
+            "y": 13
+          },
+          "separatorLocations": {},
+          "length": 8,
+          "clue": "Wrongly removed tube buried in one part of garden (8)",
+          "group": ["26-across"],
+          "solution": "ABDUCTED",
+          "format": "8"
+        }, {
+          "id": "1-down",
+          "number": 1,
+          "humanNumber": "1",
+          "direction": "down",
+          "position": {
+            "x": 1,
+            "y": 0
+          },
+          "separatorLocations": {},
+          "length": 8,
+          "clue": "Direction to slow down tune trio ruined (8)",
+          "group": ["1-down"],
+          "solution": "RITENUTO",
+          "format": "8"
+        }, {
+          "id": "2-down",
+          "number": 2,
+          "humanNumber": "2",
+          "direction": "down",
+          "position": {
+            "x": 3,
+            "y": 0
+          },
+          "separatorLocations": {},
+          "length": 4,
+          "clue": "New name given Jane, after moving east (4)",
+          "group": ["2-down"],
+          "solution": "JEAN",
+          "format": "4"
+        }, {
+          "id": "3-down",
+          "number": 3,
+          "humanNumber": "3",
+          "direction": "down",
+          "position": {
+            "x": 5,
+            "y": 0
+          },
+          "separatorLocations": {},
+          "length": 6,
+          "clue": "One rule I had set up for Indian festival (6)",
+          "group": ["3-down"],
+          "solution": "DIWALI",
+          "format": "6"
+        }, {
+          "id": "4-down",
+          "number": 4,
+          "humanNumber": "4,19",
+          "direction": "down",
+          "position": {
+            "x": 7,
+            "y": 0
+          },
+          "separatorLocations": {
+            ",": [7]
+          },
+          "length": 7,
+          "clue": "Fearful hen I can, oddly, put in kind of curry (7,7)",
+          "group": ["4-down", "19-down"],
+          "solution": "CHICKEN",
+          "format": "7,7"
+        }, {
+          "id": "5-down",
+          "number": 5,
+          "humanNumber": "5",
+          "direction": "down",
+          "position": {
+            "x": 9,
+            "y": 0
+          },
+          "separatorLocations": {},
+          "length": 8,
+          "clue": "Stone block with solid middle installed in part of year (8)",
+          "group": ["5-down"],
+          "solution": "MONOLITH",
+          "format": "8"
+        }, {
+          "id": "6-down",
+          "number": 6,
+          "humanNumber": "6",
+          "direction": "down",
+          "position": {
+            "x": 11,
+            "y": 0
+          },
+          "separatorLocations": {},
+          "length": 10,
+          "clue": "Dainty little daughter covering one leg, as requested (10)",
+          "group": ["6-down"],
+          "solution": "PETITIONED",
+          "format": "10"
+        }, {
+          "id": "7-down",
+          "number": 7,
+          "humanNumber": "7",
+          "direction": "down",
+          "position": {
+            "x": 13,
+            "y": 0
+          },
+          "separatorLocations": {},
+          "length": 6,
+          "clue": "What Blair became before spring (6)",
+          "group": ["7-down"],
+          "solution": "ORWELL",
+          "format": "6"
+        }, {
+          "id": "13-down",
+          "number": 13,
+          "humanNumber": "13",
+          "direction": "down",
+          "position": {
+            "x": 3,
+            "y": 5
+          },
+          "separatorLocations": {},
+          "length": 10,
+          "clue": "Asian citizen I see being mistreated around judge (10)",
+          "group": ["13-down"],
+          "solution": "BEIJINGESE",
+          "format": "10"
+        }, {
+          "id": "16-down",
+          "number": 16,
+          "humanNumber": "16",
+          "direction": "down",
+          "position": {
+            "x": 5,
+            "y": 7
+          },
+          "separatorLocations": {
+            ",": [4]
+          },
+          "length": 8,
+          "clue": "Bill that is, over time, providing a crucial check (4,4)",
+          "group": ["16-down"],
+          "solution": "ACIDTEST",
+          "format": "4,4"
+        }, {
+          "id": "18-down",
+          "number": 18,
+          "humanNumber": "18",
+          "direction": "down",
+          "position": {
+            "x": 13,
+            "y": 7
+          },
+          "separatorLocations": {},
+          "length": 8,
+          "clue": "Maid of Orleans uplifted, guided and elevated (8)",
+          "group": ["18-down"],
+          "solution": "ENNOBLED",
+          "format": "8"
+        }, {
+          "id": "19-down",
+          "number": 19,
+          "humanNumber": "19",
+          "direction": "down",
+          "position": {
+            "x": 7,
+            "y": 8
+          },
+          "separatorLocations": {},
+          "length": 7,
+          "clue": "See 4",
+          "group": ["4-down", "19-down"],
+          "solution": "CHENNAI"
+        }, {
+          "id": "21-down",
+          "number": 21,
+          "humanNumber": "21",
+          "direction": "down",
+          "position": {
+            "x": 1,
+            "y": 9
+          },
+          "separatorLocations": {},
+          "length": 6,
+          "clue": "They are mostly awfully coarse (6)",
+          "group": ["21-down"],
+          "solution": "EARTHY",
+          "format": "6"
+        }, {
+          "id": "24-down",
+          "number": 24,
+          "humanNumber": "24",
+          "direction": "down",
+          "position": {
+            "x": 9,
+            "y": 9
+          },
+          "separatorLocations": {},
+          "length": 6,
+          "clue": "See 12",
+          "group": ["12-across", "24-down"],
+          "solution": "NERUDA"
+        }],
+        "solutionAvailable": true,
+        "hasNumbers": true,
+        "randomCluesOrdering": false,
+        "creator": {
+          "name": "Paul",
+          "webUrl": "http://www.theguardian.com/profile/paul"
+        }
+      }
+    }
+  }
+}
