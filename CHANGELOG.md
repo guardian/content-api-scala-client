@@ -1,3 +1,6 @@
+## 6.6
+* Add crosswords.
+
 ## 6.5
 * Add audio and pull quote type data for block level elements.
 * Add additional field (credit) to type data of image block elements.
