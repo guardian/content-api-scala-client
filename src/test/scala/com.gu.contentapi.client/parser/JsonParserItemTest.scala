@@ -2,13 +2,14 @@ package com.gu.contentapi.client.parser
 
 import com.gu.contentapi.client.model.{ItemResponse, BlockElement}
 import org.joda.time.DateTime
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{FlatSpec, Matchers, OptionValues}
 import com.gu.contentapi.client.ClientTest
 
-class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
+class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with ClientTest {
 
   val contentItemResponse = JsonParser.parseItem(loadJson("item-content.json"))
   val contentItemWithBlocksResponse = JsonParser.parseItem(loadJson("item-content-with-blocks.json"))
+  val contentItemWithCrosswordResponse = JsonParser.parseItem(loadJson("item-content-with-crossword.json"))
   val tagItemResponse = JsonParser.parseItem(loadJson("item-tag.json"))
   val sectionItemResponse = JsonParser.parseItem(loadJson("item-section.json"))
 
@@ -336,9 +337,17 @@ class JsonParserItemTest extends FlatSpec with Matchers with ClientTest {
     pullquoteTypeData.attribution.get should be ("Joe Bloggs")
   }
 
+  it should "deserialize a crossword correctly" in {
+    val crossword = contentItemWithCrosswordResponse.content.value.crossword.value
+    crossword.`type` should be("cryptic")
+    crossword.number should be(24623)
+    crossword.dimensions.cols should be(15)
+    crossword.entries.head.id should be("8-across")
+  }
+
   private def getBlockElementsOfType(response: ItemResponse, `type`: String): Seq[BlockElement] = {
     val bodyBlock = response.content.get.blocks.get.body.get
-    val blockElements = bodyBlock.filter(!_.elements.isEmpty).head.elements
+    val blockElements = bodyBlock.filter(_.elements.nonEmpty).head.elements
     blockElements.filter(`type` == _.`type`)
   }
 

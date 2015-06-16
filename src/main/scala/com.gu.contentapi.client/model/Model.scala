@@ -114,7 +114,8 @@ case class Content(
     references: List[Reference] = Nil,
     isExpired: Option[Boolean] = None,
     blocks: Option[Blocks] = None,
-    rights: Option[Rights] = None
+    rights: Option[Rights] = None,
+    crossword: Option[Crossword] = None
     ) extends ContentType {
 
     // This is here for backwards compatibility. For the vast majority of use cases
@@ -475,5 +476,38 @@ case class AssetTypeData(
 case class Rights(subscriptionDatabases: Boolean = false,
                   developerCommunity: Boolean = false,
                   syndicatable: Boolean = false)
-  
+
+case class Crossword(
+  name: String,
+  `type`: String,
+  number: Int,
+  date: String, // yyyy-mm-dd
+  dimensions: CrosswordDimensions,
+  entries: Seq[CrosswordEntry],
+  solutionAvailable: Boolean,
+  hasNumbers: Boolean,
+  randomCluesOrdering: Boolean,
+  instructions: Option[String],
+  creator: Option[CrosswordCreator],
+  pdf: Option[String],
+  annotatedSolution: Option[String])
+
+case class CrosswordDimensions(cols: Int, rows: Int)
+
+case class CrosswordEntry(
+  id: String,
+  number: Option[Int],
+  humanNumber: Option[String],
+  direction: Option[String],
+  position: Option[CrosswordPosition],
+  separatorLocations: Option[Map[String, Seq[Int]]],
+  length: Option[Int],
+  clue: Option[String],
+  group: Option[Seq[String]],
+  solution: Option[String],
+  format: Option[String])
+
+case class CrosswordCreator(name: String, webUrl: String)
+
+case class CrosswordPosition(x: Int, y: Int)
 
