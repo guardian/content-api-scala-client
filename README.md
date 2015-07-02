@@ -200,6 +200,24 @@ client.getResponse(usEditionsQuery) map { response =>
 }
 ```
 
+### Removed Content
+
+Filtering or searching for removed content happens at http://content.guardianapis.com/content/removed. For example:
+
+```scala
+// print the id of all removed content items
+val removedContentQuery = RemovedContentQuery()
+client.getResponse(removedContentQuery) map { response =>
+  for (result <- response.results) println(result)
+}
+
+// print the id of all expired content
+val expiredContentQuery = RemovedContentQuery().reason("expired")
+client.getResponse(expiredContentQuery ) map { response =>
+  for (result <- response.results) println(result)
+}
+```
+
 ## Troubleshooting
 
 If you have any problems you can speak to other developers at the [Guardian API talk group] (http://groups.google.com/group/guardian-api-talk).

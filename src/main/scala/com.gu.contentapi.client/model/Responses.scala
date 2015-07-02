@@ -11,6 +11,17 @@ case class SearchResponse(
     orderBy: String,
     results: List[Content])
 
+case class RemovedContentResponse(
+    status: String,
+    userTier: String,
+    total: Int,
+    startIndex: Int,
+    pageSize: Int,
+    currentPage: Int,
+    pages: Int,
+    orderBy: String,
+    results: List[String])
+
 case class TagsResponse(
     status: String,
     userTier: String,
