@@ -20,4 +20,8 @@ class ContentApiQueryTest extends FlatSpec with Matchers  {
   "TagsQuery.toString" should "be awesome" in {
     TagsQuery().tagType("contributor").toString shouldEqual "TagsQuery(/tags?type=contributor)"
   }
+
+  "RemovedContentQuery.toString" should "be amazing" in {
+    RemovedContentQuery().reason("gone").toString shouldEqual "RemovedContentQuery(/content/removed?reason=gone)"
+  }
 }

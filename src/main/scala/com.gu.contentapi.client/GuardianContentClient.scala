@@ -25,11 +25,12 @@ trait ContentApiClientLogic {
 
   val targetUrl = "http://content.guardianapis.com"
 
-  def item(id: String) = new ItemQuery(id)
-  def search = new SearchQuery
-  def tags = new TagsQuery
-  def sections = new SectionsQuery
-  def editions = new EditionsQuery
+  def item(id: String) = ItemQuery(id)
+  val search = SearchQuery()
+  val tags = TagsQuery()
+  val sections = new SectionsQuery()
+  val editions = EditionsQuery()
+  val removedContent = RemovedContentQuery()
 
   case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
 
@@ -75,6 +76,9 @@ trait ContentApiClientLogic {
 
   def getResponse(editionsQuery: EditionsQuery)(implicit context: ExecutionContext): Future[EditionsResponse] =
     fetchResponse(editionsQuery) map JsonParser.parseEditions
+
+  def getResponse(removedContentQuery: RemovedContentQuery)(implicit context: ExecutionContext): Future[RemovedContentResponse] =
+    fetchResponse(removedContentQuery) map JsonParser.parseRemovedContent
 }
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic

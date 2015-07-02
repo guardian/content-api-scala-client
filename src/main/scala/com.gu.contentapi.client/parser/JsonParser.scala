@@ -19,6 +19,10 @@ object JsonParser {
     (JsonMethods.parse(json) \ "response").transformField(fixFields).extract[SearchResponse]
   }
 
+  def parseRemovedContent(json: String): RemovedContentResponse = {
+    (JsonMethods.parse(json) \ "response").extract[RemovedContentResponse]
+  }
+
   def parseTags(json: String): TagsResponse = {
     (JsonMethods.parse(json) \ "response").extract[TagsResponse]
   }
