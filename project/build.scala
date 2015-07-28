@@ -1,5 +1,8 @@
 import sbt._
 import sbt.Keys._
+import sbtbuildinfo.BuildInfoPlugin
+import sbtbuildinfo.BuildInfoPlugin.BuildInfoKey
+import sbtbuildinfo.BuildInfoKeys._
 import sbtrelease._
 import sbtrelease.ReleasePlugin._
 import sbtrelease.ReleasePlugin.ReleaseKeys._
@@ -13,6 +16,11 @@ object ContentApiClientBuild extends Build {
   lazy val project = Project(
     id = "content-api-client",
     base = file(".")
+  )
+  .enablePlugins(BuildInfoPlugin)
+  .settings(
+      buildInfoKeys := Seq[BuildInfoKey](version),
+      buildInfoPackage := "com.gu.contentapi.buildinfo"
   )
   .settings(releaseSettings: _*)
   .settings(sonatypeSettings: _*)
