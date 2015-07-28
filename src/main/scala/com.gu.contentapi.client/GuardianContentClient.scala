@@ -4,6 +4,7 @@ import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.parser.JsonParser
 import com.gu.contentapi.client.utils.QueryStringParams
 import dispatch.{FunctionHandler, Http}
+import com.gu.contentapi.buildinfo.BuildInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -11,6 +12,8 @@ case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends
 
 trait ContentApiClientLogic {
   val apiKey: String
+
+  private val userAgent = "content-api-scala-client/"+BuildInfo.version
 
   protected val http = Http configure { _
     .setAllowPoolingConnections(true)
@@ -20,6 +23,7 @@ trait ContentApiClientLogic {
     .setRequestTimeout(2000)
     .setCompressionEnforced(true)
     .setFollowRedirect(true)
+    .setUserAgent(userAgent)
     .setConnectionTTL(60000) // to respect DNS TTLs
   }
 
@@ -40,7 +44,7 @@ trait ContentApiClientLogic {
   }
 
   protected def fetch(url: String)(implicit context: ExecutionContext): Future[String] = {
-    val headers = Map("User-Agent" -> "scala-client", "Accept" -> "application/json")
+    val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/json")
 
     for (response <- get(url, headers)) yield {
       if (List(200, 302) contains response.statusCode) response.body
