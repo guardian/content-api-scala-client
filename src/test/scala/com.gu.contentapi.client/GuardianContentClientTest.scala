@@ -56,6 +56,6 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest w
     val query = api.removedContent.reason("expired")
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
-    fResults.size should be (10)
+    fResults.size should be (3)
   }
 }

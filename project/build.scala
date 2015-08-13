@@ -42,7 +42,6 @@ object ContentApiClientBuild extends Build {
       "joda-time" % "joda-time" % "2.3",
       "org.json4s" %% "json4s-native" % "3.2.11",
       "org.json4s" %% "json4s-ext" % "3.2.11",
-      "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
       "org.scalatest" %% "scalatest" % "2.2.1" % "test"
     ),
     pomExtra := (
