@@ -3,29 +3,21 @@ package com.gu.contentapi.client
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.parser.JsonParser
 import com.gu.contentapi.client.utils.QueryStringParams
-import dispatch.{FunctionHandler, Http}
 import com.gu.contentapi.buildinfo.BuildInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
 
-trait ContentApiClientLogic {
-  val apiKey: String
+case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
+
+trait HttpClient {
+  def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
+}
+
+class GuardianContentClient(val apiKey: String, httpClient: HttpClient) {
 
   private val userAgent = "content-api-scala-client/"+BuildInfo.version
-
-  protected val http = Http configure { _
-    .setAllowPoolingConnections(true)
-    .setMaxConnectionsPerHost(10)
-    .setMaxConnections(10)
-    .setConnectTimeout(1000)
-    .setRequestTimeout(2000)
-    .setCompressionEnforced(true)
-    .setFollowRedirect(true)
-    .setUserAgent(userAgent)
-    .setConnectionTTL(60000) // to respect DNS TTLs
-  }
 
   val targetUrl = "http://content.guardianapis.com"
 
@@ -36,8 +28,6 @@ trait ContentApiClientLogic {
   val editions = EditionsQuery()
   val removedContent = RemovedContentQuery()
 
-  case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
-
   protected[client] def url(location: String, parameters: Map[String, String]): String = {
     require(!location.contains('?'), "must not specify parameters in URL")
     location + QueryStringParams(parameters + ("api-key" -> apiKey))
@@ -46,18 +36,10 @@ trait ContentApiClientLogic {
   protected def fetch(url: String)(implicit context: ExecutionContext): Future[String] = {
     val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/json")
 
-    for (response <- get(url, headers)) yield {
+    for (response <- httpClient.get(url, headers)) yield {
       if (List(200, 302) contains response.statusCode) response.body
       else throw new GuardianContentApiError(response.statusCode, response.statusMessage)
     }
-  }
-
-  protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
-    val req = headers.foldLeft(dispatch.url(url)) {
-      case (r, (name, value)) => r.setHeader(name, value)
-    }
-    def handler = new FunctionHandler(r => HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText))
-    http(req.toRequest, handler)
   }
 
   def getUrl(contentApiQuery: ContentApiQuery): String =
@@ -84,5 +66,3 @@ trait ContentApiClientLogic {
   def getResponse(removedContentQuery: RemovedContentQuery)(implicit context: ExecutionContext): Future[RemovedContentResponse] =
     fetchResponse(removedContentQuery) map JsonParser.parseRemovedContent
 }
-
-class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
