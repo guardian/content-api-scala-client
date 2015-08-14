@@ -15,7 +15,7 @@ trait ContentApiClientLogic {
 
   private val userAgent = "content-api-scala-client/"+BuildInfo.version
 
-  protected val http = Http configure { _
+  protected lazy val http = Http configure { _
     .setAllowPoolingConnections(true)
     .setMaxConnectionsPerHost(10)
     .setMaxConnections(10)
