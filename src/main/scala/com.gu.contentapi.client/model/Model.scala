@@ -454,7 +454,8 @@ case class ImageTypeData(
   mediaApiUri: Option[String],
   picdarUrn: Option[String],
   suppliersReference: Option[String],
-  imageType: Option[String]
+  imageType: Option[String],
+  isMaster: Option[Boolean]
 )
 
 case class AssetTypeData(
