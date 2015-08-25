@@ -19,14 +19,17 @@ object ContentApiClientBuild extends Build {
     base = file(".")
   )
   .enablePlugins(BuildInfoPlugin)
-  .settings(
-      buildInfoKeys := Seq[BuildInfoKey](version),
-      buildInfoPackage := "com.gu.contentapi.buildinfo"
-  )
   .settings(ScroogeSBT.newSettings: _*)
+  .settings(
+    buildInfoKeys := Seq[BuildInfoKey](version),
+
+    buildInfoPackage := "com.gu.contentapi.buildinfo",
+    buildInfoObject := "CapiBuildInfo"
+  )
   .settings(releaseSettings: _*)
   .settings(sonatypeSettings: _*)
   .settings(
+    ScroogeSBT.scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift",
     scalaVersion := "2.11.7",
     crossScalaVersions := Seq("2.11.7", "2.10.5"),
     organization := "com.gu",

@@ -6,7 +6,7 @@ import com.gu.contentapi.client.utils.QueryStringParams
 import com.ning.http.client.AsyncHttpClientConfig.Builder
 import com.ning.http.client.{AsyncHttpClientConfig, AsyncHttpClient}
 import dispatch.{FunctionHandler, Http}
-import com.gu.contentapi.buildinfo.BuildInfo
+import com.gu.contentapi.buildinfo.CapiBuildInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -15,7 +15,7 @@ case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorRe
 trait ContentApiClientLogic {
   val apiKey: String
 
-  private val userAgent = "content-api-scala-client/"+BuildInfo.version
+  private val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
 
   protected lazy val http = {
     /*
