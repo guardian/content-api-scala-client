@@ -3,6 +3,8 @@ package com.gu.contentapi.client
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.parser.JsonParser
 import com.gu.contentapi.client.utils.QueryStringParams
+import com.ning.http.client.AsyncHttpClientConfig.Builder
+import com.ning.http.client.{AsyncHttpClientConfig, AsyncHttpClient}
 import dispatch.{FunctionHandler, Http}
 import com.gu.contentapi.buildinfo.BuildInfo
 
@@ -15,16 +17,23 @@ trait ContentApiClientLogic {
 
   private val userAgent = "content-api-scala-client/"+BuildInfo.version
 
-  protected lazy val http = Http configure { _
-    .setAllowPoolingConnections(true)
-    .setMaxConnectionsPerHost(10)
-    .setMaxConnections(10)
-    .setConnectTimeout(1000)
-    .setRequestTimeout(2000)
-    .setCompressionEnforced(true)
-    .setFollowRedirect(true)
-    .setUserAgent(userAgent)
-    .setConnectionTTL(60000) // to respect DNS TTLs
+  protected lazy val http = {
+    /*
+    Warning: do not call `Http.configure(...)` because it leaks resources!
+    See https://github.com/dispatch/reboot/pull/115
+     */
+    val config = new Builder()
+      .setAllowPoolingConnections(true)
+      .setMaxConnectionsPerHost(10)
+      .setMaxConnections(10)
+      .setConnectTimeout(1000)
+      .setRequestTimeout(2000)
+      .setCompressionEnforced(true)
+      .setFollowRedirect(true)
+      .setUserAgent(userAgent)
+      .setConnectionTTL(60000) // to respect DNS TTLs
+      .build()
+    Http(new AsyncHttpClient(config))
   }
 
   val targetUrl = "http://content.guardianapis.com"
@@ -83,6 +92,14 @@ trait ContentApiClientLogic {
 
   def getResponse(removedContentQuery: RemovedContentQuery)(implicit context: ExecutionContext): Future[RemovedContentResponse] =
     fetchResponse(removedContentQuery) map JsonParser.parseRemovedContent
+
+  /**
+   * Shutdown the client and clean up all associated resources.
+   *
+   * Note: behaviour is undefined if you try to use the client after calling this method.
+   */
+  def shutdown(): Unit = http.shutdown()
+
 }
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
