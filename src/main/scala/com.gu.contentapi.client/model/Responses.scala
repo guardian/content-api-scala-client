@@ -63,3 +63,5 @@ case class ItemResponse(
     mostViewed: List[Content],
     storyPackage: List[Content],
     leadContent: List[Content])
+
+case class ErrorResponse(status: String, message: String)

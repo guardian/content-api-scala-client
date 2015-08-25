@@ -8,7 +8,7 @@ import com.gu.contentapi.buildinfo.BuildInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class GuardianContentApiError(httpStatus: Int, httpMessage: String) extends Exception(httpMessage)
+case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
 
 trait ContentApiClientLogic {
   val apiKey: String
@@ -48,7 +48,7 @@ trait ContentApiClientLogic {
 
     for (response <- get(url, headers)) yield {
       if (List(200, 302) contains response.statusCode) response.body
-      else throw new GuardianContentApiError(response.statusCode, response.statusMessage)
+      else throw new GuardianContentApiError(response.statusCode, response.statusMessage, JsonParser.parseError(response.body))
     }
   }
 
