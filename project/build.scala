@@ -10,6 +10,7 @@ import sbtrelease.ReleaseStateTransformations._
 import xerial.sbt.Sonatype._
 import xerial.sbt.Sonatype.SonatypeKeys._
 import com.typesafe.sbt.pgp.PgpKeys._
+import com.twitter.scrooge.ScroogeSBT
 
 object ContentApiClientBuild extends Build {
 
@@ -22,6 +23,7 @@ object ContentApiClientBuild extends Build {
       buildInfoKeys := Seq[BuildInfoKey](version),
       buildInfoPackage := "com.gu.contentapi.buildinfo"
   )
+  .settings(ScroogeSBT.newSettings: _*)
   .settings(releaseSettings: _*)
   .settings(sonatypeSettings: _*)
   .settings(
@@ -43,7 +45,9 @@ object ContentApiClientBuild extends Build {
       "org.json4s" %% "json4s-native" % "3.2.11",
       "org.json4s" %% "json4s-ext" % "3.2.11",
       "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
-      "org.scalatest" %% "scalatest" % "2.2.1" % "test"
+      "org.scalatest" %% "scalatest" % "2.2.1" % "test",
+      "org.apache.thrift" % "libthrift" % "0.9.2",
+      "com.twitter" %% "scrooge-core" % "3.20.0"
     ),
     pomExtra := (
       <url>https://github.com/guardian/content-api-scala-client</url>
