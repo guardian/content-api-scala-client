@@ -125,6 +125,12 @@ val timeSearch = SearchQuery().toDate(new DateTime().minusDays(7))
 client.getResponse(timeSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
+
+// print the web titles of the last 10 content items published whose type is article.
+val typeSearch = SearchQuery().contentType("article")
+client.getResponse(typeSearch) map { response =>
+  for (result <- response.results) println(result.webTitle)
+}
 ```
 
 ### Tags

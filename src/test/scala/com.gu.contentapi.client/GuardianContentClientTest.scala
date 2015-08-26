@@ -1,6 +1,6 @@
 package com.gu.contentapi.client
 
-import com.gu.contentapi.client.model.{ErrorResponse, ItemQuery}
+import com.gu.contentapi.client.model.{SearchQuery, ErrorResponse, ItemQuery}
 import org.joda.time.DateTime
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
@@ -57,5 +57,13 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest w
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
+  }
+
+  it should "perform a given search query using the type filter" in {
+    val query = api.search.contentType("article")
+    val results = for (response <- api.getResponse(query)) yield response.results
+    val fResults = results.futureValue
+    fResults.size should be (10)
+    fResults.map(_.`type` should be("article"))
   }
 }

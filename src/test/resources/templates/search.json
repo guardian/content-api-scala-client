@@ -19,6 +19,7 @@
                 "apiUrl": "http://content.guardianapis.com/sport/blog/live/2014/sep/10/county-cricket-live-blog-notts-yorkshire-surrey"
             },
             {
+                "type": "video",
                 "webTitle": "Thorntons reports 60% profits rise despite store closures",
                 "webPublicationDate": "2014-09-10T16:07:16Z",
                 "sectionName": "Business",
@@ -28,6 +29,7 @@
                 "apiUrl": "http://content.guardianapis.com/business/2014/sep/10/thorntons-60-per-cent-profits-rise-despite-closures"
             },
             {
+                "type": "article",
                 "webTitle": "My name is Richard and I am an addict – an Apple addict | Richard Seymour",
                 "webPublicationDate": "2014-09-10T16:05:58Z",
                 "sectionName": "Comment is free",
@@ -37,6 +39,7 @@
                 "apiUrl": "http://content.guardianapis.com/commentisfree/2014/sep/10/addicted-apple-watch-technology"
             },
             {
+                "type": "article",
                 "webTitle": "Mark Carney grilled by MPs about Scottish independence -- business live",
                 "webPublicationDate": "2014-09-10T16:05:37Z",
                 "sectionName": "Business",
@@ -46,6 +49,7 @@
                 "apiUrl": "http://content.guardianapis.com/business/live/2014/sep/10/mark-carney-scotland-markets-pound-business-live"
             },
             {
+                "type": "article",
                 "webTitle": "Once-talented Piers Morgan safe to ignore, tweets Rupert Murdoch",
                 "webPublicationDate": "2014-09-10T16:04:00Z",
                 "sectionName": "Media",
@@ -55,6 +59,7 @@
                 "apiUrl": "http://content.guardianapis.com/media/greenslade/2014/sep/10/piersmorgan-rupert-murdoch"
             },
             {
+                "type": "article",
                 "webTitle": "Furrow Collective review – a quietly classy young folk band",
                 "webPublicationDate": "2014-09-10T16:03:15Z",
                 "sectionName": "Music",
@@ -64,6 +69,7 @@
                 "apiUrl": "http://content.guardianapis.com/music/2014/sep/10/furrow-collective-review-cecil-sharp-house"
             },
             {
+                "type": "article",
                 "webTitle": "Do you know what too fat looks like?",
                 "webPublicationDate": "2014-09-10T16:01:00Z",
                 "sectionName": "Society",
@@ -73,6 +79,7 @@
                 "apiUrl": "http://content.guardianapis.com/society/the-shape-we-are-in-blog/2014/sep/10/obesity-body-image"
             },
             {
+                "type": "article",
                 "webTitle": "James Murphy's tennis tunes and PC Music's LA takeover - it's today's pop culture live",
                 "webPublicationDate": "2014-09-10T15:52:54Z",
                 "sectionName": "Culture",
@@ -82,6 +89,7 @@
                 "apiUrl": "http://content.guardianapis.com/culture/live/2014/sep/10/james-murphys-tennis-tunes-and-pc-musics-la-takeover-its-todays-pop-culture-live"
             },
             {
+                "type": "article",
                 "webTitle": "Readers' assignments: my friends and I",
                 "webPublicationDate": "2014-09-10T15:52:17Z",
                 "sectionName": "Art and design",
@@ -91,6 +99,7 @@
                 "apiUrl": "http://content.guardianapis.com/artanddesign/2014/sep/10/readers-assignments-my-friends-and-i"
             },
             {
+                "type": "article",
                 "webTitle": "The Fiver | A rather baffling queue of masochists and self-sacrificers",
                 "webPublicationDate": "2014-09-10T15:50:57Z",
                 "sectionName": "Football",

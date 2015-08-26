@@ -102,6 +102,7 @@ sealed trait ContentType {
 
 case class Content(
     id: String,
+    `type`: String = "article",
     sectionId: Option[String],
     sectionName: Option[String],
     webPublicationDateOption: Option[DateTime],

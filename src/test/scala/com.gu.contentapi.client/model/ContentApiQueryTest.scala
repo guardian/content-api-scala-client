@@ -9,8 +9,8 @@ class ContentApiQueryTest extends FlatSpec with Matchers  {
   }
 
   "SearchQuery.toString" should "also be excellent" in {
-    SearchQuery().tag("profile/robert-berry").showElements("all").toString shouldEqual
-      "SearchQuery(/search?tag=profile%2Frobert-berry&show-elements=all)"
+    SearchQuery().tag("profile/robert-berry").showElements("all").contentType("article").toString shouldEqual
+      "SearchQuery(/search?tag=profile%2Frobert-berry&show-elements=all&type=article)"
   }
 
   "SectionsQuery.toString" should "be beautiful" in {
