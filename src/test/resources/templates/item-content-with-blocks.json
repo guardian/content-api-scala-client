@@ -4,6 +4,7 @@
     "userTier": "internal",
     "total": 1,
     "content": {
+      "type": "article",
       "id": "news/blog/live/2015/apr/09/example-liveblog",
       "sectionId": "news",
       "webTitle": "example-liveblog",

@@ -4,6 +4,7 @@
         "userTier": "internal",
         "total": 1,
         "content": {
+            "type": "article",
             "apiUrl": "http://content.guardianapis.com/commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa",
             "webTitle": "Can vegans stomach the unpalatable truth about quinoa? | Joanna Blythman",
             "webPublicationDate": "2013-01-16T10:14:31Z",

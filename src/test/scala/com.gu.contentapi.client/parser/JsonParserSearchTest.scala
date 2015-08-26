@@ -21,6 +21,7 @@ class JsonParserSearchTest extends FlatSpec with Matchers with ClientTest {
 
   it should "parse the content" in {
     searchResponse.results.size should be (10)
+    searchResponse.results.head.`type` should be ("article")
     searchResponse.results.head.webTitle should be ("County cricket – live!")
     searchResponse.results.head.webPublicationDate should be (new DateTime(2014, 9, 10, 17, 10, 21, 0))
     searchResponse.results.head.sectionName should be (Some("Sport"))
@@ -28,6 +29,14 @@ class JsonParserSearchTest extends FlatSpec with Matchers with ClientTest {
     searchResponse.results.head.id should be ("sport/blog/live/2014/sep/10/county-cricket-live-blog-notts-yorkshire-surrey")
     searchResponse.results.head.webUrl should be ("http://www.theguardian.com/sport/blog/live/2014/sep/10/county-cricket-live-blog-notts-yorkshire-surrey")
     searchResponse.results.head.apiUrl should be ("http://content.guardianapis.com/sport/blog/live/2014/sep/10/county-cricket-live-blog-notts-yorkshire-surrey")
+  }
+
+  it should "default type to 'article' if type field not present on content." in {
+    searchResponse.results.head.`type` should be ("article")
+  }
+
+  it should "parse the correct content type" in {
+    searchResponse.results(1).`type` should be ("video")
   }
 
 }
