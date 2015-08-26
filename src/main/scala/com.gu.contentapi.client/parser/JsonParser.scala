@@ -35,6 +35,12 @@ object JsonParser {
     (JsonMethods.parse(json) \ "response").extract[EditionsResponse]
   }
 
+  def parseError(json: String): Option[ErrorResponse] = for {
+    parsedJson <- JsonMethods.parseOpt(json)
+    response = parsedJson \ "response"
+    errorResponse <- response.extractOpt[ErrorResponse]
+  } yield errorResponse
+
   private def fixFields: PartialFunction[JField, JField] = {
     case JField("isExpired", JString(s)) => JField("isExpired", JBool(s.toBoolean))
     case JField("webPublicationDate", JString(s)) => JField("webPublicationDateOption", JString(s))
