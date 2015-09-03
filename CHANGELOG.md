@@ -1,3 +1,19 @@
+## 6.10
+* Provide proper parsing of error responses.
+* Add support for the `type` field on `Content`, including a filter to search by content type.
+
+## 6.9
+* Add an `isMaster` field to the ImageTypeData model.
+* Add a workaround for a bug in Dispatch that can cause a resource leak.
+
+## 6.8
+* Include the client's version in the user-agent header sent with requests.
+* Make it easier to inject a custom implementation for the underlying HTTP client.
+
+## 6.7
+* Add support for querying what content has been removed from the Content API.
+* Bump Scala to 2.11.7
+
 ## 6.6
 * Add crosswords.
 
