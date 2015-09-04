@@ -17,6 +17,148 @@ enum ContentType {
     VIDEO = 5
 }
 
+/*
+ * The supported Element types, the types inform what fields to expect and how the Element renders as HTML
+ */
+enum ElementType {
+
+    /*
+     * A bog standard text element
+     */
+    TEXT = 0,
+
+    /*
+     * An element with an image, will have Assets
+     */
+    IMAGE = 1,
+
+    /*
+     * Generic embed Element
+     */
+    EMBED = 2,
+
+    /*
+     * an element containing a formstack form
+     */
+    FORM = 3,
+
+    /*
+     * An element containing a text to be treated a pull quote
+     */
+    PULLQUOTE = 4,
+
+    /*
+     * An element containing a javascript interactive (although actual interactivity varies)
+     */
+    INTERACTIVE = 5,
+
+    /*
+     * An embeded comment from discussion
+     */
+    COMMENT = 6,
+
+    /*
+     * A rich link to guardian content - presents a nice trail outside of the contnet body
+     */
+    RICH_LINK = 7,
+
+    /*
+     * A table
+     */
+    TABLE = 8,
+
+    /*
+     * A video element, will contain Assets
+     */
+    VIDEO = 9,
+
+    /*
+     * A tweet element
+     */
+    TWEET = 10,
+
+    /*
+     * An embedded piece of witness UGC
+     */
+    WITNESS = 11,
+
+    /*
+     * An element containing computer codez, this is syntax highlighted.
+     * This is used almost exclusively for the developer blog and dogfooding composer.
+     */
+    CODE = 12,
+
+    /*
+     * An audi embed, typically via embedly
+     */
+    AUDIO = 13,
+
+    /*
+     * A map element, embedded via embedly
+     */
+    MAP = 14,
+
+    /*
+     * A document element, ebedded via embedly
+     */
+    DOCUMENT = 15,
+
+    /*
+     * A Guardian Membership event
+     */
+    MEMBERSHIP = 16
+}
+
+enum TagType {
+
+    CONTRIBUTOR = 0,
+
+    KEYWORD = 1,
+
+    SERIES = 2,
+
+    NEWSPAPER_BOOK_SECTION = 3,
+
+    NEWSPAPER_BOOK = 4,
+
+    BLOG = 5,
+
+    TONE = 6,
+
+    TYPE = 7,
+
+    PUBLICATION = 8
+
+}
+
+enum CrosswordType {
+
+    QUICK = 0,
+
+    CRYPTIC = 1,
+
+    QUIPTIC = 2,
+
+    SPEEDY = 3,
+
+    PRIZE = 4,
+
+    EVERYMAN = 5,
+
+    DIAN_QUIPTIC_CROSSWORD = 6
+}
+
+enum Office {
+    UK = 0,
+    US = 1,
+    AUS = 2
+}
+
+enum AssetType {
+    IMAGE = 0,
+    VIDEO = 1
+}
+
 enum MembershipTier {
     MEMBERS_ONLY = 0,
     PAID_MEMBERS_ONLY = 1
@@ -62,7 +204,7 @@ struct AssetFields {
 
 struct Asset {
 
-    1: required string type //TODO make this an enum.
+    1: required AssetType type
 
     2: optional string mimeType
 
@@ -153,7 +295,7 @@ struct ImageElementFields {
 
 struct BlockElement {
 
-    1: required string type // TODO make this an enum.
+    1: required ElementType type
 
     2: required list<Asset> assets
 
@@ -333,7 +475,7 @@ struct Crossword {
 
     1: required string name
 
-    2: required string type // TODO make this an enum.
+    2: required CrosswordType type
 
     3: required i32 number
 
@@ -364,7 +506,7 @@ struct Element {
 
     2: required string relation
 
-    3: required string type // TODO make this an enum.
+    3: required ElementType type
 
     4: optional i32 galleryIndex
 
@@ -425,7 +567,7 @@ struct ContentFields {
 
     26: optional CapiDateTime newspaperEditionDate
 
-    27: optional string productionOffice
+    27: optional Office productionOffice
 
     28: optional string publication
 
@@ -446,7 +588,7 @@ struct Reference {
 
     1: required string id
 
-    2: required string type // TODO make this an enum.
+    2: required string type
 }
 
 struct Podcast {
@@ -473,7 +615,7 @@ struct Tag {
     /*
      * The type of this tag
      */
-    2: required string type // TODO make this an enum.
+    2: required TagType type
 
     /*
      * Section is usually provided: some tags (notably contributor tags)

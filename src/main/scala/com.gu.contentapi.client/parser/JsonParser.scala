@@ -1,6 +1,7 @@
 package com.gu.contentapi.client.parser
 
-import com.gu.contentapi.client.model.v1.{MembershipTier, CapiDateTime, ContentType}
+import com.gu.contentapi.client.model.v1._
+import com.twitter.scrooge.ThriftEnum
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.DateTime
 import org.json4s.{CustomSerializer, DefaultFormats}
@@ -10,7 +11,9 @@ import com.gu.contentapi.client.model._
 
 object JsonParser {
 
-  implicit val formats = DefaultFormats + ContentTypeSerializer + DateTimeSerializer + MembershipTierSerializer
+  implicit val formats = DefaultFormats + ContentTypeSerializer + DateTimeSerializer +
+    MembershipTierSerializer + OfficeSerializer + AssetTypeSerializer + ElementTypeSerializer +
+    TagTypeSerializer + CrosswordTypeSerializer
 
   def parseItem(json: String): ItemResponse = {
     (JsonMethods.parse(json) \ "response").transformField(fixFields).extract[ItemResponse]
@@ -62,30 +65,67 @@ object JsonParser {
     case JField("width", JString(s)) => JField("width", JInt(s.toInt))
     case JField("height", JString(s)) => JField("height", JInt(s.toInt))
   }
+
+  def generateJson[A <: ThriftEnum]: PartialFunction[Any, JString] = {
+    case a: ThriftEnum => JString(a.name)
+  }
+
 }
 
 object ContentTypeSerializer extends CustomSerializer[ContentType](format => (
   {
-    /* Defaults to article */
     case JString(s) => ContentType.valueOf(s).getOrElse(ContentType.Article)
     case JNull => null
   },
-  {
-    // This is never used because we never generate JSON, only parse it
-    case ct: ContentType => JString(ct.name)
-  }
+   JsonParser.generateJson[ContentType]
   ))
 
 object MembershipTierSerializer extends CustomSerializer[MembershipTier](format => (
   {
-    /* Defaults to MembersOnly */
     case JString(s) => MembershipTier.valueOf(s).getOrElse(MembershipTier.MembersOnly)
     case JNull => null
   },
+   JsonParser.generateJson[MembershipTier]
+  ))
+
+object OfficeSerializer extends CustomSerializer[Office](format => (
   {
-    // This is never used because we never generate JSON, only parse it
-    case mt: MembershipTier => JString(mt.name)
-  }
+    case JString(s) => Office.valueOf(s).getOrElse(Office.Uk)
+    case JNull => null
+  },
+   JsonParser.generateJson[Office]
+  ))
+
+object AssetTypeSerializer extends CustomSerializer[AssetType](format => (
+  {
+    case JString(s) => AssetType.valueOf(s).getOrElse(AssetType.Image)
+    case JNull => null
+  },
+   JsonParser.generateJson[AssetType]
+  ))
+
+object ElementTypeSerializer extends CustomSerializer[ElementType](format => (
+  {
+    case JString(s) => ElementType.valueOf(s).getOrElse(ElementType.Text)
+    case JNull => null
+  },
+   JsonParser.generateJson[ElementType]
+  ))
+
+object TagTypeSerializer extends CustomSerializer[TagType](format => (
+  {
+    case JString(s) => TagType.valueOf(s).getOrElse(TagType.Contributor)
+    case JNull => null
+  },
+   JsonParser.generateJson[TagType]
+  ))
+
+object CrosswordTypeSerializer extends CustomSerializer[CrosswordType](format => (
+  {
+    case JString(s) => CrosswordType.valueOf(s).getOrElse(CrosswordType.Quick)
+    case JNull => null
+  },
+   JsonParser.generateJson[CrosswordType]
   ))
 
 object DateTimeSerializer extends CustomSerializer[CapiDateTime](format => (
@@ -100,4 +140,3 @@ object DateTimeSerializer extends CustomSerializer[CapiDateTime](format => (
     case d: CapiDateTime => JString(new DateTime(d.dateTime).toString)
   }
   ))
-

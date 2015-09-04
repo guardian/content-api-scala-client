@@ -1,6 +1,6 @@
 package com.gu.contentapi.client.parser
 
-import com.gu.contentapi.client.model.v1.{MembershipTier, ContentType, CapiDateTime, BlockElement}
+import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.model.{ItemResponse}
 import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
@@ -99,7 +99,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     contentFields.commentable should be (Some(true))
     contentFields.isPremoderated should be(Some(false))
     contentFields.byline should be (Some("Joanna Blythman"))
-    contentFields.productionOffice should be (Some("UK"))
+    contentFields.productionOffice should be (Some(Office.Uk))
     contentFields.liveBloggingNow should be (Some(false))
 
     val expectedCommentCloseDate = CapiDateTime(new DateTime("2013-01-19T10:14:00Z").getMillis)
@@ -112,7 +112,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     val tag = contentItemResponse.content.get.tags.head
     tag.id should be ("commentisfree/commentisfree")
     tag.webTitle should be ("Comment is free")
-    tag.`type` should be ("blog")
+    tag.`type` should be (TagType.Blog)
     tag.sectionId should be (Some("commentisfree"))
     tag.sectionName should be (Some("Comment is free"))
     tag.webUrl should be ("http://www.theguardian.com/commentisfree/commentisfree")
@@ -136,12 +136,12 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     val element = contentItemResponse.content.get.elements.get.head
     element.id should be ("gu-image-402807041")
     element.relation should be ("main")
-    element.`type` should be ("image")
+    element.`type` should be (ElementType.Image)
     element.assets.size should be (11)
 
     // check an asset too
     val elementAsset = contentItemResponse.content.get.elements.get.head.assets.head
-    elementAsset.`type` should be ("image")
+    elementAsset.`type` should be (AssetType.Image)
     elementAsset.mimeType should be (Some("image/jpeg"))
     elementAsset.file should be (Some("http://static.guim.co.uk/sys-images/Guardian/About/General/2013/1/16/1358330705646/Bolivian-woman-harvesting-002.jpg"))
 
@@ -191,7 +191,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     val tag =  tagItemResponse.tag.get
     tag.id should be ("world/france")
     tag.webTitle should be ("France")
-    tag.`type` should be ("keyword")
+    tag.`type` should be (TagType.Keyword)
     tag.sectionId should be (Some("world"))
     tag.sectionName should be (Some("World news"))
     tag.podcast.get.linkUrl should be ("http://www.theguardian.com/")
@@ -308,25 +308,25 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   }
 
   it should "parse a text element for a block" in {
-    val textElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "text")
+    val textElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Text)
 
     textElement should not be empty
   }
 
   it should "parse a video element for a block" in {
-    val videoElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "video")
+    val videoElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Video)
 
     videoElement should not be empty
   }
 
   it should "parse a tweet element for a block" in {
-    val tweetElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "tweet")
+    val tweetElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Tweet)
 
     tweetElement should not be empty
   }
 
   it should "have the correct typeData for a text element for a block" in {
-    val textElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "text")
+    val textElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Text)
     val textElementFields = textElement.head.textTypeData.get
 
     textElementFields.html.get should be ("<h2>Embed block</h2>")
@@ -334,7 +334,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   }
 
   it should "have the correct typeData for a video element for a block" in {
-    val videoElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "video")
+    val videoElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Video)
     val videoElementFields = videoElement.head.videoTypeData.get
 
     videoElementFields.url.get should be ("http://www.youtube.com/watch?v=p0jSGkf4DQc")
@@ -344,7 +344,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   }
 
   it should "have the correct typeData for a tweet element for a block" in {
-    val tweetElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "tweet")
+    val tweetElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Tweet)
     val tweetElementFields = tweetElement.head.tweetTypeData.get
 
     tweetElementFields.id.get should be ("596605887244083201")
@@ -355,7 +355,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   }
 
   it should "have the correct typeData for a image element for a block" in {
-    val imageElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "image")
+    val imageElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Image)
     val imageElementFields = imageElement.head.imageTypeData.get
 
     imageElementFields.caption.get should be ("FIFA chief Sepp Blatter leaves at the end of the Asian Football Confederation (AFC) regional Congress on April 30, 2015 in the Bahraini capital Manama. Sepp Blatter closed on a fifth term as FIFA president as a key ally, Asia’s soccer boss, won new powers and silenced dissent at a regional congress in Bahrain. AFP PHOTO / MOHAMMED AL-SHAIKHMOHAMMED AL-SHAIKH/AFP/Getty Images")
@@ -374,7 +374,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   }
 
   it should "have the correct typeData for a audio element for a block" in {
-    val audioElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "audio")
+    val audioElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Audio)
     val audioElementFields = audioElement.head.audioTypeData.get
 
     audioElementFields.html.get should be ("<p>html for the audio</p>")
@@ -386,7 +386,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   }
 
   it should "have the correct typeData for a pull quote element for a block" in {
-    val pullquoteElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = "pullquote")
+    val pullquoteElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Pullquote)
     val pullquoteElementFields = pullquoteElement.head.pullquoteTypeData.get
 
     pullquoteElementFields.html.get should be ("<h2>text of the pullquote</h2>")
@@ -395,13 +395,13 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
 
    it should "deserialize a crossword correctly" in {
      val crossword = contentItemWithCrosswordResponse.content.value.crossword.value
-     crossword.`type` should be("cryptic")
+     crossword.`type` should be(CrosswordType.Cryptic)
      crossword.number should be(24623)
      crossword.dimensions.cols should be(15)
      crossword.entries.head.id should be("8-across")
    }
 
-  private def getBlockElementsOfType(response: ItemResponse, `type`: String): Seq[BlockElement] = {
+  private def getBlockElementsOfType(response: ItemResponse, `type`: ElementType): Seq[BlockElement] = {
     val bodyBlock = response.content.get.blocks.get.body.get
     val blockElements = bodyBlock.filter(_.elements.nonEmpty).head.elements
     blockElements.filter(`type` == _.`type`)
