@@ -50,9 +50,9 @@ object ContentApiClientBuild extends Build {
       /* "org.json4s" %% "json4s-ext" % "3.2.11", */
       "joda-time" % "joda-time" % "2.3",
       "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
-      "org.scalatest" %% "scalatest" % "2.2.1" % "test",
       "org.apache.thrift" % "libthrift" % "0.9.2",
-      "com.twitter" %% "scrooge-core" % "3.20.0"
+      "com.twitter" %% "scrooge-core" % "3.20.0",
+      "org.scalatest" %% "scalatest" % "2.2.1" % "test"
     ),
     pomExtra := (
       <url>https://github.com/guardian/content-api-scala-client</url>
