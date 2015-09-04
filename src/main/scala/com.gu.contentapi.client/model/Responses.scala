@@ -1,5 +1,7 @@
 package com.gu.contentapi.client.model
 
+import com.gu.contentapi.client.model.v1._
+
 case class SearchResponse(
     status: String,
     userTier: String,
