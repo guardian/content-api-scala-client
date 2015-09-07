@@ -29,7 +29,6 @@ object ContentApiClientBuild extends Build {
   .settings(releaseSettings: _*)
   .settings(sonatypeSettings: _*)
   .settings(
-    unmanagedJars in Compile := (baseDirectory.value / "lib" ** "*.jar").classpath,
     ScroogeSBT.scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift",
     scalaVersion := "2.11.7",
     crossScalaVersions := Seq("2.11.7", "2.10.5"),
@@ -45,9 +44,8 @@ object ContentApiClientBuild extends Build {
     javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     libraryDependencies ++= Seq(
-    /* Json4s is an unmanaged library in this project until such a time when a new version has been officially released with our changes. */
-      /* "org.json4s" %% "json4s-native" % "3.2.11",*/
-      /* "org.json4s" %% "json4s-ext" % "3.2.11", */
+      "org.json4s" %% "json4s-native" % "3.3.0.RC4",
+      "org.json4s" %% "json4s-ext" % "3.3.0.RC4",
       "joda-time" % "joda-time" % "2.3",
       "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
       "org.apache.thrift" % "libthrift" % "0.9.2",
