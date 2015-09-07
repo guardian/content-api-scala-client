@@ -10,6 +10,7 @@
         "orderBy": "newest",
         "results": [
             {
+                "type": "article",
                 "webTitle": "County cricket – live!",
                 "webPublicationDate": "2014-09-10T16:10:21Z",
                 "sectionName": "Sport",
