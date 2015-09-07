@@ -30,6 +30,7 @@ object ContentApiClientBuild extends Build {
   .settings(sonatypeSettings: _*)
   .settings(
     ScroogeSBT.scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift",
+    unmanagedResourceDirectories in Compile += { baseDirectory.value / "src/main/thrift" },
     scalaVersion := "2.11.7",
     crossScalaVersions := Seq("2.11.7", "2.10.5"),
     organization := "com.gu",
