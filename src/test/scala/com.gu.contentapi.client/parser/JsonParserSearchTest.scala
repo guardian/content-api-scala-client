@@ -25,7 +25,7 @@ class JsonParserSearchTest extends FlatSpec with Matchers with ClientTest {
     searchResponse.results.head.`type` should be (ContentType.Article)
     searchResponse.results.head.webTitle should be ("County cricket – live!")
 
-    val expectedWebPublicationDate = CapiDateTime(new DateTime(2014, 9, 10, 17, 10, 21, 0).getMillis)
+    val expectedWebPublicationDate = CapiDateTime(new DateTime("2014-09-10T16:10:21Z").getMillis)
     searchResponse.results.head.webPublicationDate.get should be (expectedWebPublicationDate)
 
     searchResponse.results.head.sectionName should be (Some("Sport"))
