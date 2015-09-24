@@ -1,10 +1,10 @@
-package com.gu.contentapi.client.parser
+package com.gu.contentapi.client.utils
 
-import com.gu.contentapi.client.model.v1.{CapiDateTime}
+import com.gu.contentapi.client.model.v1.CapiDateTime
 import org.joda.time.DateTime
 import org.scalatest.{Matchers, FlatSpec}
 
-import com.gu.contentapi.client.model.v1.CapiModelEnrichment._
+import CapiModelEnrichment._
 
 class CapiModelEnrichmentTest extends FlatSpec with Matchers {
 
