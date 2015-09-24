@@ -111,8 +111,7 @@
                   "mediaApiUri":"https://api.media.test.dev-gutools.co.uk/images/e38889cd5697318e26258f29e0036cd9633f2dbf",
                   "picdarUrn":"GD*52757191",
                   "suppliersReference":"Nic6447359",
-                  "imageType":"Photograph",
-                  "isMaster": true
+                  "imageType":"Photograph"
                 },
                 "type": "image"
               }

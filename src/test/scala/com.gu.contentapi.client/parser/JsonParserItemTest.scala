@@ -5,12 +5,15 @@ import com.gu.contentapi.client.model.{ItemResponse}
 import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
 import com.gu.contentapi.client.ClientTest
+import com.gu.contentapi.client.utils.CapiModelEnrichment._
 
 class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with ClientTest {
 
   val contentItemResponse = JsonParser.parseItem(loadJson("item-content.json"))
   val contentItemWithBlocksResponse = JsonParser.parseItem(loadJson("item-content-with-blocks.json"))
   val contentItemWithCrosswordResponse = JsonParser.parseItem(loadJson("item-content-with-crossword.json"))
+  val contentItemWithRichLinkElementResponse = JsonParser.parseItem(loadJson("item-content-with-rich-link-element.json"))
+  val contentItemWithMembershipElementResponse = JsonParser.parseItem(loadJson("item-content-with-membership-element.json"))
   val tagItemResponse = JsonParser.parseItem(loadJson("item-tag.json"))
   val sectionItemResponse = JsonParser.parseItem(loadJson("item-section.json"))
 
@@ -370,7 +373,6 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     imageElementFields.picdarUrn.get should be ("GD*52757191")
     imageElementFields.suppliersReference.get should be ("Nic6447359")
     imageElementFields.imageType.get should be ("Photograph")
-    imageElementFields.isMaster.get should be (true)
   }
 
   it should "have the correct typeData for a audio element for a block" in {
@@ -391,6 +393,47 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
 
     pullquoteElementFields.html.get should be ("<h2>text of the pullquote</h2>")
     pullquoteElementFields.attribution.get should be ("Joe Bloggs")
+  }
+
+  it should "have the correct typeData for a rich-link element for a block" in {
+    val richLinkElement = getBlockElementsOfType(contentItemWithRichLinkElementResponse, `type` = ElementType.RichLink)
+    val richLinkElementFields = richLinkElement.head.richLinkTypeData.get
+
+    richLinkElementFields.role.get should be("thumbnail")
+    richLinkElementFields.linkText.get should be("Mecca: hajj crush kills hundreds near holy city – live coverage")
+    richLinkElementFields.originalUrl.get should be("http://www.theguardian.com/world/live/2015/sep/24/hajj-crush-kills-scores-near-mecca-live-coverage")
+    richLinkElementFields.url.get should be("http://www.theguardian.com/world/live/2015/sep/24/hajj-crush-kills-scores-near-mecca-live-coverage")
+    richLinkElementFields.linkPrefix.get should be("Related: ")
+  }
+
+  it should "have the correct typeData for an interactive element for a block" in {
+    val interactiveElement = getBlockElementsOfType(contentItemWithRichLinkElementResponse, `type` = ElementType.Interactive)
+    val interactiveElementFields = interactiveElement.head.interactiveTypeData.get
+
+    interactiveElementFields.scriptUrl.get should be("http://interactive.guim.co.uk/embed/iframe-wrapper/0.1/boot.js")
+    interactiveElementFields.alt.get should be("Hajj scene of stampede")
+    interactiveElementFields.scriptName.get should be("iframe-wrapper")
+    interactiveElementFields.html.get should be("""<a href="http://interactive.guim.co.uk/uploader/embed/2015/09/mecca_crush/giv-31114wBYHjoKMce1W/">Hajj scene of stampede</a>""")
+    interactiveElementFields.originalUrl.get should be("http://interactive.guim.co.uk/uploader/embed/2015/09/mecca_crush/giv-31114wBYHjoKMce1W/")
+    interactiveElementFields.source.get should be("Guardian")
+    interactiveElementFields.iframeUrl.get should be("http://interactive.guim.co.uk/uploader/embed/2015/09/mecca_crush/giv-31114wBYHjoKMce1W/")
+  }
+
+  it should "have the correct typeData for a membership element for a block" in {
+    val membershipElement = getBlockElementsOfType(contentItemWithMembershipElementResponse, `type` = ElementType.Membership)
+    val membershipElementFields = membershipElement.head.membershipTypeData.get
+
+    membershipElementFields.venue.get should be("The Scott room")
+    membershipElementFields.identifier.get should be("guardian-live")
+    membershipElementFields.image.get should be("https://media.guim.co.uk/e50e166a08e4279c352d83fa2f3210186999bd13/0_586_2064_1239/500.jpg")
+    membershipElementFields.price.get should be("£10")
+    membershipElementFields.start.get.toJodaDateTime should be(new DateTime("2015-09-30T18:00:00Z"))
+    membershipElementFields.linkText.get should be("Guardian Live | Guardian Newsroom: Should the UK bomb Syria?")
+    membershipElementFields.location.get should be("The Guardian, Kings Place, 90 York Way, London, N1 9GU")
+    membershipElementFields.end.get.toJodaDateTime should be(new DateTime("2015-09-30T19:30:00Z"))
+    membershipElementFields.originalUrl.get should be("https://membership.theguardian.com/event/guardian-live-guardian-newsroom-should-the-uk-bomb-syria-18761779989")
+    membershipElementFields.title.get should be("Guardian Live | Guardian Newsroom: Should the UK bomb Syria?")
+    membershipElementFields.linkPrefix.get should be("Membership Event: ")
   }
 
    it should "deserialize a crossword correctly" in {

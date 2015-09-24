@@ -200,6 +200,10 @@ struct AssetFields {
   12: optional string name
 
   13: optional string secureFile
+
+  14: optional bool isMaster
+
+  15: optional i64 sizeInBytes
 }
 
 struct Asset {
@@ -236,6 +240,8 @@ struct TweetElementFields {
     4: optional string html
 
     5: optional string originalUrl
+
+    6: optional string role
 }
 
 struct AudioElementFields {
@@ -262,6 +268,36 @@ struct VideoElementFields {
     3: optional string title
 
     4: optional string html
+
+    5: optional string source
+
+    6: optional string credit
+
+    7: optional string caption
+
+    8: optional i32 height
+
+    9: optional i32 width
+
+    10: optional i32 duration
+
+    11: optional string contentAuthSystem
+
+    12: optional string embeddable
+
+    13: optional bool isInappropriateForAdverts
+
+    14: optional string mediaId
+
+    15: optional string stillImageUrl
+
+    16: optional string thumbnailUrl
+
+    17: optional string shortUrl
+
+    18: optional string role
+
+    19: optional string originalUrl
 }
 
 struct ImageElementFields {
@@ -290,7 +326,86 @@ struct ImageElementFields {
 
     12: optional string imageType
 
-    13: optional bool isMaster
+    13: optional string comment
+
+    14: optional string role
+}
+
+struct InteractiveElementFields {
+    1: optional string url
+    2: optional string originalUrl
+    3: optional string source
+    4: optional string caption
+    5: optional string alt
+    6: optional string scriptUrl
+    7: optional string html
+    8: optional string scriptName
+    9: optional string iframeUrl
+}
+
+struct StandardElementFields {
+    1: optional string url
+    2: optional string originalUrl
+    3: optional string source
+    4: optional string title
+    5: optional string description
+    6: optional string credit
+    7: optional string caption
+    8: optional i32 width
+    9: optional i32 height
+    10: optional string html
+    11: optional string role
+}
+
+struct WitnessElementFields {
+    1: optional string url
+    2: optional string originalUrl
+    3: optional string witnessEmbedType
+    4: optional string mediaId
+    5: optional string source
+    6: optional string title
+    7: optional string description
+    8: optional string authorName
+    9: optional string authorUsername
+    10: optional string authorWitnessProfileUrl
+    11: optional string authorGuardianProfileUrl
+    12: optional string caption
+    13: optional string alt
+    14: optional i32 width
+    15: optional i32 height
+    16: optional string html
+    17: optional string apiUrl
+    18: optional string photographer
+    19: optional CapiDateTime dateCreated
+    20: optional string youtubeUrl
+    21: optional string youtubeSource
+    22: optional string youtubeTitle
+    23: optional string youtubeDescription
+    24: optional string youtubeAuthorName
+    25: optional string youtubeHtml
+    26: optional string role
+}
+
+struct RichLinkElementFields {
+    1: optional string url
+    2: optional string originalUrl
+    3: optional string linkText
+    4: optional string linkPrefix
+    5: optional string role
+}
+
+struct MembershipElementFields {
+    1: optional string originalUrl
+    2: optional string linkText
+    3: optional string linkPrefix
+    4: optional string title
+    5: optional string venue
+    6: optional string location
+    7: optional string identifier
+    8: optional string image
+    9: optional string price
+    10: optional CapiDateTime start
+    11: optional CapiDateTime end
 }
 
 struct BlockElement {
@@ -310,6 +425,20 @@ struct BlockElement {
     7: optional AudioElementFields audioTypeData
 
     8: optional PullquoteElementFields pullquoteTypeData
+
+    9: optional InteractiveElementFields interactiveTypeData
+
+    10: optional StandardElementFields mapTypeData
+
+    11: optional StandardElementFields documentTypeData
+
+    12: optional StandardElementFields tableTypeData
+
+    13: optional WitnessElementFields witnessTypeData
+
+    14: optional RichLinkElementFields richLinkTypeData
+
+    15: optional MembershipElementFields membershipTypeData
 }
 
 struct BlockAttributes {
