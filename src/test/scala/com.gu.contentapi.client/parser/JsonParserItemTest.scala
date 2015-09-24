@@ -211,7 +211,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     val tagResult = tagItemResponse.results.head
     tagResult.webTitle should be ("An awkward interview with Le Corbusier: from the archive, 11 September 1965")
 
-    val expectedWebPublicationDate = CapiDateTime(new DateTime(2014, 9, 11, 5, 30, 0, 0).getMillis)
+    val expectedWebPublicationDate = CapiDateTime(new DateTime("2014-09-11T04:30:00Z").getMillis)
     tagResult.webPublicationDate should be (Some(expectedWebPublicationDate))
 
     tagResult.sectionName should be (Some("Art and design"))
