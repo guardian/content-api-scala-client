@@ -373,7 +373,6 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     imageElementFields.picdarUrn.get should be ("GD*52757191")
     imageElementFields.suppliersReference.get should be ("Nic6447359")
     imageElementFields.imageType.get should be ("Photograph")
-    imageElementFields.isMaster.get should be (true)
   }
 
   it should "have the correct typeData for a audio element for a block" in {

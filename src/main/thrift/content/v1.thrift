@@ -326,14 +326,9 @@ struct ImageElementFields {
 
     12: optional string imageType
 
-    /** This field was added accidentally and will never be set. 
-      * isMaster only makes sense on an asset, not on an element 
-      */
-    13: optional bool isMaster
+    13: optional string comment
 
-    14: optional string comment
-
-    15: optional string role
+    14: optional string role
 }
 
 struct InteractiveElementFields {
