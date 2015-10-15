@@ -1,3 +1,16 @@
+## 7.2
+* Additional fields added to block elements.
+* 'durationMinutes' and 'durationSeconds' fields added to AssetFields.
+* 'legallySensitive' field added to ContentFields.
+* Travis file added.
+* Remove incorrectly added isMaster field.
+
+## 7.1
+* Add thrift definition to built jar file.
+
+## 7.0
+* Define and generate the Content API data model via Scrooge using Thrift. 
+
 ## 6.10
 * Provide proper parsing of error responses.
 * Add support for the `type` field on `Content`, including a filter to search by content type.
