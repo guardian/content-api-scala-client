@@ -204,6 +204,10 @@ struct AssetFields {
   14: optional bool isMaster
 
   15: optional i64 sizeInBytes
+
+  16: optional i32 durationMinutes
+
+  17: optional i32 durationSeconds
 }
 
 struct Asset {
@@ -711,6 +715,8 @@ struct ContentFields {
     33: optional bool showInRelatedContent
 
     34: optional string thumbnail
+
+    35: optional bool legallySensitive
 }
 
 struct Reference {
