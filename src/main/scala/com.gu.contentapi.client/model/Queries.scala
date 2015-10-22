@@ -16,7 +16,6 @@ sealed trait ContentApiQuery {
 case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery
   with EditionParameters[ItemQuery]
-  with ContentParameters[ItemQuery]
   with ShowParameters[ItemQuery]
   with ShowReferencesParameters[ItemQuery]
   with ShowExtendedParameters[ItemQuery]
@@ -36,7 +35,6 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
 
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery
-  with ContentParameters[SearchQuery]
   with ShowParameters[SearchQuery]
   with ShowReferencesParameters[SearchQuery]
   with OrderingParameters[SearchQuery]
@@ -89,10 +87,6 @@ case class EditionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   override def pathSegment: String = "editions"
-}
-
-trait ContentParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-  def contentSet = StringParameter("content-set")
 }
 
 trait EditionParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
