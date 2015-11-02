@@ -1,3 +1,8 @@
+## 7.3
+* Added displayCredits field to AssetFields.
+* Added MaxSearchQueryIdSize to Limits.
+* Make userAgent protected.
+
 ## 7.2
 * Additional fields added to block elements.
 * 'durationMinutes' and 'durationSeconds' fields added to AssetFields.
