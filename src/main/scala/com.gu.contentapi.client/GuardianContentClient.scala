@@ -15,7 +15,7 @@ case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorRe
 trait ContentApiClientLogic {
   val apiKey: String
 
-  private val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
+  protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
 
   protected lazy val http = {
     /*
