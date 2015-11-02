@@ -208,6 +208,8 @@ struct AssetFields {
   16: optional i32 durationMinutes
 
   17: optional i32 durationSeconds
+
+  18: optional bool displayCredit
 }
 
 struct Asset {
