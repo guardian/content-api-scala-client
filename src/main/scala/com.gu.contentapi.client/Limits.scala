@@ -9,4 +9,5 @@ object Limits {
   private val SafetyBufferSize = 100
 
   val UrlSize = AcceptedUrlSize - (MaxEc2HostNameSize + MaximumTierParameterSize + SafetyBufferSize)
+  val MaxSearchQueryIdSize = 50
 }
