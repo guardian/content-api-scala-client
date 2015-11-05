@@ -1,3 +1,6 @@
+## 7.4
+* Added AUDIO type to AseetType.
+
 ## 7.3
 * Added displayCredits field to AssetFields.
 * Added MaxSearchQueryIdSize to Limits.
