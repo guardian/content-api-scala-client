@@ -762,7 +762,7 @@ struct Tag {
     3: optional string sectionId
 
     /*
-     * The display name of the section.  Will be None iff sectionId is None.
+     * The display name of the section.  Will be None if sectionId is None.
      */
     4: optional string sectionName
 
