@@ -12,6 +12,8 @@ Add the following line to your SBT build definition, and set the version number 
 libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 ```
 
+Please note, as of version 7.0, the content api scala client no longer supports java 7.
+
 If you don't have an API key, go to [guardian.mashery.com] (http://guardian.mashery.com/) to get one. You will then need to create a new instance of the client and set the key:
 
 ```scala
