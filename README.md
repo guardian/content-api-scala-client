@@ -1,6 +1,9 @@
 Content API Scala Client
 ========================
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.gu/content-api-client_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.gu/content-api-client_2.11)
+
+
 A Scala client for the Guardian's [Content API] (http://explorer.content.guardianapis.com/).
 
 
