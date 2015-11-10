@@ -68,6 +68,8 @@ object JsonParser {
     case JField("duration", JString(s)) => JField("duration", JInt(s.toInt))
     case JField("isMaster", JString(s)) => JField("isMaster", JBool(s.toBoolean))
     case JField("sizeInBytes", JString(s)) => JField("sizeInBytes", JLong(s.toLong))
+    case JField("blockAds", JString(s)) => JField("blockAds", JBool(s.toBoolean))
+    case JField("allowUgc", JString(s)) => JField("allowUgc", JBool(s.toBoolean))
   }
 
   def generateJson[A <: ThriftEnum]: PartialFunction[Any, JString] = {
