@@ -3,7 +3,7 @@
 * Added allowUgc to ContentFields.
 
 ## 7.4
-* Added AUDIO type to AseetType.
+* Added AUDIO type to AssetType.
 
 ## 7.3
 * Added displayCredits field to AssetFields.

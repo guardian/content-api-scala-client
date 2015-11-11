@@ -105,6 +105,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     contentFields.productionOffice should be (Some(Office.Uk))
     contentFields.liveBloggingNow should be (Some(false))
     contentFields.legallySensitive should be (Some(false))
+    contentFields.sensitive should be (Some(false))
 
     val expectedCommentCloseDate = CapiDateTime(new DateTime("2013-01-19T10:14:00Z").getMillis)
     contentFields.commentCloseDate should be (Some(expectedCommentCloseDate))

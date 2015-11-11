@@ -736,6 +736,8 @@ struct ContentFields {
     35: optional bool legallySensitive
 
     36: optional bool allowUgc
+
+    37: optional bool sensitive
 }
 
 struct Reference {
