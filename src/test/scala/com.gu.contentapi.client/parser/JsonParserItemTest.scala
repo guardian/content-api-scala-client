@@ -210,6 +210,8 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     tag.podcast.get.author should be ("theguardian.com")
     tag.podcast.get.copyright should be ("theguardian.com © 2014")
     tag.podcast.get.explicit should be (true)
+    tag.podcast.get.image.value should be ("http://www.theguardian.com/images/lol.jpg")
+    tag.podcast.get.subscriptionUrl.value should be ("http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=188674007")
     tag.webUrl should be ("http://www.theguardian.com/world/france")
     tag.apiUrl should be ("http://content.guardianapis.com/world/france")
   }

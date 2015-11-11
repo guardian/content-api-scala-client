@@ -18,7 +18,9 @@
                 "linkUrl": "http://www.theguardian.com/",
                 "author": "theguardian.com",
                 "copyright": "theguardian.com © 2014",
-                "explicit": true
+                "explicit": true,
+                "image": "http://www.theguardian.com/images/lol.jpg",
+                "subscriptionUrl": "http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=188674007"
             },
             "webUrl": "http://www.theguardian.com/world/france",
             "apiUrl": "http://content.guardianapis.com/world/france"
