@@ -1,3 +1,7 @@
+## 7.5
+* Added thumbnailUrl, role, mediaId, iframeUrl, scriptName, scriptUrl, blockAds to AssetFields.
+* Added allowUgc to ContentFields.
+
 ## 7.4
 * Added AUDIO type to AseetType.
 
