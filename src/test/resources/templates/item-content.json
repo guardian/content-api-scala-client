@@ -251,7 +251,7 @@
                                 "thumbnailUrl": "thumbnailUrl",
                                 "role": "role",
                                 "mediaId": "mediaId",
-                                "iframeUrl": "iframeUrl"
+                                "iframeUrl": "iframeUrl",
                                 "scriptName": "scriptName",
                                 "scriptUrl": "scriptUrl",
                                 "blockAds": false
