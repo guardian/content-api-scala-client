@@ -108,6 +108,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
 
     val expectedCommentCloseDate = CapiDateTime(new DateTime("2013-01-19T10:14:00Z").getMillis)
     contentFields.commentCloseDate should be (Some(expectedCommentCloseDate))
+    contentFields.allowUgc should be (Some(false))
   }
 
   it should "parse content tags" in {
@@ -157,6 +158,13 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     elementAssetFields.credit should be (Some("George Steinmetz/ George Steinmetz/Corbis"))
     elementAssetFields.caption should be (Some("A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis"))
     elementAssetFields.width should be (Some(54))
+    elementAssetFields.thumbnailUrl should be (Some("thumbnailUrl"))
+    elementAssetFields.role should be (Some("role"))
+    elementAssetFields.mediaId should be (Some("mediaId"))
+    elementAssetFields.iframeUrl should be (Some("iframeUrl"))
+    elementAssetFields.scriptName should be (Some("scriptName"))
+    elementAssetFields.scriptUrl should be (Some("scriptUrl"))
+    elementAssetFields.blockAds should be (Some(false))
   }
 
   it should "parse content references" in {

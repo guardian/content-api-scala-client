@@ -211,6 +211,20 @@ struct AssetFields {
   17: optional i32 durationSeconds
 
   18: optional bool displayCredit
+
+  19: optional string thumbnailUrl
+
+  20: optional string role
+
+  21: optional string mediaId
+
+  22: optional string iframeUrl
+
+  23: optional string scriptName
+
+  24: optional string scriptUrl
+
+  25: optional bool blockAds
 }
 
 struct Asset {
@@ -720,6 +734,8 @@ struct ContentFields {
     34: optional string thumbnail
 
     35: optional bool legallySensitive
+
+    36: optional bool allowUgc
 }
 
 struct Reference {

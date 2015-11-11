@@ -247,7 +247,14 @@
                                 "height": "54",
                                 "credit": "George Steinmetz/ George Steinmetz/Corbis",
                                 "caption": "A Bolivian woman harvesting quinoa negro. 'Well-intentioned health and ethics-led consumers here [are] unwittingly driving poverty there.' Photograph: George Steinmetz/ George Steinmetz/Corbis",
-                                "width": "54"
+                                "width": "54",
+                                "thumbnailUrl": "thumbnailUrl",
+                                "role": "role",
+                                "mediaId": "mediaId",
+                                "iframeUrl": "iframeUrl",
+                                "scriptName": "scriptName",
+                                "scriptUrl": "scriptUrl",
+                                "blockAds": false
                             }
                         },
                         {
