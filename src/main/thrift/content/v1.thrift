@@ -225,6 +225,11 @@ struct AssetFields {
   24: optional string scriptUrl
 
   25: optional bool blockAds
+
+  26: optional string html
+
+  27: optional string embedType
+
 }
 
 struct Asset {

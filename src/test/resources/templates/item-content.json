@@ -255,6 +255,8 @@
                                 "iframeUrl": "iframeUrl",
                                 "scriptName": "scriptName",
                                 "scriptUrl": "scriptUrl",
+                                "html": "html",
+                                "embedType": "embedType",
                                 "blockAds": false
                             }
                         },
