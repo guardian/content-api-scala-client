@@ -44,6 +44,7 @@ object ContentApiClientBuild extends Build {
     maxErrors := 20,
     javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
+
     libraryDependencies ++= Seq(
       "org.json4s" %% "json4s-native" % "3.3.0.RC4",
       "org.json4s" %% "json4s-ext" % "3.3.0.RC4",

@@ -1,3 +1,6 @@
+## 7.6
+* Added the image field to Podcast metadata
+
 ## 7.5
 * Added thumbnailUrl, role, mediaId, iframeUrl, scriptName, scriptUrl, blockAds to AssetFields.
 * Added allowUgc to ContentFields.

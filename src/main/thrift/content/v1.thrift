@@ -758,6 +758,8 @@ struct Podcast {
     4: optional string subscriptionUrl
 
     5: required bool explicit
+
+    6: optional string image
 }
 
 struct Tag {
