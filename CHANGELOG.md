@@ -1,3 +1,6 @@
+## 7.7
+* Added the `embedType` and `html` fields to asset fields
+
 ## 7.6
 * Added the image field to Podcast metadata
 
