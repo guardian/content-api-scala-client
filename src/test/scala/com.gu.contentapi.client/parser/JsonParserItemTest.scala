@@ -165,6 +165,8 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     elementAssetFields.iframeUrl should be (Some("iframeUrl"))
     elementAssetFields.scriptName should be (Some("scriptName"))
     elementAssetFields.scriptUrl should be (Some("scriptUrl"))
+    elementAssetFields.html should be (Some("html"))
+    elementAssetFields.embedType should be (Some("embedType"))
     elementAssetFields.blockAds should be (Some(false))
   }
 
