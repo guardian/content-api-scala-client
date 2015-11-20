@@ -230,6 +230,8 @@ struct AssetFields {
 
   27: optional string embedType
 
+  28: optional bool explicit
+
 }
 
 struct Asset {
