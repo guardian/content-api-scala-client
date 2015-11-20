@@ -82,7 +82,10 @@
                   "description": "Listen to user48736353001 | Explore the largest community of artists, bands, podcasters and creators of music & audio.",
                   "title":"user48736353001",
                   "credit":"Audio credit",
-                  "caption":"Audio caption"
+                  "caption":"Audio caption",
+                  "durationMinutes":9,
+                  "durationSeconds":41,
+                  "clean":true
                 },
                 "type": "audio"
               },

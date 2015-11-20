@@ -1,6 +1,7 @@
 ## 7.8
 * Add explicit field to AssetFields
 * Add tests for audio elements
+* Add durationMinutes, durationSeconds and clean field to AudioElementField
 
 ## 7.7
 * Added the `embedType` and `html` fields to asset fields

@@ -411,6 +411,9 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     audioElementFields.credit.get should be ("Audio credit")
     audioElementFields.source.get should be ("Soundcloud")
     audioElementFields.title.get should be ("user48736353001")
+    audioElementFields.durationMinutes.get should be (9)
+    audioElementFields.durationSeconds.get should be (41)
+    audioElementFields.clean.get should be (true)
   }
 
   it should "have the correct typeData for a pull quote element for a block" in {

@@ -285,6 +285,12 @@ struct AudioElementFields {
     5: optional string credit
 
     6: optional string caption
+
+    7: optional i32 durationMinutes
+
+    8: optional i32 durationSeconds
+
+    9: optional bool clean
 }
 
 struct VideoElementFields {
