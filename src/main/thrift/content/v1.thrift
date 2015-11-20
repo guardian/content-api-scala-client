@@ -291,6 +291,8 @@ struct AudioElementFields {
     8: optional i32 durationSeconds
 
     9: optional bool clean
+
+    10: optional bool explicit
 }
 
 struct VideoElementFields {

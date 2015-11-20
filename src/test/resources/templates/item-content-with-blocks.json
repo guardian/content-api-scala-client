@@ -85,7 +85,8 @@
                   "caption":"Audio caption",
                   "durationMinutes":9,
                   "durationSeconds":41,
-                  "clean":true
+                  "clean":true,
+                  "explicit":false
                 },
                 "type": "audio"
               },
