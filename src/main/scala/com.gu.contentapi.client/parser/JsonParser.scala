@@ -75,6 +75,7 @@ object JsonParser {
     case JField("displayCredit", JString(s)) => JField("displayCredit", JBool(s.toBoolean))
     case JField("legallySensitive", JString(s)) => JField("legallySensitive", JBool(s.toBoolean))
     case JField("sensitive", JString(s)) => JField("sensitive", JBool(s.toBoolean))
+    case JField("explicit", JString(s)) => JField("explicit", JBool(s.toBoolean))
   }
 
   def generateJson[A <: ThriftEnum]: PartialFunction[Any, JString] = {
