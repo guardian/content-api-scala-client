@@ -137,7 +137,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   }
 
   it should "parse content elements" in {
-    contentItemResponse.content.get.elements.get.size should be (2)
+    contentItemResponse.content.get.elements.get.size should be (3)
 
     val element = contentItemResponse.content.get.elements.get.head
     element.id should be ("gu-image-402807041")
@@ -168,6 +168,18 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     elementAssetFields.html should be (Some("html"))
     elementAssetFields.embedType should be (Some("embedType"))
     elementAssetFields.blockAds should be (Some(false))
+
+    // check audio elements too
+    val audioElement = contentItemResponse.content.get.elements.get.apply(2).assets.head
+    audioElement.`type` should be (AssetType.Audio)
+    audioElement.mimeType should be (Some("audio/mpeg"))
+    audioElement.file should be (Some("http://static.guim.co.uk/audio/kip/football/series/footballweekly/1447937149295/5649/FW-nov19-2015.mp3"))
+
+    val audioElementAssetFields = audioElement.typeData.get
+    audioElementAssetFields.explicit should be (Some(false))
+    audioElementAssetFields.source should be (Some("guardian.co.uk"))
+    audioElementAssetFields.durationMinutes should be (Some(60))
+    audioElementAssetFields.durationSeconds should be (Some(17))
   }
 
   it should "parse content references" in {
@@ -399,6 +411,10 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     audioElementFields.credit.get should be ("Audio credit")
     audioElementFields.source.get should be ("Soundcloud")
     audioElementFields.title.get should be ("user48736353001")
+    audioElementFields.durationMinutes.get should be (9)
+    audioElementFields.durationSeconds.get should be (41)
+    audioElementFields.clean.get should be (true)
+    audioElementFields.explicit.get should be (false)
   }
 
   it should "have the correct typeData for a pull quote element for a block" in {

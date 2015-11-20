@@ -422,6 +422,24 @@
                             }
                         }
                     ]
+                },
+                {
+                    "id": "gu-audio-458408910",
+                    "relation": "main",
+                    "type": "audio",
+                    "assets": [
+                        {
+                            "type": "audio",
+                            "mimeType": "audio/mpeg",
+                            "file": "http://static.guim.co.uk/audio/kip/football/series/footballweekly/1447937149295/5649/FW-nov19-2015.mp3",
+                            "typeData": {
+                                "explicit": false,
+                                "source": "guardian.co.uk",
+                                "durationMinutes": "60",
+                                "durationSeconds": "17"
+                            }
+                        }
+                    ]
                 }
             ],
             "references": [],
