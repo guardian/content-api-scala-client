@@ -434,6 +434,7 @@
                             "file": "http://static.guim.co.uk/audio/kip/football/series/footballweekly/1447937149295/5649/FW-nov19-2015.mp3",
                             "typeData": {
                                 "explicit": false,
+                                "clean": true,
                                 "source": "guardian.co.uk",
                                 "durationMinutes": "60",
                                 "durationSeconds": "17"

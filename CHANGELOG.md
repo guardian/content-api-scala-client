@@ -1,3 +1,6 @@
+## 7.9
+* Add `clean` field to AssetFields
+
 ## 7.8
 * Add explicit field to AssetFields
 * Add tests for audio elements
