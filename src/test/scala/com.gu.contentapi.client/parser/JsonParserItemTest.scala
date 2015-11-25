@@ -177,6 +177,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
 
     val audioElementAssetFields = audioElement.typeData.get
     audioElementAssetFields.explicit should be (Some(false))
+    audioElementAssetFields.clean should be (Some(true))
     audioElementAssetFields.source should be (Some("guardian.co.uk"))
     audioElementAssetFields.durationMinutes should be (Some(60))
     audioElementAssetFields.durationSeconds should be (Some(17))
