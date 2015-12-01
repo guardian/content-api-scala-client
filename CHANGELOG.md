@@ -1,10 +1,11 @@
 ## 7.9
-* Add `clean` field to AssetFields
+* Added `clean` field to AssetFields
+* Added `sensitive` 
 
 ## 7.8
-* Add explicit field to AssetFields
-* Add tests for audio elements
-* Add durationMinutes, durationSeconds, explicit and clean field to AudioElementField
+* Added `explicit` field to AssetFields
+* Added tests for audio elements
+* Added `durationMinutes`, `durationSeconds`, `explicit` and `clean` field to AudioElementField
 
 ## 7.7
 * Added the `embedType` and `html` fields to asset fields
