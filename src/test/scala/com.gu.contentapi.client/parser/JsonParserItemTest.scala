@@ -337,6 +337,24 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     blockElements.size should be (6)
   }
 
+  it should "parse keyEvent attribute " in {
+    val bodyBlocks = contentItemWithBlocksResponse.content.get.blocks.get.body.get
+    val keyEvent = bodyBlocks.filter(_.id == "55267da9e4b091b2a1c75fe0").head
+    val nonKeyEvent = bodyBlocks.filter(_.id == "55267dc0e4b091b2a1c75fe1").head
+
+    keyEvent.attributes.keyEvent shouldBe Some(true)
+    nonKeyEvent.attributes.keyEvent shouldBe None
+  }
+
+  it should "parse summary attribute " in {
+    val bodyBlocks = contentItemWithBlocksResponse.content.get.blocks.get.body.get
+    val noSummary = bodyBlocks.filter(_.id == "55267da9e4b091b2a1c75fe0").head
+    val summary = bodyBlocks.filter(_.id == "55267dc0e4b091b2a1c75fe1").head
+
+    summary.attributes.summary shouldBe Some(true)
+    noSummary.attributes.summary shouldBe None
+  }
+
   it should "parse a text element for a block" in {
     val textElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Text)
 
