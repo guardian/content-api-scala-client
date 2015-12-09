@@ -46,6 +46,8 @@ object JsonParser {
   } yield errorResponse
 
   private def fixFields: PartialFunction[JField, JField] = {
+    case JField("summary", JString(s)) => JField("summary", JBool(s.toBoolean))
+    case JField("keyEvent", JString(s)) => JField("keyEvent", JBool(s.toBoolean))
     case JField("showInRelatedContent", JString(s)) => JField("showInRelatedContent", JBool(s.toBoolean))
     case JField("shouldHideAdverts", JString(s)) => JField("shouldHideAdverts", JBool(s.toBoolean))
     case JField("hasStoryPackage", JString(s)) => JField("hasStoryPackage", JBool(s.toBoolean))
