@@ -1,3 +1,9 @@
+## 7.11
+* Added `crossword` content type
+
+## 7.10
+* Parse "keyEvent" and "summary" boolean properties in block attributes
+
 ## 7.9
 * Added `clean` field to AssetFields
 * Added `sensitive` 
