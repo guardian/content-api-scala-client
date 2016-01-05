@@ -1,3 +1,6 @@
+## 7.12
+* Tweak model and fix deserialisation for crossword `separatorLocations` field
+
 ## 7.11
 * Added `crossword` content type
 
