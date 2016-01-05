@@ -491,6 +491,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
      crossword.number should be(24623)
      crossword.dimensions.cols should be(15)
      crossword.entries.head.id should be("8-across")
+     crossword.entries.head.separatorLocations should be(Some(Map("," -> Seq(4))))
    }
 
   private def getBlockElementsOfType(response: ItemResponse, `type`: ElementType): Seq[BlockElement] = {
