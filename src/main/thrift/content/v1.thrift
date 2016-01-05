@@ -606,13 +606,6 @@ struct CrosswordCreator {
     2: required string webUrl
 }
 
-struct SeparatorLocation {
-
-    1: optional string separator
-
-    2: optional list<i32> locations
-}
-
 struct CrosswordEntry {
 
     1: required string id
@@ -625,7 +618,7 @@ struct CrosswordEntry {
 
     5: optional CrosswordPosition position
 
-    6: optional list<SeparatorLocation> separatorLocations
+    6: optional map<string, list<i32>> separatorLocations
 
     7: optional i32 length
 
