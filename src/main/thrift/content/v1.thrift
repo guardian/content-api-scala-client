@@ -158,7 +158,8 @@ enum Office {
 enum AssetType {
     IMAGE = 0,
     VIDEO = 1,
-    AUDIO = 2
+    AUDIO = 2,
+    EMBED = 3
 }
 
 enum MembershipTier {
