@@ -14,46 +14,7 @@ import com.twitter.scrooge.ScroogeSBT
 
 object ContentApiClientBuild extends Build {
 
-  lazy val project = Project(
-    id = "content-api-client",
-    base = file(".")
-  )
-  .enablePlugins(BuildInfoPlugin)
-  .settings(ScroogeSBT.newSettings: _*)
-  .settings(
-    buildInfoKeys := Seq[BuildInfoKey](version),
-
-    buildInfoPackage := "com.gu.contentapi.buildinfo",
-    buildInfoObject := "CapiBuildInfo"
-  )
-  .settings(releaseSettings: _*)
-  .settings(sonatypeSettings: _*)
-  .settings(
-    ScroogeSBT.scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift",
-    unmanagedResourceDirectories in Compile += { baseDirectory.value / "src/main/thrift" },
-    scalaVersion := "2.11.7",
-    crossScalaVersions := Seq("2.11.7", "2.10.5"),
-    organization := "com.gu",
-    name := "content-api-client",
-    description := "Scala client for the Guardian's Content API",
-    licenses := Seq("Apache v2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
-    scmInfo := Some(ScmInfo(
-      url("https://github.com/guardian/content-api-scala-client"),
-      "scm:git:git@github.com:guardian/content-api-scala-client.git"
-    )),
-    maxErrors := 20,
-    javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
-    scalacOptions ++= Seq("-deprecation", "-unchecked"),
-
-    libraryDependencies ++= Seq(
-      "org.json4s" %% "json4s-native" % "3.3.0.RC4",
-      "org.json4s" %% "json4s-ext" % "3.3.0.RC4",
-      "joda-time" % "joda-time" % "2.3",
-      "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
-      "org.apache.thrift" % "libthrift" % "0.9.2",
-      "com.twitter" %% "scrooge-core" % "3.20.0",
-      "org.scalatest" %% "scalatest" % "2.2.1" % "test"
-    ),
+  val mavenSettings = Seq(
     pomExtra := (
       <url>https://github.com/guardian/content-api-scala-client</url>
       <developers>
@@ -89,23 +50,84 @@ object ContentApiClientBuild extends Build {
         </developer>
       </developers>
     ),
-    crossBuild := true,
-    releaseProcess := Seq(
-      checkSnapshotDependencies,
-      inquireVersions,
-      runClean,
-      runTest,
-      setReleaseVersion,
-      commitReleaseVersion,
-      tagRelease,
-      ReleaseStep(
-        action = state => Project.extract(state).runTask(publishSigned, state)._1,
-        enableCrossBuild = true
-      ),
-      setNextVersion,
-      commitNextVersion,
-      ReleaseStep(state => Project.extract(state).runTask(sonatypeReleaseAll, state)._1),
-      pushChanges
+    publishTo <<= version { v =>
+      val nexus = "https://oss.sonatype.org/"
+      if (v.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+    },
+    publishMavenStyle := true,
+    publishArtifact in Test := false,
+    pomIncludeRepository := { _ => false }
+  )
+
+  val commonSettings = Seq(
+    scalaVersion := "2.11.7",
+    crossScalaVersions := Seq("2.11.7", "2.10.5"),
+    organization := "com.gu",
+    licenses := Seq("Apache v2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
+    scmInfo := Some(ScmInfo(
+      url("https://github.com/guardian/content-api-scala-client"),
+      "scm:git:git@github.com:guardian/content-api-scala-client.git"
+    )),
+    javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
+    scalacOptions ++= Seq("-deprecation", "-unchecked")
+  ) ++ mavenSettings
+
+  lazy val root = Project(id = "root", base = file("."))
+    .aggregate(client)
+    .settings(commonSettings)
+    .settings(releaseSettings)
+    .settings(sonatypeSettings)
+    .settings(
+      publishArtifact := false,
+      releaseProcess := Seq(
+        checkSnapshotDependencies,
+        inquireVersions,
+        runClean,
+        runTest,
+        setReleaseVersion,
+        commitReleaseVersion,
+        tagRelease,
+        ReleaseStep(
+          action = state => Project.extract(state).runTask(publishSigned, state)._1,
+          enableCrossBuild = true
+        ),
+        setNextVersion,
+        commitNextVersion,
+        ReleaseStep(state => Project.extract(state).runTask(sonatypeReleaseAll, state)._1),
+        pushChanges
+      )
+    )
+
+  lazy val client = Project(
+    id = "content-api-client",
+    base = file("client")
+  )
+  .enablePlugins(BuildInfoPlugin)
+  .settings(commonSettings)
+  .settings(ScroogeSBT.newSettings)
+  .settings(
+    buildInfoKeys := Seq[BuildInfoKey](version),
+    buildInfoPackage := "com.gu.contentapi.buildinfo",
+    buildInfoObject := "CapiBuildInfo"
+  )
+  .settings(
+    ScroogeSBT.scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift",
+    unmanagedResourceDirectories in Compile += { baseDirectory.value / "src/main/thrift" },
+    name := "content-api-client",
+    description := "Scala client for the Guardian's Content API",
+
+    libraryDependencies ++= Seq(
+      "org.json4s" %% "json4s-native" % "3.3.0.RC4",
+      "org.json4s" %% "json4s-ext" % "3.3.0.RC4",
+      "joda-time" % "joda-time" % "2.3",
+      "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
+      "org.apache.thrift" % "libthrift" % "0.9.2",
+      "com.twitter" %% "scrooge-core" % "3.20.0",
+      "org.scalatest" %% "scalatest" % "2.2.1" % "test",
+      "com.google.guava" % "guava" % "19.0" % "test"
     )
   )
 
