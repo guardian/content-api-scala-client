@@ -1,3 +1,6 @@
+## 7.13
+* Add `embed` to the list of asset types
+
 ## 7.12
 * Tweak model and fix deserialisation for crossword `separatorLocations` field
 
