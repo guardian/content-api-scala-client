@@ -76,7 +76,7 @@ object ContentApiClientBuild extends Build {
   ) ++ mavenSettings
 
   lazy val root = Project(id = "root", base = file("."))
-    .aggregate(client)
+    .aggregate(models, client)
     .settings(commonSettings)
     .settings(releaseSettings)
     .settings(sonatypeSettings)
@@ -101,34 +101,36 @@ object ContentApiClientBuild extends Build {
       )
     )
 
-  lazy val client = Project(
-    id = "content-api-client",
-    base = file("client")
-  )
-  .enablePlugins(BuildInfoPlugin)
-  .settings(commonSettings)
-  .settings(ScroogeSBT.newSettings)
-  .settings(
-    buildInfoKeys := Seq[BuildInfoKey](version),
-    buildInfoPackage := "com.gu.contentapi.buildinfo",
-    buildInfoObject := "CapiBuildInfo"
-  )
-  .settings(
-    ScroogeSBT.scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift",
-    unmanagedResourceDirectories in Compile += { baseDirectory.value / "src/main/thrift" },
-    name := "content-api-client",
-    description := "Scala client for the Guardian's Content API",
-
-    libraryDependencies ++= Seq(
-      "org.json4s" %% "json4s-native" % "3.3.0.RC4",
-      "org.json4s" %% "json4s-ext" % "3.3.0.RC4",
-      "joda-time" % "joda-time" % "2.3",
-      "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
-      "org.apache.thrift" % "libthrift" % "0.9.2",
-      "com.twitter" %% "scrooge-core" % "3.20.0",
-      "org.scalatest" %% "scalatest" % "2.2.1" % "test",
-      "com.google.guava" % "guava" % "19.0" % "test"
+  lazy val models = Project(id = "content-api-models", base = file("models"))
+    .settings(commonSettings)
+    .settings(ScroogeSBT.newSettings)
+    .settings(
+      description := "Scala models for the Guardian's Content API",
+      ScroogeSBT.scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift",
+      unmanagedResourceDirectories in Compile += { baseDirectory.value / "src/main/thrift" },
+      libraryDependencies ++= Seq(
+        "org.apache.thrift" % "libthrift" % "0.9.2",
+        "com.twitter" %% "scrooge-core" % "3.20.0"
+      )
     )
-  )
+
+  lazy val client = Project(id = "content-api-client", base = file("client"))
+    .enablePlugins(BuildInfoPlugin)
+    .dependsOn(models)
+    .settings(commonSettings)
+    .settings(
+      description := "Scala client for the Guardian's Content API",
+      buildInfoKeys := Seq[BuildInfoKey](version),
+      buildInfoPackage := "com.gu.contentapi.buildinfo",
+      buildInfoObject := "CapiBuildInfo",
+      libraryDependencies ++= Seq(
+        "org.json4s" %% "json4s-native" % "3.3.0.RC4",
+        "org.json4s" %% "json4s-ext" % "3.3.0.RC4",
+        "joda-time" % "joda-time" % "2.3",
+        "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
+        "org.scalatest" %% "scalatest" % "2.2.1" % "test",
+        "com.google.guava" % "guava" % "19.0" % "test"
+      )
+    )
 
 }
