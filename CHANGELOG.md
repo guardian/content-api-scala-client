@@ -1,3 +1,10 @@
+## 7.15
+* Split the model classes into a separate artifact called `content-api-models`. They are versioned in sync with the Scala client.
+
+## 7.14
+
+DO NOT USE. This was a botched release. It was only released for Scala 2.11.x
+
 ## 7.13
 * Add `embed` to the list of asset types
 
