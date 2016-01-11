@@ -90,13 +90,10 @@ object ContentApiClientBuild extends Build {
         setReleaseVersion,
         commitReleaseVersion,
         tagRelease,
-        ReleaseStep(
-          action = state => Project.extract(state).runTask(publishSigned, state)._1,
-          enableCrossBuild = true
-        ),
+        releaseStepCommand("+publishSigned"),
         setNextVersion,
         commitNextVersion,
-        ReleaseStep(state => Project.extract(state).runTask(sonatypeReleaseAll, state)._1),
+        releaseStepCommand("sonatypeReleaseAll"),
         pushChanges
       )
     )
