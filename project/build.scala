@@ -66,6 +66,7 @@ object ContentApiClientBuild extends Build {
     scalaVersion := "2.11.7",
     crossScalaVersions := Seq("2.11.7", "2.10.5"),
     releaseCrossBuild := true,
+    releasePublishArtifactsAction := publishSigned.value,
     organization := "com.gu",
     licenses := Seq("Apache v2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
     scmInfo := Some(ScmInfo(
@@ -93,7 +94,8 @@ object ContentApiClientBuild extends Build {
         tagRelease,
         //releaseStepTaskAggregated(publishSigned),
         //releaseStepTask(publish in subproject),
-        releaseStepCommand("publishSigned"),
+        //releaseStepCommand("publishSigned"),
+        publishArtifacts,
         setNextVersion,
         commitNextVersion,
         releaseStepCommand("sonatypeReleaseAll"),
