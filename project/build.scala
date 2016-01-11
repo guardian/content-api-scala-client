@@ -5,7 +5,7 @@ import sbtbuildinfo.BuildInfoPlugin.BuildInfoKey
 import sbtbuildinfo.BuildInfoKeys._
 import sbtrelease._
 import sbtrelease.ReleasePlugin._
-import sbtrelease.ReleasePlugin.ReleaseKeys._
+import sbtrelease.ReleasePlugin.autoImport._
 import sbtrelease.ReleaseStateTransformations._
 import xerial.sbt.Sonatype._
 import xerial.sbt.Sonatype.SonatypeKeys._
@@ -65,6 +65,7 @@ object ContentApiClientBuild extends Build {
   val commonSettings = Seq(
     scalaVersion := "2.11.7",
     crossScalaVersions := Seq("2.11.7", "2.10.5"),
+    releaseCrossBuild := true,
     organization := "com.gu",
     licenses := Seq("Apache v2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
     scmInfo := Some(ScmInfo(
@@ -76,9 +77,9 @@ object ContentApiClientBuild extends Build {
   ) ++ mavenSettings
 
   lazy val root = Project(id = "root", base = file("."))
+    .enablePlugins(ReleasePlugin)
     .aggregate(models, client)
     .settings(commonSettings)
-    .settings(releaseSettings)
     .settings(sonatypeSettings)
     .settings(
       publishArtifact := false,
@@ -90,7 +91,9 @@ object ContentApiClientBuild extends Build {
         setReleaseVersion,
         commitReleaseVersion,
         tagRelease,
-        releaseStepCommand("+publishSigned"),
+        //releaseStepTaskAggregated(publishSigned),
+        //releaseStepTask(publish in subproject),
+        releaseStepCommand("publishSigned"),
         setNextVersion,
         commitNextVersion,
         releaseStepCommand("sonatypeReleaseAll"),
