@@ -1,0 +1,56 @@
+{
+  "response": {
+    "status": "ok",
+    "userTier": "internal",
+    "total": 1,
+    "content": {
+      "type": "article",
+      "sectionId": "crosswords",
+      "webTitle": "Cryptic crossword No 24,623",
+      "webPublicationDate": "2015-06-09T23:00:00Z",
+      "id": "crosswords/cryptic/24623",
+      "webUrl": "http://www.theguardian.com/crosswords/cryptic/24623",
+      "apiUrl": "http://content.guardianapis.com/crosswords/cryptic/24623",
+      "sectionName": "Crosswords"
+    },
+    "package": {
+      "packageId": "I'm packing, I'm packing, I'm pack-pack-packing",
+      "articles": [{
+        "metadata": {
+          "id": "internal-code/page/2436646",
+          "articleType": "Article",
+          "showMainVideo": true,
+          "showKickerTag": true,
+          "byline": "Haroon Siddique and Chris",
+          "showBoostedHeadline": true
+        }, 
+        "content": {
+          "type": "article",
+          "sectionId": "crosswords",
+          "webTitle": "package article 1",
+          "webPublicationDate": "2015-06-09T23:00:00Z",
+          "id": "internal-code/page/2436646",
+          "webUrl": "http://www.theguardian.com/crosswords/cryptic/24623",
+          "apiUrl": "http://content.guardianapis.com/crosswords/cryptic/24623",
+          "sectionName": "Crosswords"
+        }
+      }, {
+        "metadata": {
+          "id": "internal-code/page/2437327",
+          "articleType": "Article",
+          "trailText": "Sunday attendance also drops to 760,000 as decline continues in face of growing secularism, diversity and Chris"
+        },
+        "content": {
+          "type": "article",
+          "sectionId": "crosswords",
+          "webTitle": "package article 2",
+          "webPublicationDate": "2015-06-09T23:00:00Z",
+          "id": "internal-code/page/2437327",
+          "webUrl": "http://www.theguardian.com/crosswords/cryptic/24623",
+          "apiUrl": "http://content.guardianapis.com/crosswords/cryptic/24623",
+          "sectionName": "Crosswords"
+        }
+      }]
+    }
+  }
+}

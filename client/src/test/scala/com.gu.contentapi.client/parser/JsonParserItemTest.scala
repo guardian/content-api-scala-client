@@ -6,6 +6,7 @@ import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
 import com.gu.contentapi.client.ClientTest
 import com.gu.contentapi.client.utils.CapiModelEnrichment._
+import com.gu.storypackage.model.v1.ArticleType
 
 class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with ClientTest {
 
@@ -14,6 +15,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   val contentItemWithCrosswordResponse = JsonParser.parseItem(loadJson("item-content-with-crossword.json"))
   val contentItemWithRichLinkElementResponse = JsonParser.parseItem(loadJson("item-content-with-rich-link-element.json"))
   val contentItemWithMembershipElementResponse = JsonParser.parseItem(loadJson("item-content-with-membership-element.json"))
+  val contentItemWithPackageResponse = JsonParser.parseItem(loadJson("item-content-with-package.json"))
   val tagItemResponse = JsonParser.parseItem(loadJson("item-tag.json"))
   val sectionItemResponse = JsonParser.parseItem(loadJson("item-section.json"))
 
@@ -485,14 +487,33 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     membershipElementFields.linkPrefix.get should be("Membership Event: ")
   }
 
-   it should "deserialize a crossword correctly" in {
-     val crossword = contentItemWithCrosswordResponse.content.value.crossword.value
-     crossword.`type` should be(CrosswordType.Cryptic)
-     crossword.number should be(24623)
-     crossword.dimensions.cols should be(15)
-     crossword.entries.head.id should be("8-across")
-     crossword.entries.head.separatorLocations should be(Some(Map("," -> Seq(4))))
-   }
+  it should "deserialize a crossword correctly" in {
+    val crossword = contentItemWithCrosswordResponse.content.value.crossword.value
+    crossword.`type` should be(CrosswordType.Cryptic)
+    crossword.number should be(24623)
+    crossword.dimensions.cols should be(15)
+    crossword.entries.head.id should be("8-across")
+    crossword.entries.head.separatorLocations should be(Some(Map("," -> Seq(4))))
+  }
+
+  it should "deserialize a package correctly" in {
+    val pkg = contentItemWithPackageResponse.`package`.value
+    pkg.packageId should be("I'm packing, I'm packing, I'm pack-pack-packing")
+    pkg.articles should have size 2
+
+    pkg.articles(0).metadata.id should be("internal-code/page/2436646")
+    pkg.articles(0).metadata.articleType should be(ArticleType.Article)
+    pkg.articles(0).metadata.showMainVideo should be(Some(true))
+    pkg.articles(0).metadata.showKickerTag should be(Some(true))
+    pkg.articles(0).metadata.byline should be(Some("Haroon Siddique and Chris"))
+    pkg.articles(0).metadata.showBoostedHeadline should be(Some(true))
+    pkg.articles(0).content.webTitle should be("package article 1")
+
+    pkg.articles(1).metadata.id should be("internal-code/page/2437327")
+    pkg.articles(1).metadata.articleType should be(ArticleType.Article)
+    pkg.articles(1).metadata.trailText should be(Some("Sunday attendance also drops to 760,000 as decline continues in face of growing secularism, diversity and Chris"))
+    pkg.articles(1).content.webTitle should be("package article 2")
+  }
 
   private def getBlockElementsOfType(response: ItemResponse, `type`: ElementType): Seq[BlockElement] = {
     val bodyBlock = response.content.get.blocks.get.body.get

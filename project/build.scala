@@ -107,9 +107,11 @@ object ContentApiClientBuild extends Build {
       description := "Scala models for the Guardian's Content API",
       ScroogeSBT.scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift",
       unmanagedResourceDirectories in Compile += { baseDirectory.value / "src/main/thrift" },
+      ScroogeSBT.scroogeThriftDependencies in Compile += "story-packages-model_2.11",
       libraryDependencies ++= Seq(
         "org.apache.thrift" % "libthrift" % "0.9.2",
-        "com.twitter" %% "scrooge-core" % "3.20.0"
+        "com.twitter" %% "scrooge-core" % "3.20.0",
+        "com.gu" %% "story-packages-model" % "0.3.1"
       )
     )
 
