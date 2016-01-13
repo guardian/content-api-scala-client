@@ -1,3 +1,6 @@
+## 7.16
+* Add models for new story packages implementation
+
 ## 7.15
 * Split the model classes into a separate artifact called `content-api-models`. They are versioned in sync with the Scala client.
 
