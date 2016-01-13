@@ -1,3 +1,7 @@
+include "event.thrift" # story-packages 
+# TODO rename the file in the story-packages-model project, 
+# as this will quickly lead to a name clash as we add more Thrift includes e.g. for atoms
+
 namespace scala com.gu.contentapi.client.model.v1
 
 struct CapiDateTime {
@@ -1071,4 +1075,28 @@ struct NetworkFront {
      * Path from which the edition is available in the Content API
      */
     6: required string apiUrl
+}
+
+struct PackageArticle {
+
+    /*
+     * The story package metadata about the article. Includes custom kicker, etc.
+     */
+    1: required event.Article metadata
+
+    /*
+     * The content of the article.
+     */
+    2: required Content content
+
+}
+
+struct Package {
+
+    /* The package ID */
+    1: required string packageId
+
+    /* The articles in the package */
+    2: required list<PackageArticle> articles
+
 }

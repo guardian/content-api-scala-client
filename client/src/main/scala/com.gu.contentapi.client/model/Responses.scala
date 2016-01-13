@@ -64,6 +64,7 @@ case class ItemResponse(
     editorsPicks: List[Content],
     mostViewed: List[Content],
     storyPackage: List[Content],
-    leadContent: List[Content])
+    leadContent: List[Content],
+    `package`: Option[Package])
 
 case class ErrorResponse(status: String, message: String)

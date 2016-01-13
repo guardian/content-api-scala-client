@@ -8,12 +8,13 @@ import org.json4s.{CustomSerializer, DefaultFormats}
 import org.json4s.JsonAST._
 import org.json4s.native.JsonMethods
 import com.gu.contentapi.client.model._
+import com.gu.storypackage.model.v1.ArticleType
 
 object JsonParser {
 
   implicit val formats = DefaultFormats + ContentTypeSerializer + DateTimeSerializer +
     MembershipTierSerializer + OfficeSerializer + AssetTypeSerializer + ElementTypeSerializer +
-    TagTypeSerializer + CrosswordTypeSerializer
+    TagTypeSerializer + CrosswordTypeSerializer + StoryPackageArticleTypeSerializer
 
   def parseItem(json: String): ItemResponse = {
     (JsonMethods.parse(json) \ "response").transformField(fixFields).extract[ItemResponse]
@@ -145,6 +146,14 @@ object CrosswordTypeSerializer extends CustomSerializer[CrosswordType](format =>
     case JNull => null
   },
    generateJson[CrosswordType]
+  ))
+
+object StoryPackageArticleTypeSerializer extends CustomSerializer[ArticleType](format => (
+  {
+    case JString(s) => ArticleType.valueOf(norm(s)).getOrElse(ArticleType.Article)
+    case JNull => null
+  },
+   generateJson[ArticleType]
   ))
 
 object DateTimeSerializer extends CustomSerializer[CapiDateTime](format => (
