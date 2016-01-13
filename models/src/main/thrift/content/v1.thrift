@@ -1,6 +1,4 @@
-include "event.thrift" # story-packages 
-# TODO rename the file in the story-packages-model project, 
-# as this will quickly lead to a name clash as we add more Thrift includes e.g. for atoms
+include "story_package_article.thrift"
 
 namespace scala com.gu.contentapi.client.model.v1
 
@@ -1082,7 +1080,7 @@ struct PackageArticle {
     /*
      * The story package metadata about the article. Includes custom kicker, etc.
      */
-    1: required event.Article metadata
+    1: required story_package_article.Article metadata
 
     /*
      * The content of the article.
