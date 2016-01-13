@@ -16,6 +16,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   val contentItemWithRichLinkElementResponse = JsonParser.parseItem(loadJson("item-content-with-rich-link-element.json"))
   val contentItemWithMembershipElementResponse = JsonParser.parseItem(loadJson("item-content-with-membership-element.json"))
   val contentItemWithPackageResponse = JsonParser.parseItem(loadJson("item-content-with-package.json"))
+  val contentItemWithAtomQuiz = JsonParser.parseItem(loadJson("item-content-with-atom-quiz.json"))
   val tagItemResponse = JsonParser.parseItem(loadJson("item-tag.json"))
   val sectionItemResponse = JsonParser.parseItem(loadJson("item-section.json"))
 
@@ -525,6 +526,32 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     pkg.articles(0).metadata.group should be(Group.Included)
     pkg.articles(1).metadata.trailText should be(Some("Sunday attendance also drops to 760,000 as decline continues in face of growing secularism, diversity and Chris"))
     pkg.articles(1).content.webTitle should be("package article 2")
+  }
+
+  it should "deserialize an embedded quiz correctly" in {
+    val content = contentItemWithAtomQuiz.content.value
+    val atoms = content.atoms.value
+    val quiz = atoms.quiz.value
+    val data = quiz.data
+    val quizContent = data.content
+
+    quiz.id should be("be04fec5-7d6f-46c5-936e-f1260acea63b")
+    data.quizType should be("knowledge")
+    quizContent.questions should have size 1
+
+    val question = quizContent.questions(0)
+    question.questionText should be("Is this a good test quiz?")
+    question.answers should have size 2
+
+    question.answers(0).answerText should be("Yes")
+    question.answers(0).assets should have size 0
+    question.answers(0).weight should be(1)
+    question.answers(0).revealText should be(None)
+
+    question.answers(1).answerText should be("No")
+    question.answers(1).assets should have size 0
+    question.answers(1).weight should be(0)
+    question.answers(1).revealText should be(Some("Not bad"))
   }
 
   private def getBlockElementsOfType(response: ItemResponse, `type`: ElementType): Seq[BlockElement] = {
