@@ -4,6 +4,8 @@ include "event.thrift" # story-packages
 
 namespace scala com.gu.contentapi.client.model.v1
 
+include "quiz.thrift"
+
 struct CapiDateTime {
 
     /*
@@ -879,6 +881,18 @@ struct Tag {
     17: optional string twitterHandle
 }
 
+struct QuizAtom {
+  1: required string id
+  2: required list<string> labels // required, but may be empty
+  3: required string defaultHtml
+  4: required quiz.QuizAtomData data       // the atom payload
+//  6: required ContentChangeDetails contentChangeDetails
+ }
+
+/* an embedded content item with an independant lifecycle */
+struct Atoms {
+   1: optional QuizAtom quiz
+}
 
 struct Content {
 
@@ -981,6 +995,8 @@ struct Content {
     15: optional Rights rights
 
     16: optional Crossword crossword
+
+    17: optional Atoms atoms
 }
 
 struct Edition {
