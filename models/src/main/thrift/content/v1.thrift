@@ -2,7 +2,7 @@ include "story_package_article.thrift"
 
 namespace scala com.gu.contentapi.client.model.v1
 
-include "quiz.thrift"
+include "atoms/quiz.thrift"
 
 struct CapiDateTime {
 
@@ -888,7 +888,7 @@ struct QuizAtom {
   1: required string id
   2: required list<string> labels // required, but may be empty
   3: required string defaultHtml
-  4: required quiz.QuizAtomData data       // the atom payload
+  4: required quiz.QuizAtom data       // the atom payload
 //  6: required ContentChangeDetails contentChangeDetails
  }
 
