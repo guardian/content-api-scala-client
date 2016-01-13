@@ -111,7 +111,7 @@ object ContentApiClientBuild extends Build {
       libraryDependencies ++= Seq(
         "org.apache.thrift" % "libthrift" % "0.9.2",
         "com.twitter" %% "scrooge-core" % "3.20.0",
-        "com.gu" %% "story-packages-model" % "0.3.1"
+        "com.gu" %% "story-packages-model" % "0.3.2"
       )
     )
 
