@@ -46,6 +46,10 @@ object JsonParser {
     errorResponse <- response.extractOpt[ErrorResponse]
   } yield errorResponse
 
+  def parseContent(json: String): Content = {
+    JsonMethods.parse(json).transformField(fixFields).extract[Content]
+  }
+
   private def fixFields: PartialFunction[JField, JField] = {
     case JField("summary", JString(s)) => JField("summary", JBool(s.toBoolean))
     case JField("keyEvent", JString(s)) => JField("keyEvent", JBool(s.toBoolean))
