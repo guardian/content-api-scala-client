@@ -1,3 +1,6 @@
+## 7.17
+* Add helper method to JsonParser
+
 ## 7.16
 * Add models for new story packages implementation
 
