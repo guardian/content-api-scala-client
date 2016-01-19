@@ -17,7 +17,8 @@ enum ContentType {
     INTERACTIVE = 3,
     PICTURE = 4,
     VIDEO = 5,
-    CROSSWORD = 6
+    CROSSWORD = 6,
+    AUDIO = 7
 }
 
 /*
