@@ -50,7 +50,8 @@
                 "starRating": "4",
                 "newspaperPageNumber": "3",
                 "legallySensitive": false,
-                "sensitive": false
+                "sensitive": false,
+                "lang": "en"
             },
             "tags": [
                 {

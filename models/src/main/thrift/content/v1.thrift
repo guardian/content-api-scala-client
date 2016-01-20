@@ -752,6 +752,8 @@ struct ContentFields {
     36: optional bool allowUgc
 
     37: optional bool sensitive
+
+    38: optional string lang
 }
 
 struct Reference {
