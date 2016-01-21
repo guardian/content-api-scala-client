@@ -490,6 +490,8 @@ struct BlockAttributes {
     2: optional bool summary
 
     3: optional string title
+
+    4: optional bool pinned
 }
 
 struct User {

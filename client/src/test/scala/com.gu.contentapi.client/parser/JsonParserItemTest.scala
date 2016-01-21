@@ -349,6 +349,15 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     nonKeyEvent.attributes.keyEvent shouldBe None
   }
 
+  it should "parse pinned attribute" in {
+    val bodyBlocks = contentItemWithBlocksResponse.content.get.blocks.get.body.get
+    val pinned = bodyBlocks.filter(_.id == "55267da9e4b091b2a1c75fe0").head
+    val notPinned = bodyBlocks.filter(_.id == "55267dc0e4b091b2a1c75fe1").head
+
+    pinned.attributes.pinned shouldBe Some(true)
+    notPinned.attributes.pinned shouldBe None
+  }
+
   it should "parse summary attribute " in {
     val bodyBlocks = contentItemWithBlocksResponse.content.get.blocks.get.body.get
     val noSummary = bodyBlocks.filter(_.id == "55267da9e4b091b2a1c75fe0").head
