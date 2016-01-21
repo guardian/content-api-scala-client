@@ -145,7 +145,8 @@
           "bodyHtml": "<p>key event text</p>",
           "attributes": {
             "keyEvent": "true",
-            "title": "key event title"
+            "title": "key event title",
+            "pinned": "true"
           },
           "id": "55267da9e4b091b2a1c75fe0",
           "published": true,
