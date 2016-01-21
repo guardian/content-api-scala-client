@@ -1,3 +1,8 @@
+## 7.18
+* Add "audio" content type
+* Add "lang" field to content
+* Add "pinned" block attribute
+
 ## 7.17
 * Add helper method to JsonParser
 
