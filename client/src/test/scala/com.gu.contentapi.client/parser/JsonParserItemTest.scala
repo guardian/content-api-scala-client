@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
 import com.gu.contentapi.client.ClientTest
 import com.gu.contentapi.client.utils.CapiModelEnrichment._
-import com.gu.storypackage.model.v1.ArticleType
+import com.gu.storypackage.model.v1.{ArticleType, Group}
 
 class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with ClientTest {
 
@@ -513,6 +513,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
 
     pkg.articles(0).metadata.id should be("internal-code/page/2436646")
     pkg.articles(0).metadata.articleType should be(ArticleType.Article)
+    pkg.articles(0).metadata.group should be(Group.Included)
     pkg.articles(0).metadata.showMainVideo should be(Some(true))
     pkg.articles(0).metadata.showKickerTag should be(Some(true))
     pkg.articles(0).metadata.byline should be(Some("Haroon Siddique and Chris"))
@@ -521,6 +522,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
 
     pkg.articles(1).metadata.id should be("internal-code/page/2437327")
     pkg.articles(1).metadata.articleType should be(ArticleType.Article)
+    pkg.articles(0).metadata.group should be(Group.Included)
     pkg.articles(1).metadata.trailText should be(Some("Sunday attendance also drops to 760,000 as decline continues in face of growing secularism, diversity and Chris"))
     pkg.articles(1).content.webTitle should be("package article 2")
   }
