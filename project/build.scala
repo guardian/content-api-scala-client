@@ -115,7 +115,7 @@ object ContentApiClientBuild extends Build {
         "org.apache.thrift" % "libthrift" % "0.9.2",
         "com.twitter" %% "scrooge-core" % "3.20.0",
         "com.gu" %% "story-packages-model" % "0.4.0",
-        "com.gu" % "content-atom-model-thrift-src" % "0.2.1-SNAPSHOT" // change this to maven version once published
+        "com.gu" % "content-atom-model-thrift-src" % "0.2.3-SNAPSHOT" // change this to maven version once published
       )
     )
 
