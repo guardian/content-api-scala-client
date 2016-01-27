@@ -7,6 +7,8 @@ import org.scalatest.{FlatSpec, Matchers, OptionValues}
 import com.gu.contentapi.client.ClientTest
 import com.gu.contentapi.client.utils.CapiModelEnrichment._
 import com.gu.storypackage.model.v1.{ArticleType, Group}
+import com.gu.contentatom.thrift.atom.quiz.QuizAtom
+import com.gu.contentatom.thrift.AtomData
 
 class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with ClientTest {
 
@@ -530,9 +532,9 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
 
   it should "deserialize an embedded quiz correctly" in {
     val content = contentItemWithAtomQuiz.content.value
-    val atoms = content.atoms.value
-    val quiz = atoms.quiz.value
-    val data = quiz.data
+    val atoms = content.atoms
+    val quiz = atoms.get.quiz.get
+    val data = quiz.data.asInstanceOf[AtomData.Quiz].quiz
     val quizContent = data.content
 
     quiz.id should be("be04fec5-7d6f-46c5-936e-f1260acea63b")
