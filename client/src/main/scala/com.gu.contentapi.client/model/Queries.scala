@@ -110,6 +110,7 @@ trait ShowExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Owne
   def showRelated = BoolParameter("show-related")
   def showMostViewed = BoolParameter("show-most-viewed")
   def showEditorsPicks = BoolParameter("show-editors-picks")
+  def showPackages = BoolParameter("show-packages")
 }
 
 trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>

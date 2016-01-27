@@ -1,3 +1,10 @@
+## 7.22
+* Add show-packages filter
+
+## 7.19
+* Add serializer for story package group
+* Add lang filter
+
 ## 7.18
 * Add "audio" content type
 * Add "lang" field to content
