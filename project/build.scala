@@ -64,7 +64,7 @@ object ContentApiClientBuild extends Build {
 
   val commonSettings = Seq(
     scalaVersion := "2.11.7",
-    crossScalaVersions := Seq("2.11.7", "2.10.5"),
+    crossScalaVersions := Seq("2.11.7"),
     releaseCrossBuild := true,
     releasePublishArtifactsAction := publishSigned.value,
     organization := "com.gu",
