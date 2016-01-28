@@ -99,7 +99,7 @@ object ContentApiClientBuild extends Build {
         pushChanges
       )
     )
-
+test
   lazy val models = Project(id = "content-api-models", base = file("models"))
     .settings(commonSettings)
     .settings(ScroogeSBT.newSettings)
@@ -109,7 +109,7 @@ object ContentApiClientBuild extends Build {
       unmanagedResourceDirectories in Compile += { baseDirectory.value / "src/main/thrift" },
       ScroogeSBT.scroogeThriftDependencies in Compile ++= Seq(
         "story-packages-model_2.11",
-        "content-atom-model-thrift-src"
+        "content-atom-model_2.11"
       ),
       libraryDependencies ++= Seq(
         "org.apache.thrift" % "libthrift" % "0.9.2",
