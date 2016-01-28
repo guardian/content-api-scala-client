@@ -9,10 +9,12 @@ import org.json4s.JsonAST._
 import org.json4s.native.JsonMethods
 import com.gu.contentapi.client.model._
 import com.gu.storypackage.model.v1.{ArticleType, Group}
+import com.gu.contentatom.thrift._
+import com.gu.contentatom.thrift.atom.quiz._
 
 object JsonParser {
 
-  implicit val formats = DefaultFormats + ContentTypeSerializer + DateTimeSerializer +
+  implicit val formats = DefaultFormats + AtomQuizSerializer + ContentTypeSerializer + DateTimeSerializer +
     MembershipTierSerializer + OfficeSerializer + AssetTypeSerializer + ElementTypeSerializer +
     TagTypeSerializer + CrosswordTypeSerializer + StoryPackageArticleTypeSerializer + StoryPackageGroupSerializer
 
@@ -96,6 +98,46 @@ object JsonParser {
 }
 
 import JsonParser._
+
+
+object Helper {
+  def createChangeRecord(obj: JObject,  dateField: String, userField: String): Option[ChangeRecord] = {
+    val optionalDate = (obj \ dateField).extractOpt[String].map(new DateTime(_).getMillis)
+    optionalDate.map { d =>
+      val user = (obj \ userField).extractOpt[com.gu.contentatom.thrift.User]
+      ChangeRecord(d, user)
+    }
+  }
+}
+
+import Helper._
+
+object AtomQuizSerializer extends CustomSerializer[Atom](format => (
+  {
+    case rawAtom: JObject =>
+
+      val atomId = (rawAtom \ "id").extract[String]
+      val labels = (rawAtom \ "labels").extract[Seq[String]]
+      val defaultHtml = (rawAtom \ "defaultHtml").extract[String]
+
+      val lastModified = createChangeRecord(rawAtom, "lastModifiedDate", "lastModifiedBy")
+      val created = createChangeRecord(rawAtom, "createdDate", "createdBy")
+      val published = createChangeRecord(rawAtom, "publishDate", "publishBy")
+
+      val revision = (rawAtom \ "revision").extract[Long]
+      val change = ContentChangeDetails(lastModified, created, published, revision)
+
+      val atomData = AtomData.Quiz((rawAtom \ "data").extract[QuizAtom])
+      val atomType = AtomType.Quiz
+
+      Atom(atomId, atomType, labels, defaultHtml, atomData, change)
+
+    case JNull => null
+  },
+  generateJson[ContentType]
+  )) {
+}
+
 
 object ContentTypeSerializer extends CustomSerializer[ContentType](format => (
   {

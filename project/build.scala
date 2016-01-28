@@ -99,7 +99,7 @@ object ContentApiClientBuild extends Build {
         pushChanges
       )
     )
-
+test
   lazy val models = Project(id = "content-api-models", base = file("models"))
     .settings(commonSettings)
     .settings(ScroogeSBT.newSettings)
@@ -107,11 +107,15 @@ object ContentApiClientBuild extends Build {
       description := "Scala models for the Guardian's Content API",
       ScroogeSBT.scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift",
       unmanagedResourceDirectories in Compile += { baseDirectory.value / "src/main/thrift" },
-      ScroogeSBT.scroogeThriftDependencies in Compile += s"story-packages-model_${scalaBinaryVersion.value}",
+      ScroogeSBT.scroogeThriftDependencies in Compile ++= Seq(
+        "story-packages-model_2.11",
+        "content-atom-model_2.11"
+      ),
       libraryDependencies ++= Seq(
         "org.apache.thrift" % "libthrift" % "0.9.2",
         "com.twitter" %% "scrooge-core" % "3.20.0",
-        "com.gu" %% "story-packages-model" % "0.4.0"
+        "com.gu" %% "story-packages-model" % "0.4.0",
+        "com.gu" %% "content-atom-model" % "0.2.4"
       )
     )
 

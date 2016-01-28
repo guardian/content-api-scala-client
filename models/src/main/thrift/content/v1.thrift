@@ -1,6 +1,9 @@
 include "story_package_article.thrift"
+include "contentatom.thrift"
 
 namespace scala com.gu.contentapi.client.model.v1
+
+//include "atoms/quiz.thrift"
 
 struct CapiDateTime {
 
@@ -882,6 +885,9 @@ struct Tag {
     17: optional string twitterHandle
 }
 
+struct Atoms {
+    1: optional contentatom.Atom quiz
+}
 
 struct Content {
 
@@ -984,6 +990,8 @@ struct Content {
     15: optional Rights rights
 
     16: optional Crossword crossword
+
+    17: optional Atoms atoms
 }
 
 struct Edition {
