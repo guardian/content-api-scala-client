@@ -1,3 +1,7 @@
+## 7.23
+* Add show-atoms filter
+* Add quiz support
+
 ## 7.22
 * Add show-packages filter
 
