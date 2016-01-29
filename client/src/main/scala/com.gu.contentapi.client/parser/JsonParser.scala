@@ -11,10 +11,13 @@ import com.gu.contentapi.client.model._
 import com.gu.storypackage.model.v1.{ArticleType, Group}
 import com.gu.contentatom.thrift._
 import com.gu.contentatom.thrift.atom.quiz._
+import com.gu.contentatom.thrift.atom.viewpoints._
+
+import scala.util.{Try, Success, Failure}
 
 object JsonParser {
 
-  implicit val formats = DefaultFormats + AtomQuizSerializer + ContentTypeSerializer + DateTimeSerializer +
+  implicit val formats = DefaultFormats + AtomSerializer + ContentTypeSerializer + DateTimeSerializer +
     MembershipTierSerializer + OfficeSerializer + AssetTypeSerializer + ElementTypeSerializer +
     TagTypeSerializer + CrosswordTypeSerializer + StoryPackageArticleTypeSerializer + StoryPackageGroupSerializer
 
@@ -108,36 +111,57 @@ object Helper {
       ChangeRecord(d, user)
     }
   }
+
+  def fixAtomsFields: PartialFunction[JField, JField] = {
+    case JField("date", JString(s)) => JField("date", JLong(new DateTime(s).getMillis))
+  }
+
+  def createAtom(atom: JObject, atomType: AtomType, atomData: AtomData): Atom = {
+    val atomId = (atom \ "id").extract[String]
+    val labels = (atom \ "labels").extract[Seq[String]]
+    val defaultHtml = (atom \ "defaultHtml").extract[String]
+
+    val lastModified = createChangeRecord(atom, "lastModifiedDate", "lastModifiedBy")
+    val created = createChangeRecord(atom, "createdDate", "createdBy")
+    val published = createChangeRecord(atom, "publishDate", "publishBy")
+
+    val revision = (atom \ "revision").extract[Long]
+    val change = ContentChangeDetails(lastModified, created, published, revision)
+
+    Atom(atomId, atomType, labels, defaultHtml, atomData, change)
+  }
+
+  def getQuizIfExists(rawAtom: JObject): Option[Atom] = {
+    Try((rawAtom \ "quiz").extract[JObject]) match {
+      case Success(quizAtom) =>
+        val atomData = AtomData.Quiz((quizAtom \ "data").extract[QuizAtom])
+        Some(createAtom(quizAtom, AtomType.Quiz, atomData))
+      case Failure(_) => None
+    }
+  }
+
+  def getViewpointsIfExists(rawAtom: JObject): Option[Seq[Atom]] = {
+    Try((rawAtom \ "viewpoints").extract[Seq[JObject]]) match {
+      case Success(viewpointAtoms) =>
+        Some(viewpointAtoms map { viewpointAtom =>
+          val atomData = AtomData.Viewpoints((viewpointAtom \ "data").transformField(fixAtomsFields).extract[ViewpointsAtom])
+          createAtom(viewpointAtom, AtomType.Viewpoints, atomData)
+        })
+      case Failure(_) => None
+    }
+  }
 }
 
 import Helper._
 
-object AtomQuizSerializer extends CustomSerializer[Atom](format => (
+object AtomSerializer extends CustomSerializer[Atoms](format => (
   {
-    case rawAtom: JObject =>
-
-      val atomId = (rawAtom \ "id").extract[String]
-      val labels = (rawAtom \ "labels").extract[Seq[String]]
-      val defaultHtml = (rawAtom \ "defaultHtml").extract[String]
-
-      val lastModified = createChangeRecord(rawAtom, "lastModifiedDate", "lastModifiedBy")
-      val created = createChangeRecord(rawAtom, "createdDate", "createdBy")
-      val published = createChangeRecord(rawAtom, "publishDate", "publishBy")
-
-      val revision = (rawAtom \ "revision").extract[Long]
-      val change = ContentChangeDetails(lastModified, created, published, revision)
-
-      val atomData = AtomData.Quiz((rawAtom \ "data").extract[QuizAtom])
-      val atomType = AtomType.Quiz
-
-      Atom(atomId, atomType, labels, defaultHtml, atomData, change)
-
+    case rawAtom: JObject => Atoms(quiz = getQuizIfExists(rawAtom), viewpoints = getViewpointsIfExists(rawAtom))
     case JNull => null
   },
   generateJson[ContentType]
   )) {
 }
-
 
 object ContentTypeSerializer extends CustomSerializer[ContentType](format => (
   {

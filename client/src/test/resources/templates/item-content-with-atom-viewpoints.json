@@ -1,0 +1,110 @@
+{
+  "response": {
+    "status": "ok",
+    "userTier": "internal",
+    "total": 1,
+    "content": {
+      "fields": {
+        "body": ""
+      },
+      "apiUrl": "http://content.code.dev-guardianapis.com/test/2016/jan/12/example",
+      "webUrl": "http://www.code.dev-theguardian.com/test/2016/jan/12/example",
+      "webPublicationDate": "2016-01-12T15:17:19Z",
+      "debug": {
+        "revisionSeenByPorter": 39,
+        "lastSeenByPorterAt": "2016-01-12T17:37:45.622Z"
+      },
+      "webTitle": "example",
+      "sectionId": "test",
+      "type": "article",
+      "id": "test/2016/jan/12/example",
+      "atoms": {
+        "viewpoints": [
+          {
+            "alternateIds": [
+              "atom/viewpoints/4"
+            ],
+            "revision": 1,
+            "createdDate": "2016-01-14T23:34:58Z",
+            "createdBy": {
+              "email": "stephen.wells@guardian.co.uk",
+              "firstName": "Stephen",
+              "lastName": "Wells"
+            },
+            "lastModifiedDate": "2016-01-15T19:03:14Z",
+            "lastModifiedBy": {
+              "email": "stephen.wells@guardian.co.uk",
+              "firstName": "Stephen",
+              "lastName": "Wells"
+            },
+            "defaultHtml": "\n\n\n<link rel=\"stylesheet\" href=\"//interactive.guim.co.uk/atoms/viewpoints.css\"/>\n\n<article class=\"viewpoints-atom\" data-subject-id=\"4\" data-viewpoints-length=\"2\">\n\n<header class=\"viewpoints-atom__header\">\n\n<h1 class=\"viewpoints-atom__viewpoint-title\">Embed test 2</h1>\n\n</header>\n\n\n<section class=\"viewpoint\" data-viewpoint-id=\"13\" data-viewpoint-index=\"0\">\n\n<div class=\"viewpoint__contents\">\n\n<blockquote class=\"viewpoint__quote\">If this works I&#x27;ll be happy, over the moon in fact</blockquote>\n\n\n<cite class=\"viewpoint__candidate-name\" data-commenter-id=\"7\"> Jeb Bush</cite>\n</div>\n\n<aside class=\"viewpoint__candidate-image-container\">\n<img class=\"viewpoint__candidate-image\" src=\"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832981/JebBushR.png\" alt=\"\"/>\n</aside>\n\n\n\n<time class=\"viewpoint__date\">14 January 2016</time>\n\n\n\n</section>\n\n<section class=\"viewpoint viewpoint--odd\" data-viewpoint-id=\"14\" data-viewpoint-index=\"1\">\n\n<div class=\"viewpoint__contents\">\n\n<blockquote class=\"viewpoint__quote\">I&#x27;m all over this atoms stuff, not so hot on teamcity problems,</blockquote>\n\n\n<cite class=\"viewpoint__candidate-name\" data-commenter-id=\"4\">Hilary Clinton</cite>\n</div>\n\n<aside class=\"viewpoint__candidate-image-container\">\n<img class=\"viewpoint__candidate-image\" src=\"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832111/HillaryClintonR.png\" alt=\"\"/>\n</aside>\n\n\n\n<time class=\"viewpoint__date\">12 January 2016</time>\n\n\n\n</section>\n\n</article>",
+            "labels": [],
+            "id": "4",
+            "data": {
+              "name": "Embed test 2",
+              "viewpoints": [
+                {
+                  "commenter": {
+                    "name": "Jeb Bush",
+                    "imageUrl": "http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832981/JebBushR.png",
+                    "description": "Former Florida governor",
+                    "party": "Republican"
+                  },
+                  "quote": "If this works I'll be happy, over the moon in fact",
+                  "date": "2016-01-14T23:34:00Z"
+                },
+                {
+                  "commenter": {
+                    "name": "Hilary Clinton",
+                    "imageUrl": "http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832111/HillaryClintonR.png",
+                    "description": "Former secretary of state",
+                    "party": "Democrat"
+                  },
+                  "quote": "I'm all over this atoms stuff, not so hot on teamcity problems,",
+                  "date": "2016-01-12T23:34:00Z"
+                }
+              ]
+            }
+          },
+          {
+            "alternateIds": [
+              "atom/viewpoints/1"
+            ],
+            "revision": 1,
+            "createdDate": "2016-01-29T23:34:58Z",
+            "createdBy": {
+              "email": "maria-livia.chiorean@guardian.co.uk",
+              "firstName": "Maria",
+              "lastName": "Chiorean"
+            },
+            "lastModifiedDate": "2016-01-29T19:03:14Z",
+            "lastModifiedBy": {
+              "email": "maria-livia.chiorean@guardian.co.uk",
+              "firstName": "Maria",
+              "lastName": "Chiorean"
+            },
+            "defaultHtml": "\n\n\n<link rel=\"stylesheet\" href=\"//interactive.guim.co.uk/atoms/viewpoints.css\"/>\n\n<article class=\"viewpoints-atom\" data-subject-id=\"4\" data-viewpoints-length=\"2\">\n\n<header class=\"viewpoints-atom__header\">\n\n<h1 class=\"viewpoints-atom__viewpoint-title\">Embed test 2</h1>\n\n</header>\n\n\n<section class=\"viewpoint\" data-viewpoint-id=\"13\" data-viewpoint-index=\"0\">\n\n<div class=\"viewpoint__contents\">\n\n<blockquote class=\"viewpoint__quote\">If this works I&#x27;ll be happy, over the moon in fact</blockquote>\n\n\n<cite class=\"viewpoint__candidate-name\" data-commenter-id=\"7\"> Jeb Bush</cite>\n</div>\n\n<aside class=\"viewpoint__candidate-image-container\">\n<img class=\"viewpoint__candidate-image\" src=\"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832981/JebBushR.png\" alt=\"\"/>\n</aside>\n\n\n\n<time class=\"viewpoint__date\">14 January 2016</time>\n\n\n\n</section>\n\n<section class=\"viewpoint viewpoint--odd\" data-viewpoint-id=\"14\" data-viewpoint-index=\"1\">\n\n<div class=\"viewpoint__contents\">\n\n<blockquote class=\"viewpoint__quote\">I&#x27;m all over this atoms stuff, not so hot on teamcity problems,</blockquote>\n\n\n<cite class=\"viewpoint__candidate-name\" data-commenter-id=\"4\">Hilary Clinton</cite>\n</div>\n\n<aside class=\"viewpoint__candidate-image-container\">\n<img class=\"viewpoint__candidate-image\" src=\"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832111/HillaryClintonR.png\" alt=\"\"/>\n</aside>\n\n\n\n<time class=\"viewpoint__date\">12 January 2016</time>\n\n\n\n</section>\n\n</article>",
+            "labels": [],
+            "id": "1",
+            "data": {
+              "name": "Embed test viewpoints",
+              "viewpoints": [
+                {
+                  "commenter": {
+                    "name": "Hilary Clinton",
+                    "imageUrl": "http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832111/HillaryClintonR.png",
+                    "description": "Former secretary of state",
+                    "party": "Democrat"
+                  },
+                  "quote": "I'm all over this atoms stuff",
+                  "date": "2016-01-29T23:34:00Z"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "sectionName": "Test"
+    }
+  }
+}
