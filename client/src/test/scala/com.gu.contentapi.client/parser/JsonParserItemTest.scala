@@ -534,12 +534,11 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   it should "deserialize an embedded quiz correctly" in {
     val content = contentItemWithAtomQuiz.content.get
     val atoms = content.atoms
-    val quiz = atoms.get.atom.get
+    val quiz = atoms.get.quiz.get
     val data = quiz.data.asInstanceOf[AtomData.Quiz].quiz
     val quizContent = data.content
 
     quiz.id should be("be04fec5-7d6f-46c5-936e-f1260acea63b")
-    println(s"QUIZ: $quiz")
     data.quizType should be("knowledge")
     quizContent.questions should have size 1
 
@@ -561,18 +560,20 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   it should "deserialize an embedded viewpoints atom correctly" in {
     val content = contentItemWithAtomViewpoints.content.get
     val atoms = content.atoms
-    val viewpoints = atoms.get.atom.get
-    val data = viewpoints.data.asInstanceOf[AtomData.Viewpoints].viewpoints
+
+    // Check the first viewpoint in array
+    val viewpoints1 = atoms.get.viewpoints.get(0)
+    val data = viewpoints1.data.asInstanceOf[AtomData.Viewpoints].viewpoints
     val viewpointsContent = data.viewpoints
 
-    viewpoints.id should be("4")
+    viewpoints1.id should be("4")
     data.name should be("Embed test 2")
     viewpointsContent should have size 2
 
     val firstViewpoint = viewpointsContent(0)
     firstViewpoint.quote should be("If this works I'll be happy, over the moon in fact")
     firstViewpoint.date should be(Some(1452814440000L))
-    firstViewpoint.commenter.name should be(" Jeb Bush")
+    firstViewpoint.commenter.name should be("Jeb Bush")
     firstViewpoint.commenter.imageUrl should be(Some("http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832981/JebBushR.png"))
     firstViewpoint.commenter.description should be(Some("Former Florida governor"))
     firstViewpoint.commenter.party should be(Some("Republican"))
@@ -584,6 +585,23 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     secondViewpoint.commenter.imageUrl should be(Some("http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832111/HillaryClintonR.png"))
     secondViewpoint.commenter.description should be(Some("Former secretary of state"))
     secondViewpoint.commenter.party should be(Some("Democrat"))
+
+    // Check the second viewpoint in array
+    val viewpoints2 = atoms.get.viewpoints.get(1)
+    val data2 = viewpoints2.data.asInstanceOf[AtomData.Viewpoints].viewpoints
+    val viewpointsContent2 = data2.viewpoints
+
+    viewpoints2.id should be("1")
+    data2.name should be("Embed test viewpoints")
+    viewpointsContent2 should have size 1
+
+    val firstViewpoint2 = viewpointsContent2(0)
+    firstViewpoint2.quote should be("I'm all over this atoms stuff")
+    firstViewpoint2.date should be(Some(1454110440000L))
+    firstViewpoint2.commenter.name should be("Hilary Clinton")
+    firstViewpoint2.commenter.imageUrl should be(Some("http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2016/1/12/1452598832111/HillaryClintonR.png"))
+    firstViewpoint2.commenter.description should be(Some("Former secretary of state"))
+    firstViewpoint2.commenter.party should be(Some("Democrat"))
 
   }
 

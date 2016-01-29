@@ -13,6 +13,8 @@ import com.gu.contentatom.thrift._
 import com.gu.contentatom.thrift.atom.quiz._
 import com.gu.contentatom.thrift.atom.viewpoints._
 
+import scala.util.{Try, Success, Failure}
+
 object JsonParser {
 
   implicit val formats = DefaultFormats + AtomSerializer + ContentTypeSerializer + DateTimeSerializer +
@@ -114,7 +116,7 @@ object Helper {
     case JField("date", JString(s)) => JField("date", JLong(new DateTime(s).getMillis))
   }
 
-  def createAtom(atom: JObject, atomType: AtomType, atomData: AtomData): Atoms = {
+  def createAtom(atom: JObject, atomType: AtomType, atomData: AtomData): Atom = {
     val atomId = (atom \ "id").extract[String]
     val labels = (atom \ "labels").extract[Seq[String]]
     val defaultHtml = (atom \ "defaultHtml").extract[String]
@@ -126,7 +128,27 @@ object Helper {
     val revision = (atom \ "revision").extract[Long]
     val change = ContentChangeDetails(lastModified, created, published, revision)
 
-    Atoms(Some(Atom(atomId, atomType, labels, defaultHtml, atomData, change)))
+    Atom(atomId, atomType, labels, defaultHtml, atomData, change)
+  }
+
+  def getQuizIfExists(rawAtom: JObject): Option[Atom] = {
+    Try((rawAtom \ "quiz").extract[JObject]) match {
+      case Success(quizAtom) =>
+        val atomData = AtomData.Quiz((quizAtom \ "data").extract[QuizAtom])
+        Some(createAtom(quizAtom, AtomType.Quiz, atomData))
+      case Failure(_) => None
+    }
+  }
+
+  def getViewpointsIfExists(rawAtom: JObject): Option[Seq[Atom]] = {
+    Try((rawAtom \ "viewpoints").extract[Seq[JObject]]) match {
+      case Success(viewpointAtoms) =>
+        Some(viewpointAtoms map { viewpointAtom =>
+          val atomData = AtomData.Viewpoints((viewpointAtom \ "data").transformField(fixAtomsFields).extract[ViewpointsAtom])
+          createAtom(viewpointAtom, AtomType.Viewpoints, atomData)
+        })
+      case Failure(_) => None
+    }
   }
 }
 
@@ -134,21 +156,7 @@ import Helper._
 
 object AtomSerializer extends CustomSerializer[Atoms](format => (
   {
-    case rawAtom: JObject =>
-      if((rawAtom \ "quiz") != JNothing) {
-        val quizAtom: JObject = (rawAtom \ "quiz").extract[JObject]
-        val atomData = AtomData.Quiz((quizAtom \ "data").extract[QuizAtom])
-        createAtom(quizAtom, AtomType.Quiz, atomData)
-      }
-      else if((rawAtom \ "viewpoints") != JNothing) {
-        val viewpointAtom: JObject = (rawAtom \ "viewpoints").extract[JObject]
-        val atomData = AtomData.Viewpoints((viewpointAtom \ "data").transformField(fixAtomsFields).extract[ViewpointsAtom])
-        createAtom(viewpointAtom, AtomType.Viewpoints, atomData)
-      }
-      else {
-        println(s"Not supported type of atom $rawAtom")
-        null
-      }
+    case rawAtom: JObject => Atoms(quiz = getQuizIfExists(rawAtom), viewpoints = getViewpointsIfExists(rawAtom))
     case JNull => null
   },
   generateJson[ContentType]

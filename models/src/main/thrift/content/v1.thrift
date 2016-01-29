@@ -886,7 +886,9 @@ struct Tag {
 }
 
 struct Atoms {
-    1: optional contentatom.Atom atom
+    1: optional contentatom.Atom quiz
+
+    2: optional list<contentatom.Atom> viewpoints
 }
 
 struct Content {
