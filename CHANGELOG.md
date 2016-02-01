@@ -1,3 +1,7 @@
+## 7.24
+* Add viewpoints support
+* Change quiz (single object) to quizzes (list of objects)
+
 ## 7.23
 * Add show-atoms filter
 * Add quiz support
