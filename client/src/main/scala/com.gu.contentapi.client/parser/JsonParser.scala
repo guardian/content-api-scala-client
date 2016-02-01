@@ -131,11 +131,15 @@ object Helper {
     Atom(atomId, atomType, labels, defaultHtml, atomData, change)
   }
 
-  def getQuizIfExists(rawAtom: JObject): Option[Atom] = {
-    Try((rawAtom \ "quiz").extract[JObject]) match {
-      case Success(quizAtom) =>
-        val atomData = AtomData.Quiz((quizAtom \ "data").extract[QuizAtom])
-        Some(createAtom(quizAtom, AtomType.Quiz, atomData))
+  // For adding a new atom type define a new function here and then add it to the AtomSerializer
+
+  def getQuizIfExists(rawAtom: JObject): Option[Seq[Atom]] = {
+    Try((rawAtom \ "quiz").extract[Seq[JObject]]) match {
+      case Success(quizAtoms) =>
+        Some(quizAtoms map { quizAtom =>
+          val atomData = AtomData.Quiz((quizAtom \ "data").extract[QuizAtom])
+          createAtom(quizAtom, AtomType.Quiz, atomData)
+        })
       case Failure(_) => None
     }
   }
