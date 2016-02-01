@@ -19,7 +19,7 @@
       "type": "article",
       "id": "test/2016/jan/12/example",
       "atoms": {
-        "quiz": [
+        "quizzes": [
           {
             "alternateIds": [
               "atom/quiz/be04fec5-7d6f-46c5-936e-f1260acea63b"

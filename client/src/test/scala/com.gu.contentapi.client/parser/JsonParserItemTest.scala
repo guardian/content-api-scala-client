@@ -531,15 +531,15 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     pkg.articles(1).content.webTitle should be("package article 2")
   }
 
-  it should "deserialize an embedded quiz correctly" in {
+  it should "deserialize embedded quizzez correctly" in {
     val content = contentItemWithAtomQuiz.content.get
     val atoms = content.atoms
 
-    val quiz = atoms.get.quiz.get(0)
-    val data = quiz.data.asInstanceOf[AtomData.Quiz].quiz
+    val quizzes = atoms.get.quizzes.get(0)
+    val data = quizzes.data.asInstanceOf[AtomData.Quiz].quiz
     val quizContent = data.content
 
-    quiz.id should be("be04fec5-7d6f-46c5-936e-f1260acea63b")
+    quizzes.id should be("be04fec5-7d6f-46c5-936e-f1260acea63b")
     data.quizType should be("knowledge")
     quizContent.questions should have size 1
 
