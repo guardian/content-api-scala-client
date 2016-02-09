@@ -341,7 +341,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     val bodyBlock = contentItemWithBlocksResponse.content.get.blocks.get.body.get
     val blockElements = bodyBlock.filter(!_.elements.isEmpty).head.elements
 
-    blockElements.size should be (6)
+    blockElements.size should be (7)
   }
 
   it should "parse keyEvent attribute " in {
@@ -458,6 +458,15 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
 
     pullquoteElementFields.html.get should be ("<h2>text of the pullquote</h2>")
     pullquoteElementFields.attribution.get should be ("Joe Bloggs")
+  }
+
+  it should "have the correct typeData for an embed element for a block" in {
+    val embedElement = getBlockElementsOfType(contentItemWithBlocksResponse, `type` = ElementType.Embed)
+    val embedElementFields = embedElement.head.embedTypeData.get
+
+    embedElementFields.html.get should be ("<h2>text of the embed</h2>")
+    embedElementFields.safeEmbedCode.get should be (true)
+    embedElementFields.alt.get should be ("Embed alt")
   }
 
   it should "have the correct typeData for a rich-link element for a block" in {
