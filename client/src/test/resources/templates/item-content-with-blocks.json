@@ -65,6 +65,15 @@
                 "type": "pullquote"
               },
               {
+                "assets": [],
+                "embedTypeData": {
+                  "html": "<h2>text of the embed</h2>",
+                  "safeEmbedCode": true,
+                  "alt":"Embed alt"
+                },
+                "type": "embed"
+              },
+              {
                   "assets": [],
                   "videoTypeData": {
                       "description": "Uploaded by FunkItBlog on 2012-01-03.",

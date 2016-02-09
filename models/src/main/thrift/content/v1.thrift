@@ -453,6 +453,15 @@ struct MembershipElementFields {
     11: optional CapiDateTime end
 }
 
+struct EmbedElementFields {
+
+    1: optional string html
+
+    2: optional bool safeEmbedCode
+
+    3: optional string alt
+}
+
 struct BlockElement {
 
     1: required ElementType type
@@ -484,6 +493,8 @@ struct BlockElement {
     14: optional RichLinkElementFields richLinkTypeData
 
     15: optional MembershipElementFields membershipTypeData
+
+    16: optional EmbedElementFields embedTypeData
 }
 
 struct BlockAttributes {
