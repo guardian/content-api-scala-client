@@ -1,3 +1,6 @@
+## 7.25
+* Add embed elements support
+
 ## 7.24
 * Add viewpoints support
 * Change quiz (single object) to quizzes (list of objects)
