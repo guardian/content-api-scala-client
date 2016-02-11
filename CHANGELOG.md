@@ -1,3 +1,6 @@
+## 7.26
+* Add tracking tag type
+
 ## 7.25
 * Add embed elements support
 
