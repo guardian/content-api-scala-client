@@ -134,7 +134,9 @@ enum TagType {
 
     TYPE = 7,
 
-    PUBLICATION = 8
+    PUBLICATION = 8,
+
+    TRACKING = 9
 
 }
 
