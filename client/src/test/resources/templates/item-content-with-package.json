@@ -15,6 +15,7 @@
     },
     "package": {
       "packageId": "I'm packing, I'm packing, I'm pack-pack-packing",
+      "packageName": "I am packing",
       "articles": [{
         "metadata": {
           "id": "internal-code/page/2436646",
