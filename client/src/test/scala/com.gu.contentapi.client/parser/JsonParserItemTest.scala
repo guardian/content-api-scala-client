@@ -20,6 +20,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   val contentItemWithPackageResponse = JsonParser.parseItem(loadJson("item-content-with-package.json"))
   val contentItemWithAtomQuiz = JsonParser.parseItem(loadJson("item-content-with-atom-quiz.json"))
   val contentItemWithAtomViewpoints = JsonParser.parseItem(loadJson("item-content-with-atom-viewpoints.json"))
+  val contentItemWithTweets = JsonParser.parseItem(loadJson("item-content-with-tweets.json"))
   val tagItemResponse = JsonParser.parseItem(loadJson("item-tag.json"))
   val sectionItemResponse = JsonParser.parseItem(loadJson("item-section.json"))
 
@@ -613,6 +614,16 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     firstViewpoint2.commenter.description should be(Some("Former secretary of state"))
     firstViewpoint2.commenter.party should be(Some("Democrat"))
 
+  }
+
+  it should "deserialize a tweet asset with the correct asset type" in {
+    val content = contentItemWithTweets.content.get
+    val tweetElements = content.elements.get.filter(_.`type` == ElementType.Tweet)
+
+    tweetElements(0).assets(0).`type` should be(AssetType.Image)
+    tweetElements(0).assets(1).`type` should be(AssetType.Tweet)
+
+    tweetElements(1).assets(0).`type` should be(AssetType.Tweet)
   }
 
   private def getBlockElementsOfType(response: ItemResponse, `type`: ElementType): Seq[BlockElement] = {
