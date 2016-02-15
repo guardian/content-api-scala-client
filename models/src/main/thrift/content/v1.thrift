@@ -167,7 +167,8 @@ enum AssetType {
     IMAGE = 0,
     VIDEO = 1,
     AUDIO = 2,
-    EMBED = 3
+    EMBED = 3,
+    TWEET = 4
 }
 
 enum MembershipTier {
