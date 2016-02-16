@@ -1126,4 +1126,6 @@ struct Package {
     /* The articles in the package */
     2: required list<PackageArticle> articles
 
+    /* The package name */
+    3: required string packageName
 }

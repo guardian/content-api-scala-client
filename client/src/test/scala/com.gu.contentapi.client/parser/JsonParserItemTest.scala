@@ -523,6 +523,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   it should "deserialize a package correctly" in {
     val pkg = contentItemWithPackageResponse.`package`.value
     pkg.packageId should be("I'm packing, I'm packing, I'm pack-pack-packing")
+    pkg.packageName should be("I am packing")
     pkg.articles should have size 2
 
     pkg.articles(0).metadata.id should be("internal-code/page/2436646")
