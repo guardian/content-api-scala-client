@@ -52,15 +52,19 @@
                       {
                         "answerText": "Yes",
                         "assets": [],
-                        "weight": 1
+                        "weight": 1,
+                        "id": "a1",
+                        "bucket": ["b1","b2"]
                       },
                       {
                         "answerText": "No",
                         "assets": [],
                         "weight": 0,
-                        "revealText": "Not bad"
+                        "revealText": "Not bad",
+                        "id": "a2"
                       }
-                    ]
+                    ],
+                    "id": "q1"
                   }
                 ],
                 "resultGroups": {
