@@ -561,6 +561,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     question.answers(0).assets should have size 0
     question.answers(0).weight should be(1)
     question.answers(0).revealText should be(None)
+    question.answers(0).bucket should be(Some(Seq("b1","b2")))
 
     question.answers(1).answerText should be("No")
     question.answers(1).assets should have size 0
