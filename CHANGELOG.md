@@ -1,3 +1,6 @@
+## 7.28
+* Fix the `package` field on the content response. It is actually called `packages` and is a list.
+
 ## 7.27
 * Update content-atom version to 0.2.6. This adds `id` and `bucket` fields to the `quiz` model.
 * Update story-package version to 1.0.2. This adds the `packageName` field to the `package` model.
