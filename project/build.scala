@@ -99,7 +99,7 @@ object ContentApiClientBuild extends Build {
         pushChanges
       )
     )
-test
+
   lazy val models = Project(id = "content-api-models", base = file("models"))
     .settings(commonSettings)
     .settings(ScroogeSBT.newSettings)
