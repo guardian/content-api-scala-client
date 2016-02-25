@@ -13,7 +13,7 @@
       "apiUrl": "http://content.guardianapis.com/crosswords/cryptic/24623",
       "sectionName": "Crosswords"
     },
-    "package": {
+    "packages": [{
       "packageId": "I'm packing, I'm packing, I'm pack-pack-packing",
       "packageName": "I am packing",
       "articles": [{
@@ -54,6 +54,6 @@
           "sectionName": "Crosswords"
         }
       }]
-    }
+    }]
   }
 }
