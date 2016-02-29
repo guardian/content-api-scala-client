@@ -1,3 +1,6 @@
+## 7.29
+* Add star-rating and membership-access filters
+
 ## 7.28
 * Fix the `package` field on the content response. It is actually called `packages` and is a list.
 

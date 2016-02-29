@@ -140,6 +140,8 @@ trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Ow
   def toDate = DateParameter("to-date")
   def contentType = StringParameter("type")
   def lang = StringParameter("lang")
+  def starRating = IntParameter("star-rating")
+  def membershipAccess = StringParameter("membership-access")
 }
 
 trait FilterTagParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
