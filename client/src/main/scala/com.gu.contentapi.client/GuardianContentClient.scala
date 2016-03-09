@@ -1,19 +1,32 @@
 package com.gu.contentapi.client
 
 import com.gu.contentapi.client.model._
+import com.gu.contentapi.client.model.v1.{SearchResponse => SearchResponseThrift}
+import com.gu.contentapi.client.model.v1.{ErrorResponse => ErrorResponseThrift}
+import com.gu.contentapi.client.model.v1.{ItemResponse => ItemResponseThrift}
+import com.gu.contentapi.client.model.v1.{TagsResponse => TagsResponseThrift}
+import com.gu.contentapi.client.model.v1.{EditionsResponse => EditionsResponseThrift}
+import com.gu.contentapi.client.model.v1.{SectionsResponse => SectionsResponseThrift}
+import com.gu.contentapi.client.model.v1.{RemovedContentResponse => RemovedContentResponseThrift}
+
 import com.gu.contentapi.client.parser.JsonParser
+
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.ning.http.client.AsyncHttpClientConfig.Builder
-import com.ning.http.client.{AsyncHttpClientConfig, AsyncHttpClient}
+import com.ning.http.client.AsyncHttpClient
 import dispatch.{FunctionHandler, Http}
 import com.gu.contentapi.buildinfo.CapiBuildInfo
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import com.gu.contentapi.client.parser.ThriftDeserializer
+
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
+case class GuardianContentApiThriftError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponseThrift] = None) extends Exception(httpMessage)
 
 trait ContentApiClientLogic {
   val apiKey: String
+  def useThrift: Boolean
 
   protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
 
@@ -45,53 +58,82 @@ trait ContentApiClientLogic {
   val editions = EditionsQuery()
   val removedContent = RemovedContentQuery()
 
-  case class HttpResponse(body: String, statusCode: Int, statusMessage: String)
+  case class HttpResponse(body: Array[Byte], statusCode: Int, statusMessage: String)
 
   protected[client] def url(location: String, parameters: Map[String, String]): String = {
     require(!location.contains('?'), "must not specify parameters in URL")
     location + QueryStringParams(parameters + ("api-key" -> apiKey))
   }
 
-  protected def fetch(url: String)(implicit context: ExecutionContext): Future[String] = {
-    val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/json")
+  protected def fetch(url: String)(implicit context: ExecutionContext): Future[Array[Byte]] = {
+    val headers = if (useThrift) Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift") else Map("User-Agent" -> userAgent, "Accept" -> "application/json")
 
     for (response <- get(url, headers)) yield {
       if (List(200, 302) contains response.statusCode) response.body
-      else throw new GuardianContentApiError(response.statusCode, response.statusMessage, JsonParser.parseError(response.body))
+      else throw contentApiError(response)
     }
   }
 
+  private def contentApiError(response: HttpResponse): GuardianContentApiThriftError = {
+    if (useThrift) GuardianContentApiThriftError(response.statusCode, response.statusMessage, Some(ThriftDeserializer.deserialize(response.body, ErrorResponseThrift)))
+    else GuardianContentApiThriftError(response.statusCode, response.statusMessage, JsonParser.parseErrorThrift(new String(response.body, "UTF-8")))
+  }
+
   protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
-    val req = headers.foldLeft(dispatch.url(url)) {
+
+    val formatUrl = if (useThrift) s"$url&format=thrift" else url
+
+    val req = headers.foldLeft(dispatch.url(formatUrl)) {
       case (r, (name, value)) => r.setHeader(name, value)
     }
-    def handler = new FunctionHandler(r => HttpResponse(r.getResponseBody("utf-8"), r.getStatusCode, r.getStatusText))
+    def handler = new FunctionHandler(r => HttpResponse(r.getResponseBodyAsBytes, r.getStatusCode, r.getStatusText))
     http(req.toRequest, handler)
   }
 
   def getUrl(contentApiQuery: ContentApiQuery): String =
     url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
 
-  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[String] =
+  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
     fetch(getUrl(contentApiQuery))
 
-  def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
-    fetchResponse(itemQuery) map JsonParser.parseItem
 
-  def getResponse(searchQuery: SearchQuery)(implicit context: ExecutionContext): Future[SearchResponse] =
-    fetchResponse(searchQuery) map JsonParser.parseSearch
+  /* Exposed API */
 
-  def getResponse(tagsQuery: TagsQuery)(implicit context: ExecutionContext): Future[TagsResponse] =
-    fetchResponse(tagsQuery) map JsonParser.parseTags
+  def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponseThrift] =
+    fetchResponse(itemQuery) map { response =>
+      if (useThrift) ThriftDeserializer.deserialize(response, ItemResponseThrift)
+      else JsonParser.parseItemThrift(new String(response, "UTF-8"))
+    }
 
-  def getResponse(sectionsQuery: SectionsQuery)(implicit context: ExecutionContext): Future[SectionsResponse] =
-    fetchResponse(sectionsQuery) map JsonParser.parseSections
+  def getResponse(searchQuery: SearchQuery)(implicit context: ExecutionContext): Future[SearchResponseThrift] =
+    fetchResponse(searchQuery) map { response =>
+      if (useThrift) ThriftDeserializer.deserialize(response, SearchResponseThrift)
+      else JsonParser.parseSearchThrift(new String(response, "UTF-8"))
+    }
 
-  def getResponse(editionsQuery: EditionsQuery)(implicit context: ExecutionContext): Future[EditionsResponse] =
-    fetchResponse(editionsQuery) map JsonParser.parseEditions
+  def getResponse(tagsQuery: TagsQuery)(implicit context: ExecutionContext): Future[TagsResponseThrift] =
+    fetchResponse(tagsQuery) map { response =>
+      if (useThrift) ThriftDeserializer.deserialize(response, TagsResponseThrift)
+      else JsonParser.parseTagsThrift(new String(response, "UTF-8"))
+    }
 
-  def getResponse(removedContentQuery: RemovedContentQuery)(implicit context: ExecutionContext): Future[RemovedContentResponse] =
-    fetchResponse(removedContentQuery) map JsonParser.parseRemovedContent
+  def getResponse(sectionsQuery: SectionsQuery)(implicit context: ExecutionContext): Future[SectionsResponseThrift] =
+    fetchResponse(sectionsQuery) map { response =>
+      if (useThrift) ThriftDeserializer.deserialize(response, SectionsResponseThrift)
+      else JsonParser.parseSectionsThrift(new String(response, "UTF-8"))
+    }
+
+  def getResponse(editionsQuery: EditionsQuery)(implicit context: ExecutionContext): Future[EditionsResponseThrift] =
+    fetchResponse(editionsQuery) map { response =>
+      if (useThrift) ThriftDeserializer.deserialize(response, EditionsResponseThrift)
+      else JsonParser.parseEditionsThrift(new String(response, "UTF-8"))
+    }
+
+  def getResponse(removedContentQuery: RemovedContentQuery)(implicit context: ExecutionContext): Future[RemovedContentResponseThrift] =
+    fetchResponse(removedContentQuery) map { response =>
+      if (useThrift) ThriftDeserializer.deserialize(response, RemovedContentResponseThrift)
+      else JsonParser.parseRemovedContentThrift(new String(response, "UTF-8"))
+    }
 
   /**
    * Shutdown the client and clean up all associated resources.
@@ -102,4 +144,6 @@ trait ContentApiClientLogic {
 
 }
 
-class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
+class GuardianContentClient(val apiKey: String, val useThrift: Boolean = false) extends ContentApiClientLogic
+
+

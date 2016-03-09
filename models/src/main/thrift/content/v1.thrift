@@ -1147,3 +1147,191 @@ struct Package {
     /* The package name */
     3: required string packageName
 }
+
+struct ContentStats {
+
+    1: required i32 videos
+
+    2: required i32 images
+}
+
+/* These are experimental Responses structures */
+
+struct SearchResponse {
+
+    1: required string status
+
+    2: required string userTier
+
+    3: required i32 total
+
+    4: required i32 startIndex
+
+    5: required i32 pageSize
+
+    6: required i32 currentPage
+
+    7: required i32 pages
+
+    8: required string orderBy
+
+    9: required list<Content> results
+}
+
+struct ItemResponse {
+
+    1: required string status
+
+    2: required string userTier
+
+    3: optional i32 total
+
+    4: optional i32 startIndex
+
+    5: optional i32 pageSize
+
+    6: optional i32 currentPage
+
+    7: optional i32 pages
+
+    8: optional string orderBy
+
+    9: optional Content content
+
+    10: optional Tag tag
+
+    11: optional Edition edition
+
+    12: optional Section section
+
+    13: optional list<Content> results
+
+    14: optional contentatom.Atom quiz
+
+    15: optional list<Content> relatedContent
+
+    /* Old story packages */
+    16: optional list<Content> storyPackage
+
+    17: optional list<Content> editorsPicks
+
+    18: optional list<Content> mostViewed
+
+    19: optional list<Content> leadContent
+
+    /* New story packages */
+    20: optional list<Package> packages
+
+    21: optional list<contentatom.Atom> viewpoints
+}
+
+struct TagsResponse {
+
+    1: required string status
+
+    2: required string userTier
+
+    3: required i32 total
+
+    4: required i32 startIndex
+
+    5: required i32 pageSize
+
+    6: required i32 currentPage
+
+    7: required i32 pages
+
+    8: required list<Tag> results
+}
+
+struct SectionsResponse {
+
+    1: required string status
+
+    2: required string userTier
+
+    3: required i32 total
+
+    4: required list<Section> results
+}
+
+struct EditionsResponse {
+
+    1: required string status
+
+    2: required string userTier
+
+    3: required i32 total
+
+    4: required list<NetworkFront> results
+}
+
+struct AtomsResponse {
+
+    1: required string status
+
+    2: required string userTier
+
+    3: required i32 total
+
+    4: required i32 startIndex
+
+    5: required i32 pageSize
+
+    6: required i32 currentPage
+
+    7: required i32 pages
+
+    8: required list<Atoms> results
+}
+
+struct PackageResponse {
+
+    1: required string status
+
+    2: required string userTier
+
+    3: required i32 total
+
+    4: required i32 startIndex
+
+    5: required i32 pageSize
+
+    6: required i32 currentPage
+
+    7: required i32 pages
+
+    8: required string orderBy
+
+    9: required list<Package> results
+}
+
+struct RemovedContentResponse {
+
+    1: required string status
+
+    2: required string userTier
+
+    3: required i32 total
+
+    4: required i32 startIndex
+
+    5: required i32 pageSize
+
+    6: required i32 currentPage
+
+    7: required i32 pages
+
+    8: required string orderBy
+
+    9: required list<string> results
+}
+
+struct ErrorResponse {
+
+    1: required string status
+
+    2: required string message
+}
+
+
