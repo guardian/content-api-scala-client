@@ -905,6 +905,19 @@ struct Atoms {
     2: optional list<contentatom.Atom> viewpoints
 }
 
+struct ContentStats {
+
+   /*
+    * The number of videos that exist in a piece of content.
+    */
+    1: required i32 videos
+
+   /*
+    * The number of images that exist in a piece of content.
+    */
+    2: required i32 images
+}
+
 struct Content {
 
     /*
@@ -1008,6 +1021,8 @@ struct Content {
     16: optional Crossword crossword
 
     17: optional Atoms atoms
+
+    18: optional ContentStats stats
 }
 
 struct Edition {
