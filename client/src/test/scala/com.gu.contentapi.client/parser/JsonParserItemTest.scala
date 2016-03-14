@@ -21,8 +21,10 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
   val contentItemWithAtomQuiz = JsonParser.parseItem(loadJson("item-content-with-atom-quiz.json"))
   val contentItemWithAtomViewpoints = JsonParser.parseItem(loadJson("item-content-with-atom-viewpoints.json"))
   val contentItemWithTweets = JsonParser.parseItem(loadJson("item-content-with-tweets.json"))
+  val contentItemWithStats = JsonParser.parseItem(loadJson("item-content-with-blocks.json"))
   val tagItemResponse = JsonParser.parseItem(loadJson("item-tag.json"))
   val sectionItemResponse = JsonParser.parseItem(loadJson("item-section.json"))
+
 
   "content item parser" should "parse basic response fields" in {
     contentItemResponse.status should be ("ok")
@@ -626,6 +628,11 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     tweetElements(0).assets(1).`type` should be(AssetType.Tweet)
 
     tweetElements(1).assets(0).`type` should be(AssetType.Tweet)
+  }
+
+  it should "deserialize content stats" in {
+    val content = contentItemWithStats.content.get
+    content.stats should be(Some(ContentStats(1, 1)))
   }
 
   private def getBlockElementsOfType(response: ItemResponse, `type`: ElementType): Seq[BlockElement] = {
