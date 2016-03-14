@@ -1,3 +1,6 @@
+## 7.30
+* Add show-stats parameter.
+
 ## 7.29
 * Add star-rating and membership-access filters
 
