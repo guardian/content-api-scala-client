@@ -520,6 +520,7 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     crossword.dimensions.cols should be(15)
     crossword.entries.head.id should be("8-across")
     crossword.entries.head.separatorLocations should be(Some(Map("," -> Seq(4))))
+    crossword.dateSolutionAvailable should be(Some(CapiDateTime(new DateTime("2016-03-17").getMillis)))
   }
 
   it should "deserialize a package correctly" in {

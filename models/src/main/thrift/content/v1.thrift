@@ -681,6 +681,9 @@ struct Crossword {
     12: optional string pdf
 
     13: optional string annotatedSolution
+
+    14: optional CapiDateTime dateSolutionAvailable
+
 }
 
 struct Element {
