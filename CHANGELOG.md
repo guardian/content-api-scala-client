@@ -1,3 +1,9 @@
+## 8.0
+* Add optional support (client-side) for processing thrift responses, together with json.
+  Howerver, thrift is NOT supported at the moment by Content Api; an upgrade of the Scala client will follow.
+* The following fields for item responses are now Scala Options: `results`, `relatedContent`,
+  `editorsPicks`, `mostViewed`, and `leadContent`.
+
 ## 7.30
 * Add show-stats parameter.
 
