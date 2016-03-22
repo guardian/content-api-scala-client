@@ -1148,14 +1148,8 @@ struct Package {
     3: required string packageName
 }
 
-struct ContentStats {
 
-    1: required i32 videos
-
-    2: required i32 images
-}
-
-/* These are experimental Responses structures */
+/* These are Responses structures shared with the Content API */
 
 struct SearchResponse {
 
