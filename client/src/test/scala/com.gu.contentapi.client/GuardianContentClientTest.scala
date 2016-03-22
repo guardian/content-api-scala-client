@@ -1,7 +1,9 @@
 package com.gu.contentapi.client
 
 import com.gu.contentapi.client.model.v1.ContentType
-import com.gu.contentapi.client.model.{ErrorResponse, ItemQuery}
+
+import com.gu.contentapi.client.model.v1.{ErrorResponse => ErrorResponseThrift }
+import com.gu.contentapi.client.model.ItemQuery
 import org.joda.time.DateTime
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
@@ -23,7 +25,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest w
   it should "return errors as a broken promise" in {
     val query = ItemQuery("something-that-does-not-exist")
     val errorTest = api.getResponse(query) recover { case error =>
-      error should be (GuardianContentApiError(404, "Not Found", Some(ErrorResponse("error", "The requested resource could not be found."))))
+      error should be (GuardianContentApiThriftError(404, "Not Found", Some(ErrorResponseThrift("error", "The requested resource could not be found."))))
     }
     errorTest.futureValue
   }

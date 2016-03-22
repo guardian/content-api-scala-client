@@ -1,13 +1,29 @@
 package com.gu.contentapi.client.parser
 
+
+import com.gu.contentapi.client.model.v1.{SearchResponse => SearchResponseThrift}
+import com.gu.contentapi.client.model.v1.{ErrorResponse => ErrorResponseThrift}
+import com.gu.contentapi.client.model.v1.{ItemResponse => ItemResponseThrift}
+import com.gu.contentapi.client.model.v1.{TagsResponse => TagsResponseThrift}
+import com.gu.contentapi.client.model.v1.{EditionsResponse => EditionsResponseThrift}
+import com.gu.contentapi.client.model.v1.{SectionsResponse => SectionsResponseThrift}
+import com.gu.contentapi.client.model.v1.{RemovedContentResponse => RemovedContentResponseThrift}
 import com.gu.contentapi.client.model.v1._
+
+import com.gu.contentapi.client.model.ItemResponse
+import com.gu.contentapi.client.model.SearchResponse
+import com.gu.contentapi.client.model.RemovedContentResponse
+import com.gu.contentapi.client.model.TagsResponse
+import com.gu.contentapi.client.model.SectionsResponse
+import com.gu.contentapi.client.model.EditionsResponse
+import com.gu.contentapi.client.model.ErrorResponse
+
 import com.twitter.scrooge.ThriftEnum
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.DateTime
 import org.json4s.{CustomSerializer, DefaultFormats}
 import org.json4s.JsonAST._
 import org.json4s.native.JsonMethods
-import com.gu.contentapi.client.model._
 import com.gu.storypackage.model.v1.{ArticleType, Group}
 import com.gu.contentatom.thrift._
 import com.gu.contentatom.thrift.atom.quiz._
@@ -21,34 +37,70 @@ object JsonParser {
     MembershipTierSerializer + OfficeSerializer + AssetTypeSerializer + ElementTypeSerializer +
     TagTypeSerializer + CrosswordTypeSerializer + StoryPackageArticleTypeSerializer + StoryPackageGroupSerializer
 
+  /*
+    We need to keep the all the old json parsers to keep the tests healthy;
+    however we're not using them anymore in the actual client. In the future, if we decide
+    to keep thrift only we can fix those test and delete the duplicate parsers below.
+   */
+
   def parseItem(json: String): ItemResponse = {
     (JsonMethods.parse(json) \ "response").transformField(fixFields).extract[ItemResponse]
+  }
+
+  def parseItemThrift(json: String): ItemResponseThrift = {
+    (JsonMethods.parse(json) \ "response").transformField(fixFields).extract[ItemResponseThrift]
   }
 
   def parseSearch(json: String): SearchResponse = {
     (JsonMethods.parse(json) \ "response").transformField(fixFields).extract[SearchResponse]
   }
 
+  def parseSearchThrift(json: String): SearchResponseThrift = {
+    (JsonMethods.parse(json) \ "response").transformField(fixFields).extract[SearchResponseThrift]
+  }
+
   def parseRemovedContent(json: String): RemovedContentResponse = {
     (JsonMethods.parse(json) \ "response").extract[RemovedContentResponse]
+  }
+
+  def parseRemovedContentThrift(json: String): RemovedContentResponseThrift = {
+    (JsonMethods.parse(json) \ "response").extract[RemovedContentResponseThrift]
   }
 
   def parseTags(json: String): TagsResponse = {
     (JsonMethods.parse(json) \ "response").extract[TagsResponse]
   }
 
+  def parseTagsThrift(json: String): TagsResponseThrift = {
+    (JsonMethods.parse(json) \ "response").extract[TagsResponseThrift]
+  }
+
   def parseSections(json: String): SectionsResponse = {
     (JsonMethods.parse(json) \ "response").extract[SectionsResponse]
+  }
+
+  def parseSectionsThrift(json: String): SectionsResponseThrift = {
+    (JsonMethods.parse(json) \ "response").extract[SectionsResponseThrift]
   }
 
   def parseEditions(json: String): EditionsResponse = {
     (JsonMethods.parse(json) \ "response").extract[EditionsResponse]
   }
 
+  def parseEditionsThrift(json: String): EditionsResponseThrift = {
+    (JsonMethods.parse(json) \ "response").extract[EditionsResponseThrift]
+  }
+
   def parseError(json: String): Option[ErrorResponse] = for {
     parsedJson <- JsonMethods.parseOpt(json)
     response = parsedJson \ "response"
     errorResponse <- response.extractOpt[ErrorResponse]
+  } yield errorResponse
+
+  def parseErrorThrift(json: String): Option[ErrorResponseThrift] = for {
+    parsedJson <- JsonMethods.parseOpt(json)
+    response = parsedJson \ "response"
+    errorResponse <- response.extractOpt[ErrorResponseThrift]
   } yield errorResponse
 
   def parseContent(json: String): Content = {

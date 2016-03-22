@@ -101,8 +101,8 @@ client.getResponse(allContentSearch) map { response =>
 }
 
 // print the web titles of the 15 most recent content items
-val lastTenSearch = SearchQuery().pageSize(15)
-client.getResponse(lastTenSearch) map { response =>
+val lastFifteenSearch = SearchQuery().pageSize(15)
+client.getResponse(lastFifteenSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
