@@ -143,6 +143,7 @@ trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Ow
   def lang = StringParameter("lang")
   def starRating = IntParameter("star-rating")
   def membershipAccess = StringParameter("membership-access")
+  def containsElement = StringParameter("contains-element")
 }
 
 trait FilterTagParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
