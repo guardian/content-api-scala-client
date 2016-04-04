@@ -11,7 +11,7 @@ A Scala client for the Guardian's [Content API] (http://explorer.capi.gutools.co
 Add the following lines to your SBT build definition, and set the version number to be the latest from the [releases page] (https://github.com/guardian/content-api-scala-client/releases):
 
 ```scala
-resolvers += Resolver.bintrayRepo("guardian", "platforms"),
+useJCenter := true,
 libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 ```
 
