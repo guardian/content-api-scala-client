@@ -79,7 +79,6 @@ object ContentApiClientBuild extends Build {
       javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
       scalacOptions ++= Seq("-deprecation", "-unchecked"),
       resolvers += Resolver.bintrayRepo("guardian", "platforms"),
-      publishArtifact := false,
       releaseProcess := Seq(
         checkSnapshotDependencies,
         inquireVersions,
