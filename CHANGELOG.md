@@ -1,5 +1,6 @@
 ## 8.1 
 * Add 'contains-element' filter. e.g. contains-element=video
+* Add `commentable` filter.
 * Thrift now supported by the Content API.
 
 ## 8.0
