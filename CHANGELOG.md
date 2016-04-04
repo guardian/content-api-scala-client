@@ -1,6 +1,11 @@
+## 8.1 
+* Add 'contains-element' filter. e.g. contains-element=video
+* Add `commentable` filter.
+* Thrift now supported by the Content API.
+
 ## 8.0
 * Add optional support (client-side) for processing thrift responses, together with json.
-  Howerver, thrift is NOT supported at the moment by Content Api; an upgrade of the Scala client will follow.
+  However, thrift is NOT supported at the moment by Content Api; an upgrade of the Scala client will follow.
 * The following fields for item responses are now Scala Options: `results`, `relatedContent`,
   `editorsPicks`, `mostViewed`, and `leadContent`.
 
