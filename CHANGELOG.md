@@ -1,5 +1,15 @@
+## 8.2
+
+* Split the models into a separate library.
+
+Note that the content-api-client now depends on an artifact that is published to [JCenter](https://bintray.com/bintray/jcenter), not Maven Central. This means you will need the JCenter resolver to be enabled in sbt. If you are using sbt 0.13.11, you may need to add the following line to your sbt config:
+
+```
+useJCenter := true
+```
+
 ## 8.1 
-* Add 'contains-element' filter. e.g. contains-element=video
+* Add `contains-element` filter. e.g. contains-element=video
 * Add `commentable` filter.
 * Thrift now supported by the Content API.
 
