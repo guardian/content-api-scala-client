@@ -238,6 +238,14 @@ class JsonParserItemTest extends FlatSpec with Matchers with OptionValues with C
     tag.podcast.get.explicit should be (true)
     tag.podcast.get.image.value should be ("http://www.theguardian.com/images/lol.jpg")
     tag.podcast.get.subscriptionUrl.value should be ("http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=188674007")
+
+    tag.activeSponsorships.get.head.sponsorName should be("spons test")
+    tag.activeSponsorships.get.head.sponsorLink should be("spons test")
+    tag.activeSponsorships.get.head.sponsorLogo should be("https://static.theguardian.com/sponsTest.png")
+    tag.activeSponsorships.get.head.sponsorshipType should be(SponsorshipType.Foundation)
+    tag.activeSponsorships.get.head.targeting.get.validEditions.get.length should be(1)
+    tag.activeSponsorships.get.head.targeting.get.validEditions.get.head should be("UK")
+
     tag.webUrl should be ("http://www.theguardian.com/world/france")
     tag.apiUrl should be ("http://content.guardianapis.com/world/france")
   }

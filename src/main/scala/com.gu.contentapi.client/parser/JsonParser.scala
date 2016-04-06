@@ -35,7 +35,8 @@ object JsonParser {
 
   implicit val formats = DefaultFormats + AtomSerializer + ContentTypeSerializer + DateTimeSerializer +
     MembershipTierSerializer + OfficeSerializer + AssetTypeSerializer + ElementTypeSerializer +
-    TagTypeSerializer + CrosswordTypeSerializer + StoryPackageArticleTypeSerializer + StoryPackageGroupSerializer
+    TagTypeSerializer + SponsorshipTypeSerializer + CrosswordTypeSerializer +
+    StoryPackageArticleTypeSerializer + StoryPackageGroupSerializer
 
   /*
     We need to keep the all the old json parsers to keep the tests healthy;
@@ -258,6 +259,14 @@ object ElementTypeSerializer extends CustomSerializer[ElementType](format => (
     case JNull => null
   },
    generateJson[ElementType]
+  ))
+
+object SponsorshipTypeSerializer extends CustomSerializer[SponsorshipType](format => (
+  {
+    case JString(s) => SponsorshipType.valueOf(norm(s)).getOrElse(SponsorshipType.Sponsored)
+    case JNull => null
+  },
+   generateJson[SponsorshipType]
   ))
 
 object TagTypeSerializer extends CustomSerializer[TagType](format => (

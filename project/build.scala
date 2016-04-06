@@ -96,7 +96,7 @@ object ContentApiClientBuild extends Build {
       buildInfoPackage := "com.gu.contentapi.buildinfo",
       buildInfoObject := "CapiBuildInfo",
       libraryDependencies ++= Seq(
-        "com.gu" % "content-api-models" % "8.1.2",
+        "com.gu" % "content-api-models" % "8.3",
         "org.apache.thrift" % "libthrift" % "0.9.2",
         "com.twitter" %% "scrooge-core" % "3.20.0",
         "org.json4s" %% "json4s-native" % "3.3.0",
