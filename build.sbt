@@ -1,5 +1,7 @@
 import sbtrelease.ReleaseStateTransformations._
 
+name:="content-api-client"
+
 enablePlugins(BuildInfoPlugin)
 pomExtra := (
   <url>https://github.com/guardian/content-api-scala-client</url>
