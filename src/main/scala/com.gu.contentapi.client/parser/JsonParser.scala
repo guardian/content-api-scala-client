@@ -8,6 +8,7 @@ import com.gu.contentapi.client.model.v1.{TagsResponse => TagsResponseThrift}
 import com.gu.contentapi.client.model.v1.{EditionsResponse => EditionsResponseThrift}
 import com.gu.contentapi.client.model.v1.{SectionsResponse => SectionsResponseThrift}
 import com.gu.contentapi.client.model.v1.{RemovedContentResponse => RemovedContentResponseThrift}
+import com.gu.contentapi.client.model.v1.{VideoStatsResponse => VideoStatsResponseThrift}
 import com.gu.contentapi.client.model.v1._
 
 import com.gu.contentapi.client.model.ItemResponse
@@ -17,6 +18,7 @@ import com.gu.contentapi.client.model.TagsResponse
 import com.gu.contentapi.client.model.SectionsResponse
 import com.gu.contentapi.client.model.EditionsResponse
 import com.gu.contentapi.client.model.ErrorResponse
+import com.gu.contentapi.client.model.VideoStatsResponse
 
 import com.twitter.scrooge.ThriftEnum
 import org.joda.time.format.ISODateTimeFormat
@@ -90,6 +92,14 @@ object JsonParser {
 
   def parseEditionsThrift(json: String): EditionsResponseThrift = {
     (JsonMethods.parse(json) \ "response").extract[EditionsResponseThrift]
+  }
+
+  def parseVideoStats(json: String): VideoStatsResponse = {
+    (JsonMethods.parse(json) \ "response").extract[VideoStatsResponse]
+  }
+
+  def parseVideoStatsThrift(json: String): VideoStatsResponseThrift = {
+    (JsonMethods.parse(json) \ "response").extract[VideoStatsResponseThrift]
   }
 
   def parseError(json: String): Option[ErrorResponse] = for {

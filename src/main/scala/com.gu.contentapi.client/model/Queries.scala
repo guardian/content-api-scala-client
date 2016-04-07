@@ -89,6 +89,18 @@ case class EditionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   override def pathSegment: String = "editions"
 }
 
+case class VideoStatsQuery(
+  edition: Option[String] = None,
+  section: Option[String] = None,
+  parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+  with FilterSearchParameters[VideoStatsQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(edition, section, parameterMap)
+
+  override def pathSegment: String = Seq(Some("stats/videos"), edition, section).flatten.mkString("/")
+}
+
 trait EditionParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def edition = StringParameter("edition")
 }
