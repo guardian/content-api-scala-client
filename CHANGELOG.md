@@ -1,5 +1,7 @@
-## 8.2
+## 8.3
+* Update Scrooge from 3.16.3 to 4.6.0
 
+## 8.2
 * Split the models into a separate library.
 
 ## 8.1 
