@@ -10,6 +10,7 @@ import com.gu.contentapi.client.model.v1.TagsResponse
 import com.gu.contentapi.client.model.v1.EditionsResponse
 import com.gu.contentapi.client.model.v1.SectionsResponse
 import com.gu.contentapi.client.model.v1.RemovedContentResponse
+import com.gu.contentapi.client.model.v1.VideoStatsResponse
 
 import com.gu.contentapi.client.parser.JsonParser
 
@@ -136,6 +137,12 @@ trait ContentApiClientLogic {
     fetchResponse(removedContentQuery) map { response =>
       if (useThrift) ThriftDeserializer.deserialize(response, RemovedContentResponse)
       else JsonParser.parseRemovedContentThrift(new String(response, StandardCharsets.UTF_8))
+    }
+
+  def getResponse(videoStatsQuery: VideoStatsQuery)(implicit context: ExecutionContext): Future[VideoStatsResponse] =
+    fetchResponse(videoStatsQuery) map { response =>
+      if (useThrift) ThriftDeserializer.deserialize(response, VideoStatsResponse)
+      else JsonParser.parseVideoStatsThrift(new String(response, StandardCharsets.UTF_8))
     }
 
   /**

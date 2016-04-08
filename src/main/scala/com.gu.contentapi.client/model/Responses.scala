@@ -67,4 +67,8 @@ case class ItemResponse(
     leadContent: List[Content],
     packages: Option[List[Package]])
 
+case class VideoStatsResponse(
+    status: String,
+    mostViewedVideos: List[MostViewedVideo])
+
 case class ErrorResponse(status: String, message: String)
