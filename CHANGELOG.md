@@ -1,3 +1,6 @@
+## 8.3
+* Add Video Stats query type
+
 ## 8.2
 * Update Scrooge from 3.16.3 to 4.6.0
 * Split the models into a separate library.
