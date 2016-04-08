@@ -25,7 +25,7 @@ class GuardianContentClientThriftTest extends FlatSpec with Matchers with Client
   it should "return errors as a broken promise" in {
     val query = ItemQuery("something-that-does-not-exist")
     val errorTest = apiThrift.getResponse(query) recover { case error =>
-      error should be (GuardianContentApiThriftError(404, "Not Found", Some(ErrorResponseThrift("error", "The requested resource could not be found."))))
+      error should be (GuardianContentApiError(404, "Not Found", Some(ErrorResponseThrift("error", "The requested resource could not be found."))))
     }
     errorTest.futureValue
   }
