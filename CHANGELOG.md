@@ -1,3 +1,6 @@
+## 8.4
+* Fix the error responses when using Thrift
+
 ## 8.3
 * Add Video Stats query type
 
