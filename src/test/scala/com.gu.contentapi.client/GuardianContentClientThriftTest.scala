@@ -2,8 +2,8 @@ package com.gu.contentapi.client
 
 import com.gu.contentapi.client.model.v1.ContentType
 
-import com.gu.contentapi.client.model.v1.{ErrorResponse => ErrorResponseThrift }
-import com.gu.contentapi.client.model.ItemQuery
+import com.gu.contentapi.client.model.v1.ErrorResponse
+import com.gu.contentapi.client.model.{SearchQuery, ItemQuery}
 import org.joda.time.DateTime
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
@@ -25,7 +25,15 @@ class GuardianContentClientThriftTest extends FlatSpec with Matchers with Client
   it should "return errors as a broken promise" in {
     val query = ItemQuery("something-that-does-not-exist")
     val errorTest = apiThrift.getResponse(query) recover { case error =>
-      error should be (GuardianContentApiError(404, "Not Found", Some(ErrorResponseThrift("error", "The requested resource could not be found."))))
+      error should be (GuardianContentApiError(404, "Not Found", Some(ErrorResponse("error", "The requested resource could not be found."))))
+    }
+    errorTest.futureValue
+  }
+
+  it should "handle error responses" in {
+    val query = SearchQuery().pageSize(500)
+    val errorTest = apiThrift.getResponse(query) recover { case error =>
+      error should be (GuardianContentApiError(400, "Bad Request", Some(ErrorResponse("error", "page-size must be an integer between 1 and 200"))))
     }
     errorTest.futureValue
   }

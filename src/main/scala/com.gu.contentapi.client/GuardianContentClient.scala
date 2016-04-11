@@ -19,6 +19,7 @@ import com.ning.http.client.AsyncHttpClientConfig.Builder
 import com.ning.http.client.AsyncHttpClient
 import dispatch.{FunctionHandler, Http}
 import com.gu.contentapi.buildinfo.CapiBuildInfo
+import org.apache.thrift.transport.TTransportException
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -81,7 +82,13 @@ trait ContentApiClientLogic {
   }
 
   private def contentApiError(response: HttpResponse): GuardianContentApiError = {
-    if (useThrift) GuardianContentApiError(response.statusCode, response.statusMessage, Some(ThriftDeserializer.deserialize(response.body, ErrorResponse)))
+    if (useThrift) {
+      // This is a temporary workaround since some kind of error responses are returned by CAPI as Json responses even though Thrift is specified
+      try GuardianContentApiError(response.statusCode, response.statusMessage, Some(ThriftDeserializer.deserialize(response.body, ErrorResponse)))
+      catch {
+        case e: TTransportException => GuardianContentApiError(response.statusCode, response.statusMessage, JsonParser.parseErrorThrift(new String(response.body, "UTF-8")))
+      }
+    }
     else GuardianContentApiError(response.statusCode, response.statusMessage, JsonParser.parseErrorThrift(new String(response.body, "UTF-8")))
   }
 
