@@ -1,3 +1,7 @@
+## 8.5
+* Revert the temporary fix for handling error responses when using Thrift
+* Update the models to add new optional fields to the `Blocks` model
+
 ## 8.4
 * Fix the error responses when using Thrift
 
