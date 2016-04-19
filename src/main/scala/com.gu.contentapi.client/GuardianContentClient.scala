@@ -3,23 +3,15 @@ package com.gu.contentapi.client
 import java.nio.charset.StandardCharsets
 
 import com.gu.contentapi.client.model._
-import com.gu.contentapi.client.model.v1.SearchResponse
-import com.gu.contentapi.client.model.v1.ErrorResponse
-import com.gu.contentapi.client.model.v1.ItemResponse
-import com.gu.contentapi.client.model.v1.TagsResponse
-import com.gu.contentapi.client.model.v1.EditionsResponse
-import com.gu.contentapi.client.model.v1.SectionsResponse
-import com.gu.contentapi.client.model.v1.RemovedContentResponse
-import com.gu.contentapi.client.model.v1.VideoStatsResponse
+import com.gu.contentapi.client.model.v1._
 
-import com.gu.contentapi.client.parser.JsonParser
+import com.gu.contentapi.json.JsonParser
 
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.ning.http.client.AsyncHttpClientConfig.Builder
 import com.ning.http.client.AsyncHttpClient
 import dispatch.{FunctionHandler, Http}
 import com.gu.contentapi.buildinfo.CapiBuildInfo
-import org.apache.thrift.transport.TTransportException
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
@@ -87,7 +79,7 @@ trait ContentApiClientLogic {
       val errorResponse = Try(ThriftDeserializer.deserialize(response.body, ErrorResponse)).toOption
       GuardianContentApiError(response.statusCode, response.statusMessage, errorResponse)
     }
-    else GuardianContentApiError(response.statusCode, response.statusMessage, JsonParser.parseErrorThrift(new String(response.body, "UTF-8")))
+    else GuardianContentApiError(response.statusCode, response.statusMessage, JsonParser.parseError(new String(response.body, "UTF-8")))
   }
 
   protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
@@ -111,43 +103,43 @@ trait ContentApiClientLogic {
   def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
     fetchResponse(itemQuery) map { response =>
       if (useThrift) ThriftDeserializer.deserialize(response, ItemResponse)
-      else JsonParser.parseItemThrift(new String(response, StandardCharsets.UTF_8))
+      else JsonParser.parseItem(new String(response, StandardCharsets.UTF_8))
     }
 
   def getResponse(searchQuery: SearchQuery)(implicit context: ExecutionContext): Future[SearchResponse] =
     fetchResponse(searchQuery) map { response =>
       if (useThrift) ThriftDeserializer.deserialize(response, SearchResponse)
-      else JsonParser.parseSearchThrift(new String(response, StandardCharsets.UTF_8))
+      else JsonParser.parseSearch(new String(response, StandardCharsets.UTF_8))
     }
 
   def getResponse(tagsQuery: TagsQuery)(implicit context: ExecutionContext): Future[TagsResponse] =
     fetchResponse(tagsQuery) map { response =>
       if (useThrift) ThriftDeserializer.deserialize(response, TagsResponse)
-      else JsonParser.parseTagsThrift(new String(response, StandardCharsets.UTF_8))
+      else JsonParser.parseTags(new String(response, StandardCharsets.UTF_8))
     }
 
   def getResponse(sectionsQuery: SectionsQuery)(implicit context: ExecutionContext): Future[SectionsResponse] =
     fetchResponse(sectionsQuery) map { response =>
       if (useThrift) ThriftDeserializer.deserialize(response, SectionsResponse)
-      else JsonParser.parseSectionsThrift(new String(response, StandardCharsets.UTF_8))
+      else JsonParser.parseSections(new String(response, StandardCharsets.UTF_8))
     }
 
   def getResponse(editionsQuery: EditionsQuery)(implicit context: ExecutionContext): Future[EditionsResponse] =
     fetchResponse(editionsQuery) map { response =>
       if (useThrift) ThriftDeserializer.deserialize(response, EditionsResponse)
-      else JsonParser.parseEditionsThrift(new String(response, StandardCharsets.UTF_8))
+      else JsonParser.parseEditions(new String(response, StandardCharsets.UTF_8))
     }
 
   def getResponse(removedContentQuery: RemovedContentQuery)(implicit context: ExecutionContext): Future[RemovedContentResponse] =
     fetchResponse(removedContentQuery) map { response =>
       if (useThrift) ThriftDeserializer.deserialize(response, RemovedContentResponse)
-      else JsonParser.parseRemovedContentThrift(new String(response, StandardCharsets.UTF_8))
+      else JsonParser.parseRemovedContent(new String(response, StandardCharsets.UTF_8))
     }
 
   def getResponse(videoStatsQuery: VideoStatsQuery)(implicit context: ExecutionContext): Future[VideoStatsResponse] =
     fetchResponse(videoStatsQuery) map { response =>
       if (useThrift) ThriftDeserializer.deserialize(response, VideoStatsResponse)
-      else JsonParser.parseVideoStatsThrift(new String(response, StandardCharsets.UTF_8))
+      else JsonParser.parseVideoStats(new String(response, StandardCharsets.UTF_8))
     }
 
   /**
