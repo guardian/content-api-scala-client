@@ -12,7 +12,7 @@ import org.scalatest.{OptionValues, FlatSpec, Matchers}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest with ScalaFutures with OptionValues {
-  implicit override val patienceConfig = PatienceConfig(timeout = Span(2, Seconds))
+  implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
   "client interface" should "successfully call the Content API" in {
     val query = ItemQuery("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")

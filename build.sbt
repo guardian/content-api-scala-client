@@ -76,10 +76,13 @@ releaseProcess := Seq(
 buildInfoKeys := Seq[BuildInfoKey](version)
 buildInfoPackage := "com.gu.contentapi.buildinfo"
 buildInfoObject := "CapiBuildInfo"
+
+val CapiModelsVersion = "8.8"
+
 libraryDependencies ++= Seq(
-  "com.gu" % "content-api-models" % "8.6",
-  "com.gu" % "content-api-models-json" % "8.6",
-  "org.apache.thrift" % "libthrift" % "0.9.3",
+  "com.gu" % "content-api-models" % CapiModelsVersion,
+  "com.gu" % "content-api-models-json" % CapiModelsVersion,
+  "org.apache.thrift" % "libthrift" % "0.9.1",
   "com.twitter" %% "scrooge-core" % "4.6.0",
   "org.json4s" %% "json4s-native" % "3.3.0",
   "org.json4s" %% "json4s-ext" % "3.3.0",
