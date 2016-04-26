@@ -1,3 +1,6 @@
+## 8.8
+* Bump the content-api-models dependency
+
 ## 8.7
 * Bump the content-api-models dependency
 * Downgrade libthrift from 0.9.3 to 0.9.1
