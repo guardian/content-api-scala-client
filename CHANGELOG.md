@@ -1,3 +1,9 @@
+
+## 8.9
+* Add `thumbnailImageUrl` to fields.
+* Improve JSON and Thrift deserialisation
+* Add podcasts categories
+
 ## 8.8
 * Bump the content-api-models dependency
 
