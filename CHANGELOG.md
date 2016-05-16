@@ -1,3 +1,5 @@
+## 8.10
+* Bump the content-api-models dependency
 
 ## 8.9
 * Add `thumbnailImageUrl` to fields.

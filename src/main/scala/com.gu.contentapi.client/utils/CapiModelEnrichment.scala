@@ -2,6 +2,7 @@ package com.gu.contentapi.client.utils
 
 import org.joda.time.DateTime
 import com.gu.contentapi.client.model.v1._
+import org.joda.time.format.ISODateTimeFormat
 
 object CapiModelEnrichment {
 
@@ -10,7 +11,7 @@ object CapiModelEnrichment {
   }
 
   implicit class RichJodaDateTime(val dt: DateTime) extends AnyVal {
-    def toCapiDateTime: CapiDateTime = CapiDateTime.apply(dt.getMillis)
+    def toCapiDateTime: CapiDateTime = CapiDateTime.apply(dt.getMillis, dt.toString(ISODateTimeFormat.dateTime()))
   }
 
 }
