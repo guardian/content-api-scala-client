@@ -77,12 +77,12 @@ buildInfoKeys := Seq[BuildInfoKey](version)
 buildInfoPackage := "com.gu.contentapi.buildinfo"
 buildInfoObject := "CapiBuildInfo"
 
-val CapiModelsVersion = "8.11"
+val CapiModelsVersion = "8.14"
 
 libraryDependencies ++= Seq(
   "com.gu" % "content-api-models" % CapiModelsVersion,
   "com.gu" % "content-api-models-json" % CapiModelsVersion,
-  "org.apache.thrift" % "libthrift" % "0.9.1",
+  "org.apache.thrift" % "libthrift" % "0.9.1", 
   "com.twitter" %% "scrooge-core" % "4.6.0",
   "org.json4s" %% "json4s-native" % "3.3.0",
   "org.json4s" %% "json4s-ext" % "3.3.0",
