@@ -228,6 +228,29 @@ client.getResponse(expiredContentQuery ) map { response =>
 }
 ```
 
+## Explore in the REPL
+
+One easy way to get started with the client is to try it in the Scala REPL.
+
+First clone this repo, then run `sbt console`. This will start a REPL with a few useful things imported for you, so you can get started quickly:
+
+```
+scala> val client = new GuardianContentClient("YOUR API KEY HERE")
+client: com.gu.contentapi.client.GuardianContentClient = com.gu.contentapi.client.GuardianContentClient@3eb2a60
+
+scala> val query = client.search.showTags("all")
+query: com.gu.contentapi.client.model.SearchQuery = SearchQuery(/search?show-tags=all)
+
+scala> val response = Await.result(client.getResponse(query), 5.seconds)
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+response: com.gu.contentapi.client.model.v1.SearchResponse =
+SearchResponse(ok,developer,1853997,1,10,1,185400,newest,List(Content(politics/blog/live/2016/may/17/corbyn-more-popular-than-ever-with-labour-members-poll-suggests-politics-live,Liveblog,Some(politics),Some(Politics),Some(CapiDateTime(1463487146000,2016-05-17T12:12:26.000Z)),EU referendum: Boris Johnson accuses Cameron of making UK look like 'banana republic' - Politics live,https://www.theguardian.com/politics/blog/live/2016/may/17/corbyn-more-popular-than-ever-with-labour-members-poll-suggests-politics-live,https://content.guardianapis.com/politics/blog/live/2016/may/17/corbyn-more-popular-than-ever-with-labour-members-poll-suggests-politics-live,None,List(Tag(politics/series/politics-live-with-andrew-sparrow,Series,Some(po...
+
+scala> client.shutdown()
+```
+
 ## Troubleshooting
 
 If you have any problems you can speak to other developers at the [Guardian API talk group] (http://groups.google.com/group/guardian-api-talk).
