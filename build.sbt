@@ -101,3 +101,11 @@ scroogeThriftDependencies in Compile ++= Seq(
 scroogeThriftSources in Compile ++= {
   (scroogeUnpackDeps in Compile).value.flatMap { dir => (dir ** "*.thrift").get }
 }
+
+initialCommands in console := """
+  import com.gu.contentapi.client._
+  import com.gu.contentapi.client.model._
+  import scala.concurrent.ExecutionContext.Implicits.global
+  import scala.concurrent.Await
+  import scala.concurrent.duration._
+"""
