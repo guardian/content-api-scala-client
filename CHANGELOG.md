@@ -1,3 +1,7 @@
+## 8.11
+* Add a new show-section parameter
+* Bump the content-api-models dependency
+
 ## 8.10
 * Bump the content-api-models dependency
 
