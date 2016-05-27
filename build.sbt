@@ -77,7 +77,7 @@ buildInfoKeys := Seq[BuildInfoKey](version)
 buildInfoPackage := "com.gu.contentapi.buildinfo"
 buildInfoObject := "CapiBuildInfo"
 
-val CapiModelsVersion = "8.16"
+val CapiModelsVersion = "8.17"
 
 libraryDependencies ++= Seq(
   "com.gu" % "content-api-models" % CapiModelsVersion,
