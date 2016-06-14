@@ -1,3 +1,6 @@
+## 8.13
+* Bump the content-api-models dependency
+
 ## 8.12
 * Bump the content-api-models dependency
 
