@@ -1,5 +1,5 @@
 ## 9.0
-* Bump the content-api-models dependency
+* Bump the content-api-models dependency to a new major version.
 
 ## 8.12
 * Bump the content-api-models dependency
