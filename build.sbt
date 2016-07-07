@@ -80,10 +80,8 @@ buildInfoObject := "CapiBuildInfo"
 val CapiModelsVersion = "9.10"
 
 libraryDependencies ++= Seq(
-  "com.gu" % "content-api-models" % CapiModelsVersion,
+  "com.gu" % "content-api-models-scala" % CapiModelsVersion,
   "com.gu" % "content-api-models-json" % CapiModelsVersion,
-  "org.apache.thrift" % "libthrift" % "0.9.1", 
-  "com.twitter" %% "scrooge-core" % "4.6.0",
   "org.json4s" %% "json4s-native" % "3.3.0",
   "org.json4s" %% "json4s-ext" % "3.3.0",
   "joda-time" % "joda-time" % "2.3",
@@ -91,16 +89,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "com.google.guava" % "guava" % "19.0" % "test"
 )
-scroogeThriftOutputFolder in Compile := sourceManaged.value / "thrift"
-scroogeThriftDependencies in Compile ++= Seq(
-  "content-api-models",
-  "story-packages-model-thrift",
-  "content-atom-model-thrift"
-)
-// See: https://github.com/twitter/scrooge/issues/199
-scroogeThriftSources in Compile ++= {
-  (scroogeUnpackDeps in Compile).value.flatMap { dir => (dir ** "*.thrift").get }
-}
 
 initialCommands in console := """
   import com.gu.contentapi.client._
