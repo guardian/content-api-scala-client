@@ -1,3 +1,7 @@
+## 9.3
+* add `internalShortId`
+* add missing circe decoders
+
 ## 9.0
 * Bump the content-api-models dependency to a new major version.
 
