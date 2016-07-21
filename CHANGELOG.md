@@ -1,5 +1,5 @@
 ## 9.4
-* Bump the content-api-models dependency
+* Bump the content-api-models dependency adding campaignColour and isMandatory
 
 ## 9.3
 * add `internalShortId`
