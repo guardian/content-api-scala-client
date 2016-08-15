@@ -1,3 +1,6 @@
+## 9.5
+* Bump the content-api-models adding extra properties of media atoms: mime-type, duration and poster.
+
 ## 9.4
 * Bump the content-api-models dependency adding campaignColour and isMandatory
 
