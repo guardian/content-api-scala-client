@@ -1,4 +1,4 @@
-package com.gu.contentapi.client.parser
+package com.gu.contentapi.client.thrift
 
 import java.io.ByteArrayInputStream
 
