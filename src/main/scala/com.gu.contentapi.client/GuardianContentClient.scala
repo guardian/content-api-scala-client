@@ -5,8 +5,6 @@ import java.nio.charset.StandardCharsets
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 
-import com.gu.contentapi.json.JsonParser
-
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.ning.http.client.AsyncHttpClientConfig.Builder
 import com.ning.http.client.AsyncHttpClient
@@ -16,13 +14,12 @@ import com.gu.contentapi.buildinfo.CapiBuildInfo
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-import com.gu.contentapi.client.parser.ThriftDeserializer
+import com.gu.contentapi.client.thrift.ThriftDeserializer
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
 
 trait ContentApiClientLogic {
   val apiKey: String
-  def useThrift: Boolean
 
   protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
 
@@ -59,14 +56,11 @@ trait ContentApiClientLogic {
   protected[client] def url(location: String, parameters: Map[String, String]): String = {
     require(!location.contains('?'), "must not specify parameters in URL")
 
-    val format = if (useThrift) "thrift" else "json"
-    location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> format))
+    location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift"))
   }
 
   protected def fetch(url: String)(implicit context: ExecutionContext): Future[Array[Byte]] = {
-
-      val contentType = if (useThrift) Map("Accept" -> "application/x-thrift") else Map("Accept" -> "application/json")
-      val headers = Map("User-Agent" -> userAgent) ++ contentType
+    val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
 
     for (response <- get(url, headers)) yield {
       if (List(200, 302) contains response.statusCode) response.body
@@ -75,15 +69,11 @@ trait ContentApiClientLogic {
   }
 
   private def contentApiError(response: HttpResponse): GuardianContentApiError = {
-    if (useThrift) {
-      val errorResponse = Try(ThriftDeserializer.deserialize(response.body, ErrorResponse)).toOption
-      GuardianContentApiError(response.statusCode, response.statusMessage, errorResponse)
-    }
-    else GuardianContentApiError(response.statusCode, response.statusMessage, JsonParser.parseError(new String(response.body, "UTF-8")))
+    val errorResponse = Try(ThriftDeserializer.deserialize(response.body, ErrorResponse)).toOption
+    GuardianContentApiError(response.statusCode, response.statusMessage, errorResponse)
   }
 
   protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
-
     val req = headers.foldLeft(dispatch.url(url)) {
       case (r, (name, value)) => r.setHeader(name, value)
     }
@@ -102,44 +92,37 @@ trait ContentApiClientLogic {
 
   def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
     fetchResponse(itemQuery) map { response =>
-      if (useThrift) ThriftDeserializer.deserialize(response, ItemResponse)
-      else JsonParser.parseItem(new String(response, StandardCharsets.UTF_8))
+      ThriftDeserializer.deserialize(response, ItemResponse)
     }
 
   def getResponse(searchQuery: SearchQuery)(implicit context: ExecutionContext): Future[SearchResponse] =
     fetchResponse(searchQuery) map { response =>
-      if (useThrift) ThriftDeserializer.deserialize(response, SearchResponse)
-      else JsonParser.parseSearch(new String(response, StandardCharsets.UTF_8))
+      ThriftDeserializer.deserialize(response, SearchResponse)
     }
 
   def getResponse(tagsQuery: TagsQuery)(implicit context: ExecutionContext): Future[TagsResponse] =
     fetchResponse(tagsQuery) map { response =>
-      if (useThrift) ThriftDeserializer.deserialize(response, TagsResponse)
-      else JsonParser.parseTags(new String(response, StandardCharsets.UTF_8))
+      ThriftDeserializer.deserialize(response, TagsResponse)
     }
 
   def getResponse(sectionsQuery: SectionsQuery)(implicit context: ExecutionContext): Future[SectionsResponse] =
     fetchResponse(sectionsQuery) map { response =>
-      if (useThrift) ThriftDeserializer.deserialize(response, SectionsResponse)
-      else JsonParser.parseSections(new String(response, StandardCharsets.UTF_8))
+      ThriftDeserializer.deserialize(response, SectionsResponse)
     }
 
   def getResponse(editionsQuery: EditionsQuery)(implicit context: ExecutionContext): Future[EditionsResponse] =
     fetchResponse(editionsQuery) map { response =>
-      if (useThrift) ThriftDeserializer.deserialize(response, EditionsResponse)
-      else JsonParser.parseEditions(new String(response, StandardCharsets.UTF_8))
+      ThriftDeserializer.deserialize(response, EditionsResponse)
     }
 
   def getResponse(removedContentQuery: RemovedContentQuery)(implicit context: ExecutionContext): Future[RemovedContentResponse] =
     fetchResponse(removedContentQuery) map { response =>
-      if (useThrift) ThriftDeserializer.deserialize(response, RemovedContentResponse)
-      else JsonParser.parseRemovedContent(new String(response, StandardCharsets.UTF_8))
+      ThriftDeserializer.deserialize(response, RemovedContentResponse)
     }
 
   def getResponse(videoStatsQuery: VideoStatsQuery)(implicit context: ExecutionContext): Future[VideoStatsResponse] =
     fetchResponse(videoStatsQuery) map { response =>
-      if (useThrift) ThriftDeserializer.deserialize(response, VideoStatsResponse)
-      else JsonParser.parseVideoStats(new String(response, StandardCharsets.UTF_8))
+      ThriftDeserializer.deserialize(response, VideoStatsResponse)
     }
 
   /**
@@ -151,6 +134,5 @@ trait ContentApiClientLogic {
 
 }
 
-class GuardianContentClient(val apiKey: String, val useThrift: Boolean = false) extends ContentApiClientLogic
-
+class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
 

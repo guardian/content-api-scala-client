@@ -7,11 +7,18 @@ import com.gu.contentapi.client.model.{SearchQuery, ItemQuery}
 import org.joda.time.DateTime
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{OptionValues, FlatSpec, Matchers}
+import org.scalatest.{OptionValues, FlatSpec, Matchers, BeforeAndAfterAll}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GuardianContentClientTest extends FlatSpec with Matchers with ClientTest with ScalaFutures with OptionValues {
+class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll {
+
+  val api = new GuardianContentClient("test")
+
+  override def afterAll() {
+    api.shutdown()
+  }
+
   implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
   "client interface" should "successfully call the Content API" in {
