@@ -1,5 +1,8 @@
 package com.gu.contentapi.client
 
+import com.gu.contentatom.thrift.{ AtomType, AtomData }
+import com.gu.contentatom.thrift.atom.quiz.QuizAtom
+
 import com.gu.contentapi.client.model.v1.ContentType
 
 import com.gu.contentapi.client.model.v1.ErrorResponse
@@ -7,11 +10,11 @@ import com.gu.contentapi.client.model.{SearchQuery, ItemQuery}
 import org.joda.time.DateTime
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{OptionValues, FlatSpec, Matchers, BeforeAndAfterAll}
+import org.scalatest.{OptionValues, FlatSpec, Matchers, BeforeAndAfterAll, Inside}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll {
+class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside {
 
   val api = new GuardianContentClient("test")
 
@@ -83,6 +86,19 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     val fResults = results.futureValue
     fResults.size should be (10)
     fResults.map(_.`type` should be(ContentType.Article))
+  }
+
+  it should "perform an atom query" in {
+    val query = ItemQuery("/atom/quiz/3c244199-01a8-4836-a638-daabf9aca341")
+    val quiz = for (response <- api.getResponse(query)) yield response.quiz.get
+    val fQuiz = quiz.futureValue
+    fQuiz.atomType should be (AtomType.Quiz)
+    fQuiz.id should be ("3c244199-01a8-4836-a638-daabf9aca341")
+    inside(fQuiz.data) {
+      case AtomData.Quiz(data) =>
+        data.title should be ("Andy Burnham quiz")
+        data.content.questions should have size (10)
+    }
   }
 
 }
