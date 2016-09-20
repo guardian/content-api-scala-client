@@ -1,5 +1,5 @@
 ## 10.1
-* Add sponsor logo dimensions to answers.
+* Add sponsor logo dimensions to Sponsorship model.
 
 ## 10.0
 * Remove JSON support. The client now receives only Thrift-encoded responses from the Content API.
