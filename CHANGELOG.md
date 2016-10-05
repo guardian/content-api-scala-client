@@ -1,3 +1,6 @@
+## 10.2
+* Bump content-api-models to 10.0
+
 ## 10.1
 * Add sponsor logo dimensions to Sponsorship model.
 
