@@ -1,5 +1,8 @@
+## 10.3
+* Add interactive atom 
+
 ## 10.2
-* Bump content-api-models to 10.0
+* Add bodyText field
 
 ## 10.1
 * Add sponsor logo dimensions to Sponsorship model.
