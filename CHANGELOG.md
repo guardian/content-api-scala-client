@@ -1,3 +1,6 @@
+## 10.4
+* Add high contrast sponsor logo
+
 ## 10.3
 * Add interactive atom 
 
