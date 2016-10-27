@@ -2,6 +2,8 @@ import sbtrelease.ReleaseStateTransformations._
 
 name:="content-api-client"
 
+resolvers += Resolver.sonatypeRepo("releases")
+
 enablePlugins(BuildInfoPlugin)
 pomExtra := (
   <url>https://github.com/guardian/content-api-scala-client</url>
@@ -77,7 +79,7 @@ buildInfoKeys := Seq[BuildInfoKey](version)
 buildInfoPackage := "com.gu.contentapi.buildinfo"
 buildInfoObject := "CapiBuildInfo"
 
-val CapiModelsVersion = "10.5"
+val CapiModelsVersion = "10.6"
 
 libraryDependencies ++= Seq(
   "com.gu" % "content-api-models-scala" % CapiModelsVersion,
