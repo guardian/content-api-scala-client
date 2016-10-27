@@ -2,6 +2,8 @@ import sbtrelease.ReleaseStateTransformations._
 
 name:="content-api-client"
 
+resolvers += Resolver.sonatypeRepo("releases")
+
 enablePlugins(BuildInfoPlugin)
 pomExtra := (
   <url>https://github.com/guardian/content-api-scala-client</url>
