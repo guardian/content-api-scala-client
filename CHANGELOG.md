@@ -1,3 +1,6 @@
+## 10.15
+* Add `filename` query parameter.
+
 ## 10.4
 * Add high contrast sponsor logo
 
