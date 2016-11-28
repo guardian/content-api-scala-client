@@ -158,6 +158,7 @@ trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Ow
   def membershipAccess = StringParameter("membership-access")
   def containsElement = StringParameter("contains-element")
   def commentable = BoolParameter("commentable")
+  def filename = StringParameter("filename")
 }
 
 trait FilterTagParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
