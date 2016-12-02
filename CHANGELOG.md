@@ -1,3 +1,6 @@
+## 10.16
+* Support film review atoms (content-api-model 10.16)
+
 ## 10.15
 * Add `filename` query parameter.
 
