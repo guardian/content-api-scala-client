@@ -1,3 +1,6 @@
+## 10.17
+* `genre` field is now a list (content-api-model 10.17)
+
 ## 10.16
 * Support film review atoms (content-api-model 10.16)
 
