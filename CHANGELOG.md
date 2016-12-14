@@ -1,3 +1,6 @@
+## 10.19
+* Bump content-api-model to 10.19 (content-atom-model 2.4.27 - adding 'optional string unit' to Serves)
+
 ## 10.18
 * Bump content-api-model to 10.18 (thrift union macros)
 
