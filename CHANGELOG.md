@@ -1,3 +1,6 @@
+## 10.18
+* Bump content-api-model to 10.18 (thrift union macros)
+
 ## 10.17
 * `genre` field is now a list (content-api-model 10.17)
 
