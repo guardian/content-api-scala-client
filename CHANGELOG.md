@@ -1,8 +1,11 @@
+## 10.20
+* Recipe atom - adding `quantityRange` for ingredient and `images`  (content-api-model 10.20)
+
 ## 10.19
-* Bump content-api-model to 10.19 (content-atom-model 2.4.27 - adding 'optional string unit' to Serves)
+* Recipe atom - adding optional `unit` for `serves` (content-api-model 10.19)
 
 ## 10.18
-* Bump content-api-model to 10.18 (thrift union macros)
+* thrift union macros (content-api-model 10.18)
 
 ## 10.17
 * `genre` field is now a list (content-api-model 10.17)
