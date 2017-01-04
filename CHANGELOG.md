@@ -1,3 +1,6 @@
+## 10.21
+* Upgraded Circe to 0.6.1.
+
 ## 10.20
 * Recipe atom - adding `quantityRange` for ingredient and `images`  (content-api-model 10.20)
 
