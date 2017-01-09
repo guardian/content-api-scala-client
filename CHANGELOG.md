@@ -1,3 +1,6 @@
+## 10.22
+* Upgrade content-api-models dependency (refactored circe macros)
+
 ## 10.21
 * Upgraded Circe to 0.6.1.
 
