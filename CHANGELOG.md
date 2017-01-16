@@ -1,3 +1,6 @@
+## 10.24
+* Upgrade content-api-models dependency to include sourceArticleId field in recipe and review atom types.
+
 ## 10.22
 * Upgrade content-api-models dependency (refactored circe macros)
 
