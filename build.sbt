@@ -79,7 +79,7 @@ buildInfoKeys := Seq[BuildInfoKey](version)
 buildInfoPackage := "com.gu.contentapi.buildinfo"
 buildInfoObject := "CapiBuildInfo"
 
-val CapiModelsVersion = "10.24"
+val CapiModelsVersion = "11.0"
 
 libraryDependencies ++= Seq(
   "com.gu" % "content-api-models-scala" % CapiModelsVersion,

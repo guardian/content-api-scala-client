@@ -1,3 +1,6 @@
+## 11.0
+* Upgrade content-api-models dependency to 11 (fezziwig dependency)
+
 ## 10.24
 * Upgrade content-api-models dependency to include sourceArticleId field in recipe and review atom types.
 
