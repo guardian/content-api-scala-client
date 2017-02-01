@@ -1,3 +1,6 @@
+## 11.1
+* Upgrade content api models dependency to 11.1 to provide images on reviews model.
+
 ## 11.0
 * Upgrade content-api-models dependency to 11 (fezziwig dependency)
 
