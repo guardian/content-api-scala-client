@@ -1,3 +1,6 @@
+## 11.3
+* Provide ability to query recipe, review and atom endpoints for internal clients.
+
 ## 11.2
 * Upgrade content-api-models dependency to 11.2 (upgrades circe to 0.7.0)
 

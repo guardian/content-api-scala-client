@@ -1,10 +1,7 @@
 package com.gu.contentapi.client
 
-import java.nio.charset.StandardCharsets
-
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
-
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.ning.http.client.AsyncHttpClientConfig.Builder
 import com.ning.http.client.AsyncHttpClient
@@ -47,9 +44,16 @@ trait ContentApiClientLogic {
   def item(id: String) = ItemQuery(id)
   val search = SearchQuery()
   val tags = TagsQuery()
-  val sections = new SectionsQuery()
+  val sections = SectionsQuery()
   val editions = EditionsQuery()
   val removedContent = RemovedContentQuery()
+  val atoms = AtomsQuery()
+  val recipes = RecipesQuery()
+  val reviews = ReviewsQuery()
+  val gameReviews = GameReviewsQuery()
+  val restaurantReviews = RestaurantReviewsQuery()
+  val filmReviews = FilmReviewsQuery()
+  val videoStats = VideoStatsQuery()
 
   case class HttpResponse(body: Array[Byte], statusCode: Int, statusMessage: String)
 
@@ -123,6 +127,36 @@ trait ContentApiClientLogic {
   def getResponse(videoStatsQuery: VideoStatsQuery)(implicit context: ExecutionContext): Future[VideoStatsResponse] =
     fetchResponse(videoStatsQuery) map { response =>
       ThriftDeserializer.deserialize(response, VideoStatsResponse)
+    }
+
+  def getResponse(atomsQuery: AtomsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
+    fetchResponse(atomsQuery) map { response =>
+      ThriftDeserializer.deserialize(response, AtomsResponse)
+    }
+
+  def getResponse(recipesQuery: RecipesQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
+    fetchResponse(recipesQuery) map { response =>
+      ThriftDeserializer.deserialize(response, AtomsResponse)
+    }
+
+  def getResponse(reviewsQuery: ReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
+    fetchResponse(reviewsQuery) map { response =>
+      ThriftDeserializer.deserialize(response, AtomsResponse)
+    }
+
+  def getResponse(gameReviewsQuery: GameReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
+    fetchResponse(gameReviewsQuery) map { response =>
+      ThriftDeserializer.deserialize(response, AtomsResponse)
+    }
+
+  def getResponse(restaurantReviewsQuery: RestaurantReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
+    fetchResponse(restaurantReviewsQuery) map { response =>
+      ThriftDeserializer.deserialize(response, AtomsResponse)
+    }
+
+  def getResponse(filmReviewsQuery: FilmReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
+    fetchResponse(filmReviewsQuery) map { response =>
+      ThriftDeserializer.deserialize(response, AtomsResponse)
     }
 
   /**
