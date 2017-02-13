@@ -1,3 +1,6 @@
+## 11.2
+* Upgrade content-api-models dependency to 11.2 (upgrades circe to 0.7.0)
+
 ## 11.1
 * Upgrade content api models dependency to 11.1 to provide images on reviews model.
 
