@@ -1,22 +1,19 @@
 package com.gu.contentapi.client
 
-import com.gu.contentatom.thrift.{ AtomType, AtomData }
-import com.gu.contentatom.thrift.atom.quiz.QuizAtom
-
-import com.gu.contentapi.client.model.v1.ContentType
-
-import com.gu.contentapi.client.model.v1.ErrorResponse
-import com.gu.contentapi.client.model.{SearchQuery, ItemQuery}
+import com.gu.contentatom.thrift.{AtomData, AtomType}
+import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse}
+import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
 import org.joda.time.DateTime
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{OptionValues, FlatSpec, Matchers, BeforeAndAfterAll, Inside}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside {
 
-  val api = new GuardianContentClient("test")
+  private val api = new GuardianContentClient("test")
+  private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 
   override def afterAll() {
     api.shutdown()
@@ -25,11 +22,11 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
   "client interface" should "successfully call the Content API" in {
-    val query = ItemQuery("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+    val query = ItemQuery(TestItemPath)
     val content = for {
       response <- api.getResponse(query)
     } yield response.content.get
-    content.futureValue.id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+    content.futureValue.id should be (TestItemPath)
   }
 
   it should "return errors as a broken promise" in {
@@ -68,13 +65,55 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   }
 
   it should "perform a given item query" in {
-    val query = ItemQuery("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+    val query = ItemQuery(TestItemPath)
     val content = for (response <- api.getResponse(query)) yield response.content.get
-    content.futureValue.id should be ("commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry")
+    content.futureValue.id should be (TestItemPath)
   }
 
   it should "perform a given removed content query" in {
     val query = api.removedContent.reason("expired")
+    val results = for (response <- api.getResponse(query)) yield response.results
+    val fResults = results.futureValue
+    fResults.size should be (10)
+  }
+
+  it should "perform a given atoms query" in {
+    val query = api.atoms.types("explainer")
+    val results = for (response <- api.getResponse(query)) yield response.results
+    val fResults = results.futureValue
+    fResults.size should be (10)
+  }
+
+  it should "perform a given recipes query" in {
+    val query = api.recipes.cuisines("thai")
+    val results = for (response <- api.getResponse(query)) yield response.results
+    val fResults = results.futureValue
+    fResults.size should be (10)
+  }
+
+  it should "perform a given reviews query" in {
+    val query = api.reviews.minRating(3)
+    val results = for (response <- api.getResponse(query)) yield response.results
+    val fResults = results.futureValue
+    fResults.size should be (10)
+  }
+
+  it should "perform a given game review query" in {
+    val query = api.gameReviews.minRating(3)
+    val results = for (response <- api.getResponse(query)) yield response.results
+    val fResults = results.futureValue
+    fResults.size should be (10)
+  }
+
+  it should "perform a given film review query" in {
+    val query = api.filmReviews.maxRating(4)
+    val results = for (response <- api.getResponse(query)) yield response.results
+    val fResults = results.futureValue
+    fResults.size should be (10)
+  }
+
+  it should "perform a given restaurant review query" in {
+    val query = api.restaurantReviews.minRating(1)
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
@@ -85,7 +124,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
-    fResults.map(_.`type` should be(ContentType.Article))
+    fResults.foreach(_.`type` should be(ContentType.Article))
   }
 
   it should "perform an atom query" in {
@@ -97,7 +136,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     inside(fQuiz.data) {
       case AtomData.Quiz(data) =>
         data.title should be ("Andy Burnham quiz")
-        data.content.questions should have size (10)
+        data.content.questions should have size 10
     }
   }
 

@@ -20,7 +20,8 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   with ShowReferencesParameters[ItemQuery]
   with ShowExtendedParameters[ItemQuery]
   with PaginationParameters[ItemQuery]
-  with OrderingParameters[ItemQuery]
+  with OrderByParameter[ItemQuery]
+  with UseDateParameter[ItemQuery]
   with FilterParameters[ItemQuery]
   with FilterExtendedParameters[ItemQuery]
   with FilterSearchParameters[ItemQuery] {
@@ -37,7 +38,8 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery
   with ShowParameters[SearchQuery]
   with ShowReferencesParameters[SearchQuery]
-  with OrderingParameters[SearchQuery]
+  with OrderByParameter[SearchQuery]
+  with UseDateParameter[SearchQuery]
   with PaginationParameters[SearchQuery]
   with FilterParameters[SearchQuery]
   with FilterExtendedParameters[SearchQuery]
@@ -51,7 +53,8 @@ case class RemovedContentQuery(parameterHolder: Map[String, Parameter] = Map.emp
   extends ContentApiQuery
   with RemovedReasonParameters[RemovedContentQuery]
   with PaginationParameters[RemovedContentQuery]
-  with OrderingParameters[RemovedContentQuery] {
+  with OrderByParameter[RemovedContentQuery]
+  with UseDateParameter[RemovedContentQuery]{
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -101,6 +104,71 @@ case class VideoStatsQuery(
   override def pathSegment: String = Seq(Some("stats/videos"), edition, section).flatten.mkString("/")
 }
 
+case class AtomsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+  with AtomsParameters[AtomsQuery]
+  with PaginationParameters[AtomsQuery]
+  with OrderByParameter[AtomsQuery]
+  with FilterSearchParameters[AtomsQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "atoms"
+}
+
+case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+  with PaginationParameters[RecipesQuery]
+  with RecipeParameters[RecipesQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "atoms/recipes"
+}
+
+case class ReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+  with PaginationParameters[ReviewsQuery]
+  with ReviewSpecificParameters[ReviewsQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "atoms/reviews"
+}
+
+case class GameReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+    with ReviewSpecificParameters[GameReviewsQuery]
+    with PaginationParameters[GameReviewsQuery]
+    with GameParameters[GameReviewsQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "atoms/reviews/game"
+}
+
+case class RestaurantReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+    with ReviewSpecificParameters[RestaurantReviewsQuery]
+    with PaginationParameters[RestaurantReviewsQuery]
+    with RestaurantParameters[RestaurantReviewsQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "atoms/reviews/restaurant"
+}
+
+case class FilmReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+    with ReviewSpecificParameters[FilmReviewsQuery]
+    with PaginationParameters[FilmReviewsQuery]
+    with FilmParameters[FilmReviewsQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "atoms/reviews/film"
+}
+
 trait EditionParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def edition = StringParameter("edition")
 }
@@ -133,8 +201,11 @@ trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner]
   def pageSize = IntParameter("page-size")
 }
 
-trait OrderingParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+trait OrderByParameter[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def orderBy = StringParameter("order-by")
+}
+
+trait UseDateParameter[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def useDate = StringParameter("use-date")
 }
 
@@ -172,4 +243,43 @@ trait FilterSearchParameters[Owner <: Parameters[Owner]] extends Parameters[Owne
 // Supports values gone, expired and takendown.
 trait RemovedReasonParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def reason = StringParameter("reason")
+}
+
+trait AtomsParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  def types = StringParameter("types")
+  def searchFields = StringParameter("searchFields")
+  def fromDate = DateParameter("from-date")
+  def toDate = DateParameter("to-date")
+}
+
+trait RecipeParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  def title = StringParameter("title")
+  def credits = StringParameter("credits")
+  def categories = StringParameter("category")
+  def cuisines = StringParameter("cuisine")
+  def dietary = StringParameter("dietary")
+  def celebration = StringParameter("celebration")
+  def ingredients = StringParameter("ingredients")
+  def maxTime = IntParameter("max-time")
+}
+
+trait ReviewSpecificParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  def reviewer = StringParameter("reviewer")
+  def maxRating = IntParameter("max-rating")
+  def minRating = IntParameter("min-rating")
+}
+
+trait FilmParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  def name = StringParameter("name")
+  def genres = StringParameter("genres")
+  def actors = StringParameter("actors")
+  def directors = StringParameter("directors")
+}
+
+trait GameParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  def gameName = StringParameter("name")
+}
+
+trait RestaurantParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  def restaurantName = StringParameter("name")
 }
