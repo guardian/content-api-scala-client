@@ -1,3 +1,6 @@
+## 11.5
+* Add storyquestions field to item response.
+
 ## 11.4
 * Provide support for storyquestions atoms.
 
