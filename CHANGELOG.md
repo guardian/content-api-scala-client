@@ -1,3 +1,6 @@
+## 11.6
+* Update content-api-models to 11.6 (adds categories + entityIds fields to Tag model)
+
 ## 11.5
 * Add storyquestions field to item response.
 
