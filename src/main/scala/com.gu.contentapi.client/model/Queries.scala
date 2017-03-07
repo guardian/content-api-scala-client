@@ -181,6 +181,7 @@ trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { thi
   def showBlocks = StringParameter("show-blocks")
   def showAtoms  = StringParameter("show-atoms")
   def showSection = BoolParameter("show-section")
+  def showStats = BoolParameter("show-stats")
 }
 
 trait ShowReferencesParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
@@ -193,7 +194,6 @@ trait ShowExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Owne
   def showMostViewed = BoolParameter("show-most-viewed")
   def showEditorsPicks = BoolParameter("show-editors-picks")
   def showPackages = BoolParameter("show-packages")
-  def showStats = BoolParameter("show-stats")
 }
 
 trait PaginationParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
