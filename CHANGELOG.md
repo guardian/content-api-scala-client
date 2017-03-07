@@ -1,3 +1,6 @@
+## 11.7
+* Include show-stats parameter on search query.
+
 ## 11.6
 * Update content-api-models to 11.6 (adds categories + entityIds fields to Tag model)
 
