@@ -1,4 +1,4 @@
-## 11.8
+## 11.9
 * Update content-api-models to 11.8 (organisation and place entity models)
 
 ## 11.7
