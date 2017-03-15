@@ -1,3 +1,6 @@
+## 11.8
+* Update content-api-models to 11.8 (organisation and place entity models)
+
 ## 11.7
 * Include show-stats parameter on search query.
 
