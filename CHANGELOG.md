@@ -1,3 +1,6 @@
+## 11.10
+* Update content-api-models to 11.9 (add block membership placeholder attribute)
+
 ## 11.9
 * Update content-api-models to 11.8 (organisation and place entity models)
 
