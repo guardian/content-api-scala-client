@@ -1,3 +1,6 @@
+## 11.12
+* Update content-api-models to 11.12 (add EntitiesResponse model)
+
 ## 11.10
 * Update content-api-models to 11.9 (add block membership placeholder attribute)
 
