@@ -1,3 +1,6 @@
+## 11.14
+* Update content-api-models to 11.14 (add StoriesResponse)
+
 ## 11.12
 * Update content-api-models to 11.12 (add EntitiesResponse model)
 
