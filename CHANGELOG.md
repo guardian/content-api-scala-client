@@ -1,3 +1,6 @@
+## 11.16
+* Add new StoriesResponse
+
 ## 11.14
 * Update content-api-models to 11.14 (add StoriesResponse)
 
