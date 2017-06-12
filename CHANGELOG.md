@@ -1,3 +1,6 @@
+## 11.15
+* Update content-api-models to 11.16 (add Snippet models)
+
 ## 11.14
 * Update content-api-models to 11.14 (add StoriesResponse)
 
