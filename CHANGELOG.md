@@ -1,3 +1,6 @@
+## 11.17
+* Update content-api-models to 11.17 (add shouldHideReaderRevenue field)
+
 ## 11.15
 * Update content-api-models to 11.16 (add Snippet models)
 
