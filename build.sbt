@@ -51,7 +51,7 @@ publishMavenStyle := true
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 description := "Scala client for the Guardian's Content API"
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.11"
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 organization := "com.gu"
 licenses := Seq("Apache v2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
@@ -79,7 +79,7 @@ buildInfoKeys := Seq[BuildInfoKey](version)
 buildInfoPackage := "com.gu.contentapi.buildinfo"
 buildInfoObject := "CapiBuildInfo"
 
-val CapiModelsVersion = "11.19"
+val CapiModelsVersion = "11.21"
 
 libraryDependencies ++= Seq(
   "com.gu" % "content-api-models-scala" % CapiModelsVersion,

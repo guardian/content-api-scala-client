@@ -1,3 +1,7 @@
+## 11.21
+* Update content-api-models to 11.21 (add email provider in story questions and update fezziwig)
+* Add StoriesQuery
+
 ## 11.19
 * Update content-api-models to 11.19 (rename qanda fields)
 

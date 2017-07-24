@@ -54,6 +54,7 @@ trait ContentApiClientLogic {
   val restaurantReviews = RestaurantReviewsQuery()
   val filmReviews = FilmReviewsQuery()
   val videoStats = VideoStatsQuery()
+  val stories = StoriesQuery()
 
   case class HttpResponse(body: Array[Byte], statusCode: Int, statusMessage: String)
 
@@ -157,6 +158,11 @@ trait ContentApiClientLogic {
   def getResponse(filmReviewsQuery: FilmReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
     fetchResponse(filmReviewsQuery) map { response =>
       ThriftDeserializer.deserialize(response, AtomsResponse)
+    }
+
+  def getResponse(storiesQuery: StoriesQuery)(implicit context: ExecutionContext): Future[StoriesResponse] =
+    fetchResponse(storiesQuery) map { response =>
+      ThriftDeserializer.deserialize(response, StoriesResponse)
     }
 
   /**

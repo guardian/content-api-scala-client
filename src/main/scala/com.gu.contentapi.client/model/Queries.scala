@@ -169,6 +169,20 @@ case class FilmReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   override def pathSegment: String = "atoms/reviews/film"
 }
 
+case class StoriesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+  with StoryParameters[StoriesQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "stories"
+}
+
+trait StoryParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  def showAtoms = StringParameter("show-atoms")
+  def name = StringParameter("name")
+}
+
 trait EditionParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def edition = StringParameter("edition")
 }
