@@ -1,3 +1,6 @@
+## 11.22
+* Update content-api-models to 11.22 (add originating system in debug fields)
+
 ## 11.21
 * Update content-api-models to 11.21 (add email provider in story questions and update fezziwig)
 * Add StoriesQuery
