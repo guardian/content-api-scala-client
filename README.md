@@ -16,7 +16,7 @@ libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 
 Please note, as of version 7.0, the content api scala client no longer supports java 7.
 
-If you don't have an API key, go to [open-platform.theguardian.com/access/] (http://open-platform.theguardian.com/access/) to get one. You will then need to create a new instance of the client and set the key:
+If you don't have an API key, go to [open-platform.theguardian.com/access/](http://open-platform.theguardian.com/access/) to get one. You will then need to create a new instance of the client and set the key:
 
 ```scala
 val client = new GuardianContentClient("your-api-key")
