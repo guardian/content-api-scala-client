@@ -1,3 +1,6 @@
+## 11.23
+* Update content-api-models to 11.23 (add closeDate field to story questions atom)
+
 ## 11.22
 * Update content-api-models to 11.22 (add originating system in debug fields)
 
