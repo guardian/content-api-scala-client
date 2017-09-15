@@ -51,7 +51,8 @@ publishMavenStyle := true
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 description := "Scala client for the Guardian's Content API"
-scalaVersion := "2.11.11"
+scalaVersion := "2.12.3"
+crossScalaVersions := Seq("2.11.11", scalaVersion.value)
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 organization := "com.gu"
 licenses := Seq("Apache v2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
@@ -79,13 +80,13 @@ buildInfoKeys := Seq[BuildInfoKey](version)
 buildInfoPackage := "com.gu.contentapi.buildinfo"
 buildInfoObject := "CapiBuildInfo"
 
-val CapiModelsVersion = "11.23"
+val CapiModelsVersion = "11.24"
 
 libraryDependencies ++= Seq(
-  "com.gu" % "content-api-models-scala" % CapiModelsVersion,
+  "com.gu" %% "content-api-models-scala" % CapiModelsVersion,
   "joda-time" % "joda-time" % "2.3",
-  "net.databinder.dispatch" %% "dispatch-core" % "0.11.3",
-  "org.scalatest" %% "scalatest" % "2.2.1" % "test",
+  "net.databinder.dispatch" %% "dispatch-core" % "0.13.1",
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
   "com.google.guava" % "guava" % "19.0" % "test"
 )
 
