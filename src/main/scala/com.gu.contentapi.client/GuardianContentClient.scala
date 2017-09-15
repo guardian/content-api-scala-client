@@ -3,8 +3,6 @@ package com.gu.contentapi.client
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.utils.QueryStringParams
-import com.ning.http.client.AsyncHttpClientConfig.Builder
-import com.ning.http.client.AsyncHttpClient
 import dispatch.{FunctionHandler, Http}
 import com.gu.contentapi.buildinfo.CapiBuildInfo
 
@@ -20,13 +18,8 @@ trait ContentApiClientLogic {
 
   protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
 
-  protected lazy val http = {
-    /*
-    Warning: do not call `Http.configure(...)` because it leaks resources!
-    See https://github.com/dispatch/reboot/pull/115
-     */
-    val config = new Builder()
-      .setAllowPoolingConnections(true)
+  protected lazy val http = Http.withConfiguration { config =>
+    config
       .setMaxConnectionsPerHost(10)
       .setMaxConnections(10)
       .setConnectTimeout(1000)
@@ -34,9 +27,7 @@ trait ContentApiClientLogic {
       .setCompressionEnforced(true)
       .setFollowRedirect(true)
       .setUserAgent(userAgent)
-      .setConnectionTTL(60000) // to respect DNS TTLs
-      .build()
-    Http(new AsyncHttpClient(config))
+      .setConnectionTtl(60000) // to respect DNS TTLs
   }
 
   val targetUrl = "http://content.guardianapis.com"
