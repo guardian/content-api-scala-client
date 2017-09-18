@@ -1,3 +1,6 @@
+## 11.25
+* Update content-api-models to 11.25 (add Atom updates to the crier event model)
+
 ## 11.24
 * Update content-api-models to 11.24 (scala 2.12.3)
 * This is the first version available for both scala `2.12.x` and scala `2.11.x`
