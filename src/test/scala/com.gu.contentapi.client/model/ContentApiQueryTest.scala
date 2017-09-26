@@ -17,6 +17,10 @@ class ContentApiQueryTest extends FlatSpec with Matchers  {
     SectionsQuery().toString shouldEqual "SectionsQuery(/sections)"
   }
 
+  "SectionsQuery.toString" should "add sponsorship-type filter" in {
+    SectionsQuery().sponsorshipType("paid-content").toString shouldEqual "SectionsQuery(/sections?sponsorship-type=paid-content)"
+  }
+
   "TagsQuery.toString" should "be awesome" in {
     TagsQuery().tagType("contributor").toString shouldEqual "TagsQuery(/tags?type=contributor)"
   }

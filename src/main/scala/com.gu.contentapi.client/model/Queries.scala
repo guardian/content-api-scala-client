@@ -76,7 +76,8 @@ case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 
 case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery
-  with FilterSearchParameters[SectionsQuery] {
+  with FilterSearchParameters[SectionsQuery]
+  with FilterSectionParameters[SectionsQuery]{
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -248,6 +249,10 @@ trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Ow
 
 trait FilterTagParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def tagType = StringParameter("type")
+}
+
+trait FilterSectionParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  def sponsorshipType = StringParameter("sponsorship-type")
 }
 
 trait FilterSearchParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
