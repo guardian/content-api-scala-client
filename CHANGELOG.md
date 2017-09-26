@@ -1,3 +1,7 @@
+## 11.27
+* Update content-api-models to 11.26 (add validTo and validFrom dates to Sponsorship, present in both tags and sections.)
+* Add supported `sponsorship-type` filter for Section.
+
 ## 11.25
 * Update content-api-models to 11.25 (add Atom updates to the crier event model)
 
