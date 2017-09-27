@@ -1,5 +1,5 @@
-## 11.28
-* Update content-api-models to 11.26 (add validTo and validFrom dates to Sponsorship, present in both tags and sections.)
+## 11.26
+* Update content-api-models to 11.28 (add validTo and validFrom dates to Sponsorship, present in both tags and sections.)
 * Add supported `sponsorship-type` filter for Section.
 
 ## 11.25
