@@ -8,7 +8,7 @@ A Scala client for the Guardian's [Content API](http://explorer.capi.gutools.co.
 
 ## Setup
 
-Add the following line to your SBT build definition, and set the version number to be the latest from the [releases page] (https://github.com/guardian/content-api-scala-client/releases):
+Add the following line to your SBT build definition, and set the version number to be the latest from the [releases page](https://github.com/guardian/content-api-scala-client/releases):
 
 ```scala
 libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
@@ -130,7 +130,7 @@ client.getResponse(timeSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
-// print the web titles of the last 10 content items published whose type is article.
+// print the web titles of the last 10 content items published whose type is article
 val typeSearch = SearchQuery().contentType("article")
 client.getResponse(typeSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
