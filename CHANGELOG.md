@@ -1,3 +1,6 @@
+## 11.30
+* Update content-api-models to 11.30 (add `description` to Timeline atoms for context)
+
 ## 11.29
 * Update content-api-models to 11.29 (add `commissioningDesks` to atoms and `answers` to readers questions)
 
