@@ -84,7 +84,6 @@ val CapiModelsVersion = "11.30"
 
 libraryDependencies ++= Seq(
   "com.gu" %% "content-api-models-scala" % CapiModelsVersion,
-  "joda-time" % "joda-time" % "2.3",
   "net.databinder.dispatch" %% "dispatch-core" % "0.13.1",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test",
   "com.google.guava" % "guava" % "19.0" % "test"

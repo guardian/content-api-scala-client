@@ -31,7 +31,7 @@ Use these imports for the following code samples (substituting your own executio
 ```scala
 import com.gu.contentapi.client.GuardianContentClient
 import com.gu.contentapi.client.model._
-import org.joda.time.DateTime
+import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 ```
 
@@ -125,7 +125,7 @@ client.getResponse(sectionSearch) map { response =>
 }
 
 // print the web titles of the last 10 content items published a week ago
-val timeSearch = SearchQuery().toDate(new DateTime().minusDays(7))
+val timeSearch = SearchQuery().toDate(Instant.now().minus(7, ChronoUnit.DAYS))
 client.getResponse(timeSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }

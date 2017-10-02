@@ -1,17 +1,18 @@
 package com.gu.contentapi.client.utils
 
-import org.joda.time.DateTime
 import com.gu.contentapi.client.model.v1._
-import org.joda.time.format.ISODateTimeFormat
+
+import java.time.{ Instant, LocalDateTime, ZoneOffset }
+import java.time.format.DateTimeFormatter
 
 object CapiModelEnrichment {
 
   implicit class RichCapiDateTime(val cdt: CapiDateTime) extends AnyVal {
-    def toJodaDateTime: DateTime = new DateTime(cdt.dateTime)
+    def toLocalDateTime: LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(cdt.dateTime), ZoneOffset.UTC)
   }
 
-  implicit class RichJodaDateTime(val dt: DateTime) extends AnyVal {
-    def toCapiDateTime: CapiDateTime = CapiDateTime.apply(dt.getMillis, dt.toString(ISODateTimeFormat.dateTime()))
+  implicit class RichJodaDateTime(val dt: LocalDateTime) extends AnyVal {
+    def toCapiDateTime: CapiDateTime = CapiDateTime.apply(dt.toInstant(ZoneOffset.UTC).toEpochMilli, dt.format(DateTimeFormatter.ISO_INSTANT))
   }
 
 }
