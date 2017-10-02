@@ -23,7 +23,7 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   with OrderByParameter[ItemQuery]
   with UseDateParameter[ItemQuery]
   with FilterParameters[ItemQuery]
-  with FilterDateParameter[ItemQuery]
+  with FilterDateParameters[ItemQuery]
   with FilterExtendedParameters[ItemQuery]
   with FilterSearchParameters[ItemQuery] {
 
@@ -43,7 +43,7 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   with UseDateParameter[SearchQuery]
   with PaginationParameters[SearchQuery]
   with FilterParameters[SearchQuery]
-  with FilterDateParameter[SearchQuery]
+  with FilterDateParameters[SearchQuery]
   with FilterExtendedParameters[SearchQuery]
   with FilterSearchParameters[SearchQuery] {
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
@@ -57,7 +57,7 @@ case class RemovedContentQuery(parameterHolder: Map[String, Parameter] = Map.emp
   with PaginationParameters[RemovedContentQuery]
   with OrderByParameter[RemovedContentQuery]
   with UseDateParameter[RemovedContentQuery]
-  with FilterDateParameter[RemovedContentQuery]{
+  with FilterDateParameters[RemovedContentQuery]{
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
