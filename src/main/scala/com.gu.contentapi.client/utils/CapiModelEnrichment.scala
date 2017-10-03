@@ -11,7 +11,7 @@ object CapiModelEnrichment {
     def toLocalDateTime: LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(cdt.dateTime), ZoneOffset.UTC)
   }
 
-  implicit class RichJodaDateTime(val dt: LocalDateTime) extends AnyVal {
+  implicit class RichLocalDateTime(val dt: LocalDateTime) extends AnyVal {
     def toCapiDateTime: CapiDateTime = CapiDateTime.apply(dt.toInstant(ZoneOffset.UTC).toEpochMilli, dt.format(DateTimeFormatter.ISO_INSTANT))
   }
 
