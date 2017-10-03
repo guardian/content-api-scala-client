@@ -31,7 +31,7 @@ Use these imports for the following code samples (substituting your own executio
 ```scala
 import com.gu.contentapi.client.GuardianContentClient
 import com.gu.contentapi.client.model._
-import java.time.LocalDateTime
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 ```
 
