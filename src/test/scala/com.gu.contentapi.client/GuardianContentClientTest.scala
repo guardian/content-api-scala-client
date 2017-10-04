@@ -3,7 +3,7 @@ package com.gu.contentapi.client
 import com.gu.contentatom.thrift.{AtomData, AtomType}
 import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse}
 import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
-import org.joda.time.DateTime
+import java.time.Instant
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
@@ -50,7 +50,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   }
 
   it should "understand custom parameters" in {
-    val now = new DateTime
+    val now = Instant.now()
     val params = api.search
       .stringParam("aStringParam", "foo")
       .intParam("aIntParam", 3)
@@ -60,7 +60,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
 
     params.get("aStringParam") should be (Some("foo"))
     params.get("aIntParam") should be (Some("3"))
-    params.get("aDateParam") should be (Some(now.toString()))
+    params.get("aDateParam") should be (Some(now.toString))
     params.get("aBoolParam") should be (Some("true"))
   }
 

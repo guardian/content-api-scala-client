@@ -1,3 +1,7 @@
+## 11.32
+* Update content-api-models to 11.32
+* Replace Joda data types with their Java 8 equivalent
+
 ## 11.30
 * Update content-api-models to 11.30 (add `description` to Timeline atoms for context)
 

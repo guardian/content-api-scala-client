@@ -1,6 +1,6 @@
 package com.gu.contentapi.client
 
-import org.joda.time.ReadableInstant
+import java.time.Instant
 
 trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
   def stringParam(key: String, value: String): Owner = {
@@ -15,7 +15,7 @@ trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
     withParameter(BoolParameter(key, Some(value)))
   }
 
-  def dateParam(key: String, value: ReadableInstant): Owner = {
+  def dateParam(key: String, value: Instant): Owner = {
     withParameter(DateParameter(key, Some(value)))
   }
 
@@ -45,9 +45,9 @@ trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
     def withValue(newValue: Option[Int]) = copy(value = newValue)
   }
 
-  case class DateParameter(name: String, value: Option[ReadableInstant] = None) extends OwnedParameter {
-    type Self = ReadableInstant
-    def withValue(newValue: Option[ReadableInstant]) = copy(value = newValue)
+  case class DateParameter(name: String, value: Option[Instant] = None) extends OwnedParameter {
+    type Self = Instant
+    def withValue(newValue: Option[Instant]) = copy(value = newValue)
   }
 
   case class BoolParameter(name: String, value: Option[Boolean] = None) extends OwnedParameter {
