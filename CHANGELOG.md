@@ -1,5 +1,5 @@
-## 11.31
-* Update content-api-models to 11.31
+## 11.32
+* Update content-api-models to 11.32
 * Replace Joda data types with their Java 8 equivalent
 
 ## 11.30
