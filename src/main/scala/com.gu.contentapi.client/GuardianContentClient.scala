@@ -1,14 +1,14 @@
 package com.gu.contentapi.client
 
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.utils.QueryStringParams
-import dispatch.{FunctionHandler, Http}
 import com.gu.contentapi.buildinfo.CapiBuildInfo
-
-import scala.concurrent.{ExecutionContext, Future}
+import okhttp3._
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.Try
-
 import com.gu.contentapi.client.thrift.ThriftDeserializer
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
@@ -18,17 +18,12 @@ trait ContentApiClientLogic {
 
   protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
 
-  protected lazy val http = Http.withConfiguration { config =>
-    config
-      .setMaxConnectionsPerHost(10)
-      .setMaxConnections(10)
-      .setConnectTimeout(1000)
-      .setRequestTimeout(2000)
-      .setCompressionEnforced(true)
-      .setFollowRedirect(true)
-      .setUserAgent(userAgent)
-      .setConnectionTtl(60000) // to respect DNS TTLs
-  }
+  protected lazy val http = new OkHttpClient.Builder()
+    .connectTimeout(1000, TimeUnit.SECONDS)
+    .readTimeout(2000, TimeUnit.SECONDS)
+    .followRedirects(true)
+    .connectionPool(new ConnectionPool(10, 60, TimeUnit.SECONDS))
+    .build()
 
   val targetUrl = "http://content.guardianapis.com"
 
@@ -70,11 +65,22 @@ trait ContentApiClientLogic {
   }
 
   protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
-    val req = headers.foldLeft(dispatch.url(url)) {
-      case (r, (name, value)) => r.setHeader(name, value)
+
+    val reqBuilder = new Request.Builder().url(url)
+    val req = headers.foldLeft(reqBuilder) {
+      case (r, (name, value)) => r.header(name, value)
     }
-    def handler = new FunctionHandler(r => HttpResponse(r.getResponseBodyAsBytes, r.getStatusCode, r.getStatusText))
-    http(req.toRequest, handler)
+
+    val promise = Promise[HttpResponse]()
+
+    http.newCall(req.build()).enqueue(new Callback() {
+      override def onFailure(call: Call, e: IOException): Unit = promise.failure(e)
+      override def onResponse(call: Call, response: Response): Unit = {
+        promise.success(HttpResponse(response.body().bytes, response.code(), response.message()))
+      }
+    })
+
+    promise.future
   }
 
   def getUrl(contentApiQuery: ContentApiQuery): String =
@@ -161,7 +167,7 @@ trait ContentApiClientLogic {
    *
    * Note: behaviour is undefined if you try to use the client after calling this method.
    */
-  def shutdown(): Unit = http.shutdown()
+  def shutdown(): Unit = http.dispatcher().executorService().shutdown()
 
 }
 
