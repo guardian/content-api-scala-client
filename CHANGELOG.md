@@ -1,3 +1,6 @@
+## 11.33
+* Move to using OkHTTP over Dispatch
+
 ## 11.32
 * Update content-api-models to 11.32
 * Replace Joda data types with their Java 8 equivalent
