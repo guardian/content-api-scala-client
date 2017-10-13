@@ -1,3 +1,6 @@
+## 11.35
+* Update content-api-models to 11.35 (add sponsorship information to rich link fields)
+
 ## 11.33
 * Move to using OkHTTP over Dispatch
 
