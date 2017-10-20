@@ -1,3 +1,6 @@
+## 11.36
+Update content-api-models to 11.36 (add podcast type information)
+
 ## 11.35
 * Update content-api-models to 11.35 (add sponsorship information to rich link fields)
 
