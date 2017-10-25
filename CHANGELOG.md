@@ -1,3 +1,6 @@
+## 11.38
+Update content-api-models to 11.38 (add Pillars models)
+
 ## 11.37
 Add sponsorship-type filter to tags endpoint.
 
