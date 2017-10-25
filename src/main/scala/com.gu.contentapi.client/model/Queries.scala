@@ -249,6 +249,7 @@ trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Ow
 
 trait FilterTagParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def tagType = StringParameter("type")
+  def sponsorshipType = StringParameter("sponsorship-type")
 }
 
 trait FilterSectionParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
