@@ -1,3 +1,6 @@
+## 11.37
+Add sponsorship-type filter to tags endpoint.
+
 ## 11.36
 Update content-api-models to 11.36 (add podcast type information)
 
