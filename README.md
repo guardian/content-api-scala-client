@@ -37,7 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 ### Single item
 
-Every item on http://www.theguardian.com/ can be retrieved on the same path at http://content.guardianapis.com/. They can be either content items, tags, or sections. For example:
+Every item on http://www.theguardian.com/ can be retrieved on the same path at https://content.guardianapis.com/. They can be either content items, tags, or sections. For example:
 
 ```scala
 // query for a single content item and print its web title
@@ -91,7 +91,7 @@ client.getResponse(mostViewedTitleQuery) map { response =>
 
 ### Content
 
-Filtering or searching for multiple content items happens at http://content.guardianapis.com/search. For example:
+Filtering or searching for multiple content items happens at https://content.guardianapis.com/search. For example:
 
 ```scala
 // print the total number of content items
