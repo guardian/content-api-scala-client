@@ -25,7 +25,7 @@ trait ContentApiClientLogic {
     .connectionPool(new ConnectionPool(10, 60, TimeUnit.SECONDS))
     .build()
 
-  val targetUrl = "http://content.guardianapis.com"
+  val targetUrl = "https://content.guardianapis.com"
 
   def item(id: String) = ItemQuery(id)
   val search = SearchQuery()
