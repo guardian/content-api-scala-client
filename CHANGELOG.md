@@ -1,6 +1,9 @@
+## 11.40
+* Update content-api-models to 11.40 (atom image credit field)
+
 ## 11.39
 * Use https
-* Update content-api-models to 11.38 (scheduledLaunch field in atoms)
+* Update content-api-models to 11.39 (scheduledLaunch field in atoms)
 
 ## 11.38
 Update content-api-models to 11.38 (add Pillars models)
