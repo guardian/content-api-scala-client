@@ -1,3 +1,6 @@
+## 11.42
+* Update content-api-models to 11.42 (timeline atom flexible date formats)
+
 ## 11.40
 * Update content-api-models to 11.40 (atom image credit field)
 
