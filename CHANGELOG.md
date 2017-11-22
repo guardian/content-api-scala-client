@@ -1,3 +1,7 @@
+## 11.43 
+
+* Adds an implicit designType field to Content model
+
 ## 11.42
 * Update content-api-models to 11.42 (timeline atom flexible date formats)
 
