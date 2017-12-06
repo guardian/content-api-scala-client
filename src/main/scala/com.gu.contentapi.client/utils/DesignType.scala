@@ -15,5 +15,6 @@ case object Recipe extends DesignType
 case object MatchReport extends DesignType
 case object Interview extends DesignType
 case object GuardianView extends DesignType
+case object GuardianLabs extends DesignType
 case object Quiz extends DesignType
 
