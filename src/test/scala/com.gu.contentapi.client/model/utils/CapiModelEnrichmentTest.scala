@@ -134,15 +134,73 @@ class CapiModelEnrichmentTest extends FlatSpec with MockitoSugar with Matchers {
   it should "have a designType of 'Immersive' when the displayHint field is set to 'immersive'" in {
     val content = mock[Content]
     val fields = mock[ContentFields]
+    val tag = mock[Tag]
 
+    when(tag.id) thenReturn ("tone/analysis")
+    when(content.tags) thenReturn(List(tag))
     when(content.fields) thenReturn (Some(fields))
     when(fields.displayHint) thenReturn(Some("immersive"))
 
     content.designType shouldEqual(Immersive)
   }
 
+  it should "have a designType of 'Quiz' when tag tone/quizzes is present" in {
+    val content = mock[Content]
+    val tag = mock[Tag]
+
+    when(tag.id) thenReturn ("tone/quizzes")
+    when(content.tags) thenReturn(List(tag))
+    when(content.fields) thenReturn(None)
+
+    content.designType shouldEqual(Quiz)
+  }
+
+  it should "have a designType of 'GuardianView' when tag tone/editorials is present" in {
+    val content = mock[Content]
+    val tag = mock[Tag]
+
+    when(tag.id) thenReturn ("tone/editorials")
+    when(content.tags) thenReturn(List(tag))
+    when(content.fields) thenReturn(None)
+
+    content.designType shouldEqual(GuardianView)
+  }
+
+  it should "have a designType of 'Interview' when tag tone/interview is present" in {
+    val content = mock[Content]
+    val tag = mock[Tag]
+
+    when(tag.id) thenReturn ("tone/interview")
+    when(content.tags) thenReturn(List(tag))
+    when(content.fields) thenReturn(None)
+
+    content.designType shouldEqual(Interview)
+  }
+
+  it should "have a designType of 'MatchReport' when tag tone/matchreports is present" in {
+    val content = mock[Content]
+    val tag = mock[Tag]
+
+    when(tag.id) thenReturn ("tone/matchreports")
+    when(content.tags) thenReturn(List(tag))
+    when(content.fields) thenReturn(None)
+
+    content.designType shouldEqual(MatchReport)
+  }
+
+  it should "have a designType of 'Recipe' when tag tone/recipe is present" in {
+    val content = mock[Content]
+    val tag = mock[Tag]
+
+    when(tag.id) thenReturn ("tone/recipe")
+    when(content.tags) thenReturn(List(tag))
+    when(content.fields) thenReturn(None)
+
+    content.designType shouldEqual(Recipe)
+  }
+
   //test one example of filters being applied in priority order
-  it should "return a designType of 'Media' over a designType of 'Comment' where tags for botth are present'" in {
+  it should "return a designType of 'Media' over a designType of 'Comment' where tags for both are present'" in {
     val content = mock[Content]
     val commentTag = mock[Tag]
     val videoTag = mock[Tag]
