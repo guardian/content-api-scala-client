@@ -1,3 +1,6 @@
+## 11.44
+* Support new `DesignType`s
+
 ## 11.43 
 * Update content-api-models to 11.43 (new embargo field on atoms)
 * Adds an implicit designType field to Content model
