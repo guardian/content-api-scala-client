@@ -22,7 +22,7 @@ object CapiModelEnrichment {
 
       type ContentFilter = Content => Boolean
 
-      val isImmersive: ContentFilter = c => c.fields.flatMap(_.displayHint).map(_.equals("immersive")).getOrElse(false)
+      val isImmersive: ContentFilter = c => c.fields.flatMap(_.displayHint).contains("immersive")
 
       def tagExistsWithId(tagId: String): ContentFilter = c => c.tags.exists(tag => tag.id == tagId)
 
@@ -33,13 +33,18 @@ object CapiModelEnrichment {
       def isComment: ContentFilter = c => tagExistsWithId("tone/comment")(c) || tagExistsWithId("tone/letters")(c)
 
       val predicates: List[(ContentFilter, DesignType)] = List (
-          isImmersive -> Immersive,
-          isMedia -> Media,
-          isReview -> Review,
-          tagExistsWithId("tone/analysis") -> Analysis,
-          isComment -> Comment,
-          tagExistsWithId("tone/features") -> Feature,
-          tagExistsWithId("tone/minutebyminute") -> Live
+        tagExistsWithId("tone/quizzes") -> Quiz,
+        tagExistsWithId("tone/editorials") -> GuardianView,
+        tagExistsWithId("tone/interview") -> Interview,
+        tagExistsWithId("tone/matchreports") -> MatchReport,
+        tagExistsWithId("tone/recipe") -> Recipe,
+        isImmersive -> Immersive,
+        isMedia -> Media,
+        isReview -> Review,
+        tagExistsWithId("tone/analysis") -> Analysis,
+        isComment -> Comment,
+        tagExistsWithId("tone/features") -> Feature,
+        tagExistsWithId("tone/minutebyminute") -> Live
       )
 
       val result = predicates.collectFirst { case (predicate, design) if predicate(content) => design }
