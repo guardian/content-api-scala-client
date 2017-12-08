@@ -23,6 +23,7 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   with OrderByParameter[ItemQuery]
   with UseDateParameter[ItemQuery]
   with FilterParameters[ItemQuery]
+  with FilterDateParameters[ItemQuery]
   with FilterExtendedParameters[ItemQuery]
   with FilterSearchParameters[ItemQuery] {
 
@@ -42,6 +43,7 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   with UseDateParameter[SearchQuery]
   with PaginationParameters[SearchQuery]
   with FilterParameters[SearchQuery]
+  with FilterDateParameters[SearchQuery]
   with FilterExtendedParameters[SearchQuery]
   with FilterSearchParameters[SearchQuery] {
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
@@ -54,7 +56,8 @@ case class RemovedContentQuery(parameterHolder: Map[String, Parameter] = Map.emp
   with RemovedReasonParameters[RemovedContentQuery]
   with PaginationParameters[RemovedContentQuery]
   with OrderByParameter[RemovedContentQuery]
-  with UseDateParameter[RemovedContentQuery]{
+  with UseDateParameter[RemovedContentQuery]
+  with FilterDateParameters[RemovedContentQuery]{
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -231,13 +234,16 @@ trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { t
   def productionOffice = StringParameter("production-office")
 }
 
+trait FilterDateParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  def fromDate = DateParameter("from-date")
+  def toDate = DateParameter("to-date")
+}
+
 trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def tag = StringParameter("tag")
   def ids = StringParameter("ids")
   def rights = StringParameter("rights")
   def leadContent = StringParameter("lead-content")
-  def fromDate = DateParameter("from-date")
-  def toDate = DateParameter("to-date")
   def contentType = StringParameter("type")
   def lang = StringParameter("lang")
   def starRating = IntParameter("star-rating")
