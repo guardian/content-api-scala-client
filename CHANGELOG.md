@@ -1,4 +1,5 @@
-## 11.44
+## 11.45
+* Update content-api-models to 11.45 (commonsdivision atom)
 * Support new `DesignType`s
 
 ## 11.43 
