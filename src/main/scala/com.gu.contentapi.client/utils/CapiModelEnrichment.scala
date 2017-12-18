@@ -32,6 +32,12 @@ object CapiModelEnrichment {
 
       def isComment: ContentFilter = c => tagExistsWithId("tone/comment")(c) || tagExistsWithId("tone/letters")(c)
 
+      def liveBloggingNow: Boolean = content.fields.flatMap(_.liveBloggingNow).contains(true)
+
+      val liveBlog: ContentFilter = liveBloggingNow && tagExistsWithId("tone/minutebyminute")(_)
+
+      val deadBlog: ContentFilter = !liveBloggingNow && tagExistsWithId("tone/minutebyminute")(_)
+
       val predicates: List[(ContentFilter, DesignType)] = List (
         tagExistsWithId("tone/quizzes") -> Quiz,
         tagExistsWithId("tone/editorials") -> GuardianView,
@@ -44,7 +50,8 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/analysis") -> Analysis,
         isComment -> Comment,
         tagExistsWithId("tone/features") -> Feature,
-        tagExistsWithId("tone/minutebyminute") -> Live
+        liveBlog -> Live,
+        deadBlog -> Article
       )
 
       val result = predicates.collectFirst { case (predicate, design) if predicate(content) => design }
