@@ -1,3 +1,6 @@
+## 11.48
+* Update content-api-models to 11.48 (new atom image asset fields and internalCommissionedWordcount)
+
 ## 11.46
 * Update content-api-models to 11.46 (commonsdivision in response)
 
