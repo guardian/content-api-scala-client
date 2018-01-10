@@ -40,7 +40,7 @@ pomExtra := (
       </developer>
     </developers>
   )
-publishTo := { 
+publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (version.value.trim.endsWith("SNAPSHOT"))
     Some("snapshots" at nexus + "content/repositories/snapshots")

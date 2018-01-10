@@ -232,7 +232,7 @@ client.getResponse(expiredContentQuery ) map { response =>
 
 One easy way to get started with the client is to try it in the Scala REPL.
 
-First clone this repo, then run `sbt console`. This will start a REPL with a few useful things imported for you, so you can get started quickly:
+First clone this repo, then run `sbt console` from the `client` directory. This will start a REPL with a few useful things imported for you, so you can get started quickly:
 
 ```
 scala> val client = new GuardianContentClient("YOUR API KEY HERE")
