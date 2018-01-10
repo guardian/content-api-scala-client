@@ -6,6 +6,13 @@ resolvers += Resolver.sonatypeRepo("releases")
 
 pomExtra := (
   <url>https://github.com/guardian/content-api-scala-client</url>
+  <developers>
+    <developer>
+      <id>tomrf1</id>
+      <name>Tom Forbes</name>
+      <url>https://github.com/tomrf1</url>
+    </developer>
+  </developers>
   )
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
