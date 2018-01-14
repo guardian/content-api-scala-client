@@ -61,7 +61,7 @@ scmInfo := Some(ScmInfo(
   "scm:git:git@github.com:guardian/content-api-scala-client.git"
 ))
 javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
-scalacOptions ++= Seq("-deprecation", "-unchecked")
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-Ypartial-unification")
 releaseProcess := Seq(
   checkSnapshotDependencies,
   inquireVersions,
@@ -84,6 +84,7 @@ val CapiModelsVersion = "11.48"
 
 libraryDependencies ++= Seq(
   "com.gu" %% "content-api-models-scala" % CapiModelsVersion,
+  "org.typelevel" %% "cats-core" % "1.0.1",
   "com.squareup.okhttp3" % "okhttp" % "3.9.0",
   "org.slf4j" % "slf4j-api" % "1.7.25",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test",

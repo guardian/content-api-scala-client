@@ -1,13 +1,13 @@
 package com.gu.contentapi.client
 
+import cats.instances.future._
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import okhttp3._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 
-class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic {
-  val targetUrl = "https://content.guardianapis.com"
-  
+class GuardianContentClient(apiKey: String)(implicit context: ExecutionContext) 
+    extends ContentApiClientLogic[Future](apiKey, "https://content.guardianapis.com") {
   val http = new OkHttpClient.Builder()
     .connectTimeout(1000, TimeUnit.SECONDS)
     .readTimeout(2000, TimeUnit.SECONDS)
@@ -15,7 +15,7 @@ class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic {
     .connectionPool(new ConnectionPool(10, 60, TimeUnit.SECONDS))
     .build()
 
-  override def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
+  override def get(url: String, headers: Map[String, String]): Future[HttpResponse] = {
     val reqBuilder = new Request.Builder().url(url)
     val req = headers.foldLeft(reqBuilder) {
       case (r, (name, value)) => r.header(name, value)

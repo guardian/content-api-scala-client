@@ -1,30 +1,30 @@
 package com.gu.contentapi.client
 
+import cats.MonadError
+import cats.implicits._
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentapi.buildinfo.CapiBuildInfo
-import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.Try
 import com.gu.contentapi.client.thrift.ThriftDeserializer
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
 case class HttpResponse(body: Array[Byte], statusCode: Int, statusMessage: String)
 
-trait ContentApiClientLogic {
-  val apiKey: String
-  val targetUrl: String
+abstract class ContentApiClientLogic[F[_]](
+  val apiKey: String,
+  val targetUrl: String,
+  protected val userAgent: String = "content-api-scala-client/"+CapiBuildInfo.version
+)(implicit M: MonadError[F, Throwable]) {
 
-  protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
-
-
-  protected[client] def url(location: String, parameters: Map[String, String]): String = {
+  protected[client] def url(location: String, parameters: Map[String, String]): F[String] = {
     require(!location.contains('?'), "must not specify parameters in URL")
 
-    location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift"))
+    M.pure(location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift")))
   }
 
-  protected def fetch(url: String)(implicit context: ExecutionContext): Future[Array[Byte]] = {
+  protected def fetch(url: String): F[Array[Byte]] = {
     val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
 
     for (response <- get(url, headers)) yield {
@@ -38,14 +38,13 @@ trait ContentApiClientLogic {
     GuardianContentApiError(response.statusCode, response.statusMessage, errorResponse)
   }
 
-  protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
+  protected def get(url: String, headers: Map[String, String]): F[HttpResponse]
 
-  def getUrl(contentApiQuery: ContentApiQuery): String =
+  def getUrl(contentApiQuery: ContentApiQuery): F[String] =
     url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
 
-  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
-    fetch(getUrl(contentApiQuery))
-
+  private def fetchResponse(contentApiQuery: ContentApiQuery): F[Array[Byte]] = 
+    getUrl(contentApiQuery) >>= fetch
 
   /* Exposed API */
 
@@ -66,11 +65,7 @@ trait ContentApiClientLogic {
   val videoStats = VideoStatsQuery()
   val stories = StoriesQuery()
 
-  def getResponse[Q <: ContentApiQuery](q: Q)(
-    implicit 
-    context: ExecutionContext,
-    codec: Codec[Q]
-  ): Future[codec.R] =
+  def getResponse[Q <: ContentApiQuery](q: Q)(implicit codec: Codec[Q]): F[codec.R] =
     fetchResponse(q) map codec.decode
 }
 
