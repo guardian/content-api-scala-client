@@ -12,18 +12,12 @@ import scala.util.Try
 import com.gu.contentapi.client.thrift.ThriftDeserializer
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
+case class HttpResponse(body: Array[Byte], statusCode: Int, statusMessage: String)
 
 trait ContentApiClientLogic {
   val apiKey: String
 
   protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
-
-  protected lazy val http = new OkHttpClient.Builder()
-    .connectTimeout(1000, TimeUnit.SECONDS)
-    .readTimeout(2000, TimeUnit.SECONDS)
-    .followRedirects(true)
-    .connectionPool(new ConnectionPool(10, 60, TimeUnit.SECONDS))
-    .build()
 
   val targetUrl = "https://content.guardianapis.com"
 
@@ -42,7 +36,6 @@ trait ContentApiClientLogic {
   val videoStats = VideoStatsQuery()
   val stories = StoriesQuery()
 
-  case class HttpResponse(body: Array[Byte], statusCode: Int, statusMessage: String)
 
   protected[client] def url(location: String, parameters: Map[String, String]): String = {
     require(!location.contains('?'), "must not specify parameters in URL")
@@ -64,24 +57,7 @@ trait ContentApiClientLogic {
     GuardianContentApiError(response.statusCode, response.statusMessage, errorResponse)
   }
 
-  protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
-
-    val reqBuilder = new Request.Builder().url(url)
-    val req = headers.foldLeft(reqBuilder) {
-      case (r, (name, value)) => r.header(name, value)
-    }
-
-    val promise = Promise[HttpResponse]()
-
-    http.newCall(req.build()).enqueue(new Callback() {
-      override def onFailure(call: Call, e: IOException): Unit = promise.failure(e)
-      override def onResponse(call: Call, response: Response): Unit = {
-        promise.success(HttpResponse(response.body().bytes, response.code(), response.message()))
-      }
-    })
-
-    promise.future
-  }
+  protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
 
   def getUrl(contentApiQuery: ContentApiQuery): String =
     url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
@@ -162,14 +138,40 @@ trait ContentApiClientLogic {
       ThriftDeserializer.deserialize(response, StoriesResponse)
     }
 
+}
+
+class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic {
+
+  val http = new OkHttpClient.Builder()
+    .connectTimeout(1000, TimeUnit.SECONDS)
+    .readTimeout(2000, TimeUnit.SECONDS)
+    .followRedirects(true)
+    .connectionPool(new ConnectionPool(10, 60, TimeUnit.SECONDS))
+    .build()
+
+  override def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
+    val reqBuilder = new Request.Builder().url(url)
+    val req = headers.foldLeft(reqBuilder) {
+      case (r, (name, value)) => r.header(name, value)
+    }
+
+    val promise = Promise[HttpResponse]()
+
+    http.newCall(req.build()).enqueue(new Callback() {
+      override def onFailure(call: Call, e: IOException): Unit = promise.failure(e)
+      override def onResponse(call: Call, response: Response): Unit = {
+        promise.success(HttpResponse(response.body().bytes, response.code(), response.message()))
+      }
+    })
+
+    promise.future
+  }
+
   /**
    * Shutdown the client and clean up all associated resources.
    *
    * Note: behaviour is undefined if you try to use the client after calling this method.
    */
   def shutdown(): Unit = http.dispatcher().executorService().shutdown()
-
 }
-
-class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
 
