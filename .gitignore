@@ -3,3 +3,5 @@
 !.travis.yml
 
 target/
+ensime*
+pc.stdout.log
