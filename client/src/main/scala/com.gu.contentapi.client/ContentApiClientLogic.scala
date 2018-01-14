@@ -30,11 +30,11 @@ abstract class ContentApiClientLogic[F[_]](
   private def fetchResponse(contentApiQuery: ContentApiQuery): F[Array[Byte]] = 
     getUrl(contentApiQuery) >>= fetch
 
-  protected[client] def url(location: String, parameters: Map[String, String]): F[String] = {
+  protected[client] def url(location: String, parameters: Map[String, String]): F[String] = M.fromTry(Try {
     require(!location.contains('?'), "must not specify parameters in URL")
 
-    M.pure(location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift")))
-  }
+    location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift"))
+  })
 
   protected def fetch(url: String): F[Array[Byte]] =
     get(url, headers).ensureOr(contentApiError)(isValidResponse(_)).map(_.body)
