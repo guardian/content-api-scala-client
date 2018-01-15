@@ -1,3 +1,6 @@
+## 11.49
+* Update designType algorithm to prioritise immersive over everything else
+
 ## 11.48
 * Update content-api-models to 11.48 (new atom image asset fields and internalCommissionedWordcount)
 
