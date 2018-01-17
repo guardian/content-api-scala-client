@@ -1,14 +1,15 @@
 package com.gu.contentapi.client
 
 import com.amazonaws.DefaultRequest
-import com.amazonaws.auth.{AWS4Signer, AWSCredentials}
+import com.amazonaws.auth.{AWS4Signer, AWSCredentialsProvider}
 import com.amazonaws.http.HttpMethodName
+
 import collection.JavaConverters._
 
 /**
   * For api-gateway authorization.
   */
-class IAMSigner(credentials: AWSCredentials, awsRegion: String) {
+class IAMSigner(credentialsProvider: AWSCredentialsProvider, awsRegion: String) {
 
   private val serviceName = "execute-api"
 
@@ -47,7 +48,7 @@ class IAMSigner(credentials: AWSCredentials, awsRegion: String) {
       req
     }
 
-    signer.sign(requestToSign, credentials)
+    signer.sign(requestToSign, credentialsProvider.getCredentials)
     requestToSign.getHeaders.asScala.toMap + ("Accept-Encoding" -> "identity")
   }
 }
