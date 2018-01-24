@@ -1,5 +1,7 @@
 package com.gu.contentapi.client
 
+import java.net.URI
+
 import com.amazonaws.DefaultRequest
 import com.amazonaws.auth.{AWS4Signer, AWSCredentialsProvider}
 import com.amazonaws.http.HttpMethodName
@@ -24,14 +26,13 @@ class IAMSigner(credentialsProvider: AWSCredentialsProvider, awsRegion: String) 
     * Returns the given set of headers, updated to include AWS sig4v signed headers based on the request and the credentials
     *
     * @param headers  Current set of request headers
-    * @param url      Request URL, including params
+    * @param uri      Request URI, including params
     * @return         Updated set of headers, including the authorisation headers
     */
-  def addIAMHeaders(headers: Map[String, String], url: String): Map[String, String] = {
+  def addIAMHeaders(headers: Map[String, String], uri: URI): Map[String, String] = {
     val requestToSign = {
       val req = new DefaultRequest(serviceName)
 
-      val uri = new java.net.URI(url)
       req.setHeaders(headers.asJava)
       req.setEndpoint(new java.net.URI(s"${uri.getScheme}://${uri.getHost}"))
       req.setHttpMethod(HttpMethodName.GET)
