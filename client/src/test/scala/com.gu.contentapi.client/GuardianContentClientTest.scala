@@ -12,7 +12,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside {
 
-  private val api = new GuardianContentClient("test")
+  private val apiKey = System.getenv("API_KEY")
+  private val api = new GuardianContentClient(apiKey)
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 
   override def afterAll() {
