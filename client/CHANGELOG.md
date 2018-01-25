@@ -1,3 +1,6 @@
+## 11.50
+* Use cats 1.0 (via content-api-models 11.50)
+
 ## 11.49
 * Update designType algorithm to prioritise immersive over everything else
 
