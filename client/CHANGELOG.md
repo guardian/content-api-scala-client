@@ -1,3 +1,6 @@
+## 11.51
+* Encode query param spaces as %20
+
 ## 11.50
 * Use cats 1.0 (via content-api-models 11.50)
 
