@@ -50,6 +50,6 @@ class IAMSigner(credentialsProvider: AWSCredentialsProvider, awsRegion: String) 
     }
 
     signer.sign(requestToSign, credentialsProvider.getCredentials)
-    requestToSign.getHeaders.asScala.toMap + ("Accept-Encoding" -> "identity")
+    requestToSign.getHeaders.asScala.toMap
   }
 }
