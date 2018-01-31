@@ -1,3 +1,6 @@
+## 11.52
+* Fix regression of read and connect timeouts being 1000 and 2000 instead of 1 and 2 seconds
+
 ## 11.51
 * Encode query param spaces as %20
 
