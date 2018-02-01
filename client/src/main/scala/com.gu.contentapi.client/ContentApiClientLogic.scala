@@ -71,10 +71,10 @@ abstract class ContentApiClientLogic[F[_]](
 
   private def paginate2[Q <: ContentApiQuery](q: Q, f: SearchResponse => F[Unit])(r: SearchResponse): F[Unit] = for {
     _ <- f(r)
-    _ <- if (r.pages == r.currentPage)
-      M.pure(())
-    else
-      getResponse(NextQuery(q, r)) >>= paginate2(q, f)
+    _ <- (r.pages == r.currentPage, r.results.lastOption.map(_.id)) match {
+      case (false, Some(id)) => getResponse(NextQuery(q, id)) >>= paginate2(q, f)
+      case _                 => M.pure(())
+    }
   } yield ()
 }
 

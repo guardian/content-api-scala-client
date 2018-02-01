@@ -182,12 +182,12 @@ case class StoriesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 
 case class NextQuery[Q <: ContentApiQuery](
   originalQuery: Q, 
-  lastResults: SearchResponse)
+  contentId: String)
   extends ContentApiQuery {
   
   def parameters: Map[String, String] = originalQuery.parameters
 
-  override def pathSegment: String = s"""${lastResults.results.lastOption.map(_.id).getOrElse("")}/next"""
+  override def pathSegment: String = s"""${contentId}/next"""
 }
 
 trait StoryParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
