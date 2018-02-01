@@ -1,6 +1,6 @@
 package com.gu.contentapi.client
 
-import cats.MonadError
+import cats.{MonadError, Monoid}
 import cats.implicits._
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
@@ -76,5 +76,16 @@ abstract class ContentApiClientLogic[F[_]](
       case _                 => M.pure(())
     }
   } yield ()
+
+  def paginateMap[Q <: ContentApiQuery, RR : Monoid](q: Q)(f: SearchResponse => F[RR])(implicit codec: Codec[Q] { type R = SearchResponse }): F[RR] =
+    getResponse(q).flatMap(paginateMap2(q, f))
+
+  private def paginateMap2[Q <: ContentApiQuery, RR](q: Q, f: SearchResponse => F[RR])(r: SearchResponse)(implicit MO: Monoid[RR]): F[RR] = for {
+    r2 <- f(r)
+    r3 <- (r.pages == r.currentPage, r.results.lastOption.map(_.id)) match {
+      case (false, Some(id)) => getResponse(NextQuery(q, id)).flatMap(paginateMap2(q, f))
+      case _                 => M.pure(MO.empty)
+    }
+  } yield r2.combine(r3)
 }
 
