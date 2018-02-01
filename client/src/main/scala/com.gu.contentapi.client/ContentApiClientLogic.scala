@@ -64,15 +64,15 @@ abstract class ContentApiClientLogic[F[_]](
     url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
 
   def getResponse[Q <: ContentApiQuery](q: Q)(implicit codec: Codec[Q]): F[codec.R] =
-    fetchResponse(q) map codec.decode
+    fetchResponse(q).map(codec.decode)
   
   def paginate[Q <: ContentApiQuery](q: Q)(f: SearchResponse => F[Unit])(implicit codec: Codec[Q] { type R = SearchResponse }): F[Unit] =
-    getResponse(q) >>= paginate2(q, f)
+    getResponse(q).flatMap(paginate2(q, f))
 
   private def paginate2[Q <: ContentApiQuery](q: Q, f: SearchResponse => F[Unit])(r: SearchResponse): F[Unit] = for {
     _ <- f(r)
     _ <- (r.pages == r.currentPage, r.results.lastOption.map(_.id)) match {
-      case (false, Some(id)) => getResponse(NextQuery(q, id)) >>= paginate2(q, f)
+      case (false, Some(id)) => getResponse(NextQuery(q, id)).flatMap(paginate2(q, f))
       case _                 => M.pure(())
     }
   } yield ()
