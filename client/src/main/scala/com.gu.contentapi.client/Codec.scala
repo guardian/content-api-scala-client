@@ -80,4 +80,9 @@ private[client] object Codec {
     def decode = ThriftDeserializer.deserialize(_, StoriesResponse)
   }
 
+  implicit def nextQuery[Q <: ContentApiQuery] = new Codec[NextQuery[Q]] {
+    type R = SearchResponse
+    def decode = ThriftDeserializer.deserialize(_, SearchResponse)
+  }
+
 }

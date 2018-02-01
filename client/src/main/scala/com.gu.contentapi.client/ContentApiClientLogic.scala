@@ -65,5 +65,16 @@ abstract class ContentApiClientLogic[F[_]](
 
   def getResponse[Q <: ContentApiQuery](q: Q)(implicit codec: Codec[Q]): F[codec.R] =
     fetchResponse(q) map codec.decode
+  
+  def paginate[Q <: ContentApiQuery](q: Q)(f: SearchResponse => F[Unit])(implicit codec: Codec[Q] { type R = SearchResponse }): F[Unit] =
+    getResponse(q) >>= paginate2(q, f)
+
+  private def paginate2[Q <: ContentApiQuery](q: Q, f: SearchResponse => F[Unit])(r: SearchResponse): F[Unit] = for {
+    _ <- f(r)
+    _ <- if (r.pages == r.currentPage)
+      M.pure(())
+    else
+      getResponse(NextQuery(q, r)) >>= paginate2(q, f)
+  } yield ()
 }
 

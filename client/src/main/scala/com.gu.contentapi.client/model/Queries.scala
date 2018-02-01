@@ -2,6 +2,7 @@ package com.gu.contentapi.client.model
 
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentapi.client.{Parameter, Parameters}
+import com.gu.contentapi.client.model.v1.SearchResponse
 
 sealed trait ContentApiQuery {
   def parameters: Map[String, String]
@@ -177,6 +178,16 @@ case class StoriesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   override def pathSegment: String = "stories"
+}
+
+case class NextQuery[Q <: ContentApiQuery](
+  originalQuery: Q, 
+  lastResults: SearchResponse)
+  extends ContentApiQuery {
+  
+  def parameters: Map[String, String] = originalQuery.parameters
+
+  override def pathSegment: String = s"""${lastResults.results.lastOption.map(_.id).getOrElse("")}/next"""
 }
 
 trait StoryParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
