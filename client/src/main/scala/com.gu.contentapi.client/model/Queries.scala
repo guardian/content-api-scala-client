@@ -185,7 +185,11 @@ case class NextQuery[Q <: ContentApiQuery](
   contentId: String)
   extends ContentApiQuery {
   
-  def parameters: Map[String, String] = originalQuery.parameters
+  def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter))
+
+  private def not[A](f: A => Boolean): A => Boolean = !f(_)
+
+  private def isPaginationParameter: String => Boolean = List("page", "page-size").contains(_)
 
   override def pathSegment: String = s"""${contentId}/next"""
 }
