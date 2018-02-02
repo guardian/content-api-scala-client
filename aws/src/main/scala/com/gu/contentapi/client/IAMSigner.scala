@@ -33,7 +33,12 @@ class IAMSigner(credentialsProvider: AWSCredentialsProvider, awsRegion: String) 
     val requestToSign = {
       val req = new DefaultRequest(serviceName)
 
-      req.setHeaders(headers.asJava)
+      //api-gateway will break the compressed json response if we don't supply an accept header
+      val headersWithAccept =
+        if (headers.contains("accept") || headers.contains("Accept")) headers
+        else headers + ("accept" -> "application/json")
+
+      req.setHeaders(headersWithAccept.asJava)
       req.setEndpoint(new java.net.URI(s"${uri.getScheme}://${uri.getHost}"))
       req.setHttpMethod(HttpMethodName.GET)
       req.setResourcePath(uri.getPath)
