@@ -1,7 +1,6 @@
 package com.gu.contentapi.client
 
-import cats.{MonadError, Monoid}
-import cats.implicits._
+import com.gu.computation.{MonadError, Monoid}
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.utils.QueryStringParams
@@ -28,16 +27,23 @@ abstract class ContentApiClientLogic[F[_]](
     List(200, 302) contains r.statusCode
 
   private def fetchResponse(contentApiQuery: ContentApiQuery): F[Array[Byte]] = 
-    getUrl(contentApiQuery) >>= fetch
+    M.flatMap(getUrl(contentApiQuery))(fetch)
 
-  protected[client] def url(location: String, parameters: Map[String, String]): F[String] = M.fromTry(Try {
+  protected[client] def url(location: String, parameters: Map[String, String]): F[String] = Try {
     require(!location.contains('?'), "must not specify parameters in URL")
 
-    location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift"))
-  })
+    M.pure(location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift")))
+  }.recover { 
+    case t: Throwable => M.throwError(t): F[String]
+  }.get
 
   protected def fetch(url: String): F[Array[Byte]] =
-    get(url, headers).ensureOr(contentApiError)(isValidResponse(_)).map(_.body)
+    M.map(M.flatMap(get(url, headers)) { r =>
+      if (!isValidResponse(r))
+        M.throwError(contentApiError(r)): F[HttpResponse]
+      else
+        M.pure(r)
+    })(_.body)
 
   protected def get(url: String, headers: Map[String, String]): F[HttpResponse]
 
@@ -64,28 +70,30 @@ abstract class ContentApiClientLogic[F[_]](
     url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
 
   def getResponse[Q <: ContentApiQuery](q: Q)(implicit codec: Codec[Q]): F[codec.R] =
-    fetchResponse(q).map(codec.decode)
+    M.map(fetchResponse(q))(codec.decode)
   
   def paginate[Q <: ContentApiQuery](q: Q)(f: SearchResponse => F[Unit])(implicit codec: Codec[Q] { type R = SearchResponse }): F[Unit] =
-    getResponse(q).flatMap(paginate2(q, f))
+    M.flatMap(getResponse(q))(paginate2(q, f))
 
-  private def paginate2[Q <: ContentApiQuery](q: Q, f: SearchResponse => F[Unit])(r: SearchResponse): F[Unit] = for {
-    _ <- f(r)
-    _ <- (r.pages == r.currentPage, r.results.lastOption.map(_.id)) match {
-      case (false, Some(id)) => getResponse(NextQuery(q, id)).flatMap(paginate2(q, f))
-      case _                 => M.pure(())
+  private def paginate2[Q <: ContentApiQuery](q: Q, f: SearchResponse => F[Unit])(r: SearchResponse): F[Unit] =
+    M.flatMap(f(r)){ _ =>
+      (r.pages == r.currentPage, r.results.lastOption.map(_.id)) match {
+        case (false, Some(id)) => M.flatMap(getResponse(NextQuery(q, id)))(paginate2(q, f))
+        case _                 => M.pure(())
+      }
     }
-  } yield ()
 
   def paginateMap[Q <: ContentApiQuery, RR : Monoid](q: Q)(f: SearchResponse => F[RR])(implicit codec: Codec[Q] { type R = SearchResponse }): F[RR] =
-    getResponse(q).flatMap(paginateMap2(q, f))
+    M.flatMap(getResponse(q))(paginateMap2(q, f))
 
-  private def paginateMap2[Q <: ContentApiQuery, RR](q: Q, f: SearchResponse => F[RR])(r: SearchResponse)(implicit MO: Monoid[RR]): F[RR] = for {
-    r2 <- f(r)
-    r3 <- (r.pages == r.currentPage, r.results.lastOption.map(_.id)) match {
-      case (false, Some(id)) => getResponse(NextQuery(q, id)).flatMap(paginateMap2(q, f))
-      case _                 => M.pure(MO.empty)
+  private def paginateMap2[Q <: ContentApiQuery, RR](q: Q, f: SearchResponse => F[RR])(r: SearchResponse)(implicit MO: Monoid[RR]): F[RR] = 
+    M.flatMap(f(r)){ ra =>
+      M.map((r.pages == r.currentPage, r.results.lastOption.map(_.id)) match {
+        case (false, Some(id)) => M.flatMap(getResponse(NextQuery(q, id)))(paginateMap2(q, f))
+        case _                 => M.pure(MO.mempty)
+      }) { rb =>
+        MO.append(ra, rb)
+      }
     }
-  } yield r2.combine(r3)
 }
 
