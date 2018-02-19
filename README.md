@@ -251,6 +251,18 @@ SearchResponse(ok,developer,1853997,1,10,1,185400,newest,List(Content(politics/b
 scala> client.shutdown()
 ```
 
+## Running Tests
+
+Some tests require access to the API. See [Setup](#setup) for details on how to get one.
+
+The key needs to be passed to the tests either as a system property or an environment variable.
+```sh
+$ cd client
+$ sbt -DCAPI_TEST_KEY=your_api_key test
+# or
+$ env CAPI_TEST_KEY=your_api_key sbt test
+```
+
 ## Troubleshooting
 
 If you have any problems you can speak to other developers at the [Guardian API talk group] (http://groups.google.com/group/guardian-api-talk).

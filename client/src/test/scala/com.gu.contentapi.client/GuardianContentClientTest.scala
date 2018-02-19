@@ -10,9 +10,15 @@ import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValue
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside {
+object GuardianContentClientTest {
+  private final val ApiKeyProperty = "CAPI_TEST_KEY"
+  private val apiKey: String = {
+    Option(System.getProperty(ApiKeyProperty)) orElse Option(System.getenv(ApiKeyProperty))
+  }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable")
+}
 
-  private val apiKey = System.getenv("API_KEY")
+class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside {
+  import GuardianContentClientTest.apiKey
   private val api = new GuardianContentClient(apiKey)
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 

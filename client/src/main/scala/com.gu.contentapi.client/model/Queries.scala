@@ -44,6 +44,7 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   with FilterParameters[SearchQuery]
   with FilterExtendedParameters[SearchQuery]
   with FilterSearchParameters[SearchQuery] {
+
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   override def pathSegment: String = "search"
