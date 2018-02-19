@@ -34,7 +34,7 @@ scmInfo := Some(ScmInfo(
   url("https://github.com/guardian/content-api-scala-client"),
   "scm:git:git@github.com:guardian/content-api-scala-client.git"
 ))
-javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 scalacOptions ++= Seq("-deprecation", "-unchecked")
 releaseProcess := Seq(
   checkSnapshotDependencies,
