@@ -52,6 +52,6 @@ releaseProcess := Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.amazonaws" % "aws-java-sdk-core" % "1.11.259",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  "com.amazonaws" % "aws-java-sdk-core" % "1.11.280",
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 )
