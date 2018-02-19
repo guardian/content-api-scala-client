@@ -25,8 +25,8 @@ publishMavenStyle := true
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 description := "AWS helper functionality for using Guardian's Content API scala client"
-scalaVersion := "2.12.3"
-crossScalaVersions := Seq("2.11.11", scalaVersion.value)
+scalaVersion := "2.12.4"
+crossScalaVersions := Seq("2.11.12", scalaVersion.value)
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 organization := "com.gu"
 licenses := Seq("Apache v2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
