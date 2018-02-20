@@ -97,7 +97,7 @@ trait ContentApiClientLogic {
       ThriftDeserializer.deserialize(response, ItemResponse)
     }
 
-  def getResponse(searchQuery: SearchQuery)(implicit context: ExecutionContext): Future[SearchResponse] =
+  def getResponse(searchQuery: SearchQueryBase[_])(implicit context: ExecutionContext): Future[SearchResponse] =
     fetchResponse(searchQuery) map { response =>
       ThriftDeserializer.deserialize(response, SearchResponse)
     }
