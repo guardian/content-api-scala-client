@@ -1,3 +1,9 @@
+## 11.53
+* Extract a `SearchQueryBase` as the parent of `SearchQuery`.
+  This helps with customising search queries (e.g. using a different path or more parameters).
+* Upgrade patch versions for Scala (2.12.4 and 2.11.12) and okhttp (3.9.1).
+* Set the target JVM to 1.8.
+
 ## 11.52
 * Fix regression of read and connect timeouts being 1000 and 2000 instead of 1 and 2 seconds
 
