@@ -13,6 +13,19 @@ sealed trait ContentApiQuery {
   }
 }
 
+trait SearchQueryBase[Self <: SearchQueryBase[Self]]
+  extends ContentApiQuery
+     with ShowParameters[Self]
+     with ShowReferencesParameters[Self]
+     with OrderByParameter[Self]
+     with UseDateParameter[Self]
+     with PaginationParameters[Self]
+     with FilterParameters[Self]
+     with FilterExtendedParameters[Self]
+     with FilterSearchParameters[Self] {
+  this: Self =>
+}
+
 case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery
   with EditionParameters[ItemQuery]
@@ -35,17 +48,9 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
 }
 
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
-  with ShowParameters[SearchQuery]
-  with ShowReferencesParameters[SearchQuery]
-  with OrderByParameter[SearchQuery]
-  with UseDateParameter[SearchQuery]
-  with PaginationParameters[SearchQuery]
-  with FilterParameters[SearchQuery]
-  with FilterExtendedParameters[SearchQuery]
-  with FilterSearchParameters[SearchQuery] {
+  extends SearchQueryBase[SearchQuery] {
 
-  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+  def withParameters(parameterMap: Map[String, Parameter]): SearchQuery = copy(parameterMap)
 
   override def pathSegment: String = "search"
 }
