@@ -25,8 +25,8 @@ publishMavenStyle := true
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 description := "AWS helper functionality for using Guardian's Content API scala client"
-scalaVersion := "2.12.3"
-crossScalaVersions := Seq("2.11.11", scalaVersion.value)
+scalaVersion := "2.12.4"
+crossScalaVersions := Seq("2.11.12", scalaVersion.value)
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 organization := "com.gu"
 licenses := Seq("Apache v2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
@@ -34,7 +34,7 @@ scmInfo := Some(ScmInfo(
   url("https://github.com/guardian/content-api-scala-client"),
   "scm:git:git@github.com:guardian/content-api-scala-client.git"
 ))
-javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 scalacOptions ++= Seq("-deprecation", "-unchecked")
 releaseProcess := Seq(
   checkSnapshotDependencies,
@@ -52,6 +52,6 @@ releaseProcess := Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.amazonaws" % "aws-java-sdk-core" % "1.11.259",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  "com.amazonaws" % "aws-java-sdk-core" % "1.11.280",
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 )

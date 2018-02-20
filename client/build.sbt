@@ -51,8 +51,8 @@ publishMavenStyle := true
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 description := "Scala client for the Guardian's Content API"
-scalaVersion := "2.12.3"
-crossScalaVersions := Seq("2.11.11", scalaVersion.value)
+scalaVersion := "2.12.4"
+crossScalaVersions := Seq("2.11.12", scalaVersion.value)
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 organization := "com.gu"
 licenses := Seq("Apache v2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
@@ -60,7 +60,7 @@ scmInfo := Some(ScmInfo(
   url("https://github.com/guardian/content-api-scala-client"),
   "scm:git:git@github.com:guardian/content-api-scala-client.git"
 ))
-javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 scalacOptions ++= Seq("-deprecation", "-unchecked")
 releaseProcess := Seq(
   checkSnapshotDependencies,
@@ -84,12 +84,11 @@ val CapiModelsVersion = "11.50"
 
 libraryDependencies ++= Seq(
   "com.gu" %% "content-api-models-scala" % CapiModelsVersion,
-  "com.squareup.okhttp3" % "okhttp" % "3.9.0",
+  "com.squareup.okhttp3" % "okhttp" % "3.9.1",
   "org.slf4j" % "slf4j-api" % "1.7.25",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
   "com.google.guava" % "guava" % "19.0" % "test",
-  "org.mockito" % "mockito-all" % "1.9.0" % "test"
-
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test" exclude("org.mockito", "mockito-core"),
+  "org.mockito" % "mockito-all" % "1.10.19" % "test"
 )
 
 initialCommands in console := """
