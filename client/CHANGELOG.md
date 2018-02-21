@@ -1,3 +1,6 @@
+## 11.53
+* Support `SearchQueryBase` in `GuardianContentClient#getResponse`.
+
 ## 11.52
 * Extract a `SearchQueryBase` as the parent of `SearchQuery`.
   This helps with customising search queries (e.g. using a different path or more parameters).
