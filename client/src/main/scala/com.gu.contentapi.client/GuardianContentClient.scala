@@ -14,6 +14,9 @@ import com.gu.contentapi.client.thrift.ThriftDeserializer
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
 
 trait ContentApiClientLogic {
+  import Decoder._
+  import MetaResult._
+
   val apiKey: String
 
   protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
@@ -90,14 +93,32 @@ trait ContentApiClientLogic {
     fetch(getUrl(contentApiQuery))
 
 
+  private def paginate2[Q <: PaginatedApiQuery[Q], RR](q: Q, f: RR => Future[Unit])(r: RR)(
+    implicit
+    decoder: Decoder[Q] { type R = RR },
+    paginate: MetaResult[RR],
+    context: ExecutionContext): Future[Unit] =
+    f(r).flatMap { _ =>
+      (paginate.isLastPage(r), paginate.getResults(r).lastOption.map(paginate.getId)) match {
+        case (false, Some(id)) => getResponse(NextQuery(q, id)).flatMap(paginate2(q, f)(_))
+        case _                 => Future.successful(())
+      }
+    }
+
   /* Exposed API */
-  import Decoder._
 
   def getResponse[Q <: ContentApiQuery](query: Q)(
     implicit 
     decoder: Decoder[Q],
     context: ExecutionContext): Future[decoder.R] =
     fetchResponse(query) map decoder.decode
+
+  def paginate[Q <: PaginatedApiQuery[Q], RR: MetaResult](q: Q)(f: RR => Future[Unit])(
+    implicit 
+    decoder: Decoder[Q] { type R = RR },
+    context: ExecutionContext
+  ): Future[Unit] =
+    getResponse(q).flatMap(paginate2(q, f))
 
   /**
    * Shutdown the client and clean up all associated resources.
