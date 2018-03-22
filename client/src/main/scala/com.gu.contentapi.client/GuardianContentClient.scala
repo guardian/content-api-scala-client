@@ -91,76 +91,13 @@ trait ContentApiClientLogic {
 
 
   /* Exposed API */
+  import Decoder._
 
-  def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
-    fetchResponse(itemQuery) map { response =>
-      ThriftDeserializer.deserialize(response, ItemResponse)
-    }
-
-  def getResponse(searchQuery: SearchQueryBase[_])(implicit context: ExecutionContext): Future[SearchResponse] =
-    fetchResponse(searchQuery) map { response =>
-      ThriftDeserializer.deserialize(response, SearchResponse)
-    }
-
-  def getResponse(tagsQuery: TagsQuery)(implicit context: ExecutionContext): Future[TagsResponse] =
-    fetchResponse(tagsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, TagsResponse)
-    }
-
-  def getResponse(sectionsQuery: SectionsQuery)(implicit context: ExecutionContext): Future[SectionsResponse] =
-    fetchResponse(sectionsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, SectionsResponse)
-    }
-
-  def getResponse(editionsQuery: EditionsQuery)(implicit context: ExecutionContext): Future[EditionsResponse] =
-    fetchResponse(editionsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, EditionsResponse)
-    }
-
-  def getResponse(removedContentQuery: RemovedContentQuery)(implicit context: ExecutionContext): Future[RemovedContentResponse] =
-    fetchResponse(removedContentQuery) map { response =>
-      ThriftDeserializer.deserialize(response, RemovedContentResponse)
-    }
-
-  def getResponse(videoStatsQuery: VideoStatsQuery)(implicit context: ExecutionContext): Future[VideoStatsResponse] =
-    fetchResponse(videoStatsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, VideoStatsResponse)
-    }
-
-  def getResponse(atomsQuery: AtomsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(atomsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(recipesQuery: RecipesQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(recipesQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(reviewsQuery: ReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(reviewsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(gameReviewsQuery: GameReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(gameReviewsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(restaurantReviewsQuery: RestaurantReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(restaurantReviewsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(filmReviewsQuery: FilmReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(filmReviewsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(storiesQuery: StoriesQuery)(implicit context: ExecutionContext): Future[StoriesResponse] =
-    fetchResponse(storiesQuery) map { response =>
-      ThriftDeserializer.deserialize(response, StoriesResponse)
-    }
+  def getResponse[Q <: ContentApiQuery](query: Q)(
+    implicit 
+    decoder: Decoder[Q],
+    context: ExecutionContext): Future[decoder.R] =
+    fetchResponse(query) map decoder.decode
 
   /**
    * Shutdown the client and clean up all associated resources.
