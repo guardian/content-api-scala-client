@@ -102,7 +102,7 @@ trait ContentApiClientLogic {
     context: ExecutionContext): Future[Unit] =
     f(r).flatMap { _ =>
       (paginate.isLastPage(r), paginate.getResults(r).lastOption.map(paginate.getId)) match {
-        case (false, Some(id)) => getResponse(NextQuery(q, id)).flatMap(paginate2(q, f)(_))
+        case (false, Some(id)) => getResponse(next(q, id)).flatMap(paginate2(q, f)(_))
         case _                 => Future.successful(())
       }
     }

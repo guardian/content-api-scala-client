@@ -102,13 +102,13 @@ private[client] object Decoder {
     val companion = StoriesResponse
   }
 
-  implicit def nextQuery[Q <: ContentApiQuery with PaginationParameters[Q]](implicit d: Decoder[Q]) = new Decoder[NextQuery[Q]] {  
+  implicit def nextQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = new Decoder[NextQuery[Q]] {  
     type R = d.R
     type O = d.O
     val companion = d.companion
   }
 
-  implicit def prevQuery[Q <: ContentApiQuery with PaginationParameters[Q]](implicit d: Decoder[Q]) = new Decoder[PrevQuery[Q]] {
+  implicit def prevQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = new Decoder[PrevQuery[Q]] {
     type R = d.R
     type O = d.O
     val companion = d.companion
