@@ -44,6 +44,8 @@ trait ContentApiClientLogic {
   val filmReviews = FilmReviewsQuery()
   val videoStats = VideoStatsQuery()
   val stories = StoriesQuery()
+  def next[Q <: PaginatedApiQuery[Q]](q: Q, id: String) = NextQuery(q, id)
+  def prev[Q <: PaginatedApiQuery[Q]](q: Q, id: String) = PrevQuery(q, id)
 
   case class HttpResponse(body: Array[Byte], statusCode: Int, statusMessage: String)
 
