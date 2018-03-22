@@ -185,7 +185,7 @@ case class StoriesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   override def pathSegment: String = "stories"
 }
 
-case class NextQuery[Q <: ContentApiQuery with PaginationParameters[Q]](originalQuery: Q, contentId: String)
+case class NextQuery[Q <: PaginatedApiQuery[Q]](originalQuery: Q, contentId: String)
   extends ContentApiQuery {
   
   def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter))
@@ -193,7 +193,7 @@ case class NextQuery[Q <: ContentApiQuery with PaginationParameters[Q]](original
   override def pathSegment: String = s"""${contentId}/next"""
 }
 
-case class PrevQuery[Q <: ContentApiQuery with PaginationParameters[Q]](originalQuery: Q, contentId: String)
+case class PrevQuery[Q <: PaginatedApiQuery[Q]](originalQuery: Q, contentId: String)
   extends ContentApiQuery {
   
   def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter))
