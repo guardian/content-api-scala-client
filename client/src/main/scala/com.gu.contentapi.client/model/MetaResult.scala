@@ -24,8 +24,8 @@ object MetaResult {
 
   implicit val itemResponse = new MetaResult[ItemResponse] {
     type Result = Content
-    def getCurrentPage = _.currentPage.getOrElse(1)
-    def getTotalPages = _.pages.getOrElse(1)
+    def getCurrentPage = _.currentPage.getOrElse(0)
+    def getTotalPages = _.pages.getOrElse(0)
     def getResults = _.results.getOrElse(Nil)
     def getId = _.id
   }
