@@ -20,7 +20,7 @@ private[client] object Decoder {
 
   def apply[Q](implicit d: Decoder[Q]): Decoder[Q] = d
 
-  implicit val item = new Decoder[ItemQuery] {
+  implicit val itemQuery = new Decoder[ItemQuery] {
     type Response = ItemResponse
     type Codec = ItemResponse.type
     val codec = ItemResponse
