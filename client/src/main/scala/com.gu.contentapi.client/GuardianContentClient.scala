@@ -112,7 +112,7 @@ trait ContentApiClientLogic {
   def getResponse[Q <: ContentApiQuery](query: Q)(
     implicit 
     decoder: Decoder[Q],
-    context: ExecutionContext): Future[decoder.R] =
+    context: ExecutionContext): Future[decoder.Response] =
     fetchResponse(query) map decoder.decode
 
   def paginate[Q <: PaginatedApiQuery[Q], R](q: Q)(f: R => Future[Unit])(
