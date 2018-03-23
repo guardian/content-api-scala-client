@@ -5,7 +5,7 @@ import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.twitter.scrooge.{ThriftStruct, ThriftStructCodec}
 
-private[client] trait Decoder[Query] {
+trait Decoder[Query] {
   type Response <: ThriftStruct
   type Codec <: ThriftStructCodec[Response]
   
@@ -62,41 +62,18 @@ private[client] object Decoder {
     val codec = VideoStatsResponse
   }
 
-  implicit val atomsQuery = new Decoder[AtomsQuery] {
+  private def atomsDecoder[A] = new Decoder[A] {
     type Response = AtomsResponse
     type Codec = AtomsResponse.type
     val codec = AtomsResponse
   }
 
-  implicit val recipesQuery = new Decoder[RecipesQuery] {
-    type Response = AtomsResponse
-    type Codec = AtomsResponse.type
-    val codec = AtomsResponse
-  }
-
-  implicit val reviewsQuery = new Decoder[ReviewsQuery] {
-    type Response = AtomsResponse
-    type Codec = AtomsResponse.type
-    val codec = AtomsResponse
-  }
-
-  implicit val gameReviewsQuery = new Decoder[GameReviewsQuery] {
-    type Response = AtomsResponse
-    type Codec = AtomsResponse.type
-    val codec = AtomsResponse
-  }
-
-  implicit val restaurantReviewsQuery = new Decoder[RestaurantReviewsQuery] {
-    type Response = AtomsResponse
-    type Codec = AtomsResponse.type
-    val codec = AtomsResponse
-  }
-
-  implicit val filmReviewsQuery = new Decoder[FilmReviewsQuery] {
-    type Response = AtomsResponse
-    type Codec = AtomsResponse.type
-    val codec = AtomsResponse
-  }
+  implicit val atomsQuery = atomsDecoder[AtomsQuery]
+  implicit val recipesQuery = atomsDecoder[RecipesQuery]
+  implicit val reviewsQuery = atomsDecoder[ReviewsQuery]
+  implicit val gameReviewsQuery = atomsDecoder[GameReviewsQuery]
+  implicit val restaurantReviewsQuery = atomsDecoder[RestaurantReviewsQuery]
+  implicit val filmReviewsQuery = atomsDecoder[FilmReviewsQuery]
 
   implicit val storiesQuery = new Decoder[StoriesQuery] {
     type Response = StoriesResponse
