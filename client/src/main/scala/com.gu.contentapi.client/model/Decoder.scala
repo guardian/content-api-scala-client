@@ -62,7 +62,7 @@ private[client] object Decoder {
     val codec = VideoStatsResponse
   }
 
-  private def atomsDecoder[A] = new Decoder[A] {
+  private def atomsDecoder[Query] = new Decoder[Query] {
     type Response = AtomsResponse
     type Codec = AtomsResponse.type
     val codec = AtomsResponse
