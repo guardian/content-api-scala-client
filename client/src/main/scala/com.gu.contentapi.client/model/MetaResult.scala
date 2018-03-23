@@ -3,47 +3,36 @@ package com.gu.contentapi.client
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentatom.thrift.Atom
 
-trait MetaResult[Response] {
+trait PaginatedApiResult[Response] {
   type Result
-  def getResults: Response => Seq[Result]
-  def getId: Result => String
-  def getCurrentPage: Response => Int
-  def getTotalPages: Response => Int
-  def isLastPage: Response => Boolean = a => getCurrentPage(a) == getTotalPages(a)
+  def getNextId: Response => Option[String]
+  def getPrevId: Response => Option[String]
 }
 
-object MetaResult {
+object PaginatedApiResult {
 
-  implicit val searchResponse = new MetaResult[SearchResponse] {
+  implicit val searchResponse = new PaginatedApiResult[SearchResponse] {
     type Result = Content
-    def getCurrentPage = _.currentPage
-    def getTotalPages = _.pages
-    def getResults = _.results
-    def getId = _.id
+    def getNextId = r => if (r.pages == r.currentPage) None else r.results.lastOption.map(_.id)
+    def getPrevId = r => if (1 == r.currentPage) None else r.results.headOption.map(_.id)
   }
 
-  implicit val itemResponse = new MetaResult[ItemResponse] {
+  implicit val itemResponse = new PaginatedApiResult[ItemResponse] {
     type Result = Content
-    def getCurrentPage = _.currentPage.getOrElse(0)
-    def getTotalPages = _.pages.getOrElse(0)
-    def getResults = _.results.getOrElse(Nil)
-    def getId = _.id
+    def getNextId = r => if (r.pages.exists(ps => r.currentPage.exists(cp => ps == cp))) None else r.results.flatMap(_.lastOption.map(_.id))
+    def getPrevId = r => if (r.currentPage.exists(cp => 1 == cp)) None else r.results.flatMap(_.lastOption.map(_.id))
   }
 
-  implicit val tagsResponse = new MetaResult[TagsResponse] {
+  implicit val tagsResponse = new PaginatedApiResult[TagsResponse] {
     type Result = Tag
-    def getCurrentPage = _.currentPage
-    def getTotalPages = _.pages
-    def getResults = _.results
-    def getId = _.id
+    def getNextId = r => if (r.pages == r.currentPage) None else r.results.lastOption.map(_.id)
+    def getPrevId = r => if (1 == r.currentPage) None else r.results.headOption.map(_.id)
   }
 
-  implicit val atomsResponse = new MetaResult[AtomsResponse] {
+  implicit val atomsResponse = new PaginatedApiResult[AtomsResponse] {
     type Result = Atom
-    def getCurrentPage = _.currentPage
-    def getTotalPages = _.pages
-    def getResults = _.results
-    def getId = _.id
+    def getNextId = r => if (r.pages == r.currentPage) None else r.results.lastOption.map(_.id)
+    def getPrevId = r => if (1 == r.currentPage) None else r.results.headOption.map(_.id)
   }
 
 }
