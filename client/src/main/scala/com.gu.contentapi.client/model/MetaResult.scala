@@ -3,7 +3,7 @@ package com.gu.contentapi.client
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentatom.thrift.Atom
 
-private[client] trait MetaResult[Response] {
+trait MetaResult[Response] {
   type Result
   def getResults: Response => Seq[Result]
   def getId: Result => String
