@@ -15,7 +15,7 @@ case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorRe
 
 trait ContentApiClientLogic {
   import Decoder._
-  import PaginatedApiResult._
+  import PaginatedApiResponse._
 
   val apiKey: String
 
@@ -98,7 +98,7 @@ trait ContentApiClientLogic {
   private def paginate2[Q <: PaginatedApiQuery[Q], R](q: Q, f: R => Future[Unit])(r: R)(
     implicit
     decoder: Decoder.Aux[Q, R],
-    pager: PaginatedApiResult[R],
+    pager: PaginatedApiResponse[R],
     context: ExecutionContext): Future[Unit] =
     f(r).flatMap { _ =>
       pager.getNextId(r) match {
@@ -130,7 +130,7 @@ trait ContentApiClientLogic {
   def paginate[Q <: PaginatedApiQuery[Q], R](query: Q)(f: R => Future[Unit])(
     implicit 
     decoder: Decoder.Aux[Q, R],
-    pager: PaginatedApiResult[R],
+    pager: PaginatedApiResponse[R],
     context: ExecutionContext
   ): Future[Unit] =
     getResponse(query).flatMap(paginate2(query, f))
