@@ -16,6 +16,8 @@ private[client] trait Decoder[Q] {
 
 private[client] object Decoder {
 
+  type Aux[Q, R0] = Decoder[Q] { type R = R0 }
+
   def apply[Q](implicit d: Decoder[Q]): Decoder[Q] = d
 
   implicit val item = new Decoder[ItemQuery] {

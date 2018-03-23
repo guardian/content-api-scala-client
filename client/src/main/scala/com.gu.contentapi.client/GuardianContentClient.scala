@@ -95,10 +95,10 @@ trait ContentApiClientLogic {
     fetch(getUrl(contentApiQuery))
 
 
-  private def paginate2[Q <: PaginatedApiQuery[Q], RR](q: Q, f: RR => Future[Unit])(r: RR)(
+  private def paginate2[Q <: PaginatedApiQuery[Q], R](q: Q, f: R => Future[Unit])(r: R)(
     implicit
-    decoder: Decoder[Q] { type R = RR },
-    meta: MetaResult[RR],
+    decoder: Decoder.Aux[Q, R],
+    meta: MetaResult[R],
     context: ExecutionContext): Future[Unit] =
     f(r).flatMap { _ =>
       (meta.isLastPage(r), meta.getResults(r).lastOption.map(meta.getId)) match {
@@ -115,9 +115,10 @@ trait ContentApiClientLogic {
     context: ExecutionContext): Future[decoder.R] =
     fetchResponse(query) map decoder.decode
 
-  def paginate[Q <: PaginatedApiQuery[Q], RR: MetaResult](q: Q)(f: RR => Future[Unit])(
+  def paginate[Q <: PaginatedApiQuery[Q], R](q: Q)(f: R => Future[Unit])(
     implicit 
-    decoder: Decoder[Q] { type R = RR },
+    decoder: Decoder.Aux[Q, R],
+    meta: MetaResult[R],
     context: ExecutionContext
   ): Future[Unit] =
     getResponse(q).flatMap(paginate2(q, f))
