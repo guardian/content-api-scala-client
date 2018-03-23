@@ -107,27 +107,38 @@ trait ContentApiClientLogic {
       }
     }
 
-  /* Exposed API */
-
+  /** Runs the query against the Content API.
+    * 
+    * @tparam Q the type of a Content API query
+    * @param query the query
+    * @return a future resolving to an unmarshalled response
+    */
   def getResponse[Q <: ContentApiQuery](query: Q)(
     implicit 
     decoder: Decoder[Q],
     context: ExecutionContext): Future[decoder.Response] =
     fetchResponse(query) map decoder.decode
 
-  def paginate[Q <: PaginatedApiQuery[Q], R](q: Q)(f: R => Future[Unit])(
+  /** Runs a query and process all the pages of results.
+    * 
+    * @tparam Q the type of a Content API query with paging parameters
+    * @tparam R the type of response corresponding to `Q`
+    * @param query the initial query
+    * @param f the side-effecting function applied to each page of results
+    * @return a future resolving to the process of going through all pages
+    */
+  def paginate[Q <: PaginatedApiQuery[Q], R](query: Q)(f: R => Future[Unit])(
     implicit 
     decoder: Decoder.Aux[Q, R],
     meta: MetaResult[R],
     context: ExecutionContext
   ): Future[Unit] =
-    getResponse(q).flatMap(paginate2(q, f))
+    getResponse(query).flatMap(paginate2(query, f))
 
-  /**
-   * Shutdown the client and clean up all associated resources.
-   *
-   * Note: behaviour is undefined if you try to use the client after calling this method.
-   */
+  /** Shutdown the client and clean up all associated resources.
+    *
+    * Note: behaviour is undefined if you try to use the client after calling this method.
+    */
   def shutdown(): Unit = http.dispatcher().executorService().shutdown()
 
 }
