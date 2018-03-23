@@ -5,12 +5,20 @@ import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.twitter.scrooge.{ThriftStruct, ThriftStructCodec}
 
+/** Typeclass witnessing how to unmarshall a Thrift stream of bytes
+  * into a concrete data type
+  * @tparam Query the query type
+  */
 trait Decoder[Query] {
+  /** the response type corresponding to `Query` */
   type Response <: ThriftStruct
+  /** the type of codecs unmarshalling instances of `Response` */
   type Codec <: ThriftStructCodec[Response]
-  
+  /** the codec */
   def codec: Codec
-  
+  /** performs the unmarshalling
+    * @return a function taking an array of bytes into a `Response`
+    */
   def decode: Array[Byte] => Response = ThriftDeserializer.deserialize(_, codec)
 }
 

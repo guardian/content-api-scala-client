@@ -121,7 +121,7 @@ trait ContentApiClientLogic {
 
   /** Runs a query and process all the pages of results.
     * 
-    * @tparam Q the type of a Content API query with paging parameters
+    * @tparam Q the type of a Content API query with pagination parameters
     * @tparam R the type of response corresponding to `Q`
     * @param query the initial query
     * @param f the side-effecting function applied to each page of results
