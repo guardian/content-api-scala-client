@@ -5,11 +5,11 @@ import com.gu.contentatom.thrift.Atom
 
 private[client] trait MetaResult[Response] {
   type Result
+  def getResults: Response => Seq[Result]
+  def getId: Result => String
   def getCurrentPage: Response => Int
   def getTotalPages: Response => Int
   def isLastPage: Response => Boolean = a => getCurrentPage(a) == getTotalPages(a)
-  def getResults: Response => Seq[Result]
-  def getId: Result => String
 }
 
 object MetaResult {
