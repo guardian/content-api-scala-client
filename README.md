@@ -40,7 +40,7 @@ Every item on http://www.theguardian.com/ can be retrieved on the same path at h
 ```scala
 // query for a single content item and print its web title
 val itemQuery = client.item("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa")
-client.getResponse(client.item).foreach { itemResponse =>
+client.getResponse(itemQuery).foreach { itemResponse =>
   println(itemResponse.content.get.webTitle)
 }
 
