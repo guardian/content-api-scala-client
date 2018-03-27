@@ -14,21 +14,6 @@ trait ContentApiClient {
   private val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
   private val parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
-  def item(id: String) = ItemQuery(id)
-  val search = SearchQuery()
-  val tags = TagsQuery()
-  val sections = SectionsQuery()
-  val editions = EditionsQuery()
-  val removedContent = RemovedContentQuery()
-  val atoms = AtomsQuery()
-  val recipes = RecipesQuery()
-  val reviews = ReviewsQuery()
-  val gameReviews = GameReviewsQuery()
-  val restaurantReviews = RestaurantReviewsQuery()
-  val filmReviews = FilmReviewsQuery()
-  val videoStats = VideoStatsQuery()
-  val stories = StoriesQuery()
-
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
 
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
@@ -106,4 +91,21 @@ trait ContentApiClient {
       ThriftDeserializer.deserialize(response, StoriesResponse)
     }
 
+}
+
+object ContentApiClient {
+  def item(id: String) = ItemQuery(id)
+  val search = SearchQuery()
+  val tags = TagsQuery()
+  val sections = SectionsQuery()
+  val editions = EditionsQuery()
+  val removedContent = RemovedContentQuery()
+  val atoms = AtomsQuery()
+  val recipes = RecipesQuery()
+  val reviews = ReviewsQuery()
+  val gameReviews = GameReviewsQuery()
+  val restaurantReviews = RestaurantReviewsQuery()
+  val filmReviews = FilmReviewsQuery()
+  val videoStats = VideoStatsQuery()
+  val stories = StoriesQuery()
 }
