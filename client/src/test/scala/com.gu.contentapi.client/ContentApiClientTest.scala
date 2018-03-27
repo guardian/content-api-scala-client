@@ -1,11 +1,7 @@
 package com.gu.contentapi.client
 
-import com.gu.contentatom.thrift.{AtomData, AtomType}
-import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse}
-import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
 import java.time.Instant
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
 import scala.concurrent.{Future, ExecutionContext}
 import scala.concurrent.ExecutionContext.Implicits.global
