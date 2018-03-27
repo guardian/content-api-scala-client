@@ -42,9 +42,12 @@ trait ContentApiClient {
 
   /** Streamlines the handling of a valid CAPI response */
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
-    get(contentApiQuery(targetUrl, parameters), headers).flatMap(HttpResponse.check)
+    get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
 
   /* Exposed API */
+
+  def url(contentApiQuery: ContentApiQuery): String =
+    contentApiQuery(targetUrl, parameters)
 
   def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
     fetchResponse(itemQuery) map { response =>
