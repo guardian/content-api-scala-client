@@ -5,14 +5,14 @@ import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.gu.contentapi.client.utils.QueryStringParams
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
-
-case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
 
 trait ContentApiClient {
   def apiKey: String
   def userAgent: String
   def targetUrl: String
+
+  private val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
+  private val isValid = Set(200, 302) 
 
   def item(id: String) = ItemQuery(id)
   val search = SearchQuery()
@@ -29,27 +29,17 @@ trait ContentApiClient {
   val videoStats = VideoStatsQuery()
   val stories = StoriesQuery()
 
-  case class HttpResponse(body: Array[Byte], statusCode: Int, statusMessage: String)
-
   protected[client] def url(location: String, parameters: Map[String, String]): String = {
     require(!location.contains('?'), "must not specify parameters in URL")
 
     location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift"))
   }
 
-  protected def fetch(url: String)(implicit context: ExecutionContext): Future[Array[Byte]] = {
-    val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
-
-    for (response <- get(url, headers)) yield {
-      if (List(200, 302) contains response.statusCode) response.body
-      else throw contentApiError(response)
+  protected def fetch(url: String)(implicit context: ExecutionContext): Future[Array[Byte]] = 
+    get(url, headers).flatMap {
+      case HttpResponse(body, statusCode, _) if isValid(statusCode) => Future.successful(body)
+      case response => Future.failed(ContentApiError(response))
     }
-  }
-
-  private def contentApiError(response: HttpResponse): GuardianContentApiError = {
-    val errorResponse = Try(ThriftDeserializer.deserialize(response.body, ErrorResponse)).toOption
-    GuardianContentApiError(response.statusCode, response.statusMessage, errorResponse)
-  }
 
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
 
