@@ -7,15 +7,40 @@ import com.gu.contentapi.client.utils.QueryStringParams
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ContentApiClient {
+  
+  /** Your API key */
   def apiKey: String
+  
+  /** The user-agent identifier */
   def userAgent: String
+  
+  /** The url of the CAPI endpoint */
   def targetUrl: String
 
-  private val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
-  private val parameters = Map("api-key" -> apiKey, "format" -> "thrift")
-
+  /** Queries CAPI.
+    *
+    * This method must make a GET request to the CAPI endpoint
+    * and streamline the response into an HttpResponse object.
+    * 
+    * It is a design decision that this method is virtual.
+    * Any implementation would have to rely on a specific
+    * technology stack, e.g. an HTTP client. Fundamentally,
+    * the responsibility of making these implementation
+    * choices should be pushed out to the end of the world.
+    *
+    * @param url The CAPI REST url 
+    * @param headers Custom HTTP parameters
+    * @return an HttpResponse holding the response in the form of an array of bytes 
+    */
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
 
+  /** Some HTTP headers sent along each CAPI request */
+  private def headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
+
+  /** Authentication and format parameters appended to each query */
+  private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
+
+  /** Streamlines the handling of a valid CAPI response */
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
     get(contentApiQuery(targetUrl, parameters), headers).flatMap(HttpResponse.check)
 
