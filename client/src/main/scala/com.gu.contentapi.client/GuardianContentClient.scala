@@ -13,7 +13,7 @@ import com.gu.contentapi.client.thrift.ThriftDeserializer
 
 case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
 
-trait ContentApiClientLogic {
+trait ContentApiClient {
   val apiKey: String
 
   protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
@@ -171,5 +171,5 @@ trait ContentApiClientLogic {
 
 }
 
-class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
+class GuardianContentClient(val apiKey: String) extends ContentApiClient
 
