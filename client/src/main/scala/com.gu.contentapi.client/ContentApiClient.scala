@@ -12,7 +12,7 @@ trait ContentApiClient {
   def targetUrl: String
 
   private val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
-  private val isValid = Set(200, 302) 
+  private val parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
   def item(id: String) = ItemQuery(id)
   val search = SearchQuery()
@@ -29,26 +29,10 @@ trait ContentApiClient {
   val videoStats = VideoStatsQuery()
   val stories = StoriesQuery()
 
-  protected[client] def url(location: String, parameters: Map[String, String]): String = {
-    require(!location.contains('?'), "must not specify parameters in URL")
-
-    location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift"))
-  }
-
-  protected def fetch(url: String)(implicit context: ExecutionContext): Future[Array[Byte]] = 
-    get(url, headers).flatMap {
-      case HttpResponse(body, statusCode, _) if isValid(statusCode) => Future.successful(body)
-      case response => Future.failed(ContentApiError(response))
-    }
-
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
 
-  def getUrl(contentApiQuery: ContentApiQuery): String =
-    url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
-
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
-    fetch(getUrl(contentApiQuery))
-
+    get(contentApiQuery(targetUrl, parameters), headers).flatMap(HttpResponse.check)
 
   /* Exposed API */
 
