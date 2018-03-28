@@ -1,5 +1,6 @@
 package com.gu.contentapi.client
 
+import com.gu.contentapi.client.model.HttpResponse
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import okhttp3._
