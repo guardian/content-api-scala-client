@@ -7,11 +7,11 @@ import Dependencies._
 lazy val root = (project in file("."))
   .aggregate(client, defaultClient, aws)
   .settings(
-    Compile / sources := Seq.empty,
-    Test    / sources := Seq.empty,
-    releaseVcsSign    := true,
-    releaseCrossBuild := true,
-    releaseProcess    := releaseSteps
+    sources in Compile := Seq.empty,
+    sources in Test    := Seq.empty,
+    releaseVcsSign     := true,
+    releaseCrossBuild  := true,
+    releaseProcess     := releaseSteps
   )
 
 lazy val client = (project in file("client"))
