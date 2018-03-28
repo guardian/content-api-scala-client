@@ -9,8 +9,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside {
   private val api = new ContentApiClient {
     val apiKey = "TEST-API-KEY"
-    val userAgent = ""
-    val targetUrl = ""
 
     def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext) = Future.failed(new Throwable("This will never get called"))
   }
