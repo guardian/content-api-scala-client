@@ -122,7 +122,10 @@ trait ContentApiClient {
 
 }
 
-object ContentApiClient {
+object ContentApiClient extends ContentApiQueries
+
+/** Utility functions to instantiate each type of query */
+trait ContentApiQueries {
   def item(id: String) = ItemQuery(id)
   val search = SearchQuery()
   val tags = TagsQuery()
