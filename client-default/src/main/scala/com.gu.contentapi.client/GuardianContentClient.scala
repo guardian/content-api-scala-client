@@ -2,14 +2,10 @@ package com.gu.contentapi.client
 
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-import com.gu.contentapi.buildinfo.CapiBuildInfo
 import okhttp3._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClient {
-
-  val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
-  val targetUrl = "https://content.guardianapis.com"
 
   private val http = new OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.SECONDS)

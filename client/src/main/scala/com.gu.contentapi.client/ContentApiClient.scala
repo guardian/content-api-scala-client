@@ -1,5 +1,6 @@
 package com.gu.contentapi.client
 
+import com.gu.contentapi.buildinfo.CapiBuildInfo
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.thrift.ThriftDeserializer
@@ -10,12 +11,12 @@ trait ContentApiClient {
   
   /** Your API key */
   def apiKey: String
-  
+
   /** The user-agent identifier */
-  def userAgent: String
+  def userAgent: String = "content-api-scala-client/"+CapiBuildInfo.version
   
   /** The url of the CAPI endpoint */
-  def targetUrl: String
+  def targetUrl: String = "https://content.guardianapis.com"
 
   /** Queries CAPI.
     *
