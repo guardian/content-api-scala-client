@@ -4,6 +4,16 @@ import Dependencies._
 
 /* --------------------------------------------------------------------- */
 
+lazy val root = (project in file("."))
+  .aggregate(client, defaultClient, aws)
+  .settings(
+    Compile / sources := Seq.empty,
+    Test    / sources := Seq.empty,
+    releaseVcsSign    := true,
+    releaseCrossBuild := true,
+    releaseProcess    := releaseSteps
+  )
+
 lazy val client = (project in file("client"))
   .settings(commonSettings, clientSettings, publishSettings)
   .enablePlugins(BuildInfoPlugin)
@@ -24,7 +34,7 @@ lazy val commonSettings: Seq[Setting[_]] = Metadata.settings ++ Seq(
   pomIncludeRepository    := { _ => false },
   javacOptions            ++= Seq("-source", "1.8", "-target", "1.8"),
   scalacOptions           ++= Seq("-deprecation", "-unchecked"),
-
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
 )
 
 lazy val clientSettings: Seq[Setting[_]] = Seq(
@@ -79,19 +89,19 @@ lazy val publishSettings: Seq[Setting[_]] = Seq(
   },
   publishMavenStyle := true,
   publishArtifact in Test := false,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-  releaseProcess := Seq(
-    checkSnapshotDependencies,
-    inquireVersions,
-    runClean,
-    runTest,
-    setReleaseVersion,
-    commitReleaseVersion,
-    tagRelease,
-    publishArtifacts,
-    setNextVersion,
-    commitNextVersion,
-    releaseStepCommand("sonatypeReleaseAll"),
-    pushChanges
-  )
+)
+
+lazy val releaseSteps: Seq[ReleaseStep] = Seq(
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  publishArtifacts,
+  setNextVersion,
+  commitNextVersion,
+  releaseStepCommand("sonatypeReleaseAll"),
+  pushChanges
 )
