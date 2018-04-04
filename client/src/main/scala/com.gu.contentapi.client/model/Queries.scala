@@ -8,7 +8,7 @@ sealed trait ContentApiQuery {
 
   def pathSegment: String
 
-  override def toString = apply("")
+  override def toString = s"""${getClass.getSimpleName}(${apply("")})"""
 
   private def url(location: String, parameters: Map[String, String]): String = {
     require(!location.contains('?'), "must not specify parameters in URL")
