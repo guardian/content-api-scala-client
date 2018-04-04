@@ -45,14 +45,7 @@ lazy val clientSettings: Seq[Setting[_]] = Seq(
   buildInfoPackage    := "com.gu.contentapi.buildinfo",
   buildInfoObject     := "CapiBuildInfo",
   releaseVersionFile  := file("version-client.sbt"),
-  libraryDependencies ++= clientDeps,
-  initialCommands in console := """
-    import com.gu.contentapi.client._
-    import com.gu.contentapi.client.model._
-    import scala.concurrent.ExecutionContext.Implicits.global
-    import scala.concurrent.Await
-    import scala.concurrent.duration._
-  """
+  libraryDependencies ++= clientDeps
 )
 
 lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
@@ -63,7 +56,6 @@ lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
   libraryDependencies ++= clientDeps ++ defaultClientDeps,
   initialCommands in console := """
     import com.gu.contentapi.client._
-    import com.gu.contentapi.client.model._
     import scala.concurrent.ExecutionContext.Implicits.global
     import scala.concurrent.Await
     import scala.concurrent.duration._
