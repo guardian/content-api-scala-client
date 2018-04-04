@@ -72,13 +72,7 @@ lazy val awsSettings: Seq[Setting[_]] = Seq(
 
 lazy val publishSettings: Seq[Setting[_]] = Seq(
   resolvers += Resolver.sonatypeRepo("releases"),
-  publishTo := {
-    val nexus = "https://oss.sonatype.org/"
-    if (version.value.trim.endsWith("SNAPSHOT"))
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-  },
+  publishTo := sonatypePublishTo.value,
   publishMavenStyle := true,
   publishArtifact in Test := false,
 )
