@@ -32,7 +32,6 @@ private[client] object Decoder {
   private def atomsDecoder[Query] = apply[Query, AtomsResponse](AtomsResponse)
 
   implicit val itemQuery = apply[ItemQuery, ItemResponse](ItemResponse)
-  implicit val searchQuery = apply[SearchQuery, SearchResponse](SearchResponse)
   implicit val tagsQuery = apply[TagsQuery, TagsResponse](TagsResponse)
   implicit val sectionsQuery = apply[SectionsQuery, SectionsResponse](SectionsResponse)
   implicit val editionsQuery = apply[EditionsQuery, EditionsResponse](EditionsResponse)
@@ -45,6 +44,7 @@ private[client] object Decoder {
   implicit val restaurantReviewsQuery = atomsDecoder[RestaurantReviewsQuery]
   implicit val filmReviewsQuery = atomsDecoder[FilmReviewsQuery]
   implicit val storiesQuery = apply[StoriesQuery, StoriesResponse](StoriesResponse)
+  implicit def searchQueryBase[T <: SearchQueryBase[T]] = apply[T, SearchResponse](SearchResponse)
   implicit def nextQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = apply[NextQuery[Q], d.Response](d.codec)
   implicit def prevQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = apply[PrevQuery[Q], d.Response](d.codec)
 
