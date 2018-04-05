@@ -28,77 +28,29 @@ private[client] object Decoder {
 
   def apply[Q](implicit d: Decoder[Q]): Decoder[Q] = d
 
-  implicit val itemQuery = new Decoder[ItemQuery] {
-    type Response = ItemResponse
-    type Codec = ItemResponse.type
-    val codec = ItemResponse
+  private def instance[Q, R <: ThriftStruct, C <: ThriftStructCodec[R]](c: C) = new Decoder[Q] {
+    type Response = R
+    type Codec = C
+    val codec = c
   }
 
-  implicit val searchQuery = new Decoder[SearchQuery] {
-    type Response = SearchResponse
-    type Codec = SearchResponse.type
-    val codec = SearchResponse
-  }
+  private def atomsDecoder[Query] = instance[Query, AtomsResponse, AtomsResponse.type](AtomsResponse)
 
-  implicit val tagsQuery = new Decoder[TagsQuery] {
-    type Response = TagsResponse
-    type Codec = TagsResponse.type
-    val codec = TagsResponse
-  }
-
-  implicit val sectionsQuery = new Decoder[SectionsQuery] {
-    type Response = SectionsResponse
-    type Codec = SectionsResponse.type
-    val codec = SectionsResponse
-  }
-
-  implicit val editionsQuery = new Decoder[EditionsQuery] {
-    type Response = EditionsResponse
-    type Codec = EditionsResponse.type
-    val codec = EditionsResponse
-  }
-
-  implicit val removedContentQuery = new Decoder[RemovedContentQuery] {
-    type Response = RemovedContentResponse
-    type Codec = RemovedContentResponse.type
-    val codec = RemovedContentResponse
-  }
-
-  implicit val videoStatsQuery = new Decoder[VideoStatsQuery] {
-    type Response = VideoStatsResponse
-    type Codec = VideoStatsResponse.type
-    val codec = VideoStatsResponse
-  }
-
-  private def atomsDecoder[Query] = new Decoder[Query] {
-    type Response = AtomsResponse
-    type Codec = AtomsResponse.type
-    val codec = AtomsResponse
-  }
-
+  implicit val itemQuery = instance[ItemQuery, ItemResponse, ItemResponse.type](ItemResponse)
+  implicit val searchQuery = instance[SearchQuery, SearchResponse, SearchResponse.type](SearchResponse)
+  implicit val tagsQuery = instance[TagsQuery, TagsResponse, TagsResponse.type](TagsResponse)
+  implicit val sectionsQuery = instance[SectionsQuery, SectionsResponse, SectionsResponse.type](SectionsResponse)
+  implicit val editionsQuery = instance[EditionsQuery, EditionsResponse, EditionsResponse.type](EditionsResponse)
+  implicit val removedContentQuery = instance[RemovedContentQuery, RemovedContentResponse, RemovedContentResponse.type](RemovedContentResponse)
+  implicit val videoStatsQuery = instance[VideoStatsQuery, VideoStatsResponse, VideoStatsResponse.type](VideoStatsResponse)
   implicit val atomsQuery = atomsDecoder[AtomsQuery]
   implicit val recipesQuery = atomsDecoder[RecipesQuery]
   implicit val reviewsQuery = atomsDecoder[ReviewsQuery]
   implicit val gameReviewsQuery = atomsDecoder[GameReviewsQuery]
   implicit val restaurantReviewsQuery = atomsDecoder[RestaurantReviewsQuery]
   implicit val filmReviewsQuery = atomsDecoder[FilmReviewsQuery]
-
-  implicit val storiesQuery = new Decoder[StoriesQuery] {
-    type Response = StoriesResponse
-    type Codec = StoriesResponse.type
-    val codec = StoriesResponse
-  }
-
-  implicit def nextQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = new Decoder[NextQuery[Q]] {  
-    type Response = d.Response
-    type Codec = d.Codec
-    val codec = d.codec
-  }
-
-  implicit def prevQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = new Decoder[PrevQuery[Q]] {
-    type Response = d.Response
-    type Codec = d.Codec
-    val codec = d.codec
-  }
+  implicit val storiesQuery = instance[StoriesQuery, StoriesResponse, StoriesResponse.type](StoriesResponse)
+  implicit def nextQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = instance[NextQuery[Q], d.Response, d.Codec](d.codec)
+  implicit def prevQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = instance[PrevQuery[Q], d.Response, d.Codec](d.codec)
 
 }
