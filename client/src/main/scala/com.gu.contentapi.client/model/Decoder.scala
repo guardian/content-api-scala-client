@@ -26,7 +26,7 @@ private[client] object Decoder {
 
   private def apply[Q, R <: ThriftStruct](c: ThriftStructCodec[R]) = new Decoder[Q] {
     type Response = R
-    val codec = c
+    def codec = c
   }
 
   private def atomsDecoder[Query] = apply[Query, AtomsResponse](AtomsResponse)
