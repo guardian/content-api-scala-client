@@ -5,7 +5,7 @@ import Dependencies._
 /* --------------------------------------------------------------------- */
 
 lazy val root = (project in file("."))
-  .aggregate(client, defaultClient, aws)
+  .aggregate(client, defaultClient)
   .settings(commonSettings)
   .settings(
     sources in Compile := Seq.empty,
