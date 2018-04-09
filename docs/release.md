@@ -14,6 +14,6 @@ sbt 'release cross'
 #### Releasing content-api-client-aws:
 This project does not depend on content-api-client.
 ```
-sbt 'aws:release cross'
+sbt 'aws/release cross'
 ```
 
