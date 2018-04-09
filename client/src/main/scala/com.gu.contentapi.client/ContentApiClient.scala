@@ -48,7 +48,7 @@ trait ContentApiClient {
   /* Exposed API */
 
   def url(contentApiQuery: ContentApiQuery): String =
-    contentApiQuery(targetUrl, parameters)
+    contentApiQuery.getUrl(targetUrl, parameters)
 
   def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
     fetchResponse(itemQuery) map { response =>
