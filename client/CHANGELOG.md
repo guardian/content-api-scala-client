@@ -1,3 +1,25 @@
+## 12.0
+
+### Removed the dependency on OkHttp
+
+The content-api-client project now lacks a concrete implementation of the HTTP communication. That is the first step we take in cleaning up the client and making it more amenable to purely functional settings. As a result, the `ContentApiClient` trait is provided and users are required to provide a concrete implementation based on their preferred HTTP client library. The following method must be implemented:
+
+```scala
+def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
+```
+
+For convenience, the previous default implementation is provided in a separate project, content-api-client-default. Versioning of that package will follow the one of content-api-client and thus will start at version 12.
+
+### Utility functions moved in companion
+
+The `item`, `search`, `tags`, `sections`, `editions`, `removedContent`, `atoms`, `recipes`, `reviews`, `gameReviews`, `restaurantReviews`, `filmReviews`, `videoStats` and `stories` methods have been moved into a separate trait, `ContentApiQueries`, from which the companion object `ContentApiClient` inherits.
+
+The previous behaviour can be replicated very simply:
+
+```scala
+val client = new GuardianContentClient(...) with ContentApiQueries
+```
+
 ## 11.53
 * Support `SearchQueryBase` in `GuardianContentClient#getResponse`.
 
