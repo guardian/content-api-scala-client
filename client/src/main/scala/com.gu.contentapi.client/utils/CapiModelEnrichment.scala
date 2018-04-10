@@ -44,7 +44,7 @@ object CapiModelEnrichment {
         isImmersive -> Immersive,
         tagExistsWithId("tone/editorials") -> GuardianView,
         tagExistsWithId("tone/interview") -> Interview,
-        tagExistsWithId("tone/recipe") -> Recipe,
+        tagExistsWithId("tone/recipes") -> Recipe,
         isMedia -> Media,
         isReview -> Review,
         tagExistsWithId("tone/analysis") -> Analysis,
