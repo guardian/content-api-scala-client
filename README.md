@@ -49,8 +49,6 @@ Use these imports for the following code samples (substituting your own executio
 
 ```scala
 import com.gu.contentapi.client.GuardianContentClient
-import com.gu.contentapi.client.model._
-import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 ```
 
@@ -60,21 +58,21 @@ Every item on http://www.theguardian.com/ can be retrieved on the same path at h
 
 ```scala
 // query for a single content item and print its web title
-val itemQuery = ItemQuery("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa")
+val itemQuery = client.item("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa")
 client.getResponse(itemQuery).foreach { itemResponse =>
   println(itemResponse.content.get.webTitle)
 }
 
 // print web title for a tag
-val tagQuery = ItemQuery("music/metal")
+val tagQuery = client.item("music/metal")
 client.getResponse(tagQuery).foreach { tagResponse =>
-  println(tagResponse.content.get.webTitle)
+  println(tagResponse.tag.get.webTitle)
 }
 
 // print web title for a section
-val sectionQuery = ItemQuery("environment")
+val sectionQuery = client.item("environment")
 client.getResponse(sectionQuery).foreach { sectionResponse =>
-  println(sectionResponse.content.get.webTitle)
+  println(sectionResponse.section.get.webTitle)
 }
 ```
 
@@ -82,29 +80,23 @@ Individual content items contain information not available from the `/search` en
 
 ```scala
 // print the body of a given content item
-val itemBodyQuery = ItemQuery("politics/2014/sep/15/putin-bad-as-stalin-former-defence-secretary")
+val itemBodyQuery = client.item("politics/2014/sep/15/putin-bad-as-stalin-former-defence-secretary")
   .showFields("body")
 client.getResponse(itemBodyQuery) map { response =>
-  for (fields <- response.content.get.fields) println(fields("body"))
+  for (fields <- response.content.get.fields) println(fields.body)
 }
 
 // print the web title of every tag a content item has
-val itemWebTitleQuery = ItemQuery("environment/2014/sep/14/invest-in-monitoring-and-tagging-sharks-to-prevent-attacks")
+val itemWebTitleQuery = client.item("environment/2014/sep/14/invest-in-monitoring-and-tagging-sharks-to-prevent-attacks")
   .showTags("all")
 client.getResponse(itemWebTitleQuery) map { response =>
   for (tag <- response.content.get.tags) println(tag.webTitle)
 }
 
-// print the web title of each content item in the editor's picks for the film tag
-val editorsFilmsQuery = ItemQuery("film/film").showEditorsPicks()
-client.getResponse(editorsFilmsQuery) map { response =>
-  for (result <- response.editorsPicks) println(result.webTitle)
-}
-
 // print the web title of the most viewed content items from the world section
-val mostViewedTitleQuery = ItemQuery("world").showMostViewed()
+val mostViewedTitleQuery = client.item("world").showMostViewed()
 client.getResponse(mostViewedTitleQuery) map { response =>
-  for (result <- response.mostViewed) println(result.webTitle)
+  for (result <- response.mostViewed.get) println(result.webTitle)
 }
 ```
 
@@ -114,43 +106,45 @@ Filtering or searching for multiple content items happens at https://content.gua
 
 ```scala
 // print the total number of content items
-val allContentSearch = SearchQuery()
+val allContentSearch = client.search
 client.getResponse(allContentSearch) map { response =>
   println(response.total)
 }
 
 // print the web titles of the 15 most recent content items
-val lastFifteenSearch = SearchQuery().pageSize(15)
+val lastFifteenSearch = client.search.pageSize(15)
 client.getResponse(lastFifteenSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles of the 10 most recent content items matching a search term
-val toastSearch = SearchQuery().q("cheese on toast")
+val toastSearch = client.search.q("cheese on toast")
 client.getResponse(toastSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles of the 10 (default page size) most recent content items with certain tags
-val tagSearch = SearchQuery().tag("lifeandstyle/cheese,type/gallery")
+val tagSearch = client.search.tag("lifeandstyle/cheese,type/gallery")
 client.getResponse(tagSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles of the 10 most recent content items in the world section
-val sectionSearch = SearchQuery().section("world")
+val sectionSearch = client.search.section("world")
 client.getResponse(sectionSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles of the last 10 content items published a week ago
-val timeSearch = SearchQuery().toDate(Instant.now().minus(7, ChronoUnit.DAYS))
+import java.time.temporal.ChronoUnit
+import java.time.Instant
+val timeSearch = client.search.toDate(Instant.now().minus(7, ChronoUnit.DAYS))
 client.getResponse(timeSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles of the last 10 content items published whose type is article
-val typeSearch = SearchQuery().contentType("article")
+val typeSearch = client.search.contentType("article")
 client.getResponse(typeSearch) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
@@ -162,19 +156,19 @@ Filtering or searching for multiple tags happens at http://content.guardianapis.
 
 ```scala
 // print the total number of tags
-val allTagsQuery = TagsQuery()
+val allTagsQuery = client.tags
 client.getResponse(allTagsQuery) map { response =>
   println(response.total)
 }
 
 // print the web titles of the first 50 tags
-val fiftyTagsQuery = TagsQuery().pageSize(50)
+val fiftyTagsQuery = client.tags.pageSize(50)
 client.getResponse(fiftyTagsQuery) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web titles and bios of the first 10 contributor tags which have them
-val contributorTagsQuery = TagsQuery().tagType("contributor")
+val contributorTagsQuery = client.tags.tagType("contributor")
 client.getResponse(contributorTagsQuery) map { response =>
   for (result <- response.results.filter(_.bio.isDefined)) {
     println(result.webTitle + "\n" + result.bio.get + "\n")
@@ -182,7 +176,7 @@ client.getResponse(contributorTagsQuery) map { response =>
 }
 
 // print the web titles and numbers of the first 10 books tags with ISBNs
-val isbnTagsSearch = TagsQuery()
+val isbnTagsSearch = client.tags
   .section("books")
   .referenceType("isbn")
   .showReferences("isbn")
@@ -199,13 +193,13 @@ Filtering or searching for multiple sections happens at http://content.guardiana
 
 ```scala
 // print the web title of each section
-val allSectionsQuery = SectionsQuery()
+val allSectionsQuery = client.sections
 client.getResponse(allSectionsQuery) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
 
 // print the web title of each section with 'network' in the title
-val networkSectionsQuery = SectionsQuery().q("network")
+val networkSectionsQuery = client.sections.q("network")
 client.getResponse(networkSectionsQuery) map { response =>
   for (result <- response.results) println(result.webTitle)
 }
@@ -217,13 +211,13 @@ Filtering or searching for multiple Editions happens at http://content.guardiana
 
 ```scala
 // print the apiUrl of each edition
-val allEditionsQuery = EditionsQuery()
+val allEditionsQuery = client.editions
 client.getResponse(allEditionsQuery) map { response =>
   for (result <- response.results) println(result.apiUrl)
 }
 
 // print the webUrl of the edition with 'US' in edition field.
-val usEditionsQuery = EditionsQuery().q("US")
+val usEditionsQuery = client.editions.q("US")
 client.getResponse(usEditionsQuery) map { response =>
   for (result <- response.results) println(result.webUrl)
 }
@@ -235,13 +229,13 @@ Filtering or searching for removed content happens at http://content.guardianapi
 
 ```scala
 // print the id of all removed content items
-val removedContentQuery = RemovedContentQuery()
+val removedContentQuery = client.removedContent
 client.getResponse(removedContentQuery) map { response =>
   for (result <- response.results) println(result)
 }
 
 // print the id of all expired content
-val expiredContentQuery = RemovedContentQuery().reason("expired")
+val expiredContentQuery = client.removedContent.reason("expired")
 client.getResponse(expiredContentQuery ) map { response =>
   for (result <- response.results) println(result)
 }
