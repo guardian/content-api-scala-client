@@ -11,7 +11,7 @@ A Scala client for the Guardian's [Content API](http://explorer.capi.gutools.co.
 Add the following line to your SBT build definition, and set the version number to be the latest from the [releases page](https://github.com/guardian/content-api-scala-client/releases):
 
 ```scala
-libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
+libraryDependencies += "com.gu" %% "content-api-client-default" % "x.y"
 ```
 
 Please note, as of version 7.0, the content api scala client no longer supports java 7.
@@ -20,6 +20,25 @@ If you don't have an API key, go to [open-platform.theguardian.com/access/](http
 
 ```scala
 val client = new GuardianContentClient("your-api-key")
+```
+
+### Setup with custom Http layer
+
+As of version 12.0, the core module does not provide an http implementation. This is to accomodate use cases where people want to use their existing infrastructure, rather than relying on an extra dependency on OkHttp (the client used in the default module above). First, add the following line to your SBT definition:
+
+```scala
+libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
+```
+
+Then, create your own client by extending the `ContentApiClient` trait and implementing the `get` method, e.g. using Play's ScalaWS client library
+
+```scala
+import play.api.libs.ws.WSClient
+
+class MyContentApiClient(ws: WSClient) extends ContentApiClient
+  def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] =
+    ws.url(url).withHttpHeaders(headers: _*).get.map(r => HttpResponse(r.bodyAsBytes, r.status, r.statusText))
+}
 ```
 
 ## Usage
