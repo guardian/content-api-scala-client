@@ -8,9 +8,16 @@ sealed trait ContentApiQuery {
 
   def pathSegment: String
 
-  override def toString = {
-    s"${getClass.getSimpleName}(/$pathSegment${QueryStringParams(parameters)})"
+  override def toString = s"""${getClass.getSimpleName}(${getUrl("")})"""
+
+  private def url(location: String, parameters: Map[String, String]): String = {
+    require(!location.contains('?'), "must not specify parameters in URL")
+
+    location + QueryStringParams(parameters)
   }
+
+  def getUrl(targetUrl: String, customParameters: Map[String, String] = Map.empty): String =
+    url(s"$targetUrl/${pathSegment}", parameters ++ customParameters)
 }
 
 trait SearchQueryBase[Self <: SearchQueryBase[Self]]

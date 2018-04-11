@@ -1,96 +1,54 @@
 package com.gu.contentapi.client
 
-import java.io.IOException
-import java.util.concurrent.TimeUnit
+import com.gu.contentapi.buildinfo.CapiBuildInfo
 import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
-import com.gu.contentapi.client.utils.QueryStringParams
-import com.gu.contentapi.buildinfo.CapiBuildInfo
-import okhttp3._
-import scala.concurrent.{ExecutionContext, Future, Promise}
-import scala.util.Try
 import com.gu.contentapi.client.thrift.ThriftDeserializer
+import com.gu.contentapi.client.utils.QueryStringParams
+import scala.concurrent.{ExecutionContext, Future}
 
-case class GuardianContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends Exception(httpMessage)
+trait ContentApiClient {
+  
+  /** Your API key */
+  def apiKey: String
 
-trait ContentApiClientLogic {
-  val apiKey: String
+  /** The user-agent identifier */
+  def userAgent: String = "content-api-scala-client/"+CapiBuildInfo.version
+  
+  /** The url of the CAPI endpoint */
+  def targetUrl: String = "https://content.guardianapis.com"
 
-  protected val userAgent = "content-api-scala-client/"+CapiBuildInfo.version
+  /** Queries CAPI.
+    *
+    * This method must make a GET request to the CAPI endpoint
+    * and streamline the response into an HttpResponse object.
+    * 
+    * It is a design decision that this method is virtual.
+    * Any implementation would have to rely on a specific
+    * technology stack, e.g. an HTTP client. Fundamentally,
+    * the responsibility of making these implementation
+    * choices should be pushed out to the end of the world.
+    *
+    * @param url The CAPI REST url 
+    * @param headers Custom HTTP parameters
+    * @return an HttpResponse holding the response in the form of an array of bytes 
+    */
+  def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
 
-  protected lazy val http = new OkHttpClient.Builder()
-    .connectTimeout(1, TimeUnit.SECONDS)
-    .readTimeout(2, TimeUnit.SECONDS)
-    .followRedirects(true)
-    .connectionPool(new ConnectionPool(10, 60, TimeUnit.SECONDS))
-    .build()
+  /** Some HTTP headers sent along each CAPI request */
+  private def headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
 
-  val targetUrl = "https://content.guardianapis.com"
+  /** Authentication and format parameters appended to each query */
+  private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
-  def item(id: String) = ItemQuery(id)
-  val search = SearchQuery()
-  val tags = TagsQuery()
-  val sections = SectionsQuery()
-  val editions = EditionsQuery()
-  val removedContent = RemovedContentQuery()
-  val atoms = AtomsQuery()
-  val recipes = RecipesQuery()
-  val reviews = ReviewsQuery()
-  val gameReviews = GameReviewsQuery()
-  val restaurantReviews = RestaurantReviewsQuery()
-  val filmReviews = FilmReviewsQuery()
-  val videoStats = VideoStatsQuery()
-  val stories = StoriesQuery()
-
-  case class HttpResponse(body: Array[Byte], statusCode: Int, statusMessage: String)
-
-  protected[client] def url(location: String, parameters: Map[String, String]): String = {
-    require(!location.contains('?'), "must not specify parameters in URL")
-
-    location + QueryStringParams(parameters + ("api-key" -> apiKey) + ("format" -> "thrift"))
-  }
-
-  protected def fetch(url: String)(implicit context: ExecutionContext): Future[Array[Byte]] = {
-    val headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
-
-    for (response <- get(url, headers)) yield {
-      if (List(200, 302) contains response.statusCode) response.body
-      else throw contentApiError(response)
-    }
-  }
-
-  private def contentApiError(response: HttpResponse): GuardianContentApiError = {
-    val errorResponse = Try(ThriftDeserializer.deserialize(response.body, ErrorResponse)).toOption
-    GuardianContentApiError(response.statusCode, response.statusMessage, errorResponse)
-  }
-
-  protected def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
-
-    val reqBuilder = new Request.Builder().url(url)
-    val req = headers.foldLeft(reqBuilder) {
-      case (r, (name, value)) => r.header(name, value)
-    }
-
-    val promise = Promise[HttpResponse]()
-
-    http.newCall(req.build()).enqueue(new Callback() {
-      override def onFailure(call: Call, e: IOException): Unit = promise.failure(e)
-      override def onResponse(call: Call, response: Response): Unit = {
-        promise.success(HttpResponse(response.body().bytes, response.code(), response.message()))
-      }
-    })
-
-    promise.future
-  }
-
-  def getUrl(contentApiQuery: ContentApiQuery): String =
-    url(s"$targetUrl/${contentApiQuery.pathSegment}", contentApiQuery.parameters)
-
+  /** Streamlines the handling of a valid CAPI response */
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
-    fetch(getUrl(contentApiQuery))
-
+    get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
 
   /* Exposed API */
+
+  def url(contentApiQuery: ContentApiQuery): String =
+    contentApiQuery.getUrl(targetUrl, parameters)
 
   def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
     fetchResponse(itemQuery) map { response =>
@@ -162,14 +120,24 @@ trait ContentApiClientLogic {
       ThriftDeserializer.deserialize(response, StoriesResponse)
     }
 
-  /**
-   * Shutdown the client and clean up all associated resources.
-   *
-   * Note: behaviour is undefined if you try to use the client after calling this method.
-   */
-  def shutdown(): Unit = http.dispatcher().executorService().shutdown()
-
 }
 
-class GuardianContentClient(val apiKey: String) extends ContentApiClientLogic
+object ContentApiClient extends ContentApiQueries
 
+/** Utility functions to instantiate each type of query */
+trait ContentApiQueries {
+  def item(id: String) = ItemQuery(id)
+  val search = SearchQuery()
+  val tags = TagsQuery()
+  val sections = SectionsQuery()
+  val editions = EditionsQuery()
+  val removedContent = RemovedContentQuery()
+  val atoms = AtomsQuery()
+  val recipes = RecipesQuery()
+  val reviews = ReviewsQuery()
+  val gameReviews = GameReviewsQuery()
+  val restaurantReviews = RestaurantReviewsQuery()
+  val filmReviews = FilmReviewsQuery()
+  val videoStats = VideoStatsQuery()
+  val stories = StoriesQuery()
+}

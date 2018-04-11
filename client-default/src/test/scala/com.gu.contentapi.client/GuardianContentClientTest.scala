@@ -2,7 +2,7 @@ package com.gu.contentapi.client
 
 import com.gu.contentatom.thrift.{AtomData, AtomType}
 import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse}
-import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
+import com.gu.contentapi.client.model.{ItemQuery, SearchQuery, ContentApiError}
 import java.time.Instant
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
@@ -39,7 +39,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   it should "return errors as a broken promise" in {
     val query = ItemQuery("something-that-does-not-exist")
     val errorTest = api.getResponse(query) recover { case error =>
-      error should be (GuardianContentApiError(404, "Not Found", Some(ErrorResponse("error", "The requested resource could not be found."))))
+      error should be (ContentApiError(404, "Not Found", Some(ErrorResponse("error", "The requested resource could not be found."))))
     }
     errorTest.futureValue
   }
@@ -47,28 +47,9 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   it should "handle error responses" in {
     val query = SearchQuery().pageSize(500)
     val errorTest = api.getResponse(query) recover { case error =>
-      error should be (GuardianContentApiError(400, "Bad Request", Some(ErrorResponse("error", "page-size must be an integer between 0 and 200"))))
+      error should be (ContentApiError(400, "Bad Request", Some(ErrorResponse("error", "page-size must be an integer between 0 and 200"))))
     }
     errorTest.futureValue
-  }
-
-  it should "correctly add API key to request" in {
-    api.url("location", Map.empty) should include(s"api-key=${api.apiKey}")
-  }
-
-  it should "understand custom parameters" in {
-    val now = Instant.now()
-    val params = api.search
-      .stringParam("aStringParam", "foo")
-      .intParam("aIntParam", 3)
-      .dateParam("aDateParam", now)
-      .boolParam("aBoolParam", true)
-      .parameters
-
-    params.get("aStringParam") should be (Some("foo"))
-    params.get("aIntParam") should be (Some("3"))
-    params.get("aDateParam") should be (Some(now.toString))
-    params.get("aBoolParam") should be (Some("true"))
   }
 
   it should "perform a given item query" in {
@@ -78,56 +59,56 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   }
 
   it should "perform a given removed content query" in {
-    val query = api.removedContent.reason("expired")
+    val query = ContentApiClient.removedContent.reason("expired")
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
   }
 
   it should "perform a given atoms query" in {
-    val query = api.atoms.types("explainer")
+    val query = ContentApiClient.atoms.types("explainer")
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
   }
 
   it should "perform a given recipes query" in {
-    val query = api.recipes.cuisines("thai")
+    val query = ContentApiClient.recipes.cuisines("thai")
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
   }
 
   it should "perform a given reviews query" in {
-    val query = api.reviews.minRating(3)
+    val query = ContentApiClient.reviews.minRating(3)
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
   }
 
   it should "perform a given game review query" in {
-    val query = api.gameReviews.minRating(3)
+    val query = ContentApiClient.gameReviews.minRating(3)
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
   }
 
   it should "perform a given film review query" in {
-    val query = api.filmReviews.maxRating(4)
+    val query = ContentApiClient.filmReviews.maxRating(4)
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
   }
 
   it should "perform a given restaurant review query" in {
-    val query = api.restaurantReviews.minRating(1)
+    val query = ContentApiClient.restaurantReviews.minRating(1)
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
   }
 
   it should "perform a given search query using the type filter" in {
-    val query = api.search.contentType("article")
+    val query = ContentApiClient.search.contentType("article")
     val results = for (response <- api.getResponse(query)) yield response.results
     val fResults = results.futureValue
     fResults.size should be (10)
