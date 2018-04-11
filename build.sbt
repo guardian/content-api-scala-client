@@ -8,6 +8,7 @@ lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
   .settings(commonSettings, publishSettings)
   .settings(
+    releaseVersionFile := file("version-client.sbt"),
     skip in publish    := true,
     sources in Compile := Seq.empty,
     sources in Test    := Seq.empty,
