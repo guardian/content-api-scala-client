@@ -6,9 +6,9 @@ import Dependencies._
 
 lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
-  .settings(commonSettings, publishSettings)
+  .settings(commonSettings)
   .settings(
-    releaseVersionFile := file("version-client.sbt"),
+    publish / skip     := true,
     sources in Compile := Seq.empty,
     sources in Test    := Seq.empty,
     releaseVcsSign     := true,
@@ -17,12 +17,12 @@ lazy val root = (project in file("."))
   )
 
 lazy val client = (project in file("client"))
-  .settings(commonSettings, clientSettings)
+  .settings(commonSettings, clientSettings, publishSettings)
   .enablePlugins(BuildInfoPlugin)
 
 lazy val defaultClient = (project in file("client-default"))
   .dependsOn(client)
-  .settings(commonSettings, defaultClientSettings)
+  .settings(commonSettings, defaultClientSettings, publishSettings)
 
 lazy val aws = (project in file("aws"))
   .settings(commonSettings, awsSettings, publishSettings)
@@ -43,6 +43,7 @@ lazy val clientSettings: Seq[Setting[_]] = Seq(
   name                := Metadata.ghProject,
   description         := "Scala client for the Guardian's Content API",
   developers          := Metadata.clientDevs,
+  releaseVersionFile  := file("version-client.sbt"),
   buildInfoKeys       := Seq[BuildInfoKey](version),
   buildInfoPackage    := "com.gu.contentapi.buildinfo",
   buildInfoObject     := "CapiBuildInfo",
