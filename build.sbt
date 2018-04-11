@@ -6,7 +6,7 @@ import Dependencies._
 
 lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
-  .settings(commonSettings)
+  .settings(commonSettings, publishSettings)
   .settings(
     sources in Compile := Seq.empty,
     sources in Test    := Seq.empty,
@@ -16,12 +16,12 @@ lazy val root = (project in file("."))
   )
 
 lazy val client = (project in file("client"))
-  .settings(commonSettings, clientSettings, publishSettings)
+  .settings(commonSettings, clientSettings)
   .enablePlugins(BuildInfoPlugin)
 
 lazy val defaultClient = (project in file("client-default"))
   .dependsOn(client)
-  .settings(commonSettings, defaultClientSettings, publishSettings)
+  .settings(commonSettings, defaultClientSettings)
 
 lazy val aws = (project in file("aws"))
   .settings(commonSettings, awsSettings, publishSettings)
