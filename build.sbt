@@ -9,6 +9,7 @@ lazy val root = (project in file("."))
   .settings(commonSettings)
   .settings(
     skip in publish    := true,
+    publishArtifact    := false,
     sources in Compile := Seq.empty,
     sources in Test    := Seq.empty,
   )
