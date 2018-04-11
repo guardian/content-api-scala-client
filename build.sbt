@@ -74,7 +74,6 @@ lazy val publishSettings: Seq[Setting[_]] = Seq(
   releaseVcsSign := true,
   releaseCrossBuild := true,
   releaseProcess := releaseSteps,
-  releaseUseGlobalVersion := false,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value
 )
 
