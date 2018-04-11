@@ -8,6 +8,7 @@ lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
   .settings(commonSettings, publishSettings)
   .settings(
+    releaseVersionFile := file("version-client.sbt"),
     sources in Compile := Seq.empty,
     sources in Test    := Seq.empty,
     releaseVcsSign     := true,
@@ -45,7 +46,6 @@ lazy val clientSettings: Seq[Setting[_]] = Seq(
   buildInfoKeys       := Seq[BuildInfoKey](version),
   buildInfoPackage    := "com.gu.contentapi.buildinfo",
   buildInfoObject     := "CapiBuildInfo",
-  releaseVersionFile  := file("version-client.sbt"),
   libraryDependencies ++= clientDeps
 )
 
