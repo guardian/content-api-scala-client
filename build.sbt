@@ -37,7 +37,7 @@ lazy val clientSettings: Seq[Setting[_]] = Seq(
   name                := Metadata.ghProject,
   description         := "Scala client for the Guardian's Content API",
   developers          := Metadata.clientDevs,
-  releaseVersionFile  := baseDirectory.value / "version.sbt",
+  releaseVersionFile  := (client / baseDirectory.value) / "version.sbt",
   buildInfoKeys       := Seq[BuildInfoKey](version),
   buildInfoPackage    := "com.gu.contentapi.buildinfo",
   buildInfoObject     := "CapiBuildInfo",
@@ -62,7 +62,7 @@ lazy val awsSettings: Seq[Setting[_]] = Seq(
   name                := Metadata.ghProject + "-aws",
   description         := "AWS helper functionality for using Guardian's Content API scala client",
   developers          := Metadata.awsDevs,
-  releaseVersionFile  := baseDirectory.value / "version.sbt",
+  releaseVersionFile  := (aws / baseDirectory.value) / "version.sbt",
   libraryDependencies ++= awsDeps,
 )
 
