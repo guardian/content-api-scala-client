@@ -8,7 +8,6 @@ lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
   .settings(commonSettings, publishSettings)
   .settings(
-    releaseVersionFile := file("version-client.sbt"),
     skip in publish    := true,
     sources in Compile := Seq.empty,
     sources in Test    := Seq.empty,
@@ -38,7 +37,7 @@ lazy val clientSettings: Seq[Setting[_]] = Seq(
   name                := Metadata.ghProject,
   description         := "Scala client for the Guardian's Content API",
   developers          := Metadata.clientDevs,
-  releaseVersionFile  := file("version-client.sbt"),
+  releaseVersionFile  := (ThisBuild / baseDirectory).value / "version-client.sbt",
   buildInfoKeys       := Seq[BuildInfoKey](version),
   buildInfoPackage    := "com.gu.contentapi.buildinfo",
   buildInfoObject     := "CapiBuildInfo",
@@ -49,7 +48,7 @@ lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
   name                := Metadata.ghProject + "-default",
   description         := "Default scala client for the Guardian's Content API",
   developers          := Metadata.clientDevs,
-  releaseVersionFile  := file("version-client.sbt"),
+  releaseVersionFile  := (ThisBuild / baseDirectory).value / "version-client.sbt",
   libraryDependencies ++= clientDeps ++ defaultClientDeps,
   initialCommands in console := """
     import com.gu.contentapi.client._
@@ -63,7 +62,7 @@ lazy val awsSettings: Seq[Setting[_]] = Seq(
   name                := Metadata.ghProject + "-aws",
   description         := "AWS helper functionality for using Guardian's Content API scala client",
   developers          := Metadata.awsDevs,
-  releaseVersionFile  := file("version-aws.sbt"),
+  releaseVersionFile  := (ThisBuild / baseDirectory).value / "version-aws.sbt",
   libraryDependencies ++= awsDeps,
 )
 
