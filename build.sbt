@@ -8,12 +8,9 @@ lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
   .settings(commonSettings)
   .settings(
-    publish / skip     := true,
+    skip in publish    := true,
     sources in Compile := Seq.empty,
     sources in Test    := Seq.empty,
-    releaseVcsSign     := true,
-    releaseCrossBuild  := true,
-    releaseProcess     := releaseSteps
   )
 
 lazy val client = (project in file("client"))
@@ -30,13 +27,10 @@ lazy val aws = (project in file("aws"))
 /* --------------------------------------------------------------------- */
 
 lazy val commonSettings: Seq[Setting[_]] = Metadata.settings ++ Seq(
-  releaseUseGlobalVersion := false,
   crossScalaVersions      := scalaVersions,
   scalaVersion            := scalaVersions.min,
-  pomIncludeRepository    := { _ => false },
   javacOptions            ++= Seq("-source", "1.8", "-target", "1.8"),
   scalacOptions           ++= Seq("-deprecation", "-unchecked"),
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
 )
 
 lazy val clientSettings: Seq[Setting[_]] = Seq(
@@ -74,9 +68,15 @@ lazy val awsSettings: Seq[Setting[_]] = Seq(
 
 lazy val publishSettings: Seq[Setting[_]] = Seq(
   resolvers += Resolver.sonatypeRepo("releases"),
+  pomIncludeRepository := { _ => false },
   publishTo := sonatypePublishTo.value,
   publishMavenStyle := true,
   publishArtifact in Test := false,
+  releaseVcsSign := true,
+  releaseCrossBuild := true,
+  releaseProcess := releaseSteps,
+  releaseUseGlobalVersion := false,
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value
 )
 
 lazy val releaseSteps: Seq[ReleaseStep] = Seq(
