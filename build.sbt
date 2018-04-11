@@ -6,10 +6,9 @@ import Dependencies._
 
 lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
-  .settings(commonSettings)
+  .settings(commonSettings, publishSettings)
   .settings(
     skip in publish    := true,
-    publishArtifact    := false,
     sources in Compile := Seq.empty,
     sources in Test    := Seq.empty,
   )
