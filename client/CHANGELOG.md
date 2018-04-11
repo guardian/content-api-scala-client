@@ -20,6 +20,9 @@ The previous behaviour can be replicated very simply:
 val client = new GuardianContentClient(...) with ContentApiQueries
 ```
 
+## 11.54
+* Update content-api-models to 11.51 (to get `showAffiliateLinks` field)
+
 ## 11.53
 * Support `SearchQueryBase` in `GuardianContentClient#getResponse`.
 
