@@ -8,12 +8,13 @@ import scala.concurrent.{ExecutionContext, Future, Promise}
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClient {
 
-  private val http = new OkHttpClient.Builder()
+  protected def httpClientBuilder = new OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.SECONDS)
     .readTimeout(2, TimeUnit.SECONDS)
     .followRedirects(true)
     .connectionPool(new ConnectionPool(10, 60, TimeUnit.SECONDS))
-    .build()
+
+  protected val http = httpClientBuilder.build
 
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
 
