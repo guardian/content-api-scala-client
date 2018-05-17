@@ -13,7 +13,6 @@ object Dependencies {
 
   val defaultClientDeps = Seq(
     "com.squareup.okhttp3" % "okhttp" % "3.9.1",
-    "org.slf4j" % "slf4j-api" % "1.7.25"
   )
 
   val awsDeps = Seq(
