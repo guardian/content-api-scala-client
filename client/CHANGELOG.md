@@ -1,3 +1,7 @@
+## 12.1
+* Update content-api-models to 12.1 (new `campaign` tag type)
+* Allow OkHttp client to be overridden in the default client class
+
 ## 12.0
 
 ### Removed the dependency on OkHttp
