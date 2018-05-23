@@ -12,6 +12,7 @@ lazy val root = (project in file("."))
     releaseVersionFile := baseDirectory.value / "version.sbt",
     sources in Compile := Seq.empty,
     sources in Test    := Seq.empty,
+    Global / PgpKeys.useGpg := true
   )
 
 lazy val client = (project in file("client"))
@@ -74,7 +75,8 @@ lazy val publishSettings: Seq[Setting[_]] = Seq(
   releaseVcsSign := true,
   releaseCrossBuild := true,
   releaseProcess := releaseSteps,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  pgpSecretRing := pgpPublicRing.value
 )
 
 lazy val releaseSteps: Seq[ReleaseStep] = Seq(
