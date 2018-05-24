@@ -11,8 +11,7 @@ lazy val root = (project in file("."))
     skip in publish    := true,
     releaseVersionFile := baseDirectory.value / "version.sbt",
     sources in Compile := Seq.empty,
-    sources in Test    := Seq.empty,
-    Global / PgpKeys.useGpg := true
+    sources in Test    := Seq.empty
   )
 
 lazy val client = (project in file("client"))
