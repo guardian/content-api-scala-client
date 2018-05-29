@@ -1,7 +1,7 @@
 package com.gu.contentapi.client
 
 import com.gu.contentatom.thrift.{AtomData, AtomType}
-import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse}
+import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
 import com.gu.contentapi.client.model.{ItemQuery, SearchQuery, ContentApiError}
 import java.time.Instant
 import org.scalatest.concurrent.ScalaFutures
@@ -9,6 +9,7 @@ import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 object GuardianContentClientTest {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
@@ -128,4 +129,18 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     }
   }
 
+  it should "paginate through all results" in {
+    var pageCount = 0
+    val query = ContentApiClient.search
+      .q("brexit")
+      .fromDate(Instant.parse("2018-05-10T00:00:00.00Z"))
+      .toDate(Instant.parse("2018-05-11T23:59:59.99Z"))
+
+    val result = api.paginate(query) { _: SearchResponse => 
+      pageCount += 1 
+      Future.successful(())
+    }
+    
+    result.map { _ => pageCount should be (5) }
+  }
 }
