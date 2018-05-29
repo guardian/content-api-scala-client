@@ -54,7 +54,7 @@ trait ContentApiClient {
     context: ExecutionContext): Future[Unit] =
     f(r).flatMap { _ =>
       pager.getNextId(r) match {
-        case Some(id) => getResponse(next(q, id)).flatMap(paginate2(q, f)(_))
+        case Some(id) => getResponse(ContentApiClient.next(q, id)).flatMap(paginate2(q, f)(_))
         case _        => Future.successful(())
       }
     }
