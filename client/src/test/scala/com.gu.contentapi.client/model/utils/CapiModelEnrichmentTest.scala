@@ -142,9 +142,9 @@ class CapiModelEnrichmentTest extends FlatSpec with MockitoSugar with Matchers {
     f.content.designType shouldEqual MatchReport
   }
 
-  it should "have a designType of 'Recipe' when tag tone/recipe is present" in {
+  it should "have a designType of 'Recipe' when tag tone/recipes is present" in {
     val f = fixture
-    when(f.tag.id) thenReturn "tone/recipe"
+    when(f.tag.id) thenReturn "tone/recipes"
 
     f.content.designType shouldEqual Recipe
   }
