@@ -47,7 +47,7 @@ trait ContentApiClient {
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
     get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
 
-  private def paginate2[Q <: PaginatedApiQuery[Q], R](q: Q, f: R => Future[Unit])(r: R)(
+  private def paginate2[Q <: PaginatedApiQuery[Q] with OrderByParameter[Q], R](q: Q, f: R => Future[Unit])(r: R)(
     implicit
     decoder: Decoder.Aux[Q, R],
     pager: PaginatedApiResponse[R],
@@ -79,7 +79,7 @@ trait ContentApiClient {
     * @param f the side-effecting function applied to each page of results
     * @return a future resolving to the process of going through all pages
     */
-  def paginate[Q <: PaginatedApiQuery[Q], R](query: Q)(f: R => Future[Unit])(
+  def paginate[Q <: PaginatedApiQuery[Q] with OrderByParameter[Q], R](query: Q)(f: R => Future[Unit])(
     implicit 
     decoder: Decoder.Aux[Q, R],
     pager: PaginatedApiResponse[R],
@@ -109,6 +109,20 @@ trait ContentApiQueries {
   val filmReviews = FilmReviewsQuery()
   val videoStats = VideoStatsQuery()
   val stories = StoriesQuery()
-  def next[Q <: PaginatedApiQuery[Q]](q: Q, id: String) = NextQuery(q, id)
-  def prev[Q <: PaginatedApiQuery[Q]](q: Q, id: String) = PrevQuery(q, id)
+  def next[Q <: PaginatedApiQuery[Q] with OrderByParameter[Q]](q: Q, id: String) = NextQuery(normalize(q), id)
+  def prev[Q <: PaginatedApiQuery[Q] with OrderByParameter[Q]](q: Q, id: String) = PrevQuery(normalize(q), id)
+
+  private def normalize[Q <: PaginatedApiQuery[Q] with OrderByParameter[Q]]: Q => Q =
+    normalizePageSize andThen normalizeOrder
+
+  private def normalizePageSize[Q <: PaginatedApiQuery[Q] with OrderByParameter[Q]]: Q => Q = 
+    q => if (q.parameterHolder.contains("page-size")) q else q.pageSize(10)
+
+  private def normalizeOrder[Q <: PaginatedApiQuery[Q] with OrderByParameter[Q]]: Q => Q = 
+    q => if (q.parameterHolder.contains("order-by")) 
+      q 
+    else if (q.parameterHolder.contains("q"))
+      q.orderBy("relevance")
+    else
+      q.orderBy("newest")
 }

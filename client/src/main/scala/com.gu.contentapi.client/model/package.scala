@@ -5,5 +5,5 @@ package object model {
 
   private[model] def not[A](f: A => Boolean): A => Boolean = !f(_)
 
-  private[model] val isPaginationParameter = Set("page", "page-size")
+  private[model] val isPaginationParameter = Set("page")
 }
