@@ -32,4 +32,42 @@ class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with
     params.get("aBoolParam") should be (Some("true"))
   }
 
+  behavior of "Paginated queries"
+
+  it should "produce next/prev urls for 10 results ordered by relevance" in {
+    val query = ContentApiClient.search.q("brexit")
+    val next = ContentApiClient.next(query, "hello")
+    val prev = ContentApiClient.prev(query, "hello")
+    val nextP = next.parameters
+    val prevP = prev.parameters
+
+    next.pathSegment should startWith ("content/hello/next")
+    prev.pathSegment should startWith ("content/hello/prev")
+
+    nextP.get("q") should be (Some("brexit"))
+    prevP.get("q") should be (Some("brexit"))
+
+    nextP.get("page-size") should be (Some("10"))
+    prevP.get("page-size") should be (Some("10"))
+
+    nextP.get("order-by") should be (Some("relevance"))
+    prevP.get("order-by") should be (Some("relevance"))
+  }
+
+  it should "produce next/prev urls for 10 results order by newest" in {
+    val query = ContentApiClient.search
+    val next = ContentApiClient.next(query, "hello")
+    val prev = ContentApiClient.prev(query, "hello")
+    val nextP = next.parameters
+    val prevP = prev.parameters
+
+    next.pathSegment should startWith ("content/hello/next")
+    prev.pathSegment should startWith ("content/hello/prev")
+
+    nextP.get("page-size") should be (Some("10"))
+    prevP.get("page-size") should be (Some("10"))
+
+    nextP.get("order-by") should be (Some("newest"))
+    prevP.get("order-by") should be (Some("newest"))
+  }
 }
