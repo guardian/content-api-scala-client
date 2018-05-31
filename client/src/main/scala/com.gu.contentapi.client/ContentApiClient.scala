@@ -95,7 +95,7 @@ trait ContentApiClient {
     * @tparam R the type of response expected for `Q`
     * @param query the initial query
     * @param f a result-processing function
-    * @return a future of a list of result-processed results
+    * @return a future of an accumulated value
     */
   def paginateAccum[Q <: PaginatedApiQuery[Q], R, M](query: Q)(f: R => M, g: (M, M) => M)(
     implicit 
