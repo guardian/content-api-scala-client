@@ -116,12 +116,12 @@ trait ContentApiQueries {
     normalizePageSize andThen normalizeOrder
 
   private def normalizePageSize[Q <: PaginatedApiQuery[Q]]: Q => Q = 
-    q => if (q.parameterHolder.contains("page-size")) q else q.pageSize(10)
+    q => if (q.has("page-size")) q else q.pageSize(10)
 
   private def normalizeOrder[Q <: PaginatedApiQuery[Q]]: Q => Q = 
-    q => if (q.parameterHolder.contains("order-by")) 
+    q => if (q.has("order-by")) 
       q 
-    else if (q.parameterHolder.contains("q"))
+    else if (q.has("q"))
       q.orderBy("relevance")
     else
       q.orderBy("newest")
