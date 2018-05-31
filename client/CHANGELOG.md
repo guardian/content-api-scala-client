@@ -1,3 +1,11 @@
+## 12.2
+
+### New features
+
+* `paginate(query)(f)` unfolds a query until there are no more page results to process. `f` is a pure function processing a CAPI response and `paginate` returns a list of processed responses (wrappied in a `Future`)
+* `paginateAccum(query)(f, g)` folds over the results and accumulates into a final result. `f` transforms a response into an accumulated result, `g` [multiplies](https://en.wikipedia.org/wiki/Semigroup) two results together
+* `paginateFold(query)(f, m)` folds over the results by accumulating a final result. `f` takes two parameters: a response and the accumulated result so far.
+
 ## 12.1
 * Update content-api-models to 12.1 (new `campaign` tag type)
 * Allow OkHttp client to be overridden in the default client class
