@@ -108,6 +108,34 @@ trait ContentApiClient {
       case m :: Nil => m
       case ms => ms.reduce(g)
     }
+
+  /** Unfolds a query by accumulating its results
+    * 
+    * @tparam Q the type of a Content API query with pagination parameters
+    * @tparam R the type of response expected for `Q`
+    * @param query the initial query
+    * @param f a result-processing function
+    * @return a future of an accumulated value
+    */
+  def paginateFold[Q <: PaginatedApiQuery[Q], R, M](query: Q)(f: (R, M) => M, m: M)(
+    implicit 
+    decoder: Decoder.Aux[Q, R],
+    decoderNext: Decoder.Aux[NextQuery[Q], R],
+    pager: PaginatedApiResponse[R],
+    context: ExecutionContext
+  ): Future[M] = {
+    def paginateFoldIn(nextQuery: Option[NextQuery[Q]])(m: M): Future[M] = {
+      val req = nextQuery.map(getResponse(_)).getOrElse(getResponse(query))
+      req.flatMap { r: R =>
+        pager.getNextId(r) match {
+          case None => Future.successful(f(r, m))
+          case Some(id) => paginateFoldIn(Some(ContentApiClient.next(query, id)))(f(r, m))
+        }
+      }
+    }
+
+    paginateFoldIn(None)(m)
+  }
 }
 
 object ContentApiClient extends ContentApiQueries

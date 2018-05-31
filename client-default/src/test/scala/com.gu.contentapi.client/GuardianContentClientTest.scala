@@ -156,4 +156,18 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     
     result.futureValue should be (46)
   }
+
+  it should "fold over the results" in {
+    val query = ContentApiClient.search
+      .q("brexit")
+      .fromDate(Instant.parse("2018-05-10T00:00:00.00Z"))
+      .toDate(Instant.parse("2018-05-11T23:59:59.99Z"))
+      .orderBy("newest")
+    // http://content.guardianapis.com/search?q=brexit&from-date=2018-05-10T00:00:00.00Z&to-date=2018-05-11T23:59:59.99Z
+    // has 5 pages of results
+
+    val result = api.paginateFold(query)({ (r: SearchResponse, t: Int) => r.results.length + t }, 0)
+    
+    result.futureValue should be (46)
+  }
 }
