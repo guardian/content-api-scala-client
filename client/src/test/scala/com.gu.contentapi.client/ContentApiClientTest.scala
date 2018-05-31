@@ -1,12 +1,13 @@
 package com.gu.contentapi.client
 
+import com.gu.contentapi.client.model.ContentApiQuery
 import java.time.Instant
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Inspectors, Matchers, OptionValues}
 import scala.concurrent.{Future, ExecutionContext}
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside {
+class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
   private val api = new ContentApiClient {
     val apiKey = "TEST-API-KEY"
 
@@ -38,36 +39,23 @@ class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with
     val query = ContentApiClient.search.q("brexit")
     val next = ContentApiClient.next(query, "hello")
     val prev = ContentApiClient.prev(query, "hello")
-    val nextP = next.parameters
-    val prevP = prev.parameters
 
-    next.pathSegment should startWith ("content/hello/next")
-    prev.pathSegment should startWith ("content/hello/prev")
-
-    nextP.get("q") should be (Some("brexit"))
-    prevP.get("q") should be (Some("brexit"))
-
-    nextP.get("page-size") should be (Some("10"))
-    prevP.get("page-size") should be (Some("10"))
-
-    nextP.get("order-by") should be (Some("relevance"))
-    prevP.get("order-by") should be (Some("relevance"))
+    forEvery(Map(next -> "next", prev -> "prev"))(testPaginatedQuery("content/hello/", 10, "relevance", Some("brexit")))
   }
 
-  it should "produce next/prev urls for 10 results order by newest" in {
-    val query = ContentApiClient.search
+  it should "produce next/prev urls for 20 results order by newest" in {
+    val query = ContentApiClient.search.pageSize(20)
     val next = ContentApiClient.next(query, "hello")
     val prev = ContentApiClient.prev(query, "hello")
-    val nextP = next.parameters
-    val prevP = prev.parameters
 
-    next.pathSegment should startWith ("content/hello/next")
-    prev.pathSegment should startWith ("content/hello/prev")
+    forEvery(Map(next -> "next", prev -> "prev"))(testPaginatedQuery("content/hello/", 20, "newest"))
+  }
 
-    nextP.get("page-size") should be (Some("10"))
-    prevP.get("page-size") should be (Some("10"))
-
-    nextP.get("order-by") should be (Some("newest"))
-    prevP.get("order-by") should be (Some("newest"))
+  def testPaginatedQuery(pt: String, page: Int, ob: String, q: Option[String] = None)(params: (ContentApiQuery, String)) = {
+    val ps = params._1.parameters
+    params._1.pathSegment should startWith (pt + params._2)
+    ps.get("page-size") should be (Some(page.toString))
+    ps.get("order-by") should be (Some(ob))
+    q.map(q => ps.get("q") should be (Some(q))).getOrElse(succeed)
   }
 }
