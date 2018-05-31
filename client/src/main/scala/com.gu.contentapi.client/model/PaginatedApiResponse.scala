@@ -21,7 +21,7 @@ object PaginatedApiResponse {
   }
 
   implicit val itemResponse = new PaginatedApiResponse[ItemResponse] {
-    def getNextId = r => if (r.results.exists(res => r.pageSize.exists(res.length < _))) None else r.results.flatMap(_.lastOption.map(_.id))
+    def getNextId = r => r.results.filter(res => r.pageSize.exists(res.length < _)).flatMap(_.lastOption).map(_.id)
   }
 
   implicit val tagsResponse = new PaginatedApiResponse[TagsResponse] {
