@@ -117,7 +117,7 @@ trait ContentApiClient {
     * @param f a result-processing function
     * @return a future of an accumulated value
     */
-  def paginateFold[Q <: PaginatedApiQuery[Q], R, M](query: Q)(f: (R, M) => M, m: M)(
+  def paginateFold[Q <: PaginatedApiQuery[Q], R, M](query: Q)(m: M)(f: (R, M) => M)(
     implicit 
     decoder: Decoder.Aux[Q, R],
     decoderNext: Decoder.Aux[NextQuery[Q], R],

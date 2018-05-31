@@ -166,7 +166,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     // http://content.guardianapis.com/search?q=brexit&from-date=2018-05-10T00:00:00.00Z&to-date=2018-05-11T23:59:59.99Z
     // has 5 pages of results
 
-    val result = api.paginateFold(query)({ (r: SearchResponse, t: Int) => r.results.length + t }, 0)
+    val result = api.paginateFold(query)(0){ (r: SearchResponse, t: Int) => r.results.length + t }
     
     result.futureValue should be (46)
   }
