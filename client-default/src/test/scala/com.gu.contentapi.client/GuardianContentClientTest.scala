@@ -4,7 +4,7 @@ import com.gu.contentatom.thrift.{AtomData, AtomType}
 import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
 import com.gu.contentapi.client.model.{ItemQuery, SearchQuery, ContentApiError}
 import java.time.Instant
-import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.concurrent.{ IntegrationPatience, ScalaFutures }
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
 
@@ -18,7 +18,7 @@ object GuardianContentClientTest {
   }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable")
 }
 
-class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside {
+class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
   import GuardianContentClientTest.apiKey
   private val api = new GuardianContentClient(apiKey)
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
@@ -134,12 +134,13 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
       .q("brexit")
       .fromDate(Instant.parse("2018-05-10T00:00:00.00Z"))
       .toDate(Instant.parse("2018-05-11T23:59:59.99Z"))
+      .orderBy("oldest")
     // http://content.guardianapis.com/search?q=brexit&from-date=2018-05-10T00:00:00.00Z&to-date=2018-05-11T23:59:59.99Z
     // has 5 pages of results
 
-    val result = api.paginate(query){ r: SearchResponse => Math.max(r.pageSize, r.total - r.startIndex + 1) }
+    val result = api.paginate(query){ r: SearchResponse => r.results.length }
     
-    result.map { r => r should be (List(10, 10, 10, 10, 6)) }
+    result.futureValue should be (List(10, 10, 10, 10, 6))
   }
 
   it should "sum up the number of results" in {
@@ -147,11 +148,12 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
       .q("brexit")
       .fromDate(Instant.parse("2018-05-10T00:00:00.00Z"))
       .toDate(Instant.parse("2018-05-11T23:59:59.99Z"))
+      .orderBy("newest")
     // http://content.guardianapis.com/search?q=brexit&from-date=2018-05-10T00:00:00.00Z&to-date=2018-05-11T23:59:59.99Z
     // has 5 pages of results
 
-    val result = api.paginateAccum(query)({ r: SearchResponse => Math.max(r.pageSize, r.total - r.startIndex + 1) }, { (a: Int, b: Int) => a + b })
+    val result = api.paginateAccum(query)({ r: SearchResponse => r.results.length }, { (a: Int, b: Int) => a + b })
     
-    result.map { r => r should be (46) }
+    result.futureValue should be (46)
   }
 }
