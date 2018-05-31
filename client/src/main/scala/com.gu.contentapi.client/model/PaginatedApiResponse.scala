@@ -9,8 +9,6 @@ import com.gu.contentatom.thrift.Atom
 trait PaginatedApiResponse[Response] {
   /** the id for a next query, if any */
   def getNextId: Response => Option[String]
-  /** the id for a prev query, if any */
-  def getPrevId: Response => Option[String]
 }
 
 /** Instances of [[PaginatedApiResponse]] for response types
@@ -19,23 +17,19 @@ trait PaginatedApiResponse[Response] {
 object PaginatedApiResponse {
 
   implicit val searchResponse = new PaginatedApiResponse[SearchResponse] {
-    def getNextId = r => if (r.pages == r.currentPage) None else r.results.lastOption.map(_.id)
-    def getPrevId = r => if (1 == r.currentPage) None else r.results.headOption.map(_.id)
+    def getNextId = r => if (r.results.length < r.pageSize) None else r.results.lastOption.map(_.id)
   }
 
   implicit val itemResponse = new PaginatedApiResponse[ItemResponse] {
-    def getNextId = r => if (r.pages.exists(ps => r.currentPage.exists(cp => ps == cp))) None else r.results.flatMap(_.lastOption.map(_.id))
-    def getPrevId = r => if (r.currentPage.exists(cp => 1 == cp)) None else r.results.flatMap(_.lastOption.map(_.id))
+    def getNextId = r => if (r.results.exists(res => r.pageSize.exists(res.length < _))) None else r.results.flatMap(_.lastOption.map(_.id))
   }
 
   implicit val tagsResponse = new PaginatedApiResponse[TagsResponse] {
-    def getNextId = r => if (r.pages == r.currentPage) None else r.results.lastOption.map(_.id)
-    def getPrevId = r => if (1 == r.currentPage) None else r.results.headOption.map(_.id)
+    def getNextId = r => if (r.results.length < r.pageSize) None else r.results.lastOption.map(_.id)
   }
 
   implicit val atomsResponse = new PaginatedApiResponse[AtomsResponse] {
     def getNextId = r => if (r.pages == r.currentPage) None else r.results.lastOption.map(_.id)
-    def getPrevId = r => if (1 == r.currentPage) None else r.results.headOption.map(_.id)
   }
 
 }
