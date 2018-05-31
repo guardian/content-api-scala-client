@@ -130,7 +130,6 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   }
 
   it should "paginate through all results" in {
-    var pageCount = 0
     val query = ContentApiClient.search
       .q("brexit")
       .fromDate(Instant.parse("2018-05-10T00:00:00.00Z"))
@@ -138,11 +137,21 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     // http://content.guardianapis.com/search?q=brexit&from-date=2018-05-10T00:00:00.00Z&to-date=2018-05-11T23:59:59.99Z
     // has 5 pages of results
 
-    val result = api.paginate(query) { _: SearchResponse => 
-      pageCount += 1 
-      Future.successful(())
-    }
+    val result = api.paginate(query){ r: SearchResponse => Math.max(r.pageSize, r.total - r.startIndex + 1) }
     
-    result.map { _ => pageCount should be (5) }
+    result.map { r => r should be (List(10, 10, 10, 10, 6)) }
+  }
+
+  it should "sum up the number of results" in {
+    val query = ContentApiClient.search
+      .q("brexit")
+      .fromDate(Instant.parse("2018-05-10T00:00:00.00Z"))
+      .toDate(Instant.parse("2018-05-11T23:59:59.99Z"))
+    // http://content.guardianapis.com/search?q=brexit&from-date=2018-05-10T00:00:00.00Z&to-date=2018-05-11T23:59:59.99Z
+    // has 5 pages of results
+
+    val result = api.paginateAccum(query)({ r: SearchResponse => Math.max(r.pageSize, r.total - r.startIndex + 1) }, { (a: Int, b: Int) => a + b })
+    
+    result.map { r => r should be (46) }
   }
 }

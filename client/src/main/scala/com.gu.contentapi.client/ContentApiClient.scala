@@ -47,15 +47,11 @@ trait ContentApiClient {
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
     get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
 
-  private def paginate2[Q <: PaginatedApiQuery[Q], R](q: Q, f: R => Future[Unit])(r: R)(
-    implicit
-    decoder: Decoder.Aux[Q, R],
-    pager: PaginatedApiResponse[R],
-    context: ExecutionContext): Future[Unit] =
-    f(r).flatMap { _ =>
-      pager.getNextId(r) match {
-        case Some(id) => getResponse(ContentApiClient.next(q, id)).flatMap(paginate2(q, f)(_))
-        case _        => Future.successful(())
+  private def unfoldM[A, B](f: B => Option[(A, Future[B])])(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
+    fb.flatMap { b =>
+      f(b) match {
+        case None => Future.successful(Nil)
+        case Some((a, b)) => unfoldM(f)(b).map(a :: _)
       }
     }
 
@@ -74,21 +70,43 @@ trait ContentApiClient {
     context: ExecutionContext): Future[decoder.Response] =
     fetchResponse(query) map decoder.decode
 
-  /** Runs a query and process all the pages of results.
+  /** Unfolds a query to its results, page by page
     * 
     * @tparam Q the type of a Content API query with pagination parameters
-    * @tparam R the type of response corresponding to `Q`
+    * @tparam R the type of response expected for `Q`
     * @param query the initial query
-    * @param f the side-effecting function applied to each page of results
-    * @return a future resolving to the process of going through all pages
+    * @param f a result-processing function
+    * @return a future of a list of result-processed results
     */
-  def paginate[Q <: PaginatedApiQuery[Q], R](query: Q)(f: R => Future[Unit])(
+  def paginate[Q <: PaginatedApiQuery[Q], R, M](query: Q)(f: R => M)(
     implicit 
     decoder: Decoder.Aux[Q, R],
     pager: PaginatedApiResponse[R],
     context: ExecutionContext
-  ): Future[Unit] =
-    getResponse(query).flatMap(paginate2(query, f))
+  ): Future[List[M]] =
+    unfoldM { r: R =>
+      pager.getNextId(r).map(id => (f(r), getResponse(ContentApiClient.next(query, id))))
+    }(getResponse(query))
+
+  /** Unfolds a query by accumulating its results
+    * 
+    * @tparam Q the type of a Content API query with pagination parameters
+    * @tparam R the type of response expected for `Q`
+    * @param query the initial query
+    * @param f a result-processing function
+    * @return a future of a list of result-processed results
+    */
+  def paginateAccum[Q <: PaginatedApiQuery[Q], R, M](query: Q)(f: R => M, g: (M, M) => M)(
+    implicit 
+    decoder: Decoder.Aux[Q, R],
+    pager: PaginatedApiResponse[R],
+    context: ExecutionContext
+  ): Future[M] =
+    paginate(query)(f).map {
+      case Nil => throw new RuntimeException("Something went wrong with the query")
+      case m :: Nil => m
+      case m1 :: m2 :: ms => ms.foldLeft(g(m1, m2))(g)
+    }
 }
 
 object ContentApiClient extends ContentApiQueries
