@@ -29,7 +29,7 @@ object PaginatedApiResponse {
   }
 
   implicit val atomsResponse = new PaginatedApiResponse[AtomsResponse] {
-    def getNextId = r => if (r.pages == r.currentPage) None else r.results.lastOption.map(_.id)
+    def getNextId = r => if (r.results.length < r.pageSize) None else r.results.lastOption.map(_.id)
   }
 
 }
