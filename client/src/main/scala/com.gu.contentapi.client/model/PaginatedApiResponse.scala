@@ -4,7 +4,7 @@ import com.gu.contentapi.client.model.v1._
 import com.gu.contentatom.thrift.Atom
 
 /** Typeclass witnessing how to extract the id for
-  * a Next or Prev query
+  * a paginated query
   */
 trait PaginatedApiResponse[Response] {
   /** the id for a next query, if any */

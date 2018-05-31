@@ -46,6 +46,5 @@ private[client] object Decoder {
   implicit val storiesQuery = apply[StoriesQuery, StoriesResponse](StoriesResponse)
   implicit def searchQueryBase[T <: SearchQueryBase[T]] = apply[T, SearchResponse](SearchResponse)
   implicit def nextQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = apply[NextQuery[Q], d.Response](d.codec)
-  implicit def prevQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = apply[PrevQuery[Q], d.Response](d.codec)
 
 }

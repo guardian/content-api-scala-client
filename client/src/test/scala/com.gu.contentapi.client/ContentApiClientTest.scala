@@ -35,25 +35,23 @@ class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with
 
   behavior of "Paginated queries"
 
-  it should "produce next/prev urls for 10 results ordered by relevance" in {
+  it should "produce next urls for 10 results ordered by relevance" in {
     val query = ContentApiClient.search.q("brexit")
     val next = ContentApiClient.next(query, "hello")
-    val prev = ContentApiClient.prev(query, "hello")
 
-    forEvery(Map(next -> "next", prev -> "prev"))(testPaginatedQuery("content/hello/", 10, "relevance", Some("brexit")))
+    testPaginatedQuery("content/hello/next", 10, "relevance", Some("brexit"))(next)
   }
 
-  it should "produce next/prev urls for 20 results order by newest" in {
+  it should "produce next urls for 20 results order by newest" in {
     val query = ContentApiClient.search.pageSize(20)
     val next = ContentApiClient.next(query, "hello")
-    val prev = ContentApiClient.prev(query, "hello")
 
-    forEvery(Map(next -> "next", prev -> "prev"))(testPaginatedQuery("content/hello/", 20, "newest"))
+    testPaginatedQuery("content/hello/", 20, "newest")(next)
   }
 
-  def testPaginatedQuery(pt: String, page: Int, ob: String, q: Option[String] = None)(params: (ContentApiQuery, String)) = {
-    val ps = params._1.parameters
-    params._1.pathSegment should startWith (pt + params._2)
+  def testPaginatedQuery(pt: String, page: Int, ob: String, q: Option[String] = None)(query: ContentApiQuery) = {
+    val ps = query.parameters
+    query.pathSegment should startWith (pt)
     ps.get("page-size") should be (Some(page.toString))
     ps.get("order-by") should be (Some(ob))
     q.map(q => ps.get("q") should be (Some(q))).getOrElse(succeed)

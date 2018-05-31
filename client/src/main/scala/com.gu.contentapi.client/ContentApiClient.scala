@@ -129,7 +129,6 @@ trait ContentApiQueries {
   val videoStats = VideoStatsQuery()
   val stories = StoriesQuery()
   def next[Q <: PaginatedApiQuery[Q]](q: Q, id: String) = NextQuery(normalize(q), id)
-  def prev[Q <: PaginatedApiQuery[Q]](q: Q, id: String) = PrevQuery(normalize(q), id)
 
   private def normalize[Q <: PaginatedApiQuery[Q]]: Q => Q =
     normalizePageSize andThen normalizeOrder
