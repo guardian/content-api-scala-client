@@ -47,11 +47,11 @@ trait ContentApiClient {
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
     get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
 
-  private def unfoldM[A, B](f: B => Option[(A, Future[B])])(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
+  private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
     fb.flatMap { b =>
       f(b) match {
-        case None => Future.successful(Nil)
-        case Some((a, b)) => unfoldM(f)(b).map(a :: _)
+        case (a, None) => Future.successful(a :: Nil)
+        case (a, Some(b)) => unfoldM(f)(b).map(a :: _)
       }
     }
 
@@ -85,7 +85,8 @@ trait ContentApiClient {
     context: ExecutionContext
   ): Future[List[M]] =
     unfoldM { r: R =>
-      pager.getNextId(r).map(id => (f(r), getResponse(ContentApiClient.next(query, id))))
+      val nextQuery = pager.getNextId(r).map { id => getResponse(ContentApiClient.next(query, id)) }
+      (f(r), nextQuery)      
     }(getResponse(query))
 
   /** Unfolds a query by accumulating its results
