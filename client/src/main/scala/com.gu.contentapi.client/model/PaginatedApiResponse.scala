@@ -20,10 +20,6 @@ object PaginatedApiResponse {
     def getNextId = r => if (r.results.length < r.pageSize) None else r.results.lastOption.map(_.id)
   }
 
-  implicit val itemResponse = new PaginatedApiResponse[ItemResponse] {
-    def getNextId = r => r.results.filter(res => r.pageSize.exists(res.length < _)).flatMap(_.lastOption).map(_.id)
-  }
-
   implicit val tagsResponse = new PaginatedApiResponse[TagsResponse] {
     def getNextId = r => if (r.results.length < r.pageSize) None else r.results.lastOption.map(_.id)
   }
