@@ -106,7 +106,7 @@ trait ContentApiClient {
     paginate(query)(f).map {
       case Nil => throw new RuntimeException("Something went wrong with the query")
       case m :: Nil => m
-      case m1 :: m2 :: ms => ms.foldLeft(g(m1, m2))(g)
+      case ms => ms.reduce(g)
     }
 }
 
