@@ -192,6 +192,14 @@ case class StoriesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   override def pathSegment: String = "stories"
 }
 
+case class NextQuery[Q <: PaginatedApiQuery[Q]](originalQuery: Q, contentId: String)
+  extends ContentApiQuery {
+  
+  def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter))
+
+  override def pathSegment: String = s"""content/${contentId}/next"""
+}
+
 trait StoryParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def showAtoms = StringParameter("show-atoms")
   def name = StringParameter("name")

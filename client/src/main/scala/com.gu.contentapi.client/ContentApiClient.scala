@@ -8,6 +8,8 @@ import com.gu.contentapi.client.utils.QueryStringParams
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ContentApiClient {
+  import Decoder._
+  import PaginatedApiResponse._
   
   /** Your API key */
   def apiKey: String
@@ -45,81 +47,95 @@ trait ContentApiClient {
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
     get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
 
-  /* Exposed API */
+  private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
+    fb.flatMap { b =>
+      f(b) match {
+        case (a, None) => Future.successful(a :: Nil)
+        case (a, Some(b)) => unfoldM(f)(b).map(a :: _)
+      }
+    }
 
   def url(contentApiQuery: ContentApiQuery): String =
     contentApiQuery.getUrl(targetUrl, parameters)
+    
+  /** Runs the query against the Content API.
+    * 
+    * @tparam Q the type of a Content API query
+    * @param query the query
+    * @return a future resolving to an unmarshalled response
+    */
+  def getResponse[Q <: ContentApiQuery](query: Q)(
+    implicit 
+    decoder: Decoder[Q],
+    context: ExecutionContext): Future[decoder.Response] =
+    fetchResponse(query) map decoder.decode
 
-  def getResponse(itemQuery: ItemQuery)(implicit context: ExecutionContext): Future[ItemResponse] =
-    fetchResponse(itemQuery) map { response =>
-      ThriftDeserializer.deserialize(response, ItemResponse)
+  /** Unfolds a query to its results, page by page
+    * 
+    * @tparam Q the type of a Content API query with pagination parameters
+    * @tparam R the type of response expected for `Q`
+    * @param query the initial query
+    * @param f a result-processing function
+    * @return a future of a list of result-processed results
+    */
+  def paginate[Q <: PaginatedApiQuery[Q], R, M](query: Q)(f: R => M)(
+    implicit 
+    decoder: Decoder.Aux[Q, R],
+    pager: PaginatedApiResponse[R],
+    context: ExecutionContext
+  ): Future[List[M]] =
+    unfoldM { r: R =>
+      val nextQuery = pager.getNextId(r).map { id => getResponse(ContentApiClient.next(query, id)) }
+      (f(r), nextQuery)      
+    }(getResponse(query))
+
+  /** Unfolds a query by accumulating its results
+    * 
+    * @tparam Q the type of a Content API query with pagination parameters
+    * @tparam R the type of response expected for `Q`
+    * @param query the initial query
+    * @param f a result-processing function
+    * @return a future of an accumulated value
+    */
+  def paginateAccum[Q <: PaginatedApiQuery[Q], R, M](query: Q)(f: R => M, g: (M, M) => M)(
+    implicit 
+    decoder: Decoder.Aux[Q, R],
+    pager: PaginatedApiResponse[R],
+    context: ExecutionContext
+  ): Future[M] =
+    paginate(query)(f).map {
+      case Nil => throw new RuntimeException("Something went wrong with the query")
+      case m :: Nil => m
+      case ms => ms.reduce(g)
     }
 
-  def getResponse(searchQuery: SearchQueryBase[_])(implicit context: ExecutionContext): Future[SearchResponse] =
-    fetchResponse(searchQuery) map { response =>
-      ThriftDeserializer.deserialize(response, SearchResponse)
+  /** Unfolds a query by accumulating its results
+    * 
+    * @tparam Q the type of a Content API query with pagination parameters
+    * @tparam R the type of response expected for `Q`
+    * @param query the initial query
+    * @param f a result-processing function
+    * @return a future of an accumulated value
+    */
+  def paginateFold[Q <: PaginatedApiQuery[Q], R, M](query: Q)(m: M)(f: (R, M) => M)(
+    implicit 
+    decoder: Decoder.Aux[Q, R],
+    decoderNext: Decoder.Aux[NextQuery[Q], R],
+    pager: PaginatedApiResponse[R],
+    context: ExecutionContext
+  ): Future[M] = {
+    def paginateFoldIn(nextQuery: Option[NextQuery[Q]])(m: M): Future[M] = {
+      val req = nextQuery.map(getResponse(_)).getOrElse(getResponse(query))
+      req.flatMap { r: R =>
+        pager.getNextId(r) match {
+          case None => Future.successful(f(r, m))
+          case Some(id) => paginateFoldIn(Some(ContentApiClient.next(query, id)))(f(r, m))
+        }
+      }
     }
 
-  def getResponse(tagsQuery: TagsQuery)(implicit context: ExecutionContext): Future[TagsResponse] =
-    fetchResponse(tagsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, TagsResponse)
-    }
-
-  def getResponse(sectionsQuery: SectionsQuery)(implicit context: ExecutionContext): Future[SectionsResponse] =
-    fetchResponse(sectionsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, SectionsResponse)
-    }
-
-  def getResponse(editionsQuery: EditionsQuery)(implicit context: ExecutionContext): Future[EditionsResponse] =
-    fetchResponse(editionsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, EditionsResponse)
-    }
-
-  def getResponse(removedContentQuery: RemovedContentQuery)(implicit context: ExecutionContext): Future[RemovedContentResponse] =
-    fetchResponse(removedContentQuery) map { response =>
-      ThriftDeserializer.deserialize(response, RemovedContentResponse)
-    }
-
-  def getResponse(videoStatsQuery: VideoStatsQuery)(implicit context: ExecutionContext): Future[VideoStatsResponse] =
-    fetchResponse(videoStatsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, VideoStatsResponse)
-    }
-
-  def getResponse(atomsQuery: AtomsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(atomsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(recipesQuery: RecipesQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(recipesQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(reviewsQuery: ReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(reviewsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(gameReviewsQuery: GameReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(gameReviewsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(restaurantReviewsQuery: RestaurantReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(restaurantReviewsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(filmReviewsQuery: FilmReviewsQuery)(implicit context: ExecutionContext): Future[AtomsResponse] =
-    fetchResponse(filmReviewsQuery) map { response =>
-      ThriftDeserializer.deserialize(response, AtomsResponse)
-    }
-
-  def getResponse(storiesQuery: StoriesQuery)(implicit context: ExecutionContext): Future[StoriesResponse] =
-    fetchResponse(storiesQuery) map { response =>
-      ThriftDeserializer.deserialize(response, StoriesResponse)
-    }
-
+    paginateFoldIn(None)(m)
+  }
 }
 
 object ContentApiClient extends ContentApiQueries
@@ -140,4 +156,19 @@ trait ContentApiQueries {
   val filmReviews = FilmReviewsQuery()
   val videoStats = VideoStatsQuery()
   val stories = StoriesQuery()
+  def next[Q <: PaginatedApiQuery[Q]](q: Q, id: String) = NextQuery(normalize(q), id)
+
+  private def normalize[Q <: PaginatedApiQuery[Q]]: Q => Q =
+    normalizePageSize andThen normalizeOrder
+
+  private def normalizePageSize[Q <: PaginatedApiQuery[Q]]: Q => Q = 
+    q => if (q.has("page-size")) q else q.pageSize(10)
+
+  private def normalizeOrder[Q <: PaginatedApiQuery[Q]]: Q => Q = 
+    q => if (q.has("order-by")) 
+      q 
+    else if (q.has("q"))
+      q.orderBy("relevance")
+    else
+      q.orderBy("newest")
 }

@@ -1,12 +1,13 @@
 package com.gu.contentapi.client
 
+import com.gu.contentapi.client.model.ContentApiQuery
 import java.time.Instant
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Inspectors, Matchers, OptionValues}
 import scala.concurrent.{Future, ExecutionContext}
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside {
+class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
   private val api = new ContentApiClient {
     val apiKey = "TEST-API-KEY"
 
@@ -32,4 +33,27 @@ class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with
     params.get("aBoolParam") should be (Some("true"))
   }
 
+  behavior of "Paginated queries"
+
+  it should "produce next urls for 10 results ordered by relevance" in {
+    val query = ContentApiClient.search.q("brexit")
+    val next = ContentApiClient.next(query, "hello")
+
+    testPaginatedQuery("content/hello/next", 10, "relevance", Some("brexit"))(next)
+  }
+
+  it should "produce next urls for 20 results order by newest" in {
+    val query = ContentApiClient.search.pageSize(20)
+    val next = ContentApiClient.next(query, "hello")
+
+    testPaginatedQuery("content/hello/", 20, "newest")(next)
+  }
+
+  def testPaginatedQuery(pt: String, page: Int, ob: String, q: Option[String] = None)(query: ContentApiQuery) = {
+    val ps = query.parameters
+    query.pathSegment should startWith (pt)
+    ps.get("page-size") should be (Some(page.toString))
+    ps.get("order-by") should be (Some(ob))
+    q.map(q => ps.get("q") should be (Some(q))).getOrElse(succeed)
+  }
 }

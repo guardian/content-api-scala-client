@@ -25,6 +25,8 @@ trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
 
   def withParameters(parameterMap: Map[String, Parameter]): Owner
 
+  def has(param: String) = parameterHolder.contains(param)
+
   protected def parameterHolder: Map[String, Parameter]
 
   def parameters: Map[String, String] =
