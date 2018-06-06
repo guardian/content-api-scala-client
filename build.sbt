@@ -66,6 +66,8 @@ lazy val awsSettings: Seq[Setting[_]] = Seq(
 )
 
 lazy val publishSettings: Seq[Setting[_]] = Seq(
+  useGpg := true,
+  pgpSecretRing := pgpPublicRing.value,
   resolvers += Resolver.sonatypeRepo("releases"),
   pomIncludeRepository := { _ => false },
   publishTo := sonatypePublishTo.value,
