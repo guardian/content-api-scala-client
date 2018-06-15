@@ -3,7 +3,7 @@ import sbt._
 object Dependencies {
   val scalaVersions = Seq("2.11.12", "2.12.6")
 
-  val CapiModelsVersion = "12.1"
+  val CapiModelsVersion = "12.5"
 
   val clientDeps = Seq(
     "com.gu" %% "content-api-models-scala" % CapiModelsVersion,
