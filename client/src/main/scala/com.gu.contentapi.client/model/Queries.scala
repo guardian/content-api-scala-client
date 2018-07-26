@@ -69,6 +69,8 @@ case class RemovedContentQuery(parameterHolder: Map[String, Parameter] = Map.emp
   with OrderByParameter[RemovedContentQuery]
   with UseDateParameter[RemovedContentQuery]{
 
+  def ids = StringParameter("ids")
+
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   def pathSegment: String = "content/removed"
