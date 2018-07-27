@@ -1,3 +1,6 @@
+## 12.6
+* [#272](https://github.com/guardian/content-api-scala-client/pull/272) Adds ids parameter to RemovedContentQuery
+
 ## 12.5
 * bump content-api-models to 12.5 (adds `resultsWithLastModified` to `RemovedContentResponse`)
 
