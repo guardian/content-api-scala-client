@@ -241,6 +241,18 @@ client.getResponse(expiredContentQuery ) map { response =>
 }
 ```
 
+### Pagination
+The client allows you to paginate through results in the following ways:
+* `paginate(query)(f)` unfolds a query until there are no more page results to process. `f` is a pure function processing a CAPI response and `paginate` returns a list of processed responses (wrapped in a `Future`)
+* `paginateAccum(query)(f, g)` folds over the results and accumulates into a final result. `f` transforms a response into an accumulated result, `g` [multiplies](https://en.wikipedia.org/wiki/Semigroup) two results together
+* `paginateFold(query)(f, m)` folds over the results by accumulating a final result. `f` takes two parameters: a response and the accumulated result so far.
+
+E.g. the following simply sums the number of results:
+
+```
+val result: Future[Int] = client.paginateFold(query)(0){ (r: SearchResponse, t: Int) => r.results.length + t }
+```
+
 ## Explore in the REPL
 
 One easy way to get started with the client is to try it in the Scala REPL.
