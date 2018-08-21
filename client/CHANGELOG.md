@@ -1,3 +1,6 @@
+## 12.7
+* bump content-api-models to 12.7 (adds `googlePodcastsUrl` and `spotifyUrl` to the Tag Podcast model)
+
 ## 12.6
 * [#272](https://github.com/guardian/content-api-scala-client/pull/272) Adds ids parameter to RemovedContentQuery
 
