@@ -139,7 +139,7 @@ case class AtomUsageQuery(atomType: AtomType, atomId: String, parameterHolder: M
   
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterHolder = parameterMap)
 
-  override def pathSegment: String = s"atom/$atomType/$atomId/usage"
+  override def pathSegment: String = s"atom/${atomType.toString.toLowerCase}/$atomId/usage"
 }
 
 case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
