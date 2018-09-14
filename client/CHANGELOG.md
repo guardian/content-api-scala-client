@@ -1,3 +1,6 @@
+## 12.9
+* Fix a bug in the new atom usage API where the URL contained uppercase characters
+
 ## 12.8
 * [#277](https://github.com/guardian/content-api-scala-client/pull/277) Add support for atom usage queries
 * bump content-api-models to 12.8 (adds `ChartAtom`)
