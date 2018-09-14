@@ -1,3 +1,7 @@
+## 12.8
+* [#277](https://github.com/guardian/content-api-scala-client/pull/277) Add support for atom usage queries
+* bump content-api-models to 12.8 (adds `ChartAtom`)
+
 ## 12.7
 * bump content-api-models to 12.7 (adds `googlePodcastsUrl` and `spotifyUrl` to the Tag Podcast model)
 
