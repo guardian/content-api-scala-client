@@ -1,19 +1,26 @@
 package com.gu.contentapi.client
 
-import com.gu.contentapi.client.model.ContentApiQuery
+import com.gu.contentapi.client.model._
 import java.time.Instant
+
+import com.gu.contentapi.client.model.v1.{ErrorResponse, SearchResponse}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Inspectors, Matchers, OptionValues}
-import scala.concurrent.{Future, ExecutionContext}
+import org.scalatest.time.{Seconds, Span}
+import org.scalatest._
+
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
   private val api = new ContentApiClient {
     val apiKey = "TEST-API-KEY"
 
-    def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext) = Future.failed(new Throwable("This will never get called"))
+    def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext) = {
+      Future.successful(HttpResponse(Array(), 500, "status"))
+    }
   }
 
+  implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
   it should "correctly add API key to request" in {
     api.url(ContentApiClient.search) should include(s"api-key=${api.apiKey}")
   }
@@ -47,6 +54,18 @@ class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with
     val next = ContentApiClient.next(query, "hello")
 
     testPaginatedQuery("content/hello/", 20, "newest")(next)
+  }
+
+  it should "recover gracefully from error" in {
+
+    val query = SearchQuery()
+    val errorTest = api.paginateFold(query)(Seq(): Seq[SearchResponse]){
+      (response: SearchResponse, acc: Seq[SearchResponse]) => acc :+ response
+    } recover {
+      case graceful: ContentApiError => succeed
+      case notGraceful => fail("Threw the wrong exception")
+    }
+    errorTest.futureValue
   }
 
   def testPaginatedQuery(pt: String, page: Int, ob: String, q: Option[String] = None)(query: ContentApiQuery) = {
