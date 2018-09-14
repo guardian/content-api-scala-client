@@ -5,6 +5,7 @@ import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.gu.contentapi.client.utils.QueryStringParams
+import com.gu.contentatom.thrift.AtomType
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ContentApiClient {
@@ -149,6 +150,7 @@ trait ContentApiQueries {
   val editions = EditionsQuery()
   val removedContent = RemovedContentQuery()
   val atoms = AtomsQuery()
+  def atomUsage(atomType: AtomType, atomId: String) = AtomUsageQuery(atomType, atomId)
   val recipes = RecipesQuery()
   val reviews = ReviewsQuery()
   val gameReviews = GameReviewsQuery()

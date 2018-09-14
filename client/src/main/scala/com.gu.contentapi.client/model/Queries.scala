@@ -2,6 +2,7 @@ package com.gu.contentapi.client.model
 
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentapi.client.{Parameter, Parameters}
+import com.gu.contentatom.thrift.AtomType
 
 sealed trait ContentApiQuery {
   def parameters: Map[String, String]
@@ -130,6 +131,15 @@ case class AtomsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   override def pathSegment: String = "atoms"
+}
+
+case class AtomUsageQuery(atomType: AtomType, atomId: String, parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery
+  with PaginationParameters[AtomUsageQuery] {
+  
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterHolder = parameterMap)
+
+  override def pathSegment: String = s"atom/$atomType/$atomId/usage"
 }
 
 case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
