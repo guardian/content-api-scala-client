@@ -1,5 +1,5 @@
 ## 12.10
-* Bump version of content-api-models to 12.9
+* Bump version of content-api-models to 12.10
 
 ## 12.9
 * Fix a bug in the new atom usage API where the URL contained uppercase characters
