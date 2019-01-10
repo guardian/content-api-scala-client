@@ -1,5 +1,5 @@
-## 12.13
-* Bump version of content-api-models to 12.13 (adds support for the audio atom).
+## 12.14
+* Bump version of content-api-models to 12.14 (adds support for the audio atom).
 
 ## 12.10
 * Bump version of content-api-models to 12.10 (fixes namespacing of the new chart atom).
