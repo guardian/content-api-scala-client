@@ -1,3 +1,6 @@
+## 12.15
+* Add support for `use-date` parameter in atoms queries
+
 ## 12.14
 * Bump version of content-api-models to 12.14 (adds support for the audio atom).
 
