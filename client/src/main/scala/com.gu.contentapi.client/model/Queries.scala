@@ -125,6 +125,7 @@ case class AtomsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery
   with AtomsParameters[AtomsQuery]
   with PaginationParameters[AtomsQuery]
+  with UseDateParameter[AtomsQuery]
   with OrderByParameter[AtomsQuery]
   with FilterSearchParameters[AtomsQuery] {
 
