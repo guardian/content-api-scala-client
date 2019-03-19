@@ -140,7 +140,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
 
     val result = api.paginate(query){ r: SearchResponse => r.results.length }
     
-    result.futureValue should be (List(10, 10, 10, 10, 6))
+    result.futureValue should be (List(10, 10, 10, 10, 2))
   }
 
   it should "sum up the number of results" in {
@@ -154,7 +154,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
 
     val result = api.paginateAccum(query)({ r: SearchResponse => r.results.length }, { (a: Int, b: Int) => a + b })
     
-    result.futureValue should be (46)
+    result.futureValue should be (42)
   }
 
   it should "fold over the results" in {
@@ -168,6 +168,6 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
 
     val result = api.paginateFold(query)(0){ (r: SearchResponse, t: Int) => r.results.length + t }
     
-    result.futureValue should be (46)
+    result.futureValue should be (42)
   }
 }
