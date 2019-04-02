@@ -35,7 +35,7 @@ Then, create your own client by extending the `ContentApiClient` trait and imple
 ```scala
 import play.api.libs.ws.WSClient
 
-class MyContentApiClient(ws: WSClient) extends ContentApiClient
+class ContentApiClient(ws: WSClient) extends ContentApiClient
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] =
     ws.url(url).withHttpHeaders(headers: _*).get.map(r => HttpResponse(r.bodyAsBytes, r.status, r.statusText))
 }
