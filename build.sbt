@@ -29,7 +29,7 @@ lazy val aws = (project in file("aws"))
 
 lazy val commonSettings: Seq[Setting[_]] = Metadata.settings ++ Seq(
   crossScalaVersions      := scalaVersions,
-  scalaVersion            := scalaVersions.min,
+  scalaVersion            := scalaVersions.max,
   javacOptions            ++= Seq("-source", "1.8", "-target", "1.8"),
   scalacOptions           ++= Seq("-deprecation", "-unchecked"),
 )
@@ -72,7 +72,6 @@ lazy val publishSettings: Seq[Setting[_]] = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
   releaseVcsSign := true,
-  releaseCrossBuild := true,
   releaseProcess := releaseSteps,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   pgpSecretRing := pgpPublicRing.value
