@@ -1,3 +1,7 @@
+## 14.0 (13.0 is skipped)
+
+* Upgrades to Scrooge 19.3, which uses libthrift 0.10
+
 ## 12.15
 * Add support for `use-date` parameter in atoms queries
 
