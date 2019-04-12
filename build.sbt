@@ -66,7 +66,7 @@ lazy val awsSettings: Seq[Setting[_]] = Seq(
 )
 
 lazy val publishSettings: Seq[Setting[_]] = Seq(
-  resolvers += Resolver.sonatypeRepo("releases"),
+  resolvers += Resolver.sonatypeRepo("public"),
   pomIncludeRepository := { _ => false },
   publishTo := sonatypePublishTo.value,
   publishMavenStyle := true,
