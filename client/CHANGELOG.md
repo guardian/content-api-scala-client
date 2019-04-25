@@ -1,3 +1,7 @@
+## 14.2
+
+* Version 14.1 of the models dependency was empty
+
 ## 14.0 (13.0 is skipped)
 
 * Upgrades to Scrooge 19.3, which uses libthrift 0.10
