@@ -20,7 +20,7 @@ trait Decoder[Query] {
   def decode: Array[Byte] => Response = ThriftDeserializer.deserialize(_, codec)
 }
 
-private[client] object Decoder {
+object Decoder {
 
   type Aux[Q, R] = Decoder[Q] { type Response = R }
 
