@@ -7,6 +7,7 @@ object Dependencies {
 
   val clientDeps = Seq(
     "com.gu" %% "content-api-models-scala" % CapiModelsVersion,
+    "org.apache.thrift" % "libthrift" % "0.12.0",
     "org.scalatest" %% "scalatest" % "3.0.5" % "test" exclude("org.mockito", "mockito-core"),
     "org.slf4j" % "slf4j-api" % "1.7.25",
     "org.mockito" % "mockito-all" % "1.10.19" % "test"
