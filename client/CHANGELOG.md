@@ -1,3 +1,7 @@
+## XX.X //TODO: put in version number when published
+
+* Bump version of content-api-models to XX.XX (add support for the emailsignup atom) //TODO: put in version number when published
+
 ## 14.2
 
 * Version 14.1 of the models dependency was empty
