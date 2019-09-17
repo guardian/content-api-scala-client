@@ -157,7 +157,6 @@ trait ContentApiQueries {
   val restaurantReviews = RestaurantReviewsQuery()
   val filmReviews = FilmReviewsQuery()
   val videoStats = VideoStatsQuery()
-  val stories = StoriesQuery()
   def next[Q <: PaginatedApiQuery[Q]](q: Q, id: String) = NextQuery(normalize(q), id)
 
   private def normalize[Q <: PaginatedApiQuery[Q]]: Q => Q =
