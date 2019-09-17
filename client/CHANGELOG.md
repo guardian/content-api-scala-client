@@ -1,3 +1,8 @@
+## 15.0
+
+* Remove stories-related APIs
+* Upgrade model to v15.0
+
 ## 14.2
 
 * Version 14.1 of the models dependency was empty
