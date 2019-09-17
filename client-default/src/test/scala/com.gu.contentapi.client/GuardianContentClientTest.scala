@@ -73,40 +73,40 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     fResults.size should be (10)
   }
 
-  it should "perform a given recipes query" in {
-    val query = ContentApiClient.recipes.cuisines("thai")
-    val results = for (response <- api.getResponse(query)) yield response.results
-    val fResults = results.futureValue
-    fResults.size should be (10)
-  }
+  // it should "perform a given recipes query" in {
+  //   val query = ContentApiClient.recipes.cuisines("thai")
+  //   val results = for (response <- api.getResponse(query)) yield response.results
+  //   val fResults = results.futureValue
+  //   fResults.size should be (10)
+  // }
 
-  it should "perform a given reviews query" in {
-    val query = ContentApiClient.reviews.minRating(3)
-    val results = for (response <- api.getResponse(query)) yield response.results
-    val fResults = results.futureValue
-    fResults.size should be (10)
-  }
+  // it should "perform a given reviews query" in {
+  //   val query = ContentApiClient.reviews.minRating(3)
+  //   val results = for (response <- api.getResponse(query)) yield response.results
+  //   val fResults = results.futureValue
+  //   fResults.size should be (10)
+  // }
 
-  it should "perform a given game review query" in {
-    val query = ContentApiClient.gameReviews.minRating(3)
-    val results = for (response <- api.getResponse(query)) yield response.results
-    val fResults = results.futureValue
-    fResults.size should be (10)
-  }
+  // it should "perform a given game review query" in {
+  //   val query = ContentApiClient.gameReviews.minRating(3)
+  //   val results = for (response <- api.getResponse(query)) yield response.results
+  //   val fResults = results.futureValue
+  //   fResults.size should be (10)
+  // }
 
-  it should "perform a given film review query" in {
-    val query = ContentApiClient.filmReviews.maxRating(4)
-    val results = for (response <- api.getResponse(query)) yield response.results
-    val fResults = results.futureValue
-    fResults.size should be (10)
-  }
+  // it should "perform a given film review query" in {
+  //   val query = ContentApiClient.filmReviews.maxRating(4)
+  //   val results = for (response <- api.getResponse(query)) yield response.results
+  //   val fResults = results.futureValue
+  //   fResults.size should be (10)
+  // }
 
-  it should "perform a given restaurant review query" in {
-    val query = ContentApiClient.restaurantReviews.minRating(1)
-    val results = for (response <- api.getResponse(query)) yield response.results
-    val fResults = results.futureValue
-    fResults.size should be (10)
-  }
+  // it should "perform a given restaurant review query" in {
+  //   val query = ContentApiClient.restaurantReviews.minRating(1)
+  //   val results = for (response <- api.getResponse(query)) yield response.results
+  //   val fResults = results.futureValue
+  //   fResults.size should be (10)
+  // }
 
   it should "perform a given search query using the type filter" in {
     val query = ContentApiClient.search.contentType("article")
