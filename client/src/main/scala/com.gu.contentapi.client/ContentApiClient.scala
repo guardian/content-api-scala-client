@@ -7,6 +7,8 @@ import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentatom.thrift.AtomType
 import scala.concurrent.{ExecutionContext, Future}
+import java.time.temporal.ChronoUnit
+import java.time.Instant
 
 trait ContentApiClient {
   import Decoder._
@@ -44,9 +46,41 @@ trait ContentApiClient {
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
+  private def backOffUntil(attempt: Int): Long = {
+    // a _very_ coarse implementation of an exponential backoff policy
+    // retry: backoff period
+    // 1: 500ms
+    // 2: 1000ms
+    // 3: 2000ms
+    // 4: 4000ms
+    // 5: 8000ms
+    // etc
+    Instant.now().plus((Math.pow(2, attempt) * 250).toInt, ChronoUnit.MILLIS).toEpochMilli
+  }
+
+  val maxRetries: Int = 5
+
   /** Streamlines the handling of a valid CAPI response */
-  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
-    get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
+  private def fetchResponse(contentApiQuery: ContentApiQuery, attempt: Int = 1)(implicit context: ExecutionContext): Future[Array[Byte]] = {
+    try {
+      get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
+    } catch {
+
+      case e: ContentApiRecoverableException => {
+        if (attempt < maxRetries) {
+          val retryTime = backOffUntil(attempt)
+          while (retryTime > 0 && Instant.now().toEpochMilli < retryTime) {
+            // just wait :(
+          }
+          fetchResponse(contentApiQuery, attempt + 1)
+        }
+        Future.failed(e.copy(httpMessage = e.httpMessage.concat(s" - failed after $maxRetries retries.")))
+      }
+
+      case e: Exception => Future.failed(e)
+
+    }
+  }
 
   private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
     fb.flatMap { b =>
