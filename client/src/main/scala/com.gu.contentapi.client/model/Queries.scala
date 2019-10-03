@@ -199,7 +199,7 @@ case class FilmReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 case class NextQuery[Q <: PaginatedApiQuery[Q]](originalQuery: Q, contentId: String)
   extends ContentApiQuery {
   
-  def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter))
+  def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter)).toMap
 
   override def pathSegment: String = s"""content/${contentId}/next"""
 }

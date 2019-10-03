@@ -30,7 +30,7 @@ trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
   protected def parameterHolder: Map[String, Parameter]
 
   def parameters: Map[String, String] =
-    parameterHolder.mapValues(_.value).collect { case (k, Some(v)) => (k, v.toString) }
+    parameterHolder.mapValues(_.value).toMap.collect { case (k, Some(v)) => (k, v.toString) }
 
   protected trait OwnedParameter extends Parameter {
     type ParameterOwner = Owner
