@@ -15,7 +15,7 @@ object GuardianContentClientTest {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
   private val apiKey: String = {
     Option(System.getProperty(ApiKeyProperty)) orElse Option(System.getenv(ApiKeyProperty))
-  }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable")
+  }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable e.g. sbt -Dsome-api-key")
 }
 
 class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {

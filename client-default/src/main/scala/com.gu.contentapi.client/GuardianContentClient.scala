@@ -8,6 +8,8 @@ import scala.concurrent.{ExecutionContext, Future, Promise}
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClient {
 
+  override val scheduledExecutor = new ScheduledExecutor(1)
+
   protected def httpClientBuilder = new OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.SECONDS)
     .readTimeout(2, TimeUnit.SECONDS)

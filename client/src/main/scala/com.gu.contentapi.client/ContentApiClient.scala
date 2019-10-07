@@ -7,13 +7,16 @@ import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentatom.thrift.AtomType
 import scala.concurrent.{ExecutionContext, Future}
-import java.time.temporal.ChronoUnit
-import java.time.Instant
+import scala.concurrent.duration.FiniteDuration
+import java.util.concurrent.TimeUnit
 
 trait ContentApiClient {
   import Decoder._
   import PaginatedApiResponse._
-  
+
+  /**  **/
+  val scheduledExecutor: ScheduledExecutor
+
   /** Your API key */
   def apiKey: String
 
@@ -46,41 +49,29 @@ trait ContentApiClient {
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
-  private def backOffUntil(attempt: Int): Long = {
-    // a _very_ coarse implementation of an exponential backoff policy
-    // retry: backoff period
-    // 1: 500ms
-    // 2: 1000ms
-    // 3: 2000ms
-    // 4: 4000ms
-    // 5: 8000ms
-    // etc
-    Instant.now().plus((Math.pow(2, attempt) * 250).toInt, ChronoUnit.MILLIS).toEpochMilli
-  }
-
-  val maxRetries: Int = 5
+  val maxRetries: Int = 3 // max wait time ~1.5s
 
   /** Streamlines the handling of a valid CAPI response */
+  @scala.annotation.tailrec
   private def fetchResponse(contentApiQuery: ContentApiQuery, attempt: Int = 1)(implicit context: ExecutionContext): Future[Array[Byte]] = {
     try {
-      get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
+      fetchResponseWithBackoff(contentApiQuery, attempt)(context).flatMap(_.flatMap(HttpResponse.check))
     } catch {
-
-      case e: ContentApiRecoverableException => {
-        if (attempt < maxRetries) {
-          val retryTime = backOffUntil(attempt)
-          while (retryTime > 0 && Instant.now().toEpochMilli < retryTime) {
-            // just wait :(
-          }
-          fetchResponse(contentApiQuery, attempt + 1)
+      case e: ContentApiRecoverableException =>
+        if (attempt <= maxRetries) {
+          fetchResponse(contentApiQuery, attempt + 1)(context)
+        } else {
+          Future.failed(ContentApiError(e.httpStatus, e.httpMessage.concat(s" - Operation could not be completed after $attempt attempt(s). Please try again later")))
         }
-        Future.failed(e.copy(httpMessage = e.httpMessage.concat(s" - failed after $maxRetries retries.")))
-      }
-
-      case e: Exception => Future.failed(e)
-
+      case e: ContentApiError =>
+        Future.failed(e.copy(httpMessage = e.httpMessage.concat(" - please check your query")))
+      case e: Exception =>
+        Future.failed(e)
     }
   }
+
+  private def fetchResponseWithBackoff(contentApiQuery: ContentApiQuery, attempt: Int)(implicit context: ExecutionContext): CancellableFuture[Future[HttpResponse]] =
+    scheduledExecutor.delayExecution(get(url(contentApiQuery), headers)(context))(by = scheduledExecutor.getWaitDuration(attempt))
 
   private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
     fb.flatMap { b =>
