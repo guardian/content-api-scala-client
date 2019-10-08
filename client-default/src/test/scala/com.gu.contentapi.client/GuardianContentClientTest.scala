@@ -23,7 +23,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   private val api = new GuardianContentClient(apiKey)
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
     api.shutdown()
   }
 

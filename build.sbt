@@ -68,7 +68,7 @@ lazy val awsSettings: Seq[Setting[_]] = Seq(
 lazy val publishSettings: Seq[Setting[_]] = Seq(
   resolvers += Resolver.sonatypeRepo("public"),
   pomIncludeRepository := { _ => false },
-  publishTo := sonatypePublishTo.value,
+  publishTo := sonatypePublishToBundle.value,
   publishMavenStyle := true,
   publishArtifact in Test := false,
   releaseVcsSign := true,
@@ -85,9 +85,9 @@ lazy val releaseSteps: Seq[ReleaseStep] = Seq(
   setReleaseVersion,
   commitReleaseVersion,
   tagRelease,
-  publishArtifacts,
+  releaseStepCommandAndRemaining("+publishSigned"),
+  releaseStepCommand("sonatypeBundleRelease"),
   setNextVersion,
   commitNextVersion,
-  releaseStepCommand("sonatypeRelease"),
   pushChanges
 )
