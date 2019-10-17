@@ -7,7 +7,7 @@ import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentatom.thrift.AtomType
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration.Duration
 import java.util.concurrent.TimeUnit
 import scala.util.{Failure, Success}
 
@@ -50,42 +50,24 @@ trait ContentApiClient {
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
-  val maxRetries: Int = 3 // max wait time ~1.5s
+  private lazy val backoffStrategy = Backoff(Duration(250, TimeUnit.MILLISECONDS))
 
   /** Streamlines the handling of a valid CAPI response */
-  private def fetchResponse(contentApiQuery: ContentApiQuery, attempt: Int = 1)(implicit context: ExecutionContext): Future[Array[Byte]] =
-    fetchResponseWithBackoff(contentApiQuery, attempt)(context).flatMap { _.flatMap { HttpResponse.check }}
+  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = {
+    def getter: Future[HttpResponse] = get(url(contentApiQuery), headers)(context)
 
-  private def fetchResponseWithBackoff(contentApiQuery: ContentApiQuery, attempt: Int)(implicit context: ExecutionContext): CancellableFuture[Future[HttpResponse]] = {
-    val waitDuration = scheduledExecutor.getWaitDuration(attempt)
-    // To test this - uncomment the following line
-    // println(s"fetchResponseWithBackoff attempt: ${attempt} waitDuration: ${waitDuration}")
-    // and add 400 to the HttpResponse failedButMaybeRecoverable set
-    // and something like 400 -> "Not a real recoverable - just for testing" to the recoverableErrorMessages list, then
-    // run the tests, and the should "handle error responses" test will cause these printlns to be output:
-    //    fetchResponseWithBackoff attempt: 1 waitDuration: 0 milliseconds
-    //    fetchResponseWithBackoff attempt: 2 waitDuration: 500 milliseconds
-    //    fetchResponseWithBackoff attempt: 3 waitDuration: 1000 milliseconds
-    // and ultimately fail with the message
-    //    [info] - should handle error responses *** FAILED ***
-    //    [info]   The future returned an exception of type: org.scalatest.exceptions.TestFailedException, with message: com.gu.contentapi.client.model.ContentApiRecoverableException: Not a real recoverable - just for testing was not equal to com.gu.contentapi.client.model.ContentApiError: Bad Request. (GuardianContentClientTest.scala:53)
+    getter
+      .recoverWith {
+        case r: ContentApiRecoverableException =>
+          println(s"Recoverable error ${r.httpStatus} encountered - retrying")
+          backoffStrategy.retry(getter)
 
-    val op = get(url(contentApiQuery), headers)(context)
-    val delayed = scheduledExecutor.delayExecution(op)(by = waitDuration)
-    delayed.onComplete({
-      case Success(t) =>
-        t.flatMap{ r =>
-          try {
-            HttpResponse.check(r)
-          } catch {
-            case e: ContentApiRecoverableException if attempt < maxRetries =>
-              fetchResponseWithBackoff(contentApiQuery, attempt + 1)
-          }
-        }
-      case _ =>
-    })
-    delayed
-  }
+        case e => Future.failed(e)
+      }
+      .map {
+        HttpResponse.check
+      }
+  }.flatten
 
   private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
     fb.flatMap { b =>
