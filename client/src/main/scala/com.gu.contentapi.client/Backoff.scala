@@ -12,25 +12,20 @@ sealed abstract class Backoff extends Product with Serializable { self =>
 
   def state: Backoff = self match {
     case Exponential(_, n, max, _) if n == max => Failed(max)
-    case Exponential(_, n, max, f) => {
-      val delay = Duration(Math.pow(2, n - 1) * 250, TimeUnit.MILLISECONDS)
-      Exponential(delay, n, max, f)
-    }
+    case Exponential(_, n, max, f) =>
+      val delay = Duration(Math.pow(2, n) * 250, TimeUnit.MILLISECONDS)
+      Exponential(delay, n + 1, max, f)
+
     case x => x
   }
 
-  def retry(operation: ⇒ Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = { //Future[Array[Byte]] = {
+  def retry(operation: ⇒ Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
     self.state match {
       case exp: Exponential =>
-        val prom = scheduledExecutor.delayExecution(operation)(by = exp.delay)
-        val futResp = for {
-          resp <- prom.future.flatten
-          // checked <- HttpResponse.check(resp)
-        } yield resp
-        futResp
+        scheduledExecutor.sleepFor(exp.delay)
+          .flatMap { _ => operation }
           .recoverWith {
             case r: ContentApiRecoverableException => retry(operation)
-            case e => Future.failed(e)
           }
 
       case f: Failed => Future.failed(new Exception(s"Retry failed after ${f.attempts} retries"))

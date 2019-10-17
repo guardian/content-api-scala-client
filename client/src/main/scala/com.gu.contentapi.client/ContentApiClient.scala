@@ -64,10 +64,10 @@ trait ContentApiClient {
 
         case e => Future.failed(e)
       }
-      .map {
+      .flatMap {
         HttpResponse.check
       }
-  }.flatten
+  }
 
   private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
     fb.flatMap { b =>

@@ -1,12 +1,19 @@
 package com.gu.contentapi.client
 
 import java.util.concurrent.ThreadPoolExecutor.AbortPolicy
-import java.util.concurrent._
+import java.util.concurrent.{
+  ThreadFactory,
+  Executors,
+  ScheduledThreadPoolExecutor,
+  ScheduledExecutorService,
+  RejectedExecutionHandler,
+  RejectedExecutionException
+}
 
+import scala.concurrent.Future
 import scala.concurrent.duration.Duration
 import scala.concurrent.Promise
 import scala.language.implicitConversions
-import scala.util.Try
 
 object ScheduledExecutor {
   private val defaultHandler: RejectedExecutionHandler = new AbortPolicy
@@ -33,57 +40,16 @@ class ScheduledExecutor(corePoolSize: Int,
   /**
     * Creates a Future and schedules the operation to run after the given delay.
     *
-    * @param operation to execute
-    * @param by the time from now to delay execution
-    * @tparam T the type of the operation's result
-    * @return a Future that can be used to extract result
+    * @param napTime duration for which to delay execution
+    * @return a Future to capture the signal that napTime is over
     * @throws RejectedExecutionException if the task cannot be
     *                                    scheduled for execution
     */
-  def delayExecution[T](operation: ⇒ T)(by: Duration): Promise[T] = {
-    val promise = Promise[T]()
-    underlying.schedule(new Runnable {
-      override def run() = {
-        promise.complete(Try(operation))
-      }
-    }, by.length, by.unit)
-    promise
+
+  def sleepFor(napTime: Duration): Future[Unit] = {
+    val promise = Promise[Unit]()
+    underlying.schedule(() => { promise.success(())}, napTime.length, napTime.unit)
+    promise.future
   }
+
 }
-
-//object CancellableFuture {
-//  implicit def extractFuture[T](cf: CancellableFuture[T]): Future[T] = cf.future
-//}
-
-///**
-//  * Wraps a future, adding a method to cancel it
-//  * @tparam T
-//  */
-//trait CancellableFuture[T] {
-//  def future: Future[T]
-//
-//  /**
-//    * Attempts to cancel execution of this task.  This attempt will
-//    * fail if the task has already completed, has already been cancelled,
-//    * or could not be cancelled for some other reason. If successful,
-//    * and this task has not started when {@code cancel} is called,
-//    * this task should never run.  If the task has already started,
-//    * then the {@code mayInterruptIfRunning} parameter determines
-//    * whether the thread executing this task should be interrupted in
-//    * an attempt to stop the task.
-//    *
-//    * <p>If this method returns true, the future should never complete.
-//    *
-//    * @param mayInterruptIfRunning { @code true} if the thread executing this
-//    *                                      task should be interrupted; otherwise, in-progress tasks are allowed
-//    *                                      to complete
-//    * @return { @code false} if the task could not be cancelled,
-//    *                 typically because it has already completed normally;
-//    *                 { @code true} otherwise
-//    */
-//  def cancel(mayInterruptIfRunning: Boolean): Boolean
-//}
-
-//private class DelegatingCancellableFuture[T](val future: Future[T], cancelMethod: (Boolean) ⇒ Boolean) extends CancellableFuture[T] {
-//  def cancel(interruptIfRunning: Boolean): Boolean = cancelMethod(interruptIfRunning)
-//}
