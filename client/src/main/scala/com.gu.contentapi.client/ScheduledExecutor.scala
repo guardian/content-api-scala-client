@@ -48,7 +48,10 @@ class ScheduledExecutor(corePoolSize: Int,
 
   def sleepFor(napTime: Duration): Future[Unit] = {
     val promise = Promise[Unit]()
-    underlying.schedule(() => { promise.success(())}, napTime.length, napTime.unit)
+    val runnable = new Runnable {
+      override def run(): Unit = promise.success(())
+    }
+    underlying.schedule(runnable, napTime.length, napTime.unit)
     promise.future
   }
 
