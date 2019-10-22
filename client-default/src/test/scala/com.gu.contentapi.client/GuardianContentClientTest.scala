@@ -2,13 +2,17 @@ package com.gu.contentapi.client
 
 import com.gu.contentatom.thrift.{AtomData, AtomType}
 import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
-import com.gu.contentapi.client.model.{ItemQuery, SearchQuery, ContentApiError}
+import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
 import java.time.Instant
-import org.scalatest.concurrent.{ IntegrationPatience, ScalaFutures }
+import java.util.concurrent.TimeUnit
+
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration
+import scala.concurrent.duration.Duration
 
 object GuardianContentClientTest {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
@@ -28,7 +32,12 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
 
   implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
-  "client interface" should "successfully call the Content API" in {
+  "client interface" should "be using a correctly configured default backoffStrategy" in {
+    val expectedBackoffStrategy = Backoff()
+    api.backoffStrategy should be (expectedBackoffStrategy)
+  }
+
+  it should "successfully call the Content API" in {
     val query = ItemQuery(TestItemPath)
     val content = for {
       response <- api.getResponse(query)

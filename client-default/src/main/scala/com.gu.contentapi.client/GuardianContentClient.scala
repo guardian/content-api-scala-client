@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClient {
 
-  override val backoffStrategy = Backoff()
+  override val backoffStrategy = Backoff.doubling()
 
   protected def httpClientBuilder = new OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.SECONDS)

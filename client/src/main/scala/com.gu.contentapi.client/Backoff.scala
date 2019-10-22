@@ -11,11 +11,14 @@ sealed abstract class Backoff extends Product with Serializable { self =>
   val scheduledExecutor = new ScheduledExecutor(1)
 
   def state: Backoff = self match {
-    case Exponential(_, n, max, _) if n == max => Failed(max)
-    case Exponential(_, n, max, f) =>
-      val delay = Duration(Math.pow(2, n) * 250, TimeUnit.MILLISECONDS)
-      Exponential(delay, n + 1, max, f)
-
+    case Exponential(_, n, max) if n == max => Failed(max)
+    case Exponential(d, n, max) =>
+      val delay = Duration(Math.pow(2, n) * d.toMillis, TimeUnit.MILLISECONDS)
+      Exponential(delay, n + 1, max)
+    case Multiple(_, n, max, _) if n == max => Failed(max)
+    case Multiple(d, n, max, f) =>
+      val delay = Duration(f * d.toMillis, TimeUnit.MILLISECONDS)
+      Multiple(delay, n + 1, max, f)
     case x => x
   }
 
@@ -34,20 +37,47 @@ sealed abstract class Backoff extends Product with Serializable { self =>
 
 }
 
-final case class Exponential private (delay: Duration, attempts: Int, maxAttempts: Int, factor: Double) extends Backoff
+final case class Exponential private (delay: Duration, attempts: Int, maxAttempts: Int) extends Backoff
+final case class Multiple private (delay: Duration, attempts: Int, maxAttempts: Int, factor: Double) extends Backoff
 final case class Failed private (attempts: Int) extends Backoff
 
 object Backoff {
-  // 1. make it as easy as possible for clients: supply default values for all params
-  //    the only new code they need to supply in their implementation of ContentApiClient is
-  //    `override val backoffStrategy: Backoff = Backoff()` or similar
-  def apply(min: Duration = Duration(250, TimeUnit.MILLISECONDS), maxAttempts: Int = 3, factor: Double = 2): Backoff = {
-    // 2. if clients supply their own values, enforce some sensible min/max limits
-    //    e.g. min. wait time 250ms, multiplier (factor) minimum of 2 and no more than 10 retries (maxAttempts)
-    val mx = if (maxAttempts > 10) 10 else maxAttempts
-    val fc = if (factor < 2) 2 else factor
-    val ln = if (min.toMillis < 250) 250 else min.toMillis
+  private val defaultMaxAttempts = 3
+  private val defaultMultipleMaxAttempts = 10
+  private val defaultExponentialMinimumInterval = 100L
+  private def defaultExponentialMaxAttempts = 5
+  private val defaultMultiplierDuration = 250L
+  private val defaultMultiplierMinimumInterval = 250L
+  private val defaultMinimumMultiplierFactor = 2.0
 
-    Exponential(Duration(ln, TimeUnit.MILLISECONDS), 1, mx, fc)
+  def apply(): Backoff = doubling()
+
+  def exponential(
+    min: Duration = Duration(defaultExponentialMinimumInterval, TimeUnit.MILLISECONDS),
+    maxAttempts: Int = defaultMaxAttempts
+  ): Backoff = {
+    val mx = if (maxAttempts > defaultExponentialMaxAttempts) defaultExponentialMaxAttempts else maxAttempts
+    val ln = if (min.toMillis < defaultExponentialMinimumInterval) defaultExponentialMinimumInterval else min.toMillis
+    Exponential(Duration(ln, TimeUnit.MILLISECONDS), 1, mx)
+  }
+
+  def doubling(
+    min: Duration = Duration(defaultMultiplierDuration, TimeUnit.MILLISECONDS),
+    maxAttempts: Int = defaultMaxAttempts
+  ): Backoff = {
+    val mx = if (maxAttempts > defaultMultipleMaxAttempts) defaultMultipleMaxAttempts else maxAttempts
+    val ln = if (min.toMillis < defaultMultiplierMinimumInterval) defaultMultiplierMinimumInterval else min.toMillis
+    Multiple(Duration(ln, TimeUnit.MILLISECONDS), 1, mx, 2.0)
+  }
+
+  def multiple(
+    min: Duration = Duration(defaultMultiplierMinimumInterval, TimeUnit.MILLISECONDS),
+    maxAttempts: Int = defaultMaxAttempts,
+    factor: Double
+  ): Backoff = {
+    val mx = if (maxAttempts > defaultMultipleMaxAttempts) defaultMultipleMaxAttempts else maxAttempts
+    val fc = if (factor < defaultMinimumMultiplierFactor) defaultMinimumMultiplierFactor else factor
+    val ln = if (min.toMillis < defaultMultiplierMinimumInterval) defaultMultiplierMinimumInterval else min.toMillis
+    Multiple(Duration(ln, TimeUnit.MILLISECONDS), 1, mx, fc)
   }
 }
