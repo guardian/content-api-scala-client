@@ -7,17 +7,10 @@ import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentatom.thrift.AtomType
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration.Duration
-import java.util.concurrent.TimeUnit
-import scala.util.{Failure, Success}
 
 trait ContentApiClient {
   import Decoder._
   import PaginatedApiResponse._
-
-  /**  **/
-  val scheduledExecutor: ScheduledExecutor = new ScheduledExecutor(1)
-
   /** Your API key */
   def apiKey: String
 
@@ -50,7 +43,7 @@ trait ContentApiClient {
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
-  private lazy val backoffStrategy = Backoff(Duration(250, TimeUnit.MILLISECONDS))
+  val backoffStrategy: Backoff
 
   /** Streamlines the handling of a valid CAPI response */
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = {

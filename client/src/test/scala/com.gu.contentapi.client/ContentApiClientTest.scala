@@ -14,6 +14,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
   private val api = new ContentApiClient {
 
+    override val backoffStrategy: Backoff = Backoff()
+
     val apiKey = "TEST-API-KEY"
 
     def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext) = {

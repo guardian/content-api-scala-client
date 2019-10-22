@@ -2,11 +2,13 @@ package com.gu.contentapi.client
 
 import com.gu.contentapi.client.model.HttpResponse
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 import okhttp3._
 import scala.concurrent.{ExecutionContext, Future, Promise}
+import java.util.concurrent.TimeUnit
 
 class GuardianContentClient(val apiKey: String) extends ContentApiClient {
+
+  override val backoffStrategy = Backoff()
 
   protected def httpClientBuilder = new OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.SECONDS)

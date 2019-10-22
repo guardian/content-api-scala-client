@@ -38,6 +38,16 @@ final case class Exponential private (delay: Duration, attempts: Int, maxAttempt
 final case class Failed private (attempts: Int) extends Backoff
 
 object Backoff {
-  def apply(min: Duration, maxAttempts: Int = 3, factor: Double = 2): Backoff =
-    Exponential(min, 1, maxAttempts, factor)
+  // 1. make it as easy as possible for clients: supply default values for all params
+  //    the only new code they need to supply in their implementation of ContentApiClient is
+  //    `override val backoffStrategy: Backoff = Backoff()` or similar
+  def apply(min: Duration = Duration(250, TimeUnit.MILLISECONDS), maxAttempts: Int = 3, factor: Double = 2): Backoff = {
+    // 2. if clients supply their own values, enforce some sensible min/max limits
+    //    e.g. min. wait time 250ms, multiplier (factor) minimum of 2 and no more than 10 retries (maxAttempts)
+    val mx = if (maxAttempts > 10) 10 else maxAttempts
+    val fc = if (factor < 2) 2 else factor
+    val ln = if (min.toMillis < 250) 250 else min.toMillis
+
+    Exponential(Duration(ln, TimeUnit.MILLISECONDS), 1, mx, fc)
+  }
 }
