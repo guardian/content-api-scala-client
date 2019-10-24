@@ -28,35 +28,27 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     }
   }
 
-  "Client interface" should "be created with expected backoff strategy" in {
+  "Client interface" should "be created with expected doubling backoff strategy" in {
     val myInterval = 250L
     val myRetries = 3
     val myApi = clientWithBackoff(doublingBackoff(Duration(myInterval, MILLIS), myRetries))
-    val expectedStrategy = Backoff.doubling(Duration(myInterval, MILLIS))
+    val expectedStrategy = Multiple(Duration(myInterval, MILLIS), 1, myRetries, 2.0)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
-  it should "be created with expected minimum and maximum backoff properties" in {
+  it should "be created with expected minimum and maximum doubling backoff properties" in {
     val myInterval = 10L
     val myRetries = 20
-    val myApi = clientWithBackoff(doublingBackoff(Duration(myInterval, MILLIS), myRetries))
-    val expectedStrategy = Backoff.doubling(Duration(100L, MILLIS), 10)
+    val myApi = clientWithBackoff(doublingBackoff(Duration(myInterval, NANOS), myRetries))
+    val expectedStrategy = Multiple(Duration(250L, MILLIS), 1, 10, 2.0)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
-  it should "create a backoff with a minimum delay of 100 milliseconds" in {
-    val myInterval = 10L
-    val myRetries = 3
-    val myApi = clientWithBackoff(Backoff.doubling(Duration(myInterval, NANOS), myRetries))
-    val expectedStrategy = Backoff.doubling(Duration(100L, MILLIS), myRetries)
-    myApi.backoffStrategy should be(expectedStrategy)
-  }
-
-  it should "respect user's parameters if they are within acceptable limits" in {
+  "Client interface with an exponential backoff" should "respect user's parameters if they are within acceptable limits" in {
     val myInterval = 100L
-    val myRetries = 6
+    val myRetries = 5
     val myApi = clientWithBackoff(Backoff.exponential(Duration(myInterval, MILLIS), myRetries))
-    val expectedStrategy = Backoff.exponential(Duration(100L, MILLIS), myRetries)
+    val expectedStrategy = Exponential(Duration(myInterval, MILLIS), 1, myRetries)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
