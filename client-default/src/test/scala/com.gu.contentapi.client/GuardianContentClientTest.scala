@@ -4,15 +4,12 @@ import com.gu.contentatom.thrift.{AtomData, AtomType}
 import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
 import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
 import java.time.Instant
-import java.util.concurrent.TimeUnit
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration
-import scala.concurrent.duration.Duration
 
 object GuardianContentClientTest {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"

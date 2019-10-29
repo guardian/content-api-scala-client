@@ -8,7 +8,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.Duration
 
 sealed abstract class Backoff extends Product with Serializable { self =>
-  val scheduledExecutor = new ScheduledExecutor(1)
 
   def state: Backoff = self match {
     case Exponential(_, n, max) if n == max => Failed(max)
@@ -23,22 +22,29 @@ sealed abstract class Backoff extends Product with Serializable { self =>
   }
 
   def retry(operation: ⇒ Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
-    self.state match {
-      case exp: Exponential =>
-        scheduledExecutor.sleepFor(exp.delay)
-          .flatMap { _ => operation }
-          .recoverWith {
-            case r: ContentApiRecoverableException => retry(operation)
-          }
+    def delayedRetry[T <: Retrying](backoff: T) = {
+      Backoff.scheduledExecutor.sleepFor(backoff.delay)
+        .flatMap { _ => operation }
+        .recoverWith {
+          case _: ContentApiRecoverableException => retry(operation)
+        }
+    }
 
+    self.state match {
+      case exp: Exponential => delayedRetry(exp)
+      case mul: Multiple => delayedRetry(mul)
       case f: Failed => Future.failed(new Exception(s"Retry failed after ${f.attempts} retries"))
     }
   }
 
 }
 
-final case class Exponential private (delay: Duration, attempts: Int, maxAttempts: Int) extends Backoff
-final case class Multiple private (delay: Duration, attempts: Int, maxAttempts: Int, factor: Double) extends Backoff
+abstract class Retrying extends Backoff {
+  val delay: Duration
+}
+
+final case class Exponential private (delay: Duration, attempts: Int, maxAttempts: Int) extends Retrying
+final case class Multiple private (delay: Duration, attempts: Int, maxAttempts: Int, factor: Double) extends Retrying
 final case class Failed private (attempts: Int) extends Backoff
 
 object Backoff {
@@ -49,6 +55,8 @@ object Backoff {
   private val defaultMultiplierDuration = 250L
   private val defaultMultiplierMinimumInterval = 250L
   private val defaultMinimumMultiplierFactor = 2.0
+
+  lazy val scheduledExecutor = new ScheduledExecutor(1)
 
   def apply(): Backoff = doubling()
 
