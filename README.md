@@ -258,71 +258,76 @@ E.g. the following simply sums the number of results:
 val result: Future[Int] = client.paginateFold(query)(0){ (r: SearchResponse, t: Int) => r.results.length + t }
 ```
 
-## Backoff
+## Retrying recoverable errors (backoff strategies)
 Sometimes the backend services that the client relies on can return HTTP failure results, and some of these are potentially recoverable within a relatively short period of time.
-Rather than always fail these requests by default, we have made it possible to automatically retry those failures that may yield a successful result on a subsequent attempt. 
-As of version 15.1 of the client we have made it compulsory to provide a declaration of a `Backoff` class when an implementation of `ContentApiClient` is declared.
-In its most basic form this is just a case of adding the following line to your implementation of a `ContentApiClient` descended class:
+Rather than immediately fail these requests by default as we have done previously, it is now possible to automatically retry those failures that may yield a successful result on a subsequent attempt. 
+As of version 15.1 of the client it is necessary to declare a `ContentApiBackoff` strategy when defining an implementation of `ContentApiClient`.
+
+The following strategies are available;
 
 ```scala
-  override val backoffStrategy: Backoff = Backoff()
+  ContentApiBackoff.doublingStrategy                               
+  ContentApiBackoff.exponentialStrategy
+  ContentApiBackoff.multiplierStrategy 
+  ContentApiBackoff.constantStrategy   
+```                                    
+
+To use these, it's simply a case of defining a duration and a number of retries you intend to make. And in the case of the multiplierStrategy, a `double` defining the factor by which to multiply the waiting time.
+
+Some examples:
+
+```scala
+class ApiClient extends CapiContentApiClient {
+  // create a doubling backoff and retry strategy
+  // we will wait for 500ms, 1000ms, 2000ms, 4000ms  and then 8000ms while recoverable errors are encountered
+  val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
+  val retryAttempts = 5
+  override val backoffStrategy = ContentApiBackoff.doublingStrategy(retryDuration, retryAttempts)
+}
 ``` 
 
-The above will give you a delay-doubling backoff strategy starting at 250ms and retrying the request up to 3 times.
-
-Other backoff types are available, and may be accessed by calling one of the following:
+```scala
+class ApiClient extends CapiContentApiClient {
+  // create a constant backoff and retry strategy
+  // we will allow up to three attempts, each separated by one second
+  val retryDuration = Duration(1000L, TimeUnit.MILLISECONDS)
+  val retryAttempts = 3
+  override val backoffStrategy = ContentApiBackoff.constantStrategy(retryDuration, retryAttempts)
+}
+```
 
 ```scala
-  override val backoffStrategy: Backoff = Backoff.exponential()
-  override val backoffStrategy: Backoff = Backoff.multiple(factor = 3.0)
-``` 
-
-These definitions give you a default implementation of an exponential strategy (an initial 100ms delay, with 3 retries where each delay is incremented by a power of 2 after each failure), 
-and a multiple strategy (an initial delay of 250ms, with three retries, each failure multiplying, in this example, the delay time by 3) respectively.
-
-Note that `Backoff.multiple` is the only instance where a parameter value for the multiplication factor is required, however you can provide parameters to the
-`exponential` and `doubling` strategies if you wish. These must be a retry interval expressed as a `scala.concurrent.duration.Duration` and a retry count as a regular `Int`.
-
-e.g.
-```scala
-class MyApiClient(ws: WSClient) extends ContentApiClient
-  val retrySchedule: Duration = Duration(500L, TimeUnit.MILLISECONDS)
+class ApiClient extends ContentApiClient {
+  // create an exponential backoff strategy
+  // the duration is multiplied by the next power of two on each attempt, so: 200ms, 400ms, 800ms, 1600ms and 3200ms
+  // this means a maximum waiting time of 6.2 seconds if the error doesn't clear before then
+  val retrySchedule: Duration = Duration(100L, TimeUnit.MILLISECONDS)
   val retryCount: Int = 5
-  override val backoffStrategy: Backoff = Backoff.exponential(retrySchedule, retryCount)
-  .
-  . 
+  override val backoffStrategy = ContentApiBackoff.exponentialStrategy(retrySchedule, retryCount)
 }
 ```
-or
+
 ```scala
-class MyApiClient(ws: WSClient) extends ContentApiClient
+class ApiClient extends ContentApiClient {
+  // create a multiplier backoff strategy
+  // here, the duration is multiplied by the factor between each retry
+  // with a factor of 3.0, and 3 retries we will wait: 750ms, 2250ms and 6750ms
   val retrySchedule: Duration = Duration(250L, TimeUnit.MILLISECONDS)
-  val retryCount: Int = 10
-  val factor: Double = 4.0
-  override val backoffStrategy: Backoff = Backoff.multiple(retrySchedule, retryCount, factor)
-  .
-  . 
+  val retryCount: Int = 3
+  val retryFactor: Double = 3.0
+  override val backoffStrategy: Backoff = Backoff.multiplierStrategy(retrySchedule, retryCount, retryFactor)
 }
 ```
 
-Note that the parameters passed are subject to limit caps on the upper and lower end, to prevent using values that either result in excessively long or short waits, or attempts to circumvent the backoff strategy entirely by forcing immediate retries.
+Note that there are some minimum values that are enforced to prevent using excessively short waits, or attempts to circumvent the backoff strategy entirely by forcing immediate retries.
 
-`exponential` requires a minimum delay of 100ms, and a max of 5 retry attempts.
+`exponential` requires a minimum delay of 100ms
 
-`doubling` requires a minimum of 250ms delay, and a maximum of 10 retry attempts.
+`doubling`, `multiple` and `constant` strategies requires a minimum delay of 250ms
 
-`multiple` also requires a minimum 250ms delay, and a multiplication factor of at least 2.0. As with the doubling strategy, this is limited to 10 retries.
+All strategies will ensure at least one retry attempt is configured.
 
-
-If any values are omitted defaults will be applied automatically thus;
-
-`exponential`: 100ms interval, 3 retries
-
-`doubling`: 250ms interval, 3 retries
-
-`multiple`: 250ms interval, 3 retries, but a multiplication factor must be supplied (there is no upper limit for the factor value)
-
-Actually, `doubling` is merely an implementation of the `multiple` strategy with a factor fixed at 2.0.
+No upper limits are enforced for retries, delays or multipliers, so exercise caution in case you accidentally configure your client to wait for a very long time. 
 
 ### Which response codes will be retried by the backoff strategy
 
