@@ -2,6 +2,7 @@ package com.gu.contentapi.client
 
 import com.gu.contentapi.client.model._
 import java.time.Instant
+import java.util.concurrent.TimeUnit
 
 import com.gu.contentapi.client.model.v1.{ErrorResponse, SearchResponse}
 import org.scalatest.concurrent.ScalaFutures
@@ -10,11 +11,14 @@ import org.scalatest._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
   private val api = new ContentApiClient {
+    val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
+    val maxRetries = 5
 
-    override val backoffStrategy: Backoff = Backoff()
+    override val backoffStrategy: Multiple = Backoff.doublingStrategy(retryDuration, maxRetries)
 
     val apiKey = "TEST-API-KEY"
 

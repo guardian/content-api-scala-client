@@ -4,12 +4,14 @@ import com.gu.contentatom.thrift.{AtomData, AtomType}
 import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
 import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
 import java.time.Instant
+import java.util.concurrent.TimeUnit
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 object GuardianContentClientTest {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
@@ -20,7 +22,10 @@ object GuardianContentClientTest {
 
 class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
   import GuardianContentClientTest.apiKey
-  private val api = new GuardianContentClient(apiKey)
+  private val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
+  private val maxRetryCount = 3
+  private val backoffStrategy = Backoff.doublingStrategy(retryDuration, maxRetryCount)
+  private val api = new GuardianContentClient(apiKey, backoffStrategy)
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 
   override def afterAll() {
@@ -29,9 +34,8 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
 
   implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
-  "client interface" should "be using a correctly configured default backoffStrategy" in {
-    val expectedBackoffStrategy = Backoff()
-    api.backoffStrategy should be (expectedBackoffStrategy)
+  "client interface" should "be using a correctly configured backoff strategy" in {
+    api.backoffStrategy should be (backoffStrategy)
   }
 
   it should "successfully call the Content API" in {

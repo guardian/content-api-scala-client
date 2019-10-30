@@ -6,9 +6,7 @@ import okhttp3._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import java.util.concurrent.TimeUnit
 
-class GuardianContentClient(val apiKey: String) extends ContentApiClient {
-
-  override val backoffStrategy = Backoff.doubling()
+class GuardianContentClient(val apiKey: String, val backoffStrategy: Backoff) extends ContentApiClient {
 
   protected def httpClientBuilder = new OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.SECONDS)
