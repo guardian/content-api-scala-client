@@ -24,7 +24,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   import GuardianContentClientTest.apiKey
   private val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
   private val maxRetryCount = 3
-  private val backoffStrategy = Backoff.doublingStrategy(retryDuration, maxRetryCount)
+  private val backoffStrategy = ContentApiBackoff.doublingStrategy(retryDuration, maxRetryCount)
   private val api = new GuardianContentClient(apiKey, backoffStrategy)
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 

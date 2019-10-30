@@ -14,9 +14,9 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
   private def MILLIS = TimeUnit.MILLISECONDS
   private def SECONDS = TimeUnit.SECONDS
 
-  def clientWithBackoff(strategy: Backoff) = new ContentApiClient {
+  def clientWithBackoff(strategy: ContentApiBackoff) = new ContentApiClient {
 
-    override val backoffStrategy: Backoff = strategy
+    override val backoffStrategy: ContentApiBackoff = strategy
 
     val apiKey = "TEST-API-KEY"
 
@@ -28,7 +28,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
   "Client interface" should "have the expected doubling backoff strategy" in {
     val myInterval = 250L
     val myRetries = 3
-    val myStrategy = Backoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
     val expectedStrategy = Multiple(Duration(myInterval, MILLIS), 1, myRetries, 2.0)
     myApi.backoffStrategy should be(expectedStrategy)
@@ -38,7 +38,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     // 10 NANOS should become 250 MILLIS
     val myInterval = 10L
     val myRetries = 20
-    val myStrategy = Backoff.doublingStrategy(Duration(myInterval, NANOS), myRetries)
+    val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, NANOS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
     val expectedStrategy = Multiple(Duration(250L, MILLIS), 1, myRetries, 2.0)
     myApi.backoffStrategy should be(expectedStrategy)
@@ -47,7 +47,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
   it should "not allow a doubling strategy with zero retries" in {
     val myInterval = 250L
     val myRetries = 0
-    val myStrategy = Backoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
     val expectedStrategy = Multiple(Duration(myInterval, MILLIS), 1, 1, 2.0)
     myApi.backoffStrategy should be(expectedStrategy)
@@ -57,7 +57,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     // an exponential backoff allows a minimum interval of 100 MILLIS
     val myInterval = 100L
     val myRetries = 10
-    val myStrategy = Backoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
     val expectedStrategy = Exponential(Duration(myInterval, MILLIS), 1, myRetries)
     myApi.backoffStrategy should be(expectedStrategy)
@@ -67,7 +67,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     // an attempt to delay just 10 MILLIS should be set to minimum of 100 MILLIS
     val myInterval = 10L
     val myRetries = 1
-    val myStrategy = Backoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
     val expectedStrategy = Exponential(Duration(100L, MILLIS), 1, myRetries)
     myApi.backoffStrategy should be(expectedStrategy)
@@ -76,7 +76,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
   it should "not allow an exponential strategy with zero retries" in {
     val myInterval = 10L
     val myRetries = 0
-    val myStrategy = Backoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
     val expectedStrategy = Exponential(Duration(100L, MILLIS), 1, 1)
     myApi.backoffStrategy should be(expectedStrategy)
@@ -85,7 +85,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
   it should "respect user's parameters even if they request ridiculous upper limits" in {
     val myInterval = 500L
     val myRetries = 20
-    val myStrategy = Backoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
     val expectedStrategy = Exponential(Duration(myInterval, MILLIS), 1, myRetries)
     myApi.backoffStrategy should be(expectedStrategy)
@@ -94,7 +94,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
   "When invoked, a doubling backoff strategy" should "increment properly" in {
     val myInterval = 250L
     val myRetries = 4
-    val myStrategy = Backoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
 
     val firstRetry = myApi.backoffStrategy.state
@@ -114,7 +114,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myInterval = 350L
     val myFactor = 3.0
     val myRetries = 3
-    val myStrategy = Backoff.multiplierStrategy(Duration(myInterval, MILLIS), myRetries, myFactor)
+    val myStrategy = ContentApiBackoff.multiplierStrategy(Duration(myInterval, MILLIS), myRetries, myFactor)
     val myApi = clientWithBackoff(myStrategy)
 
     val firstRetry = myApi.backoffStrategy.state
@@ -130,7 +130,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
   "When invoked, an exponential backoff strategy" should "increment backoff values correctly" in {
     val myInterval = 100L
     val myRetries = 4
-    val myStrategy = Backoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
 
     val firstRetry = myApi.backoffStrategy.state

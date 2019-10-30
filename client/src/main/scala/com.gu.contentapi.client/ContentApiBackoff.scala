@@ -7,9 +7,9 @@ import com.gu.contentapi.client.model.{ ContentApiRecoverableException, HttpResp
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.Duration
 
-abstract class Backoff extends Product with Serializable { self =>
+abstract class ContentApiBackoff extends Product with Serializable { self =>
 
-  def state: Backoff = self match {
+  def state: ContentApiBackoff = self match {
     case Exponential(_, n, max) if n == max => RetryFailed(max)
     case Exponential(d, n, max) =>
       val delay = Duration(Math.pow(2, n) * d.toMillis, TimeUnit.MILLISECONDS)
@@ -22,8 +22,8 @@ abstract class Backoff extends Product with Serializable { self =>
   }
 
   def retry(operation: ⇒ Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
-    def delayedRetry[T <: Retrying](backoff: T) = {
-      Backoff.scheduledExecutor.sleepFor(backoff.delay)
+    def delayedRetry[T <: Retrying](backoff: T): Future[HttpResponse] = {
+      ContentApiBackoff.scheduledExecutor.sleepFor(backoff.delay)
         .flatMap { _ => operation }
         .recoverWith {
           case _: ContentApiRecoverableException => retry(operation)
@@ -39,15 +39,15 @@ abstract class Backoff extends Product with Serializable { self =>
 
 }
 
-abstract class Retrying extends Backoff {
+abstract class Retrying extends ContentApiBackoff {
   val delay: Duration
 }
 
 sealed case class Exponential private (delay: Duration, attempts: Int, maxAttempts: Int) extends Retrying
 sealed case class Multiple private (delay: Duration, attempts: Int, maxAttempts: Int, factor: Double) extends Retrying
-sealed case class RetryFailed private(attempts: Int) extends Backoff
+sealed case class RetryFailed private(attempts: Int) extends ContentApiBackoff
 
-object Backoff {
+object ContentApiBackoff {
   private val defaultMaxAttempts = 3
   private val defaultExponentialMinimumInterval = 100L
   private val defaultMultiplierMinimumInterval = 250L
