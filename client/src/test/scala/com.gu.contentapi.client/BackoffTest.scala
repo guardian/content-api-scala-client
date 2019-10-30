@@ -91,6 +91,34 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
+  "Client interface with a constant wait backoff strategy" should "be initialised correctly" in {
+    // an exponential backoff allows a minimum interval of 100 MILLIS
+    val myInterval = 500L
+    val myRetries = 5
+    val myStrategy = ContentApiBackoff.constantStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myApi = clientWithBackoff(myStrategy)
+    val expectedStrategy = Constant(Duration(myInterval, MILLIS), 1, myRetries)
+    myApi.backoffStrategy should be(expectedStrategy)
+  }
+
+  it should "respect minimum parameters" in {
+    val myInterval = 1L
+    val myRetries = 100
+    val myStrategy = ContentApiBackoff.constantStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myApi = clientWithBackoff(myStrategy)
+    val expectedStrategy = Constant(Duration(250L, MILLIS), 1, myRetries)
+    myApi.backoffStrategy should be(expectedStrategy)
+  }
+
+  it should "not allow a constant strategy with zero retries" in {
+    val myInterval = 250L
+    val myRetries = 0
+    val myStrategy = ContentApiBackoff.constantStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myApi = clientWithBackoff(myStrategy)
+    val expectedStrategy = Constant(Duration(myInterval, MILLIS), 1, 1)
+    myApi.backoffStrategy should be(expectedStrategy)
+  }
+
   "When invoked, a doubling backoff strategy" should "increment properly" in {
     val myInterval = 250L
     val myRetries = 4
@@ -141,6 +169,25 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
 
     val thirdRetry = secondRetry.state
     thirdRetry should be(Exponential(Duration(6400L, MILLIS), 4, myRetries))
+
+    val fourthRetry = thirdRetry.state
+    fourthRetry should be(com.gu.contentapi.client.RetryFailed(4))
+  }
+
+  "When invoked, a constant wait backoff strategy" should "increment itself correctly" in {
+    val myInterval = 1000L
+    val myRetries = 4
+    val myStrategy = ContentApiBackoff.constantStrategy(Duration(myInterval, MILLIS), myRetries)
+    val myApi = clientWithBackoff(myStrategy)
+
+    val firstRetry = myApi.backoffStrategy.state
+    firstRetry should be(Constant(Duration(1000L, MILLIS), 2, myRetries))
+
+    val secondRetry = firstRetry.state
+    secondRetry should be(Constant(Duration(1000L, MILLIS), 3, myRetries))
+
+    val thirdRetry = secondRetry.state
+    thirdRetry should be(Constant(Duration(1000L, MILLIS), 4, myRetries))
 
     val fourthRetry = thirdRetry.state
     fourthRetry should be(com.gu.contentapi.client.RetryFailed(4))
