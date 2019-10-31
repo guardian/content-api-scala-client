@@ -20,22 +20,14 @@ object ScheduledExecutor {
 }
 
 /**
-  * A thread pool backed executor for tasks scheduled in the future
-  * @param corePoolSize the number of threads to keep in the pool, even
-  *                     if they are idle, unless { @code allowCoreThreadTimeOut} is set
-  * @param threadFactory the factory to use when the executor
-  *                      creates a new thread
-  * @param handler the handler to use when execution is blocked
-  *                because the thread bounds and queue capacities are reached
+  * A single threaded executor for tasks scheduled in the future
   * @throws IllegalArgumentException if { @code corePoolSize < 0}
   * @throws NullPointerException if { @code threadFactory} or
   *                                         { @code handler} is null
   */
-class ScheduledExecutor(corePoolSize: Int,
-                        threadFactory: ThreadFactory = Executors.defaultThreadFactory,
-                        handler: RejectedExecutionHandler = ScheduledExecutor.defaultHandler) {
+class ScheduledExecutor {
 
-  private val underlying: ScheduledExecutorService = new ScheduledThreadPoolExecutor(corePoolSize, threadFactory, handler)
+  private lazy val underlying: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
 
   /**
     * Creates a Future and schedules the operation to run after the given delay.

@@ -30,7 +30,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 3
     val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Multiple(Duration(myInterval, MILLIS), 1, myRetries, 2.0)
+    val expectedStrategy = Multiple(Duration(myInterval, MILLIS), 0, myRetries, 2.0)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -40,7 +40,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 20
     val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, NANOS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Multiple(Duration(250L, MILLIS), 1, myRetries, 2.0)
+    val expectedStrategy = Multiple(Duration(250L, MILLIS), 0, myRetries, 2.0)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -49,7 +49,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 0
     val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Multiple(Duration(myInterval, MILLIS), 1, 1, 2.0)
+    val expectedStrategy = Multiple(Duration(myInterval, MILLIS), 0, 1, 2.0)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -59,7 +59,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 10
     val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Exponential(Duration(myInterval, MILLIS), 1, myRetries)
+    val expectedStrategy = Exponential(Duration(myInterval, MILLIS), 0, myRetries)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -69,7 +69,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 1
     val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Exponential(Duration(100L, MILLIS), 1, myRetries)
+    val expectedStrategy = Exponential(Duration(100L, MILLIS), 0, myRetries)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -78,7 +78,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 0
     val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Exponential(Duration(100L, MILLIS), 1, 1)
+    val expectedStrategy = Exponential(Duration(100L, MILLIS), 0, 1)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -87,7 +87,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 20
     val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Exponential(Duration(myInterval, MILLIS), 1, myRetries)
+    val expectedStrategy = Exponential(Duration(myInterval, MILLIS), 0, myRetries)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -97,7 +97,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 5
     val myStrategy = ContentApiBackoff.constantStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Constant(Duration(myInterval, MILLIS), 1, myRetries)
+    val expectedStrategy = Constant(Duration(myInterval, MILLIS), 0, myRetries)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -106,7 +106,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 100
     val myStrategy = ContentApiBackoff.constantStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Constant(Duration(250L, MILLIS), 1, myRetries)
+    val expectedStrategy = Constant(Duration(250L, MILLIS), 0, myRetries)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -115,7 +115,7 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myRetries = 0
     val myStrategy = ContentApiBackoff.constantStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
-    val expectedStrategy = Constant(Duration(myInterval, MILLIS), 1, 1)
+    val expectedStrategy = Constant(Duration(myInterval, MILLIS), 0, 1)
     myApi.backoffStrategy should be(expectedStrategy)
   }
 
@@ -125,17 +125,20 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
 
-    val firstRetry = myApi.backoffStrategy.state
-    firstRetry should be(Multiple(Duration(500L, MILLIS), 2, myRetries, 2.0))
+    val firstRetry = myApi.backoffStrategy.nextState
+    firstRetry should be(Multiple(Duration(250L, MILLIS), 1, myRetries, 2.0))
 
-    val secondRetry = firstRetry.state
-    secondRetry should be(Multiple(Duration(1L, SECONDS), 3, myRetries, 2.0))
+    val secondRetry = firstRetry.nextState
+    secondRetry should be(Multiple(Duration(500L, MILLIS), 2, myRetries, 2.0))
 
-    val thirdRetry = secondRetry.state
-    thirdRetry should be(Multiple(Duration(2L, SECONDS), 4, myRetries, 2.0))
+    val thirdRetry = secondRetry.nextState
+    thirdRetry should be(Multiple(Duration(1000L, MILLIS), 3, myRetries, 2.0))
 
-    val fourthRetry = thirdRetry.state
-    fourthRetry should be(com.gu.contentapi.client.RetryFailed(4))
+    val fourthRetry = thirdRetry.nextState
+    fourthRetry should be(Multiple(Duration(2000L, MILLIS), 4, myRetries, 2.0))
+
+    val fifthRetry = fourthRetry.nextState
+    fifthRetry should be(com.gu.contentapi.client.RetryFailed(4))
   }
 
   "When invoked, a multiplier backoff strategy" should "increment backoff values correctly with custom factor" in {
@@ -145,14 +148,17 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myStrategy = ContentApiBackoff.multiplierStrategy(Duration(myInterval, MILLIS), myRetries, myFactor)
     val myApi = clientWithBackoff(myStrategy)
 
-    val firstRetry = myApi.backoffStrategy.state
-    firstRetry should be(Multiple(Duration(1050L, MILLIS), 2, myRetries, myFactor))
+    val firstRetry = myApi.backoffStrategy.nextState
+    firstRetry should be(Multiple(Duration(350L, MILLIS), 1, myRetries, myFactor))
 
-    val secondRetry = firstRetry.state
-    secondRetry should be(Multiple(Duration(3150L, MILLIS), 3, myRetries, myFactor))
+    val secondRetry = firstRetry.nextState
+    secondRetry should be(Multiple(Duration(1050L, MILLIS), 2, myRetries, myFactor))
 
-    val thirdRetry = secondRetry.state
-    thirdRetry should be(com.gu.contentapi.client.RetryFailed(3))
+    val thirdRetry = secondRetry.nextState
+    thirdRetry should be(Multiple(Duration(3150L, MILLIS), 3, myRetries, myFactor))
+
+    val fourthRetry = thirdRetry.nextState
+    fourthRetry should be(com.gu.contentapi.client.RetryFailed(3))
   }
 
   "When invoked, an exponential backoff strategy" should "increment backoff values correctly" in {
@@ -161,36 +167,39 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
 
-    val firstRetry = myApi.backoffStrategy.state
-    firstRetry should be(Exponential(Duration(200L, MILLIS), 2, myRetries))
+    val firstRetry = myApi.backoffStrategy.nextState
+    firstRetry should be(Exponential(Duration(100L, MILLIS), 1, myRetries))
 
-    val secondRetry = firstRetry.state
-    secondRetry should be(Exponential(Duration(800L, MILLIS), 3, myRetries))
+    val secondRetry = firstRetry.nextState
+    secondRetry should be(Exponential(Duration(200L, MILLIS), 2, myRetries))
 
-    val thirdRetry = secondRetry.state
-    thirdRetry should be(Exponential(Duration(6400L, MILLIS), 4, myRetries))
+    val thirdRetry = secondRetry.nextState
+    thirdRetry should be(Exponential(Duration(800L, MILLIS), 3, myRetries))
 
-    val fourthRetry = thirdRetry.state
-    fourthRetry should be(com.gu.contentapi.client.RetryFailed(4))
+    val fourthRetry = thirdRetry.nextState
+    fourthRetry should be(Exponential(Duration(6400L, MILLIS), 4, myRetries))
+
+    val fifthRetry = fourthRetry.nextState
+    fifthRetry should be(com.gu.contentapi.client.RetryFailed(4))
   }
 
   "When invoked, a constant wait backoff strategy" should "increment itself correctly" in {
     val myInterval = 1000L
-    val myRetries = 4
+    val myRetries = 3
     val myStrategy = ContentApiBackoff.constantStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
 
-    val firstRetry = myApi.backoffStrategy.state
-    firstRetry should be(Constant(Duration(1000L, MILLIS), 2, myRetries))
+    val firstRetry = myApi.backoffStrategy.nextState
+    firstRetry should be(Constant(Duration(1000L, MILLIS), 1, myRetries))
 
-    val secondRetry = firstRetry.state
-    secondRetry should be(Constant(Duration(1000L, MILLIS), 3, myRetries))
+    val secondRetry = firstRetry.nextState
+    secondRetry should be(Constant(Duration(1000L, MILLIS), 2, myRetries))
 
-    val thirdRetry = secondRetry.state
-    thirdRetry should be(Constant(Duration(1000L, MILLIS), 4, myRetries))
+    val thirdRetry = secondRetry.nextState
+    thirdRetry should be(Constant(Duration(1000L, MILLIS), 3, myRetries))
 
-    val fourthRetry = thirdRetry.state
-    fourthRetry should be(com.gu.contentapi.client.RetryFailed(4))
+    val fourthRetry = thirdRetry.nextState
+    fourthRetry should be(com.gu.contentapi.client.RetryFailed(3))
   }
 
 }

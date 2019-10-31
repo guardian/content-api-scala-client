@@ -2,43 +2,33 @@ package com.gu.contentapi.client
 
 import java.util.concurrent.TimeUnit
 
-import com.gu.contentapi.client.model.{ ContentApiRecoverableException, HttpResponse }
+import com.gu.contentapi.client.model.{ContentApiRecoverableException, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.Duration
 
 abstract class ContentApiBackoff extends Product with Serializable { self =>
 
-  def state: ContentApiBackoff = self match {
+  def nextState: ContentApiBackoff = self match {
     // check max retries reached
     case Exponential(_, n, max) if n == max => RetryFailed(max)
     case Multiple(_, n, max, _) if n == max => RetryFailed(max)
     case Constant(_, n, max) if n == max => RetryFailed(max)
     // setup next delay cycle
     case Exponential(d, n, max) =>
-      val delay = Duration(Math.pow(2, n) * d.toMillis, TimeUnit.MILLISECONDS)
+      val delay = if (n == 0) Duration(d.toMillis, TimeUnit.MILLISECONDS) else Duration(Math.pow(2, n) * d.toMillis, TimeUnit.MILLISECONDS)
       Exponential(delay, n + 1, max)
     case Multiple(d, n, max, f) =>
-      val delay = Duration(f * d.toMillis, TimeUnit.MILLISECONDS)
+      val delay = if (n == 0) Duration(d.toMillis, TimeUnit.MILLISECONDS) else Duration(f * d.toMillis, TimeUnit.MILLISECONDS)
       Multiple(delay, n + 1, max, f)
     case Constant(d, n, max) =>
       Constant(d, n + 1, max)
     case x => x
   }
 
-  def retry(operation: ⇒ Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
-    def delayedRetry[T <: Retrying](backoff: T): Future[HttpResponse] = {
-      ContentApiBackoff.scheduledExecutor.sleepFor(backoff.delay)
-        .flatMap { _ => operation }
-        .recoverWith {
-          case _: ContentApiRecoverableException => retry(operation)
-        }
-    }
-
-    self.state match {
-      case exp: Exponential => delayedRetry(exp)
-      case mul: Multiple => delayedRetry(mul)
-      case con: Constant => delayedRetry(con)
+  def execute(operation: => Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
+    self match {
+      case r: Retrying => ContentApiBackoff.scheduledExecutor.sleepFor(r.delay).flatMap { _ => ContentApiBackoff.retry(self.nextState, operation) }
       case f: RetryFailed => Future.failed(new Exception(s"Retry failed after ${f.attempts} retries"))
     }
   }
@@ -60,7 +50,7 @@ object ContentApiBackoff {
   private val defaultMinimumInterval = 250L
   private val defaultMinimumMultiplierFactor = 2.0
 
-  private lazy val scheduledExecutor = new ScheduledExecutor(1)
+  private lazy val scheduledExecutor = new ScheduledExecutor
 
   def exponentialStrategy(d: Duration, maxAttempts: Int): Exponential = exponential(d, maxAttempts)
   def doublingStrategy(d: Duration, maxAttempts: Int): Multiple = multiple(d, maxAttempts, 2.0)
@@ -73,7 +63,7 @@ object ContentApiBackoff {
   ): Exponential = {
     val ln = if (min.toMillis < defaultExponentialMinimumInterval) defaultExponentialMinimumInterval else min.toMillis
     val mx = if (maxAttempts > 0) maxAttempts else 1
-    Exponential(Duration(ln, TimeUnit.MILLISECONDS), 1, mx)
+    Exponential(Duration(ln, TimeUnit.MILLISECONDS), 0, mx)
   }
 
   private def multiple(
@@ -84,16 +74,23 @@ object ContentApiBackoff {
     val ln = if (min.toMillis < defaultMinimumInterval) defaultMinimumInterval else min.toMillis
     val mx = if (maxAttempts > 0) maxAttempts else 1
     val fc = if (factor < defaultMinimumMultiplierFactor) defaultMinimumMultiplierFactor else factor
-    Multiple(Duration(ln, TimeUnit.MILLISECONDS), 1, mx, fc)
+    Multiple(Duration(ln, TimeUnit.MILLISECONDS), 0, mx, fc)
   }
 
   private def constant(
     min: Duration = Duration(defaultMinimumInterval, TimeUnit.MILLISECONDS),
-    maxAttempts: Int = defaultMaxAttempts,
+    maxAttempts: Int = defaultMaxAttempts
   ): Constant = {
     val ln = if (min.toMillis < defaultMinimumInterval) defaultMinimumInterval else min.toMillis
     val mx = if (maxAttempts > 0) maxAttempts else 1
-    Constant(Duration(ln, TimeUnit.MILLISECONDS), 1, mx)
+    Constant(Duration(ln, TimeUnit.MILLISECONDS), 0, mx)
+  }
+
+  private def retry(backoff: ContentApiBackoff, operation: ⇒ Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
+    operation
+      .recoverWith {
+        case _: ContentApiRecoverableException => backoff.execute(operation)
+      }
   }
 
 }

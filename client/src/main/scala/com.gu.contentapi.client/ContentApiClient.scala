@@ -47,20 +47,8 @@ trait ContentApiClient {
 
   /** Streamlines the handling of a valid CAPI response */
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = {
-    def getter: Future[HttpResponse] = get(url(contentApiQuery), headers)(context)
-
-    getter
-      .recoverWith {
-        case r: ContentApiRecoverableException =>
-          // TODO: Remove println or replace it with a log operation
-          println(s"Recoverable error ${r.httpStatus} encountered - retrying")
-          backoffStrategy.retry(getter)
-
-        case e => Future.failed(e)
-      }
-      .flatMap {
-        HttpResponse.check
-      }
+    def getter: Future[HttpResponse] = get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
+    backoffStrategy.execute(getter).map(_.body)
   }
 
   private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
