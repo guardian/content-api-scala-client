@@ -1,3 +1,7 @@
+## 15.5
+
+* Upgrade model to v15.5 (adds acast ID to podcast metadata)
+
 ## 15.4
 
 * Upgrade model to v15.3 (removes storyquestions)
