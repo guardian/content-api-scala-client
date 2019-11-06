@@ -2,9 +2,7 @@ package com.gu.contentapi.client
 
 import java.util.concurrent.ThreadPoolExecutor.AbortPolicy
 import java.util.concurrent.{
-  ThreadFactory,
   Executors,
-  ScheduledThreadPoolExecutor,
   ScheduledExecutorService,
   RejectedExecutionHandler,
   RejectedExecutionException

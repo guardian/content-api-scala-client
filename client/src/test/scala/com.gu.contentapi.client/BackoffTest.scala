@@ -125,19 +125,19 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
 
-    val firstRetry = myApi.backoffStrategy.nextState
+    val firstRetry = myApi.backoffStrategy.increment
     firstRetry should be(Multiple(Duration(250L, MILLIS), 1, myRetries, 2.0))
 
-    val secondRetry = firstRetry.nextState
+    val secondRetry = firstRetry.increment
     secondRetry should be(Multiple(Duration(500L, MILLIS), 2, myRetries, 2.0))
 
-    val thirdRetry = secondRetry.nextState
+    val thirdRetry = secondRetry.increment
     thirdRetry should be(Multiple(Duration(1000L, MILLIS), 3, myRetries, 2.0))
 
-    val fourthRetry = thirdRetry.nextState
+    val fourthRetry = thirdRetry.increment
     fourthRetry should be(Multiple(Duration(2000L, MILLIS), 4, myRetries, 2.0))
 
-    val fifthRetry = fourthRetry.nextState
+    val fifthRetry = fourthRetry.increment
     fifthRetry should be(com.gu.contentapi.client.RetryFailed(4))
   }
 
@@ -148,16 +148,16 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myStrategy = ContentApiBackoff.multiplierStrategy(Duration(myInterval, MILLIS), myRetries, myFactor)
     val myApi = clientWithBackoff(myStrategy)
 
-    val firstRetry = myApi.backoffStrategy.nextState
+    val firstRetry = myApi.backoffStrategy.increment
     firstRetry should be(Multiple(Duration(350L, MILLIS), 1, myRetries, myFactor))
 
-    val secondRetry = firstRetry.nextState
+    val secondRetry = firstRetry.increment
     secondRetry should be(Multiple(Duration(1050L, MILLIS), 2, myRetries, myFactor))
 
-    val thirdRetry = secondRetry.nextState
+    val thirdRetry = secondRetry.increment
     thirdRetry should be(Multiple(Duration(3150L, MILLIS), 3, myRetries, myFactor))
 
-    val fourthRetry = thirdRetry.nextState
+    val fourthRetry = thirdRetry.increment
     fourthRetry should be(com.gu.contentapi.client.RetryFailed(3))
   }
 
@@ -167,19 +167,19 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myStrategy = ContentApiBackoff.exponentialStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
 
-    val firstRetry = myApi.backoffStrategy.nextState
+    val firstRetry = myApi.backoffStrategy.increment
     firstRetry should be(Exponential(Duration(100L, MILLIS), 1, myRetries))
 
-    val secondRetry = firstRetry.nextState
+    val secondRetry = firstRetry.increment
     secondRetry should be(Exponential(Duration(200L, MILLIS), 2, myRetries))
 
-    val thirdRetry = secondRetry.nextState
+    val thirdRetry = secondRetry.increment
     thirdRetry should be(Exponential(Duration(800L, MILLIS), 3, myRetries))
 
-    val fourthRetry = thirdRetry.nextState
+    val fourthRetry = thirdRetry.increment
     fourthRetry should be(Exponential(Duration(6400L, MILLIS), 4, myRetries))
 
-    val fifthRetry = fourthRetry.nextState
+    val fifthRetry = fourthRetry.increment
     fifthRetry should be(com.gu.contentapi.client.RetryFailed(4))
   }
 
@@ -189,16 +189,16 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
     val myStrategy = ContentApiBackoff.constantStrategy(Duration(myInterval, MILLIS), myRetries)
     val myApi = clientWithBackoff(myStrategy)
 
-    val firstRetry = myApi.backoffStrategy.nextState
+    val firstRetry = myApi.backoffStrategy.increment
     firstRetry should be(Constant(Duration(1000L, MILLIS), 1, myRetries))
 
-    val secondRetry = firstRetry.nextState
+    val secondRetry = firstRetry.increment
     secondRetry should be(Constant(Duration(1000L, MILLIS), 2, myRetries))
 
-    val thirdRetry = secondRetry.nextState
+    val thirdRetry = secondRetry.increment
     thirdRetry should be(Constant(Duration(1000L, MILLIS), 3, myRetries))
 
-    val fourthRetry = thirdRetry.nextState
+    val fourthRetry = thirdRetry.increment
     fourthRetry should be(com.gu.contentapi.client.RetryFailed(3))
   }
 

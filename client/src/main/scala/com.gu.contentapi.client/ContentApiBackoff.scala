@@ -9,7 +9,7 @@ import scala.concurrent.duration.Duration
 
 abstract class ContentApiBackoff extends Product with Serializable { self =>
 
-  def nextState: ContentApiBackoff = self match {
+  def increment: ContentApiBackoff = self match {
     // check max retries reached
     case Exponential(_, n, max) if n == max => RetryFailed(max)
     case Multiple(_, n, max, _) if n == max => RetryFailed(max)
@@ -26,22 +26,27 @@ abstract class ContentApiBackoff extends Product with Serializable { self =>
     case x => x
   }
 
+  def currentState: ContentApiBackoff = self
+
   def execute(operation: => Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
     self match {
-      case r: Retrying => ContentApiBackoff.scheduledExecutor.sleepFor(r.delay).flatMap { _ => ContentApiBackoff.retry(self.nextState, operation) }
+      case r: Retryable if(r.attempts == 0) => ContentApiBackoff.attempt(self.increment, operation)
+      case r: Retryable => ContentApiBackoff.scheduledExecutor.sleepFor(r.delay).flatMap { _ => ContentApiBackoff.attempt(self.increment, operation) }
       case f: RetryFailed => Future.failed(new Exception(s"Retry failed after ${f.attempts} retries"))
     }
   }
 
 }
 
-abstract class Retrying extends ContentApiBackoff {
+abstract class Retryable extends ContentApiBackoff {
   val delay: Duration
+  val attempts: Int
+  val maxAttempts: Int
 }
 
-sealed case class Exponential private (delay: Duration, attempts: Int, maxAttempts: Int) extends Retrying
-sealed case class Multiple private (delay: Duration, attempts: Int, maxAttempts: Int, factor: Double) extends Retrying
-sealed case class Constant private (delay: Duration, attempts: Int, maxAttempts: Int) extends Retrying
+sealed case class Exponential private (delay: Duration, attempts: Int, maxAttempts: Int) extends Retryable
+sealed case class Multiple private (delay: Duration, attempts: Int, maxAttempts: Int, factor: Double) extends Retryable
+sealed case class Constant private (delay: Duration, attempts: Int, maxAttempts: Int) extends Retryable
 sealed case class RetryFailed private(attempts: Int) extends ContentApiBackoff
 
 object ContentApiBackoff {
@@ -86,7 +91,7 @@ object ContentApiBackoff {
     Constant(Duration(ln, TimeUnit.MILLISECONDS), 0, mx)
   }
 
-  private def retry(backoff: ContentApiBackoff, operation: ⇒ Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
+  private def attempt(backoff: ContentApiBackoff, operation: ⇒ Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
     operation
       .recoverWith {
         case _: ContentApiRecoverableException => backoff.execute(operation)
