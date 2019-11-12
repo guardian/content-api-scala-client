@@ -22,6 +22,9 @@ object GuardianContentClientTest {
 
 class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
   import GuardianContentClientTest.apiKey
+
+  implicit val executor = ScheduledExecutor()
+
   private val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
   private val maxRetryCount = 3
   private val backoffStrategy = ContentApiBackoff.doublingStrategy(retryDuration, maxRetryCount)

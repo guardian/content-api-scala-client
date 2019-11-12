@@ -7,7 +7,9 @@ import com.gu.contentapi.client.model.{ContentApiRecoverableException, HttpRespo
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.Duration
 
-abstract class ContentApiBackoff extends Product with Serializable { self =>
+case class ContentApiBackoffException(message: String) extends RuntimeException(message, null, false, false)
+
+abstract class ContentApiBackoff(implicit executor: ScheduledExecutor) extends Product with Serializable { self =>
 
   def increment: ContentApiBackoff = self match {
     // check max retries reached
@@ -31,23 +33,23 @@ abstract class ContentApiBackoff extends Product with Serializable { self =>
   def execute(operation: => Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
     self match {
       case r: Retryable if(r.attempts == 0) => ContentApiBackoff.attempt(self.increment, operation)
-      case r: Retryable => ContentApiBackoff.scheduledExecutor.sleepFor(r.delay).flatMap { _ => ContentApiBackoff.attempt(self.increment, operation) }
-      case f: RetryFailed => Future.failed(new Exception(s"Retry failed after ${f.attempts} retries"))
+      case r: Retryable => executor.sleepFor(r.delay).flatMap { _ => ContentApiBackoff.attempt(self.increment, operation) }
+      case _: RetryFailed => Future.failed(ContentApiBackoffException("Backoff failed after retries"))
     }
   }
 
 }
 
-abstract class Retryable extends ContentApiBackoff {
+abstract class Retryable(implicit executor: ScheduledExecutor) extends ContentApiBackoff {
   val delay: Duration
   val attempts: Int
   val maxAttempts: Int
 }
 
-sealed case class Exponential private (delay: Duration, attempts: Int, maxAttempts: Int) extends Retryable
-sealed case class Multiple private (delay: Duration, attempts: Int, maxAttempts: Int, factor: Double) extends Retryable
-sealed case class Constant private (delay: Duration, attempts: Int, maxAttempts: Int) extends Retryable
-sealed case class RetryFailed private(attempts: Int) extends ContentApiBackoff
+final case class Exponential private (delay: Duration, attempts: Int, maxAttempts: Int)(implicit executor: ScheduledExecutor) extends Retryable
+final case class Multiple private (delay: Duration, attempts: Int, maxAttempts: Int, factor: Double)(implicit executor: ScheduledExecutor) extends Retryable
+final case class Constant private (delay: Duration, attempts: Int, maxAttempts: Int)(implicit executor: ScheduledExecutor) extends Retryable
+final case class RetryFailed private(attempts: Int)(implicit executor: ScheduledExecutor) extends ContentApiBackoff
 
 object ContentApiBackoff {
   private val defaultMaxAttempts = 3
@@ -55,18 +57,16 @@ object ContentApiBackoff {
   private val defaultMinimumInterval = 250L
   private val defaultMinimumMultiplierFactor = 2.0
 
-  private lazy val scheduledExecutor = new ScheduledExecutor
-
-  def exponentialStrategy(d: Duration, maxAttempts: Int): Exponential = exponential(d, maxAttempts)
-  def doublingStrategy(d: Duration, maxAttempts: Int): Multiple = multiple(d, maxAttempts, 2.0)
-  def multiplierStrategy(d: Duration, maxAttempts: Int, multiplier: Double): Multiple = multiple(d, maxAttempts, multiplier)
-  def constantStrategy(d: Duration, maxAttempts: Int): Constant = constant(d, maxAttempts)
+  def exponentialStrategy(d: Duration, maxAttempts: Int)(implicit executor: ScheduledExecutor): Exponential = exponential(d, maxAttempts)
+  def doublingStrategy(d: Duration, maxAttempts: Int)(implicit executor: ScheduledExecutor): Multiple = multiple(d, maxAttempts, 2.0)
+  def multiplierStrategy(d: Duration, maxAttempts: Int, multiplier: Double)(implicit executor: ScheduledExecutor): Multiple = multiple(d, maxAttempts, multiplier)
+  def constantStrategy(d: Duration, maxAttempts: Int)(implicit executor: ScheduledExecutor): Constant = constant(d, maxAttempts)
 
   private def exponential(
     min: Duration = Duration(defaultExponentialMinimumInterval, TimeUnit.MILLISECONDS),
     maxAttempts: Int = defaultMaxAttempts
-  ): Exponential = {
-    val ln = if (min.toMillis < defaultExponentialMinimumInterval) defaultExponentialMinimumInterval else min.toMillis
+  )(implicit executor: ScheduledExecutor): Exponential = {
+    val ln = Math.max(min.toMillis, defaultExponentialMinimumInterval)
     val mx = if (maxAttempts > 0) maxAttempts else 1
     Exponential(Duration(ln, TimeUnit.MILLISECONDS), 0, mx)
   }
@@ -75,8 +75,8 @@ object ContentApiBackoff {
     min: Duration = Duration(defaultMinimumInterval, TimeUnit.MILLISECONDS),
     maxAttempts: Int = defaultMaxAttempts,
     factor: Double
-  ): Multiple = {
-    val ln = if (min.toMillis < defaultMinimumInterval) defaultMinimumInterval else min.toMillis
+  )(implicit executor: ScheduledExecutor): Multiple = {
+    val ln = Math.max(min.toMillis, defaultMinimumInterval)
     val mx = if (maxAttempts > 0) maxAttempts else 1
     val fc = if (factor < defaultMinimumMultiplierFactor) defaultMinimumMultiplierFactor else factor
     Multiple(Duration(ln, TimeUnit.MILLISECONDS), 0, mx, fc)
@@ -85,8 +85,8 @@ object ContentApiBackoff {
   private def constant(
     min: Duration = Duration(defaultMinimumInterval, TimeUnit.MILLISECONDS),
     maxAttempts: Int = defaultMaxAttempts
-  ): Constant = {
-    val ln = if (min.toMillis < defaultMinimumInterval) defaultMinimumInterval else min.toMillis
+  )(implicit executor: ScheduledExecutor): Constant = {
+    val ln = Math.max(min.toMillis, defaultMinimumInterval)
     val mx = if (maxAttempts > 0) maxAttempts else 1
     Constant(Duration(ln, TimeUnit.MILLISECONDS), 0, mx)
   }

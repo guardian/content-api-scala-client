@@ -14,8 +14,11 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
   private def MILLIS = TimeUnit.MILLISECONDS
   private def SECONDS = TimeUnit.SECONDS
 
+  implicit val schedEx: ScheduledExecutor = ScheduledExecutor()
+
   def clientWithBackoff(strategy: ContentApiBackoff) = new ContentApiClient {
 
+    override implicit val executor: ScheduledExecutor = schedEx
     override val backoffStrategy: ContentApiBackoff = strategy
 
     val apiKey = "TEST-API-KEY"

@@ -14,7 +14,19 @@ import scala.concurrent.Promise
 import scala.language.implicitConversions
 
 object ScheduledExecutor {
-  private val defaultHandler: RejectedExecutionHandler = new AbortPolicy
+  def apply(): ScheduledExecutor = {
+    new ScheduledExecutor {
+      private lazy val underlying: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+      override def sleepFor(napTime: Duration): Future[Unit] = {
+        val promise = Promise[Unit]()
+        val runnable = new Runnable {
+          override def run(): Unit = promise.success(())
+        }
+        underlying.schedule(runnable, napTime.length, napTime.unit)
+        promise.future
+      }
+    }
+  }
 }
 
 /**
@@ -23,9 +35,7 @@ object ScheduledExecutor {
   * @throws NullPointerException if { @code threadFactory} or
   *                                         { @code handler} is null
   */
-class ScheduledExecutor {
-
-  private lazy val underlying: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+abstract class ScheduledExecutor {
 
   /**
     * Creates a Future and schedules the operation to run after the given delay.
@@ -36,13 +46,6 @@ class ScheduledExecutor {
     *                                    scheduled for execution
     */
 
-  def sleepFor(napTime: Duration): Future[Unit] = {
-    val promise = Promise[Unit]()
-    val runnable = new Runnable {
-      override def run(): Unit = promise.success(())
-    }
-    underlying.schedule(runnable, napTime.length, napTime.unit)
-    promise.future
-  }
+  def sleepFor(napTime: Duration): Future[Unit]
 
 }

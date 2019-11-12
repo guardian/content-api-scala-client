@@ -11,6 +11,9 @@ import scala.concurrent.{ExecutionContext, Future}
 trait ContentApiClient {
   import Decoder._
   import PaginatedApiResponse._
+
+  implicit val executor: ScheduledExecutor
+
   /** Your API key */
   def apiKey: String
 

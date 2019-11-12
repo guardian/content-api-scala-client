@@ -32,14 +32,18 @@ libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 
 Then, create your own client by extending the `ContentApiClient` trait and implementing the `get` method, e.g. using Play's ScalaWS client library
 
-Note that as of version 15.1 an instance of `ContentApiClient` now requires a `Backoff` declaration. This allows for some classes of HTTP errors to be automatically retried. The most basic implementation is shown below and is explained in more detail later in this readme.
+Note that as of version 15.1 an instance of `ContentApiClient` now requires a `ContentApiBackoff` declaration. This allows for some classes of HTTP errors to be automatically retried. A sample implementation is shown below and more examples can be found later in this readme.
 
 ```scala
 import play.api.libs.ws.WSClient
 
 class ContentApiClient(ws: WSClient) extends ContentApiClient
-  // new in version 15.1: Supply an automatic backoff and retry declaration
-  override val backoffStrategy: Backoff = Backoff()
+  // new in version 15.1: create an automatic backoff and retry strategy
+  override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
+  
+  val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
+  val retryAttempts = 5
+  override val backoffStrategy = ContentApiBackoff.doublingStrategy(retryDuration, retryAttempts)
  
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] =
     ws.url(url).withHttpHeaders(headers: _*).get.map(r => HttpResponse(r.bodyAsBytes, r.status, r.statusText))
@@ -277,9 +281,11 @@ To use these, it's simply a case of defining a duration and a number of retries 
 Some examples:
 
 ```scala
-class ApiClient extends CapiContentApiClient {
+class ApiClient extends ContentApiClient {
+  override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
+
   // create a doubling backoff and retry strategy
-  // we will wait for 500ms, 1000ms, 2000ms, 4000ms  and then 8000ms while recoverable errors are encountered
+  // we will wait for 250ms, 500ms, 1000ms, 2000ms  and then 4000ms while recoverable errors are encountered
   val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
   val retryAttempts = 5
   override val backoffStrategy = ContentApiBackoff.doublingStrategy(retryDuration, retryAttempts)
@@ -287,7 +293,9 @@ class ApiClient extends CapiContentApiClient {
 ``` 
 
 ```scala
-class ApiClient extends CapiContentApiClient {
+class ApiClient extends ContentApiClient {
+  override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
+
   // create a constant backoff and retry strategy
   // we will allow up to three attempts, each separated by one second
   val retryDuration = Duration(1000L, TimeUnit.MILLISECONDS)
@@ -298,6 +306,8 @@ class ApiClient extends CapiContentApiClient {
 
 ```scala
 class ApiClient extends ContentApiClient {
+  override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
+
   // create an exponential backoff strategy
   // the duration is multiplied by the next power of two on each attempt, so: 200ms, 400ms, 800ms, 1600ms and 3200ms
   // this means a maximum waiting time of 6.2 seconds if the error doesn't clear before then
@@ -309,9 +319,11 @@ class ApiClient extends ContentApiClient {
 
 ```scala
 class ApiClient extends ContentApiClient {
+  override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
+
   // create a multiplier backoff strategy
   // here, the duration is multiplied by the factor between each retry
-  // with a factor of 3.0, and 3 retries we will wait: 750ms, 2250ms and 6750ms
+  // with a factor of 3.0, and 3 retries we will wait: 250ms, 750ms, 2250ms
   val retrySchedule: Duration = Duration(250L, TimeUnit.MILLISECONDS)
   val retryCount: Int = 3
   val retryFactor: Double = 3.0

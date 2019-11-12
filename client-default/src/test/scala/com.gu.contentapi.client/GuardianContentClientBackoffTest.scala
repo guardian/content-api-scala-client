@@ -19,7 +19,7 @@ object FakeGuardianContentClient {
     }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable e.g. sbt -D$ApiKeyProperty=some-api-key")
 }
 
-class FakeGuardianContentClient(backoffStrategy: ContentApiBackoff) extends GuardianContentClient(FakeGuardianContentClient.apiKey, backoffStrategy) {
+class FakeGuardianContentClient(backoffStrategy: ContentApiBackoff)(implicit executor: ScheduledExecutor) extends GuardianContentClient(FakeGuardianContentClient.apiKey, backoffStrategy) {
 
   private var attempts = 0
   private var failWithCode = 0
@@ -50,7 +50,10 @@ class FakeGuardianContentClient(backoffStrategy: ContentApiBackoff) extends Guar
 
     attempts += 1
     http.newCall(req).enqueue(new Callback() {
-      override def onFailure(call: Call, e: IOException): Unit = promise.failure(e)
+      override def onFailure(call: Call, e: IOException): Unit = {
+        println(s"fail with ${e.getMessage}")
+        promise.failure(e)
+      }
       override def onResponse(call: Call, response: Response): Unit = {
         if (attempts < expectedFailures) {
           try {
@@ -72,6 +75,8 @@ class FakeGuardianContentClient(backoffStrategy: ContentApiBackoff) extends Guar
 class GuardianContentClientBackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
 
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
+
+  implicit val executor: ScheduledExecutor = ScheduledExecutor()
 
   "Client interface" should "establish the backoff strategy" in {
     val myInterval = 250L
@@ -98,6 +103,7 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
     fakeApi.shutdown()
   }
 
+  // TODO: MAKE THIS TEST WORK PROPERLY!
   it should "fail after three 429 retries" in {
     val myInterval = 250L
     val myRetries = 3 // i.e. try this once, and then make three retry attempts = 4 attempts in total
@@ -108,6 +114,7 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
     val query = ItemQuery(TestItemPath)
     try {
       fakeApi.getResponse(query)
+      fail()
     } catch {
       case e: Exception => e.getMessage should be ("Retry failed after 3 retries")
     }

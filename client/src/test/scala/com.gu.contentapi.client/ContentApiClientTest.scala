@@ -15,6 +15,8 @@ import scala.concurrent.duration.Duration
 
 class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
   private val api = new ContentApiClient {
+    override implicit val executor = ScheduledExecutor()
+
     val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
     val maxRetries = 5
 
