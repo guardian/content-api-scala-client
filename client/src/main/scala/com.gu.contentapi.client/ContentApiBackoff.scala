@@ -34,7 +34,7 @@ abstract class ContentApiBackoff(implicit executor: ScheduledExecutor) extends P
     self match {
       case r: Retryable if(r.attempts == 0) => ContentApiBackoff.attempt(self.increment, operation)
       case r: Retryable => executor.sleepFor(r.delay).flatMap { _ => ContentApiBackoff.attempt(self.increment, operation) }
-      case _: RetryFailed => Future.failed(ContentApiBackoffException("Backoff failed after retries"))
+      case f: RetryFailed => Future.failed(ContentApiBackoffException(s"Backoff failed after ${f.attempts} attempts"))
     }
   }
 
