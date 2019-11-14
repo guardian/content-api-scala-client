@@ -1,3 +1,7 @@
+## 15.6
+
+* Require clients to implement a ContentApiBackoff retry strategy along with an implicitly declared ScheduledExecutor. See the README for more info.
+
 ## 15.5
 
 * Upgrade model to v15.5 (adds acast ID to podcast metadata)

@@ -2,25 +2,33 @@ package com.gu.contentapi.client
 
 import com.gu.contentatom.thrift.{AtomData, AtomType}
 import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
-import com.gu.contentapi.client.model.{ItemQuery, SearchQuery, ContentApiError}
+import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
 import java.time.Instant
-import org.scalatest.concurrent.{ IntegrationPatience, ScalaFutures }
+import java.util.concurrent.TimeUnit
+
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
 
 object GuardianContentClientTest {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
   private val apiKey: String = {
     Option(System.getProperty(ApiKeyProperty)) orElse Option(System.getenv(ApiKeyProperty))
-  }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable")
+  }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable e.g. sbt -D$ApiKeyProperty=some-api-key")
 }
 
 class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
   import GuardianContentClientTest.apiKey
-  private val api = new GuardianContentClient(apiKey)
+
+  implicit val executor = ScheduledExecutor()
+
+  private val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
+  private val maxRetryCount = 3
+  private val backoffStrategy = ContentApiBackoff.doublingStrategy(retryDuration, maxRetryCount)
+  private val api = new GuardianContentClient(apiKey, backoffStrategy)
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 
   override def afterAll(): Unit = {
@@ -29,7 +37,11 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
 
   implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
-  "client interface" should "successfully call the Content API" in {
+  "client interface" should "be using a correctly configured backoff strategy" in {
+    api.backoffStrategy should be (backoffStrategy)
+  }
+
+  it should "successfully call the Content API" in {
     val query = ItemQuery(TestItemPath)
     val content = for {
       response <- api.getResponse(query)

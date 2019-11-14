@@ -11,7 +11,9 @@ import scala.concurrent.{ExecutionContext, Future}
 trait ContentApiClient {
   import Decoder._
   import PaginatedApiResponse._
-  
+
+  implicit val executor: ScheduledExecutor
+
   /** Your API key */
   def apiKey: String
 
@@ -44,9 +46,13 @@ trait ContentApiClient {
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
+  val backoffStrategy: ContentApiBackoff
+
   /** Streamlines the handling of a valid CAPI response */
-  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] =
-    get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
+  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = {
+    def getter: Future[HttpResponse] = get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
+    backoffStrategy.execute(getter).map(_.body)
+  }
 
   private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
     fb.flatMap { b =>
