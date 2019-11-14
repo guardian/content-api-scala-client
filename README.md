@@ -32,13 +32,13 @@ libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 
 Then, create your own client by extending the `ContentApiClient` trait and implementing the `get` method, e.g. using Play's ScalaWS client library
 
-Note that as of version 15.1 an instance of `ContentApiClient` now requires a `ContentApiBackoff` declaration. This allows for some classes of HTTP errors to be automatically retried. A sample implementation is shown below and more examples can be found later in this readme.
+Note that as of version 15.6 an instance of `ContentApiClient` now requires a `ContentApiBackoff` declaration. This allows for some classes of HTTP errors to be automatically retried. A sample implementation is shown below and more examples can be found later in this readme.
 
 ```scala
 import play.api.libs.ws.WSClient
 
 class ContentApiClient(ws: WSClient) extends ContentApiClient
-  // new in version 15.1: create an automatic backoff and retry strategy
+  // new in version 15.6: create an automatic backoff and retry strategy
   override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
   
   val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
@@ -265,7 +265,7 @@ val result: Future[Int] = client.paginateFold(query)(0){ (r: SearchResponse, t: 
 ## Retrying recoverable errors (backoff strategies)
 Sometimes the backend services that the client relies on can return HTTP failure results, and some of these are potentially recoverable within a relatively short period of time.
 Rather than immediately fail these requests by default as we have done previously, it is now possible to automatically retry those failures that may yield a successful result on a subsequent attempt. 
-As of version 15.1 of the client it is necessary to declare a `ContentApiBackoff` strategy when defining an implementation of `ContentApiClient`.
+As of version 15.6 of the client it is necessary to declare a `ContentApiBackoff` strategy when defining an implementation of `ContentApiClient`.
 
 The following strategies are available;
 
