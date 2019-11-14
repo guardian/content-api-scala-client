@@ -8,8 +8,9 @@ In your PR, update `CHANGELOG.md` with a description of the change.
 
 Then to release (from master branch):
 ```
-sbt 'release cross'
+sbt -DCAPI_TEST_KEY=a-valid-api-key 'release cross'
 ```
+(you need to supply the api key because the build process runs the tests)
 
 #### Releasing content-api-client-aws:
 This project does not depend on content-api-client.
@@ -17,3 +18,18 @@ This project does not depend on content-api-client.
 sbt 'aws/release cross'
 ```
 
+
+If the release process may ends with the following lines;
+```
+[info] error: gpg failed to sign the data
+[info] fatal: failed to write commit object
+Push changes to the remote repository (y/n)? [y] 
+```
+
+It's ok to respond `y` as long as there are entries like this in the output;
+```
+[info]   Evaluate: signature-staging
+[info]     Passed: signature-staging
+```
+
+The version numbers can be a bit screwy too, so double-check the version you're deploying. And you may have to manually push the updated `version.sbt` following the release process.
