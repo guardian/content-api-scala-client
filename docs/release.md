@@ -19,7 +19,7 @@ sbt 'aws/release cross'
 ```
 
 
-If the release process may ends with the following lines;
+If the release process ends with the following lines;
 ```
 [info] error: gpg failed to sign the data
 [info] fatal: failed to write commit object
