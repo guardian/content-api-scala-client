@@ -17,4 +17,4 @@ case object Interview extends DesignType
 case object GuardianView extends DesignType
 case object GuardianLabs extends DesignType
 case object Quiz extends DesignType
-
+case object AdvertisementFeature extends DesignType

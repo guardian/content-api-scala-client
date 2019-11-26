@@ -1,3 +1,7 @@
+## 15.7
+
+* Add AdvertisementFeature design type
+
 ## 15.6
 
 * Require clients to implement a ContentApiBackoff retry strategy along with an implicitly declared ScheduledExecutor. See the README for more info.

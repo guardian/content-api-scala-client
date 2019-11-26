@@ -39,6 +39,7 @@ object CapiModelEnrichment {
       val deadBlog: ContentFilter = !liveBloggingNow && tagExistsWithId("tone/minutebyminute")(_)
 
       val predicates: List[(ContentFilter, DesignType)] = List (
+        tagExistsWithId("tone/advertisement-features") -> AdvertisementFeature,
         tagExistsWithId("tone/matchreports") -> MatchReport,
         tagExistsWithId("tone/quizzes") -> Quiz,
         isImmersive -> Immersive,
