@@ -30,6 +30,7 @@ object Metadata {
         , Developer(id="cb372", name="Chris Birchall", email="", url=url("https://github.com/cb372"))
         , Developer(id="tomrf1", name="Tom Forbes", email="", url=url("https://github.com/tomrf1"))
         , Developer(id="regiskuckaertz", name="Regis Kuckaertz", email="", url=url("https://github.com/regiskuckaertz"))
+        , Developer(id="JustinPinner", name="Justin Pinner", email="", url=url("https://github.com/JustinPinner"))
         )
 
   val awsDevs = 

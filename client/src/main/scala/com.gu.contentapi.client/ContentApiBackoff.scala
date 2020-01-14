@@ -30,10 +30,10 @@ abstract class ContentApiBackoff(implicit executor: ScheduledExecutor) extends P
 
   def currentState: ContentApiBackoff = self
 
-  def execute(operation: => Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
+  def execute(operation: Int => Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
     self match {
-      case r: Retryable if(r.attempts == 0) => ContentApiBackoff.attempt(self.increment, operation)
-      case r: Retryable => executor.sleepFor(r.delay).flatMap { _ => ContentApiBackoff.attempt(self.increment, operation) }
+      case r: Retryable if(r.attempts == 0) => ContentApiBackoff.attempt(self.increment, r.attempts, operation)
+      case r: Retryable => executor.sleepFor(r.delay).flatMap { _ => ContentApiBackoff.attempt(self.increment, r.attempts, operation) }
       case f: RetryFailed => Future.failed(ContentApiBackoffException(s"Backoff failed after ${f.attempts} attempts"))
     }
   }
@@ -91,8 +91,8 @@ object ContentApiBackoff {
     Constant(Duration(ln, TimeUnit.MILLISECONDS), 0, mx)
   }
 
-  private def attempt(backoff: ContentApiBackoff, operation: ⇒ Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
-    operation
+  private def attempt(backoff: ContentApiBackoff, retry: Int, operation: Int => Future[HttpResponse])(implicit context: ExecutionContext): Future[HttpResponse] = {
+    operation(retry)
       .recoverWith {
         case _: ContentApiRecoverableException => backoff.execute(operation)
       }

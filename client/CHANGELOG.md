@@ -1,3 +1,8 @@
+## 15.8
+
+* Add a Retry-Count header so we can see the behaviour of the backoff code in Kibana
+* Update expired content test to ensure we return a 404
+
 ## 15.7
 
 * Add AdvertisementFeature design type

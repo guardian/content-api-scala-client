@@ -41,7 +41,8 @@ trait ContentApiClient {
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
 
   /** Some HTTP headers sent along each CAPI request */
-  private def headers = Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift")
+  private def headers(retry: Int) =
+    Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift", "x-retry" -> s"$retry")
 
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
@@ -50,7 +51,9 @@ trait ContentApiClient {
 
   /** Streamlines the handling of a valid CAPI response */
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = {
-    def getter: Future[HttpResponse] = get(url(contentApiQuery), headers).flatMap(HttpResponse.check)
+    def getter(retry: Int): Future[HttpResponse] =
+      get(url(contentApiQuery), headers(retry)).flatMap(HttpResponse.check)
+
     backoffStrategy.execute(getter).map(_.body)
   }
 
