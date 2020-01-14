@@ -1,3 +1,7 @@
+## 15.9
+
+* Bump CAPI models to 15.8 (adding more chart atom types in content-atom)
+
 ## 15.8
 
 * Bump CAPI models to 15.6 (removed content no longer supported)
