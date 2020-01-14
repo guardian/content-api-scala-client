@@ -71,13 +71,6 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     content.futureValue.id should be (TestItemPath)
   }
 
-  it should "perform a given removed content query" in {
-    val query = ContentApiClient.removedContent.reason("expired")
-    val results = for (response <- api.getResponse(query)) yield response.results
-    val fResults = results.futureValue
-    fResults.size should be (10)
-  }
-
   it should "perform a given atoms query" in {
     val query = ContentApiClient.atoms.types("explainer")
     val results = for (response <- api.getResponse(query)) yield response.results

@@ -63,20 +63,6 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   override def pathSegment: String = "search"
 }
 
-case class RemovedContentQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
-  with RemovedReasonParameters[RemovedContentQuery]
-  with PaginationParameters[RemovedContentQuery]
-  with OrderByParameter[RemovedContentQuery]
-  with UseDateParameter[RemovedContentQuery]{
-
-  def ids = StringParameter("ids")
-
-  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
-
-  def pathSegment: String = "content/removed"
-}
-
 case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery
   with ShowReferencesParameters[TagsQuery]
@@ -278,11 +264,6 @@ trait FilterSectionParameters[Owner <: Parameters[Owner]] extends Parameters[Own
 
 trait FilterSearchParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def q = StringParameter("q")
-}
-
-// Supports values gone, expired and takendown.
-trait RemovedReasonParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
-  def reason = StringParameter("reason")
 }
 
 trait AtomsParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
