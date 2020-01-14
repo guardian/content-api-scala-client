@@ -35,7 +35,6 @@ private[client] object Decoder {
   implicit val tagsQuery = apply[TagsQuery, TagsResponse](TagsResponse)
   implicit val sectionsQuery = apply[SectionsQuery, SectionsResponse](SectionsResponse)
   implicit val editionsQuery = apply[EditionsQuery, EditionsResponse](EditionsResponse)
-  implicit val removedContentQuery = apply[RemovedContentQuery, RemovedContentResponse](RemovedContentResponse)
   implicit val videoStatsQuery = apply[VideoStatsQuery, VideoStatsResponse](VideoStatsResponse)
   implicit val atomsQuery = atomsDecoder[AtomsQuery]
   implicit val recipesQuery = atomsDecoder[RecipesQuery]

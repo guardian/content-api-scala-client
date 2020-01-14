@@ -1,3 +1,7 @@
+## 15.8
+
+* Bump CAPI models to 15.6 (removed content no longer supported)
+
 ## 15.7
 
 * Add AdvertisementFeature design type
