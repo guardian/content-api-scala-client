@@ -25,7 +25,4 @@ class ContentApiQueryTest extends FlatSpec with Matchers  {
     TagsQuery().tagType("contributor").getUrl("") shouldEqual "/tags?type=contributor"
   }
 
-  "RemovedContentQuery" should "be amazing" in {
-    RemovedContentQuery().reason("gone").getUrl("") shouldEqual "/content/removed?reason=gone"
-  }
 }

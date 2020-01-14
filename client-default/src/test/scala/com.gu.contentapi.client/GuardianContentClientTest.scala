@@ -71,14 +71,6 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     content.futureValue.id should be (TestItemPath)
   }
 
-  it should "return a 404 in response to a removed (expired) content query" in {
-    val query = ContentApiClient.removedContent.reason("expired")
-    val errorTest = api.getResponse(query) recover { case error =>
-      error should be (ContentApiError(404, "Not Found", Some(ErrorResponse("error", "The requested resource could not be found."))))
-    }
-    errorTest.futureValue
-  }
-
   it should "perform a given atoms query" in {
     val query = ContentApiClient.atoms.types("explainer")
     val results = for (response <- api.getResponse(query)) yield response.results

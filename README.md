@@ -234,21 +234,7 @@ client.getResponse(usEditionsQuery) map { response =>
 
 ### Removed Content
 
-Filtering or searching for removed content happens at http://content.guardianapis.com/content/removed. For example:
-
-```scala
-// print the id of all removed content items
-val removedContentQuery = ContentApiLogic.removedContent
-client.getResponse(removedContentQuery) map { response =>
-  for (result <- response.results) println(result)
-}
-
-// print the id of all expired content
-val expiredContentQuery = ContentApiLogic.removedContent.reason("expired")
-client.getResponse(expiredContentQuery ) map { response =>
-  for (result <- response.results) println(result)
-}
-```
+This is removed in version 15.8
 
 ### Pagination
 The client allows you to paginate through results in the following ways:

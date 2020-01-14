@@ -157,7 +157,6 @@ trait ContentApiQueries {
   val tags = TagsQuery()
   val sections = SectionsQuery()
   val editions = EditionsQuery()
-  val removedContent = RemovedContentQuery()
   val atoms = AtomsQuery()
   def atomUsage(atomType: AtomType, atomId: String) = AtomUsageQuery(atomType, atomId)
   val recipes = RecipesQuery()
