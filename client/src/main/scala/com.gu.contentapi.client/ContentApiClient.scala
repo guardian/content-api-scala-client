@@ -42,7 +42,7 @@ trait ContentApiClient {
 
   /** Some HTTP headers sent along each CAPI request */
   private def headers(retry: Int) =
-    Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift", "x-retry" -> s"$retry")
+    Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift", "Request-Attempt" -> s"$retry", "Accept-Language" -> "*")
 
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
