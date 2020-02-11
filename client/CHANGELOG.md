@@ -1,4 +1,4 @@
-## 15.9
+## 16.0
 
 * Add a Retry-Count header so we can see the behaviour of the backoff code in Kibana
 
