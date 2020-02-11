@@ -1,6 +1,6 @@
 ## 16.0
 
-* Add a Retry-Count header so we can see the behaviour of the backoff code in Kibana
+* Add a `Request-Attempt` header that is set to zero for any initial request and incremented by one for each retry - so that we can see the behaviour of the backoff code in Kibana
 
 ## 15.8
 
