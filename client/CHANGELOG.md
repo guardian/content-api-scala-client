@@ -1,3 +1,7 @@
+## 16.0
+
+* Add a `Request-Attempt` header that is set to zero for any initial request and incremented by one for each retry - so that we can see the behaviour of the backoff code in Kibana
+
 ## 15.8
 
 * Bump CAPI models to 15.6 (removed content no longer supported)
