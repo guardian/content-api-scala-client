@@ -2,6 +2,7 @@ package com.gu.contentapi.client
 
 import com.gu.contentapi.buildinfo.CapiBuildInfo
 import com.gu.contentapi.client.HttpRetry.withRetry
+import com.gu.contentapi.client.model.HttpResponse.IsSuccessHttpResponse
 import com.gu.contentapi.client.model._
 import com.gu.contentatom.thrift.AtomType
 
@@ -9,8 +10,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait ContentApiClient {
   import Decoder._
-
-  implicit val executor: ScheduledExecutor
 
   /** Your API key */
   def apiKey: String
@@ -39,17 +38,17 @@ trait ContentApiClient {
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
 
   /** Some HTTP headers sent along each CAPI request */
-  private def headers(retry: Int) =
-    Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift", "Request-Attempt" -> s"$retry", "Accept-Language" -> "*")
+  private val headers =
+    Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift", "Request-Attempt" -> "0", "Accept-Language" -> "*")
 
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
-  val backoffStrategy: BackoffStrategy
-
   /** Streamlines the handling of a valid CAPI response */
-  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = withRetry(backoffStrategy){ retryAttempt =>
-    get(url(contentApiQuery), headers(retryAttempt)).flatMap(HttpResponse.check)
+
+  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = get(url(contentApiQuery), headers).flatMap {
+    case response @ IsSuccessHttpResponse() => Future.successful(response)
+    case response => Future.failed(ContentApiError(response))
   }.map(_.body)
 
   private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
@@ -142,6 +141,16 @@ trait ContentApiClient {
     paginateFoldIn(None)(m)
   }
 }
+
+trait RetryableContentApiClient extends ContentApiClient {
+  def backoffStrategy: BackoffStrategy
+  implicit def executor: ScheduledExecutor
+
+  abstract override def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = withRetry(backoffStrategy){ retryAttempt =>
+    super.get(url, headers + ("Request-Attempt" -> s"$retryAttempt"))
+  }
+}
+
 
 object ContentApiClient extends ContentApiQueries
 

@@ -3,11 +3,11 @@ package com.gu.contentapi.client
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-import com.gu.contentapi.client.model.{ContentApiRecoverableException, HttpResponse, ItemQuery}
+import com.gu.contentapi.client.model.{HttpResponse, ItemQuery}
 import okhttp3.{Call, Callback, Request, Response}
+import org.scalatest._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.exceptions.TestFailedException
-import org.scalatest._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -20,7 +20,7 @@ object FakeGuardianContentClient {
     }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable e.g. sbt -D$ApiKeyProperty=some-api-key")
 }
 
-class FakeGuardianContentClient(backoffStrategy: BackoffStrategy, interval: Long, retries: Int, failCode: Option[Int], alwaysFail: Boolean = false)(implicit executor: ScheduledExecutor) extends GuardianContentClient(FakeGuardianContentClient.apiKey, backoffStrategy) {
+class FakeGuardianContentClient(retries: Int, failCode: Option[Int], alwaysFail: Boolean = false) extends GuardianContentClient(FakeGuardianContentClient.apiKey) {
 
   private var attempts = 0
 
@@ -44,9 +44,9 @@ class FakeGuardianContentClient(backoffStrategy: BackoffStrategy, interval: Long
       override def onResponse(call: Call, response: Response): Unit = {
         try {
           failCode match {
-            case code: Some[Int] if (HttpResponse.failedButMaybeRecoverable.contains(code.get) && attempts < retries) || alwaysFail =>
-              val msg = s"Failed with recoverable result ${code.get}. This is intentional"
-              promise.failure(ContentApiRecoverableException(code.get, msg))
+            case Some(value) if attempts < retries || alwaysFail =>
+              val msg = s"Failed with recoverable result $value. This is intentional"
+              promise.success(HttpResponse("Failed".getBytes(), value, msg))
             case _ if alwaysFail =>
               val msg = "Failed, unrecoverable. This is intentional"
               promise.failure(ContentApiBackoffException(msg))
@@ -69,24 +69,17 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
 
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 
-  implicit val executor: ScheduledExecutor = ScheduledExecutor()
+  implicit val executor0: ScheduledExecutor = ScheduledExecutor()
 
-  "Client interface" should "establish the backoff strategy" in {
-    val myInterval = 250L
-    val myAttempts = 3
-    val myStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myAttempts)
-    val fakeApi = new FakeGuardianContentClient(myStrategy, myInterval, myAttempts, None)
-    val expectedStrategy = Multiple(Duration(myInterval, TimeUnit.MILLISECONDS), 0, myAttempts, 2.0)
-    fakeApi.backoffStrategy should be(expectedStrategy)
-    fakeApi.shutdown()
-  }
-
-  it should "succeed after two 408 retry attempts" in {
+  "Client interface" should "succeed after two 408 retry attempts" in {
     val myInterval = 250L
     val myAttempts = 3
     val failureCode = 408
-    val myStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myAttempts)
-    val fakeApi = new FakeGuardianContentClient(myStrategy, myInterval, myAttempts, Some(failureCode))
+    val fakeApi = new FakeGuardianContentClient(myAttempts, Some(failureCode)) with RetryableContentApiClient {
+      override val backoffStrategy: BackoffStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myAttempts)
+      override implicit val executor: ScheduledExecutor = executor0
+    }
+
     val query = ItemQuery(TestItemPath)
     val content = for {
       response <- fakeApi.getResponse(query)
@@ -100,8 +93,10 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
     val myRetries = 3 // i.e. try this once, and then make three retry attempts = 4 attempts in total
     val failureCode = 429
     val alwaysFail = true
-    val myStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
-    val fakeApi = new FakeGuardianContentClient(myStrategy, myInterval, myRetries, Some(failureCode), alwaysFail)
+    val fakeApi = new FakeGuardianContentClient(myRetries, Some(failureCode), alwaysFail) with RetryableContentApiClient {
+      override val backoffStrategy: BackoffStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
+      override implicit val executor: ScheduledExecutor = executor0
+    }
     val query = ItemQuery(TestItemPath)
 
     val result = for {
@@ -121,11 +116,13 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
   it should "retry (successfully) all recoverable error codes" in {
     val myInterval = 250L
     val myRetries = 2 // i.e. try once, then retry once = 2 attempts total
-    val myStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
     val query = ItemQuery(TestItemPath)
 
     HttpResponse.failedButMaybeRecoverable.foreach(code => {
-      val fakeApi = new FakeGuardianContentClient(myStrategy, myInterval, myRetries, Some(code))
+      val fakeApi = new FakeGuardianContentClient(myRetries, Some(code)) with RetryableContentApiClient {
+        override val backoffStrategy: BackoffStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
+        override implicit val executor: ScheduledExecutor = executor0
+      }
       val content = for {
         response <- fakeApi.getResponse(query)
       } yield response.content.get

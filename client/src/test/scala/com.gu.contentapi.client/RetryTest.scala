@@ -16,7 +16,7 @@ class RetryTest extends AsyncWordSpecLike with Matchers with RecoverMethods {
     "not retry if operation result is not retryable" in {
       val attemptValues: Iterator[Int] = (1 to maxAttempts).iterator
       for {
-        result <- Retry.withRetry[Any](backoffStrategy, _ => Future.successful(false)) { _ =>
+        result <- Retry.withRetry[Any](backoffStrategy, _ => false){ _ =>
           Future.successful(attemptValues.next())
         }
       } yield {
@@ -27,7 +27,7 @@ class RetryTest extends AsyncWordSpecLike with Matchers with RecoverMethods {
     "retry if operation result is retryable" in {
       val attemptValues: Iterator[Int] = (1 to maxAttempts).iterator
       for {
-        result <- Retry.withRetry[Int](backoffStrategy, _.map(_ != 4)) { _ =>
+        result <- Retry.withRetry[Int](backoffStrategy, _ != 4) { _ =>
           Future.successful(attemptValues.next())
         }
       } yield {
@@ -38,7 +38,7 @@ class RetryTest extends AsyncWordSpecLike with Matchers with RecoverMethods {
     "return failed Future if retry count exhausted" in {
       val attemptValues: Iterator[Int] = (1 to maxAttempts * 2).iterator
       val validateFailure = recoverToSucceededIf[ContentApiBackoffException] {
-        Retry.withRetry[Int](backoffStrategy, _ => Future.successful(true)) { _ =>
+        Retry.withRetry[Int](backoffStrategy, _ => true) { _ =>
           Future.successful(attemptValues.next())
         }
       }

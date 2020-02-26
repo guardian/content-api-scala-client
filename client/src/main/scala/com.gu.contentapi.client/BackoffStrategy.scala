@@ -3,11 +3,11 @@ package com.gu.contentapi.client
 import java.util.concurrent.TimeUnit
 
 import com.gu.contentapi.client.Retry.RetryAttempt
-import com.gu.contentapi.client.model.{ContentApiRecoverableException, HttpResponse}
+import com.gu.contentapi.client.model.HttpResponse
+import com.gu.contentapi.client.model.HttpResponse.IsRecoverableHttpResponse
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
 
 case class ContentApiBackoffException(message: String) extends RuntimeException(message, null, false, false)
 
@@ -85,13 +85,11 @@ object BackoffStrategy {
 
 object Retry {
   type RetryAttempt = Int
-  def withRetry[A](backoffStrategy: BackoffStrategy, retryPredicate: Future[A] => Future[Boolean])(operation: RetryAttempt => Future[A])(implicit executor: ScheduledExecutor, ec: ExecutionContext): Future[A] = {
+  def withRetry[A](backoffStrategy: BackoffStrategy, retryPredicate: A => Boolean)(operation: RetryAttempt => Future[A])(implicit executor: ScheduledExecutor, ec: ExecutionContext): Future[A] = {
     def loop(backoffStrategy: BackoffStrategy): Future[A] = backoffStrategy match {
-      case r: Retryable =>
-        val result = operation(r.attempts)
-        retryPredicate(result).flatMap {
-          case true => executor.sleepFor(r.delay).flatMap(_ => loop(backoffStrategy.increment))
-          case false => result
+      case r: Retryable => operation(r.attempts).flatMap {
+          case result if retryPredicate(result) => executor.sleepFor(r.delay).flatMap(_ => loop(backoffStrategy.increment))
+          case result => Future.successful(result)
         }
       case RetryFailed(attempts) =>
         Future.failed(ContentApiBackoffException(s"Backoff failed after $attempts attempts"))
@@ -102,9 +100,9 @@ object Retry {
 
 object HttpRetry {
 
-  private def canRetry(implicit executionContext: ExecutionContext): Future[HttpResponse] => Future[Boolean] = _.transform {
-    case Failure(_ : ContentApiRecoverableException) => Success(true)
-    case _ => Success(false)
+  private def canRetry(implicit executionContext: ExecutionContext): HttpResponse => Boolean = {
+    case IsRecoverableHttpResponse() => true
+    case _ => false
   }
 
   def withRetry(backoffStrategy: BackoffStrategy)(operation: RetryAttempt => Future[HttpResponse])(implicit executor: ScheduledExecutor, ec: ExecutionContext): Future[HttpResponse] =

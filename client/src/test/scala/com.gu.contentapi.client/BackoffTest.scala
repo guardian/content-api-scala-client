@@ -15,16 +15,17 @@ class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionVa
 
   implicit val schedEx: ScheduledExecutor = ScheduledExecutor()
 
-  def clientWithBackoff(strategy: BackoffStrategy) = new ContentApiClient {
-
-    override implicit val executor: ScheduledExecutor = schedEx
-    override val backoffStrategy: BackoffStrategy = strategy
-
+  class RetryableCapiClient(strategy: BackoffStrategy) extends ContentApiClient {
     val apiKey = "TEST-API-KEY"
 
-    def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext) = {
+    def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
       Future.successful(HttpResponse(Array(), 500, "status"))
     }
+  }
+
+  def clientWithBackoff(strategy: BackoffStrategy): RetryableContentApiClient = new RetryableCapiClient(strategy) with RetryableContentApiClient {
+    override implicit val executor: ScheduledExecutor = schedEx
+    override val backoffStrategy: BackoffStrategy = strategy
   }
 
   "Client interface" should "have the expected doubling backoff strategy" in {

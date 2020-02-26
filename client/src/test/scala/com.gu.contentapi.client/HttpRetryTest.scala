@@ -1,7 +1,7 @@
 package com.gu.contentapi.client
 
 import com.gu.contentapi.client.BackoffStrategy.constantStrategy
-import com.gu.contentapi.client.model.{ContentApiRecoverableException, HttpResponse}
+import com.gu.contentapi.client.model.HttpResponse
 import org.scalatest.{AsyncWordSpecLike, Matchers}
 
 import scala.concurrent.Future
@@ -14,10 +14,10 @@ class HttpRetryTest extends AsyncWordSpecLike with Matchers {
     val backoffStrategy = constantStrategy(delay = 100.millis, maxAttempts = maxAttempts)
     implicit val schedEx: ScheduledExecutor = ScheduledExecutor()
     val successResponse = HttpResponse(Array(), 200, "")
-    val failure = ContentApiRecoverableException(429, "")
+    val failure = HttpResponse(Array(), 429, "")
 
     "not retry if we get success response" in {
-      val httpResponses = List(Future.successful(successResponse), Future.failed(failure), Future.successful(successResponse.copy(statusCode = 503))).iterator
+      val httpResponses = List(Future.successful(successResponse), Future.successful(failure), Future.successful(successResponse.copy(statusCode = 503))).iterator
       for {
         result <- HttpRetry.withRetry(backoffStrategy) { _ =>
           httpResponses.next()
@@ -28,7 +28,7 @@ class HttpRetryTest extends AsyncWordSpecLike with Matchers {
     }
 
     "retry if we get ContentApiRecoverableException" in {
-      val httpResponses = List(Future.failed(failure), Future.successful(successResponse)).iterator
+      val httpResponses = List(Future.successful(failure), Future.successful(successResponse)).iterator
       for {
         result <- HttpRetry.withRetry(backoffStrategy) { _ =>
           httpResponses.next()
