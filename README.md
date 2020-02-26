@@ -265,7 +265,9 @@ class ApiClient extends ContentApiClient {
     // your implemenetation  
   }
 }
+```
 
+```scala
 val apiClient = new ApiClient with RetryableContentApiClient {
   override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
 
@@ -277,6 +279,45 @@ val apiClient = new ApiClient with RetryableContentApiClient {
 
 }
 ``` 
+
+```scala
+val apiClient = new ApiClient with RetryableContentApiClient {
+  override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
+
+  // create a constant backoff and retry strategy
+  // we will allow up to three attempts, each separated by one second
+  val retryDuration = Duration(1000L, TimeUnit.MILLISECONDS)
+  val retryAttempts = 3
+  override val backoffStrategy = ContentApiBackoff.constantStrategy(retryDuration, retryAttempts)
+}
+```
+
+```scala
+val apiClient = new ApiClient with RetryableContentApiClient {
+  override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
+
+  // create an exponential backoff strategy
+  // the duration is multiplied by the next power of two on each attempt, so: 200ms, 400ms, 800ms, 1600ms and 3200ms
+  // this means a maximum waiting time of 6.2 seconds if the error doesn't clear before then
+  val retrySchedule: Duration = Duration(100L, TimeUnit.MILLISECONDS)
+  val retryCount: Int = 5
+  override val backoffStrategy = ContentApiBackoff.exponentialStrategy(retrySchedule, retryCount)
+}
+```
+
+```scala
+val apiClient = new ApiClient with RetryableContentApiClient {
+  override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
+
+  // create a multiplier backoff strategy
+  // here, the duration is multiplied by the factor between each retry
+  // with a factor of 3.0, and 3 retries we will wait: 250ms, 750ms, 2250ms
+  val retrySchedule: Duration = Duration(250L, TimeUnit.MILLISECONDS)
+  val retryCount: Int = 3
+  val retryFactor: Double = 3.0
+  override val backoffStrategy: Backoff = Backoff.multiplierStrategy(retrySchedule, retryCount, retryFactor)
+}
+```
 
 Note that there are some minimum values that are enforced to prevent using excessively short waits, or attempts to circumvent the backoff strategy entirely by forcing immediate retries.
 
