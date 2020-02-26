@@ -23,7 +23,7 @@ object GuardianContentClient {
     }
 }
 
-class GuardianContentClient private[client](val apiKey: String) extends ContentApiClient {
+class GuardianContentClient (val apiKey: String) extends ContentApiClient {
 
   protected def httpClientBuilder = new OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.SECONDS)
