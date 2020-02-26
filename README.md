@@ -32,7 +32,7 @@ libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 
 Then, create your own client by extending the `ContentApiClient` trait and implementing the `get` method, e.g. using Play's ScalaWS client library
 
-Note that as of version 16.0 `ContentApiClient` no longer has a hard dependency on `ContentApiBackoff` declaration. We have decoupled the client from the retry logic (More on this, later in the README) A sample implementation is shown below and more examples can be found later in this readme.
+Note that as of version 16.0, `ContentApiClient` no longer enforces backoff strategy. We have decoupled the client from the retry-backoff logic (More on this, later in the README) A sample implementation is shown below and more examples can be found later in this readme.
 
 ```scala
 import play.api.libs.ws.WSClient
