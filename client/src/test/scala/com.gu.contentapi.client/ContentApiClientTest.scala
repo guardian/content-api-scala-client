@@ -20,7 +20,7 @@ class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with
     val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
     val maxRetries = 5
 
-    override val backoffStrategy: Multiple = ContentApiBackoff.doublingStrategy(retryDuration, maxRetries)
+    override val backoffStrategy: Multiple = BackoffStrategy.doublingStrategy(retryDuration, maxRetries)
 
     val apiKey = "TEST-API-KEY"
 

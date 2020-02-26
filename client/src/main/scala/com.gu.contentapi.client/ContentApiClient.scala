@@ -1,16 +1,14 @@
 package com.gu.contentapi.client
 
 import com.gu.contentapi.buildinfo.CapiBuildInfo
+import com.gu.contentapi.client.HttpRetry.withRetry
 import com.gu.contentapi.client.model._
-import com.gu.contentapi.client.model.v1._
-import com.gu.contentapi.client.thrift.ThriftDeserializer
-import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentatom.thrift.AtomType
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ContentApiClient {
   import Decoder._
-  import PaginatedApiResponse._
 
   implicit val executor: ScheduledExecutor
 
@@ -19,7 +17,7 @@ trait ContentApiClient {
 
   /** The user-agent identifier */
   def userAgent: String = "content-api-scala-client/"+CapiBuildInfo.version
-  
+
   /** The url of the CAPI endpoint */
   def targetUrl: String = "https://content.guardianapis.com"
 
@@ -27,16 +25,16 @@ trait ContentApiClient {
     *
     * This method must make a GET request to the CAPI endpoint
     * and streamline the response into an HttpResponse object.
-    * 
+    *
     * It is a design decision that this method is virtual.
     * Any implementation would have to rely on a specific
     * technology stack, e.g. an HTTP client. Fundamentally,
     * the responsibility of making these implementation
     * choices should be pushed out to the end of the world.
     *
-    * @param url The CAPI REST url 
+    * @param url The CAPI REST url
     * @param headers Custom HTTP parameters
-    * @return an HttpResponse holding the response in the form of an array of bytes 
+    * @return an HttpResponse holding the response in the form of an array of bytes
     */
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse]
 
@@ -47,15 +45,12 @@ trait ContentApiClient {
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
 
-  val backoffStrategy: ContentApiBackoff
+  val backoffStrategy: BackoffStrategy
 
   /** Streamlines the handling of a valid CAPI response */
-  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = {
-    def getter(retry: Int): Future[HttpResponse] =
-      get(url(contentApiQuery), headers(retry)).flatMap(HttpResponse.check)
-
-    backoffStrategy.execute(getter).map(_.body)
-  }
+  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = withRetry(backoffStrategy){ retryAttempt =>
+    get(url(contentApiQuery), headers(retryAttempt)).flatMap(HttpResponse.check)
+  }.map(_.body)
 
   private def unfoldM[A, B](f: B => (A, Option[Future[B]]))(fb: Future[B])(implicit ec: ExecutionContext): Future[List[A]] =
     fb.flatMap { b =>

@@ -1,14 +1,14 @@
 package com.gu.contentapi.client
 
-import com.gu.contentatom.thrift.{AtomData, AtomType}
-import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
-import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
+import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
+import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
+import com.gu.contentatom.thrift.{AtomData, AtomType}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
+import org.scalatest._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -27,7 +27,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
 
   private val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
   private val maxRetryCount = 3
-  private val backoffStrategy = ContentApiBackoff.doublingStrategy(retryDuration, maxRetryCount)
+  private val backoffStrategy = BackoffStrategy.doublingStrategy(retryDuration, maxRetryCount)
   private val api = new GuardianContentClient(apiKey, backoffStrategy)
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 

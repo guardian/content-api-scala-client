@@ -13,16 +13,16 @@ import scala.concurrent.duration.Duration
 object GuardianContentClient {
   def apply(apiKey: String): GuardianContentClient = {
     implicit val executor = ScheduledExecutor()
-    val strategy = ContentApiBackoff.doublingStrategy(Duration(250L, TimeUnit.MILLISECONDS), 5)
+    val strategy = BackoffStrategy.doublingStrategy(Duration(250L, TimeUnit.MILLISECONDS), 5)
     new GuardianContentClient(apiKey, strategy)(executor)
   }
 
-  def apply(apiKey: String, backoffStrategy: ContentApiBackoff)(implicit executor: ScheduledExecutor): GuardianContentClient =
+  def apply(apiKey: String, backoffStrategy: BackoffStrategy)(implicit executor: ScheduledExecutor): GuardianContentClient =
     new GuardianContentClient(apiKey, backoffStrategy)
 
 }
 
-class GuardianContentClient private[client] (val apiKey: String, val backoffStrategy: ContentApiBackoff)(implicit executor0: ScheduledExecutor) extends ContentApiClient {
+class GuardianContentClient private[client](val apiKey: String, val backoffStrategy: BackoffStrategy)(implicit executor0: ScheduledExecutor) extends ContentApiClient {
 
   override implicit val executor: ScheduledExecutor = executor0
 

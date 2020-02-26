@@ -4,14 +4,14 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 import com.gu.contentapi.client.model.{ContentApiRecoverableException, HttpResponse, ItemQuery}
-import okhttp3.{Call, Callback, OkHttpClient, Request, Response}
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Inside, Matchers, OptionValues}
+import okhttp3.{Call, Callback, Request, Response}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.exceptions.TestFailedException
+import org.scalatest._
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
-import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{ExecutionContext, Future, Promise}
 
 object FakeGuardianContentClient {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
@@ -20,7 +20,7 @@ object FakeGuardianContentClient {
     }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable e.g. sbt -D$ApiKeyProperty=some-api-key")
 }
 
-class FakeGuardianContentClient(backoffStrategy: ContentApiBackoff, interval: Long, retries: Int, failCode: Option[Int], alwaysFail: Boolean = false)(implicit executor: ScheduledExecutor) extends GuardianContentClient(FakeGuardianContentClient.apiKey, backoffStrategy) {
+class FakeGuardianContentClient(backoffStrategy: BackoffStrategy, interval: Long, retries: Int, failCode: Option[Int], alwaysFail: Boolean = false)(implicit executor: ScheduledExecutor) extends GuardianContentClient(FakeGuardianContentClient.apiKey, backoffStrategy) {
 
   private var attempts = 0
 
@@ -74,7 +74,7 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
   "Client interface" should "establish the backoff strategy" in {
     val myInterval = 250L
     val myAttempts = 3
-    val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myAttempts)
+    val myStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myAttempts)
     val fakeApi = new FakeGuardianContentClient(myStrategy, myInterval, myAttempts, None)
     val expectedStrategy = Multiple(Duration(myInterval, TimeUnit.MILLISECONDS), 0, myAttempts, 2.0)
     fakeApi.backoffStrategy should be(expectedStrategy)
@@ -85,7 +85,7 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
     val myInterval = 250L
     val myAttempts = 3
     val failureCode = 408
-    val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myAttempts)
+    val myStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myAttempts)
     val fakeApi = new FakeGuardianContentClient(myStrategy, myInterval, myAttempts, Some(failureCode))
     val query = ItemQuery(TestItemPath)
     val content = for {
@@ -100,7 +100,7 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
     val myRetries = 3 // i.e. try this once, and then make three retry attempts = 4 attempts in total
     val failureCode = 429
     val alwaysFail = true
-    val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
+    val myStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
     val fakeApi = new FakeGuardianContentClient(myStrategy, myInterval, myRetries, Some(failureCode), alwaysFail)
     val query = ItemQuery(TestItemPath)
 
@@ -121,7 +121,7 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
   it should "retry (successfully) all recoverable error codes" in {
     val myInterval = 250L
     val myRetries = 2 // i.e. try once, then retry once = 2 attempts total
-    val myStrategy = ContentApiBackoff.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
+    val myStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
     val query = ItemQuery(TestItemPath)
 
     HttpResponse.failedButMaybeRecoverable.foreach(code => {
