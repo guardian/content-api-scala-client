@@ -32,7 +32,7 @@ libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 
 Then, create your own client by extending the `ContentApiClient` trait and implementing the `get` method, e.g. using Play's ScalaWS client library
 
-Note that as of version 16.0, `ContentApiClient` no longer enforces backoff strategy. We have decoupled the client from the retry-backoff logic (More on this, later in the README) A sample implementation is shown below and more examples can be found later in this readme.
+Note that as of version 17.0, `ContentApiClient` no longer enforces backoff strategy. We have decoupled the client from the retry-backoff logic (More on this, later in the README) A sample implementation is shown below and more examples can be found later in this readme.
 
 ```scala
 import play.api.libs.ws.WSClient
@@ -244,7 +244,7 @@ val result: Future[Int] = client.paginateFold(query)(0){ (r: SearchResponse, t: 
 ## Retrying recoverable errors (backoff strategies)
 Sometimes the backend services that the client relies on can return HTTP failure results, and some of these are potentially recoverable within a relatively short period of time.
 Rather than immediately fail these requests by default as we have done previously, it is now possible to automatically retry those failures that may yield a successful result on a subsequent attempt. 
-As of version 16.0 of the client you can apply a retry and a backoff strategy when instantiating a `ContentApiClient` instance by mixing in `RetryableContentApiClient` trait and providing a backoff strategy.
+As of version 17.0 of the client you can apply a retry and a backoff strategy when instantiating a `ContentApiClient` instance by mixing in `RetryableContentApiClient` trait and providing a backoff strategy.
 
 The following strategies are available;
 
