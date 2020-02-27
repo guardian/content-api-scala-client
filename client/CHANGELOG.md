@@ -1,3 +1,7 @@
+## 17.0
+
+* Removed `backoffStrategy` from `ContentApiClient`. Introduced `RetryableContentApiClient` to mix-in a retry backoff strategy. More in README.
+
 ## 16.0
 
 * Add a `Request-Attempt` header that is set to zero for any initial request and incremented by one for each retry - so that we can see the behaviour of the backoff code in Kibana
