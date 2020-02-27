@@ -2,7 +2,7 @@ package com.gu.contentapi.client
 
 import com.gu.contentapi.buildinfo.CapiBuildInfo
 import com.gu.contentapi.client.HttpRetry.withRetry
-import com.gu.contentapi.client.model.HttpResponse.IsSuccessHttpResponse
+import com.gu.contentapi.client.model.HttpResponse.isSuccessHttpResponse
 import com.gu.contentapi.client.model._
 import com.gu.contentatom.thrift.AtomType
 
@@ -47,7 +47,7 @@ trait ContentApiClient {
   /** Streamlines the handling of a valid CAPI response */
 
   private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = get(url(contentApiQuery), headers).flatMap {
-    case response @ IsSuccessHttpResponse() => Future.successful(response)
+    case response if isSuccessHttpResponse(response) => Future.successful(response)
     case response => Future.failed(ContentApiError(response))
   }.map(_.body)
 

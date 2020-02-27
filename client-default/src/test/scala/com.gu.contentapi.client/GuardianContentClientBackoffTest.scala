@@ -118,7 +118,7 @@ class GuardianContentClientBackoffTest extends FlatSpec with Matchers with Scala
     val myRetries = 2 // i.e. try once, then retry once = 2 attempts total
     val query = ItemQuery(TestItemPath)
 
-    HttpResponse.failedButMaybeRecoverable.foreach(code => {
+    HttpResponse.failedButMaybeRecoverableCodes.foreach(code => {
       val fakeApi = new FakeGuardianContentClient(myRetries, Some(code)) with RetryableContentApiClient {
         override val backoffStrategy: BackoffStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
         override implicit val executor: ScheduledExecutor = executor0

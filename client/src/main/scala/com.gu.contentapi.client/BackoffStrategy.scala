@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import com.gu.contentapi.client.Retry.RetryAttempt
 import com.gu.contentapi.client.model.HttpResponse
-import com.gu.contentapi.client.model.HttpResponse.IsRecoverableHttpResponse
+import com.gu.contentapi.client.model.HttpResponse.isRecoverableHttpResponse
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
@@ -100,11 +100,6 @@ object Retry {
 
 object HttpRetry {
 
-  private def canRetry(implicit executionContext: ExecutionContext): HttpResponse => Boolean = {
-    case IsRecoverableHttpResponse() => true
-    case _ => false
-  }
-
   def withRetry(backoffStrategy: BackoffStrategy)(operation: RetryAttempt => Future[HttpResponse])(implicit executor: ScheduledExecutor, ec: ExecutionContext): Future[HttpResponse] =
-    Retry.withRetry(backoffStrategy, canRetry)(operation)
+    Retry.withRetry(backoffStrategy, isRecoverableHttpResponse)(operation)
 }
