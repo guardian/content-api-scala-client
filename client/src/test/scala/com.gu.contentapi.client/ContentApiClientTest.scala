@@ -1,32 +1,27 @@
 package com.gu.contentapi.client
 
-import com.gu.contentapi.client.model._
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
-import com.gu.contentapi.client.model.v1.{ErrorResponse, SearchResponse}
+import com.gu.contentapi.client.model._
+import com.gu.contentapi.client.model.v1.SearchResponse
+import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest._
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import scala.concurrent.{ExecutionContext, Future}
 
 class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
   private val api = new ContentApiClient {
-    override implicit val executor = ScheduledExecutor()
-
     val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
     val maxRetries = 5
 
-    override val backoffStrategy: Multiple = ContentApiBackoff.doublingStrategy(retryDuration, maxRetries)
-
     val apiKey = "TEST-API-KEY"
 
-    def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext) = {
+    def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] =
       Future.successful(HttpResponse(Array(), 500, "status"))
-    }
   }
 
   implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))

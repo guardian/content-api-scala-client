@@ -4,7 +4,7 @@ This repository contains two projects: the client library (with its default impl
 Each has its own versioning and so they are released independently.
 
 #### Releasing content-api-client and content-api-client-default:
-In your PR, update `CHANGELOG.md` with a description of the change.
+In your PR, update `CHANGELOG.md` with a description of the change. Also update `version.sbt` if releasing a new major version. 
 
 Then to release (from master branch):
 ```

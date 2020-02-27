@@ -1,16 +1,9 @@
 package com.gu.contentapi.client
 
-import java.util.concurrent.ThreadPoolExecutor.AbortPolicy
-import java.util.concurrent.{
-  Executors,
-  ScheduledExecutorService,
-  RejectedExecutionHandler,
-  RejectedExecutionException
-}
+import java.util.concurrent.{Executors, RejectedExecutionException, ScheduledExecutorService}
 
-import scala.concurrent.Future
+import scala.concurrent.{Future, Promise}
 import scala.concurrent.duration.Duration
-import scala.concurrent.Promise
 import scala.language.implicitConversions
 
 object ScheduledExecutor {

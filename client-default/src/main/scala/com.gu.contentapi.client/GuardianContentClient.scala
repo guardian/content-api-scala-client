@@ -1,30 +1,29 @@
 package com.gu.contentapi.client
 
-import com.gu.contentapi.client.model.HttpResponse
 import java.io.IOException
-
-import okhttp3._
-
-import scala.concurrent.{ExecutionContext, Future, Promise}
 import java.util.concurrent.TimeUnit
 
+import com.gu.contentapi.client.model.HttpResponse
+import okhttp3._
+
 import scala.concurrent.duration.Duration
+import scala.concurrent.{ExecutionContext, Future, Promise}
 
 object GuardianContentClient {
   def apply(apiKey: String): GuardianContentClient = {
     implicit val executor = ScheduledExecutor()
-    val strategy = ContentApiBackoff.doublingStrategy(Duration(250L, TimeUnit.MILLISECONDS), 5)
-    new GuardianContentClient(apiKey, strategy)(executor)
+    val strategy = BackoffStrategy.doublingStrategy(Duration(250L, TimeUnit.MILLISECONDS), 5)
+    GuardianContentClient(apiKey, strategy)
   }
 
-  def apply(apiKey: String, backoffStrategy: ContentApiBackoff)(implicit executor: ScheduledExecutor): GuardianContentClient =
-    new GuardianContentClient(apiKey, backoffStrategy)
-
+  def apply(apiKey: String, clientBackoffStrategy: BackoffStrategy)(implicit executor0: ScheduledExecutor): GuardianContentClient =
+    new GuardianContentClient(apiKey) with RetryableContentApiClient {
+      override val backoffStrategy: BackoffStrategy = clientBackoffStrategy
+      override implicit val executor: ScheduledExecutor = executor0
+    }
 }
 
-class GuardianContentClient private[client] (val apiKey: String, val backoffStrategy: ContentApiBackoff)(implicit executor0: ScheduledExecutor) extends ContentApiClient {
-
-  override implicit val executor: ScheduledExecutor = executor0
+class GuardianContentClient (val apiKey: String) extends ContentApiClient {
 
   protected def httpClientBuilder = new OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.SECONDS)
@@ -60,4 +59,3 @@ class GuardianContentClient private[client] (val apiKey: String, val backoffStra
   def shutdown(): Unit = http.dispatcher().executorService().shutdown()
 
 }
-

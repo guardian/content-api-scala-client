@@ -32,19 +32,12 @@ libraryDependencies += "com.gu" %% "content-api-client" % "x.y"
 
 Then, create your own client by extending the `ContentApiClient` trait and implementing the `get` method, e.g. using Play's ScalaWS client library
 
-Note that as of version 15.6 an instance of `ContentApiClient` now requires a `ContentApiBackoff` declaration. This allows for some classes of HTTP errors to be automatically retried. A sample implementation is shown below and more examples can be found later in this readme.
+Note that as of version 17.0, `ContentApiClient` no longer enforces backoff strategy. We have decoupled the client from the retry-backoff logic (More on this, later in the README) A sample implementation is shown below and more examples can be found later in this readme.
 
 ```scala
 import play.api.libs.ws.WSClient
 
 class ContentApiClient(ws: WSClient) extends ContentApiClient
-  // new in version 15.6: create an automatic backoff and retry strategy
-  override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
-  
-  val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
-  val retryAttempts = 5
-  override val backoffStrategy = ContentApiBackoff.doublingStrategy(retryDuration, retryAttempts)
- 
   def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] =
     ws.url(url).withHttpHeaders(headers: _*).get.map(r => HttpResponse(r.bodyAsBytes, r.status, r.statusText))
 }
@@ -251,7 +244,7 @@ val result: Future[Int] = client.paginateFold(query)(0){ (r: SearchResponse, t: 
 ## Retrying recoverable errors (backoff strategies)
 Sometimes the backend services that the client relies on can return HTTP failure results, and some of these are potentially recoverable within a relatively short period of time.
 Rather than immediately fail these requests by default as we have done previously, it is now possible to automatically retry those failures that may yield a successful result on a subsequent attempt. 
-As of version 15.6 of the client it is necessary to declare a `ContentApiBackoff` strategy when defining an implementation of `ContentApiClient`.
+As of version 17.0 of the client you can apply a retry and a backoff strategy when instantiating a `ContentApiClient` instance by mixing in `RetryableContentApiClient` trait and providing a backoff strategy.
 
 The following strategies are available;
 
@@ -268,18 +261,27 @@ Some examples:
 
 ```scala
 class ApiClient extends ContentApiClient {
+  def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
+    // your implemenetation  
+  }
+}
+```
+
+```scala
+val apiClient = new ApiClient with RetryableContentApiClient {
   override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
 
   // create a doubling backoff and retry strategy
   // we will wait for 250ms, 500ms, 1000ms, 2000ms  and then 4000ms while recoverable errors are encountered
-  val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
-  val retryAttempts = 5
+  private val retryDuration = Duration(250L, TimeUnit.MILLISECONDS)
+  private val retryAttempts = 5
   override val backoffStrategy = ContentApiBackoff.doublingStrategy(retryDuration, retryAttempts)
+
 }
 ``` 
 
 ```scala
-class ApiClient extends ContentApiClient {
+val apiClient = new ApiClient with RetryableContentApiClient {
   override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
 
   // create a constant backoff and retry strategy
@@ -291,7 +293,7 @@ class ApiClient extends ContentApiClient {
 ```
 
 ```scala
-class ApiClient extends ContentApiClient {
+val apiClient = new ApiClient with RetryableContentApiClient {
   override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
 
   // create an exponential backoff strategy
@@ -304,7 +306,7 @@ class ApiClient extends ContentApiClient {
 ```
 
 ```scala
-class ApiClient extends ContentApiClient {
+val apiClient = new ApiClient with RetryableContentApiClient {
   override implicit val executor = ScheduledExecutor()  // or apply your own preferred executor
 
   // create a multiplier backoff strategy
@@ -339,6 +341,17 @@ Initially we have specified the following codes as potentially recoverable:
 
 This list may be subject to change over time.
 
+## Default client - GuardianContentClient
+
+We have provided a default client `GuardianContentClient` (okHttp as underlying HTTP layer) which has multi-variants for specifying backoff strategies
+
+```scala
+val client = new GuardianContentClient("YOUR API KEY HERE") // default vanilla client with no retry mechanism
+val client = GuardianContentClient("YOUR API KEY HERE", yourBackoffstrategy) // default client with injectable backoff strategy
+val client = GuardianContentClient("YOUR API KEY HERE") // default client with hardcoded doubling backoff strategy
+
+```
+
 ## Explore in the REPL
 
 One easy way to get started with the client is to try it in the Scala REPL.
@@ -346,7 +359,7 @@ One easy way to get started with the client is to try it in the Scala REPL.
 First clone this repo, then run `sbt console` from the `client` directory. This will start a REPL with a few useful things imported for you, so you can get started quickly:
 
 ```
-scala> val client = new GuardianContentClient("YOUR API KEY HERE")
+scala> val client = GuardianContentClient("YOUR API KEY HERE")
 client: com.gu.contentapi.client.GuardianContentClient = com.gu.contentapi.client.GuardianContentClient@3eb2a60
 
 scala> val query = ContentApiLogic.search.showTags("all")
