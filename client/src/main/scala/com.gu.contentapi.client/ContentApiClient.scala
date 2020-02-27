@@ -39,7 +39,7 @@ trait ContentApiClient {
 
   /** Some HTTP headers sent along each CAPI request */
   private val headers =
-    Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift", "Request-Attempt" -> "0", "Accept-Language" -> "*")
+    Map("User-Agent" -> userAgent, "Accept" -> "application/x-thrift", "Accept-Language" -> "*")
 
   /** Authentication and format parameters appended to each query */
   private def parameters = Map("api-key" -> apiKey, "format" -> "thrift")
