@@ -375,6 +375,32 @@ SearchResponse(ok,developer,1853997,1,10,1,185400,newest,List(Content(politics/b
 scala> client.shutdown()
 ```
 
+## Serialisation / Deserialisation
+
+To serialise the models returned from the client, you can use the JSON encoder in [content-api-models](https://github.com/guardian/content-api-models). You will need to import circe as a dependency in `build.sbt` –
+
+```
+val circeVersion = "0.12.3"
+
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser"
+).map(_ % circeVersion)
+```
+
+... and then call the relevant method on the model.
+
+```scala
+import com.gu.contentapi.json.CirceEncoders._
+import io.circe.syntax._
+
+// ... later ...
+
+val query = ContentApiClient.search.q("An example query")
+client.getResponse(query).asJson.toString
+```
+
 ## Running Tests
 
 Some tests require access to the API. See [Setup](#setup) for details on how to get one.
