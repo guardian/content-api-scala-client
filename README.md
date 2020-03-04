@@ -398,7 +398,7 @@ import io.circe.syntax._
 // ... later ...
 
 val query = ContentApiClient.search.q("An example query")
-client.getResponse(query).asJson.toString
+val str = client.getResponse(query).map(_.asJson.toString)
 ```
 
 ## Running Tests
