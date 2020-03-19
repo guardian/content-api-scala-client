@@ -1,3 +1,7 @@
+## 17.1
+
+* Removed 503 from list of retryable response codes
+
 ## 17.0
 
 * Removed `backoffStrategy` from `ContentApiClient`. Introduced `RetryableContentApiClient` to mix-in a retry backoff strategy. More in README.
