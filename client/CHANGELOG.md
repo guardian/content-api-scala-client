@@ -1,3 +1,7 @@
+## 17.2
+
+* Bump CAPI models to 15.9.2 (adds optional `placeholderUrl` field to interactive atoms)
+
 ## 17.1
 
 * Removed 503 from list of retryable response codes
