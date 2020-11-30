@@ -1,3 +1,7 @@
+## 17.5
+
+* Bump CAPI model to 15.9.6 (adds block element role fields)
+
 ## 17.2
 
 * Bump CAPI models to 15.9.2 (adds optional `placeholderUrl` field to interactive atoms)
