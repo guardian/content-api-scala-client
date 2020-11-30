@@ -8,7 +8,7 @@ In your PR, update `CHANGELOG.md` with a description of the change. Also update 
 
 Then to release (from master branch):
 ```
-sbt -DCAPI_TEST_KEY=a-valid-api-key 'release cross'
+sbt -DCAPI_TEST_KEY=a-valid-api-key 'release'
 ```
 (you need to supply the api key because the build process runs the tests)
 
