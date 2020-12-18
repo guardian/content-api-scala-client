@@ -1,3 +1,7 @@
+## 17.6
+
+* Bump CAPI model to 15.9.7 (adds additional fields to RetrievableEvent)
+
 ## 17.5
 
 * Bump CAPI model to 15.9.6 (adds block element role fields)
