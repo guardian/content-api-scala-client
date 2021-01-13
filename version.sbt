@@ -1,1 +1,2 @@
-version in ThisBuild := "17.6"
+// TODO: is it?
+version in ThisBuild := "IRRELEVANT"
