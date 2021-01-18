@@ -1,2 +1,2 @@
-// TODO: is it?
-version in ThisBuild := "IRRELEVANT"
+// TODO: is this used/required?
+version in ThisBuild := "17.2-SNAPSHOT"
