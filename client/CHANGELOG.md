@@ -1,3 +1,10 @@
+## 17.7
+
+* Bump CAPI models to 15.9.12 
+  * 15.9.10 adds `deletedContent` payload type with optional `aliasPaths` to delete events
+  * 15.9.11 adds `source` fields to `PullquoteElementFields` and `EmbedElementFields`
+  * 15.9.12 adds `sourceDomain` to `*ElementFields`
+
 ## 17.6
 
 * Bump CAPI model to 15.9.7 (adds additional fields to RetrievableEvent)
