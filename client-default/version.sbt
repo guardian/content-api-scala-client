@@ -1,2 +1,3 @@
-// TODO: is this used/required?
-version in ThisBuild := "17.2-SNAPSHOT"
+// TODO: This appears to be the only version that is referenced
+//  (at least when running a +publishLocal) when publishing
+version in ThisBuild := "17.7-SNAPSHOT"
