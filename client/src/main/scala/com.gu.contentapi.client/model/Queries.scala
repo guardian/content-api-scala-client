@@ -203,6 +203,7 @@ trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { thi
   def showAtoms  = StringParameter("show-atoms")
   def showSection = BoolParameter("show-section")
   def showStats = BoolParameter("show-stats")
+  def showAliasPaths = BoolParameter("show-alias-paths")
 }
 
 trait ShowReferencesParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
