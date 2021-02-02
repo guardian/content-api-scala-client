@@ -1,9 +1,17 @@
+## 17.8
+
+* Bump CAPI models to 15.9.14
+  * 15.9.13 adds `sourceDomain` to `*ElementFields`
+  * 15.9.14 removes `height` and `width` fields from `PullquoteElementFields`, `TweetElementFields`, 
+    `AudioElementFields`, `InteractiveElementFields`, `EmbedElementFields` and `InstagramElementFields`
+
 ## 17.7
 
 * Bump CAPI models to 15.9.12 
   * 15.9.10 adds `deletedContent` payload type with optional `aliasPaths` to delete events
   * 15.9.11 adds `source` fields to `PullquoteElementFields` and `EmbedElementFields`
-  * 15.9.12 adds `sourceDomain` to `*ElementFields`
+  * 15.9.12 adds `height` and `width` fields to `PullquoteElementFields`, `TweetElementFields`, `AudioElementFields`,
+    `InteractiveElementFields`, `EmbedElementFields` and `InstagramElementFields`
 
 ## 17.6
 
