@@ -1,3 +1,7 @@
+## 17.9
+
+* Adds `showAliasPaths` to `ShowParameters`
+
 ## 17.8
 
 * Bump CAPI models to 15.9.14
