@@ -8,9 +8,19 @@ class ContentApiQueryTest extends FlatSpec with Matchers  {
       "/profile/robert-berry?show-fields=all"
   }
 
+  "ItemQuery" should "be similarly excellent when asked to show alias paths" in {
+    ItemQuery("profile/justin-pinner").showAliasPaths(true).getUrl("") shouldEqual
+      "/profile/justin-pinner?show-alias-paths=true"
+  }
+
   "SearchQuery" should "also be excellent" in {
     SearchQuery().tag("profile/robert-berry").showElements("all").contentType("article").getUrl("") shouldEqual
       "/search?tag=profile%2Frobert-berry&show-elements=all&type=article"
+  }
+
+  "SearchQuery" should "not be perturbed when asked to show alias paths" in {
+    SearchQuery().tag("profile/justin-pinner").showElements("all").showAliasPaths(true).contentType("article").getUrl("") shouldEqual
+      "/search?tag=profile%2Fjustin-pinner&show-elements=all&show-alias-paths=true&type=article"
   }
 
   "SectionsQuery" should "be beautiful" in {
