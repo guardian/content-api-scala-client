@@ -180,6 +180,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(fields.displayHint) thenReturn None
     when(content.tags) thenReturn List(tag)
     when(content.fields) thenReturn None
+    when(content.pillarName) thenReturn None
   }
 
   behavior of "Format.design"
@@ -394,7 +395,6 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
   it should "return a theme of 'SpecialReportTheme' when tag business/series/undercover-in-the-chicken-industry is present" in {
     val f = fixture
     when(f.tag.id) thenReturn "business/series/undercover-in-the-chicken-industry"
-
     f.content.theme shouldEqual SpecialReportTheme
   }
 
