@@ -1,3 +1,8 @@
+## 17.10
+
+* Bump CAPI models to 15.10.0
+  * updates `aliasPaths` definition to include `ceasedToBeCanonicalAt` datetime
+
 ## 17.9
 
 * Adds `showAliasPaths` to `ShowParameters`
