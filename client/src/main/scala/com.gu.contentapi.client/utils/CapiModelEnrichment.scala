@@ -27,8 +27,6 @@ object CapiModelEnrichment {
 
   val isCommentDesign: ContentFilter = content => tagExistsWithId("tone/comment")(content) || tagExistsWithId("tone/letters")(content)
 
-  val isPhotoEssay: ContentFilter = content => content.fields.flatMap(_.displayHint).contains("photoessay")
-
   val isLiveBlog: ContentFilter = content => isLiveBloggingNow(content) && tagExistsWithId("tone/minutebyminute")(content)
 
   val isDeadBlog: ContentFilter = content => !isLiveBloggingNow(content) && tagExistsWithId("tone/minutebyminute")(content)
@@ -71,13 +69,15 @@ object CapiModelEnrichment {
 
   implicit class RenderingFormat(val content: Content) extends AnyVal {
 
+
     def design: Design = {
 
       val defaultDesign: Design = ArticleDesign
 
+      val isPhotoEssay: ContentFilter = content => content.fields.flatMap(_.displayHint).contains("photoessay")
+
       val predicates: List[(ContentFilter, Design)] = List(
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
-        tagExistsWithId("tone/matchreports") -> MatchReportDesign,
         isMedia -> MediaDesign,
         isReview -> ReviewDesign,
         tagExistsWithId("tone/analysis") -> AnalysisDesign,
@@ -128,7 +128,7 @@ object CapiModelEnrichment {
         isPillar("Sport") -> SportPillar,
         isCulture -> CulturePillar,
         isPillar("Lifestyle") -> LifestylePillar,
-        isSpecialReport -> SpecialReport,
+        isSpecialReport -> SpecialReportTheme,
         tagExistsWithId("tone/advertisement-features") -> Labs,
       )
 
