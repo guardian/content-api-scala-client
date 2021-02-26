@@ -140,9 +140,9 @@ object CapiModelEnrichment {
 
       val defaultDisplay = StandardDisplay
 
-      def hasShowcaseImage: ContentFilter = c => {
+      def hasShowcaseImage: ContentFilter = content => {
         val hasShowcaseImage = for {
-          blocks <- c.blocks
+          blocks <- content.blocks
           main <- blocks.main
           mainMedia = main.elements.head
           imageTypeData <- mainMedia.imageTypeData
