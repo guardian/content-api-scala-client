@@ -1,6 +1,6 @@
 package com.gu.contentapi.client.model.utils
 
-import com.gu.contentapi.client.model.v1.{Block, BlockElement, Blocks, Content, ContentFields, Tag}
+import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.utils.CapiModelEnrichment._
 import com.gu.contentapi.client.utils._
 import com.gu.contentapi.client.utils.format._
@@ -177,10 +177,33 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     val tag: Tag = mock[Tag]
     val fields: ContentFields = mock[ContentFields]
 
+    val blocks: Blocks = mock[Blocks]
+    val main: Block = mock[Block]
+    val blockElement: BlockElement = mock[BlockElement]
+    val imageTypeData: ImageElementFields = mock[ImageElementFields]
+
+    val element: Element = mock[Element]
+    val asset: Asset = mock[Asset]
+    val assetFields: AssetFields = mock[AssetFields]
+
     when(fields.displayHint) thenReturn None
     when(content.tags) thenReturn List(tag)
     when(content.fields) thenReturn None
     when(content.pillarName) thenReturn None
+
+    when(content.blocks) thenReturn None
+    when(blocks.main) thenReturn None
+    when(main.elements) thenReturn Seq(blockElement)
+    when(blockElement.imageTypeData) thenReturn None
+
+    when(content.elements) thenReturn None
+    when(element.relation) thenReturn ""
+    when(element.`type`) thenReturn ElementType.Text // Are these acceptable empty values?
+    when(element.assets) thenReturn Seq(asset)
+    when(asset.`type`) thenReturn AssetType.Image // Are these acceptable empty values?
+    when(asset.typeData) thenReturn None
+    when(assetFields.role) thenReturn None
+
   }
 
   behavior of "Format.design"
@@ -503,21 +526,29 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.display shouldEqual ImmersiveDisplay
   }
 
-  ignore should "return a display of 'ShowcaseDisplay' when a showcaseImage is set" in {
+  it should "return a display of 'ShowcaseDisplay' when a showcaseImage is set" in {
     val f = fixture
-    val blocks: Blocks = mock[Blocks]
-    val main: Block = mock[Block]
-    val elements: Seq[BlockElement] = mock[Seq[BlockElement]]
-    val imageTypeData: ImageTypeSpecifier = mock[ImageTypeSpecifier]
+
+    when(f.content.blocks) thenReturn Some(f.blocks)
+    when(f.blocks.main) thenReturn Some(f.main)
+    when(f.blockElement.imageTypeData) thenReturn Some(f.imageTypeData)
+    when(f.imageTypeData.role) thenReturn Some("showcase")
+
+    f.content.display shouldEqual ShowcaseDisplay
 
   }
 
-  ignore should "return a display of 'ShowcaseDisplay' when a showcaseEmbed is set" in {
+  it should "return a display of 'ShowcaseDisplay' when a showcaseEmbed is set" in {
     val f = fixture
-    val blocks: Blocks = mock[Blocks]
-    val main: Block = mock[Block]
-    val elements: Seq[BlockElement] = mock[Seq[BlockElement]]
-    val imageTypeData: ImageTypeSpecifier = mock[ImageTypeSpecifier]
+
+    when(f.content.elements) thenReturn Some(scala.collection.Seq(f.element))
+    when(f.element.relation) thenReturn "main"
+    when(f.element.`type`) thenReturn ElementType.Embed
+    when(f.asset.`type`) thenReturn AssetType.Embed
+    when(f.asset.typeData) thenReturn Some(f.assetFields)
+    when(f.assetFields.role) thenReturn Some("showcase")
+
+    f.content.display shouldEqual ShowcaseDisplay
 
   }
 
