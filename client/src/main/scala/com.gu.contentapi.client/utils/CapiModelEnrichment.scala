@@ -132,7 +132,7 @@ object CapiModelEnrichment {
         isCulture -> CulturePillar,
         isPillar("Lifestyle") -> LifestylePillar,
         isSpecialReport -> SpecialReportTheme,
-        tagExistsWithId("tone/advertisement-features") -> Labs,
+        tagExistsWithId("tone/advertisement-features") -> Labs
       )
 
       val result = getFromPredicate(content, predicates)
