@@ -1,10 +1,33 @@
 package com.gu.contentapi.client.utils
 
 import com.gu.contentapi.client.model.v1._
+import com.gu.contentapi.client.utils.format._
+
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 object CapiModelEnrichment {
+
+  type ContentFilter = Content => Boolean
+
+  def getFromPredicate[T](content: Content, predicates: List[(ContentFilter, T)]): Option[T] =
+    predicates.collectFirst { case (predicate, t) if predicate(content) => t }
+
+  def tagExistsWithId(tagId: String): ContentFilter = content => content.tags.exists(tag => tag.id == tagId)
+
+  def displayHintExistsWithName(displayHintName: String): ContentFilter = content => content.fields.flatMap(_.displayHint).contains(displayHintName)
+
+  def isLiveBloggingNow: ContentFilter = content => content.fields.flatMap(_.liveBloggingNow).contains(true)
+
+  val isImmersive: ContentFilter = content => displayHintExistsWithName("immersive")(content)
+
+  val isMedia: ContentFilter = content => tagExistsWithId("type/audio")(content) || tagExistsWithId("type/video")(content) || tagExistsWithId("type/gallery")(content)
+
+  val isReview: ContentFilter = content => tagExistsWithId("tone/reviews")(content) || tagExistsWithId("tone/livereview")(content) || tagExistsWithId("tone/albumreview")(content)
+
+  val isLiveBlog: ContentFilter = content => isLiveBloggingNow(content) && tagExistsWithId("tone/minutebyminute")(content)
+
+  val isDeadBlog: ContentFilter = content => !isLiveBloggingNow(content) && tagExistsWithId("tone/minutebyminute")(content)
 
   implicit class RichCapiDateTime(val cdt: CapiDateTime) extends AnyVal {
     def toOffsetDateTime: OffsetDateTime = OffsetDateTime.parse(cdt.iso8601)
@@ -18,27 +41,10 @@ object CapiModelEnrichment {
 
     def designType: DesignType = {
 
-      val defaultDesignType = Article
+      val isComment: ContentFilter = content => tagExistsWithId("tone/comment")(content) || tagExistsWithId("tone/letters")(content)
+      val defaultDesignType: DesignType = Article
 
-      type ContentFilter = Content => Boolean
-
-      val isImmersive: ContentFilter = c => c.fields.flatMap(_.displayHint).contains("immersive")
-
-      def tagExistsWithId(tagId: String): ContentFilter = c => c.tags.exists(tag => tag.id == tagId)
-
-      val isMedia: ContentFilter = c => tagExistsWithId("type/audio")(c) || tagExistsWithId("type/video")(c) || tagExistsWithId("type/gallery")(c)
-
-      val isReview: ContentFilter = c => tagExistsWithId("tone/reviews")(c) || tagExistsWithId("tone/livereview")(c) || tagExistsWithId("tone/albumreview")(c)
-
-      def isComment: ContentFilter = c => tagExistsWithId("tone/comment")(c) || tagExistsWithId("tone/letters")(c)
-
-      def liveBloggingNow: Boolean = content.fields.flatMap(_.liveBloggingNow).contains(true)
-
-      val liveBlog: ContentFilter = liveBloggingNow && tagExistsWithId("tone/minutebyminute")(_)
-
-      val deadBlog: ContentFilter = !liveBloggingNow && tagExistsWithId("tone/minutebyminute")(_)
-
-      val predicates: List[(ContentFilter, DesignType)] = List (
+      val predicates: List[(ContentFilter, DesignType)] = List(
         tagExistsWithId("tone/advertisement-features") -> AdvertisementFeature,
         tagExistsWithId("tone/matchreports") -> MatchReport,
         tagExistsWithId("tone/quizzes") -> Quiz,
@@ -51,12 +57,146 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/analysis") -> Analysis,
         isComment -> Comment,
         tagExistsWithId("tone/features") -> Feature,
-        liveBlog -> Live,
-        deadBlog -> Article
+        isLiveBlog -> Live,
+        isDeadBlog -> Article
       )
 
-      val result = predicates.collectFirst { case (predicate, design) if predicate(content) => design }
+      val result = getFromPredicate(content, predicates)
       result.getOrElse(defaultDesignType)
     }
   }
+
+  implicit class RenderingFormat(val content: Content) extends AnyVal {
+
+
+    def design: Design = {
+
+      val defaultDesign: Design = ArticleDesign
+
+      val isPhotoEssay: ContentFilter = content => content.fields.flatMap(_.displayHint).contains("photoessay")
+
+      val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
+
+      val predicates: List[(ContentFilter, Design)] = List(
+        tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
+        isMedia -> MediaDesign,
+        isReview -> ReviewDesign,
+        tagExistsWithId("tone/analysis") -> AnalysisDesign,
+        tagExistsWithId("tone/comment") -> CommentDesign,
+        tagExistsWithId("tone/letters") -> LetterDesign,
+        tagExistsWithId("tone/features") -> FeatureDesign,
+        tagExistsWithId("tone/recipes") -> RecipeDesign,
+        tagExistsWithId("tone/matchreports") -> MatchReportDesign,
+        tagExistsWithId("tone/interview") -> InterviewDesign,
+        tagExistsWithId("tone/editorials") -> EditorialDesign,
+        tagExistsWithId("tone/quizzes") -> QuizDesign,
+        isInteractive -> InteractiveDesign,
+        isPhotoEssay -> PhotoEssayDesign,
+        isLiveBlog -> LiveBlogDesign,
+        isDeadBlog -> DeadBlogDesign
+      )
+
+      val result = getFromPredicate(content, predicates)
+      result.getOrElse(defaultDesign)
+    }
+
+    def theme: Theme = {
+      val defaultTheme: Theme = NewsPillar
+
+      val specialReportTags: Set[String] = Set(
+        "business/series/undercover-in-the-chicken-industry",
+        "business/series/britains-debt-timebomb",
+        "world/series/this-is-europe",
+        "environment/series/the-polluters",
+        "news/series/hsbc-files",
+        "news/series/panama-papers",
+        "us-news/homan-square",
+        "uk-news/series/the-new-world-of-work",
+        "world/series/the-new-arrivals",
+        "news/series/nauru-files",
+        "us-news/series/counted-us-police-killings",
+        "australia-news/series/healthcare-in-detention",
+        "society/series/this-is-the-nhs"
+      )
+
+      def isPillar(pillar: String): ContentFilter = content => content.pillarName.contains(pillar)
+
+      val isSpecialReport: ContentFilter = content => content.tags.exists(t => specialReportTags(t.id))
+      val isOpinion: ContentFilter = content => (tagExistsWithId("tone/comment")(content) && isPillar("News")(content)) ||
+        isPillar("Opinion")(content)
+      val isCulture: ContentFilter = content => isPillar("Arts")(content) || isPillar("Books")(content)
+
+      val predicates: List[(ContentFilter, Theme)] = List(
+        isOpinion -> OpinionPillar,
+        isPillar("Sport") -> SportPillar,
+        isCulture -> CulturePillar,
+        isPillar("Lifestyle") -> LifestylePillar,
+        isSpecialReport -> SpecialReportTheme,
+        tagExistsWithId("tone/advertisement-features") -> Labs
+      )
+
+      val result = getFromPredicate(content, predicates)
+      result.getOrElse(defaultTheme)
+    }
+
+    def display: Display = {
+
+      val defaultDisplay = StandardDisplay
+
+      def hasShowcaseImage: ContentFilter = content => {
+        val hasShowcaseImage = for {
+          blocks <- content.blocks
+          main <- blocks.main
+          mainMedia = main.elements.head
+          imageTypeData <- mainMedia.imageTypeData
+          imageRole <- imageTypeData.role
+        } yield {
+          imageRole == "showcase"
+        }
+        hasShowcaseImage.getOrElse(false)
+      }
+
+      def hasShowcaseEmbed: ContentFilter = content => {
+
+        def isMainEmbed(elem: Element): Boolean = elem.relation == "main" && elem.`type` == ElementType.Embed
+
+        def hasShowcaseAsset(assets: scala.collection.Seq[Asset]): Boolean = {
+          val isShowcaseAsset = for {
+            embedAsset <- assets.find(asset => asset.`type` == AssetType.Embed)
+            typeData <- embedAsset.typeData
+            role <- typeData.role
+          } yield {
+            role == "showcase"
+          }
+          isShowcaseAsset.getOrElse(false)
+        }
+
+        val hasShowcaseEmbed = for {
+          elements <- content.elements
+          mainEmbed <- elements.find(isMainEmbed)
+        } yield {
+          hasShowcaseAsset(mainEmbed.assets)
+        }
+
+        hasShowcaseEmbed.getOrElse(false)
+      }
+
+      val isShowcase: ContentFilter = content => displayHintExistsWithName("column")(content) ||
+        displayHintExistsWithName("showcase")(content) ||
+        hasShowcaseImage(content) ||
+        hasShowcaseEmbed(content)
+
+      val isNumberedList: ContentFilter = displayHintExistsWithName("numberedList")
+
+      val predicates: List[(ContentFilter, Display)] = List(
+        isImmersive -> ImmersiveDisplay,
+        isShowcase -> ShowcaseDisplay,
+        isNumberedList -> NumberedListDisplay
+      )
+
+      val result = getFromPredicate(content, predicates)
+      result.getOrElse(defaultDisplay)
+    }
+  }
+
 }

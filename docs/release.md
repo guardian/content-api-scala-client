@@ -12,6 +12,9 @@ sbt -DCAPI_TEST_KEY=a-valid-api-key 'release cross'
 ```
 (you need to supply the api key because the build process runs the tests)
 
+The api key needs to be a production key with tier `Internal`. You can obtain a key from `https://bonobo.capi.gutools.co.uk/`
+
+
 #### Releasing content-api-client-aws:
 This project does not depend on content-api-client.
 ```
