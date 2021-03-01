@@ -190,6 +190,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(content.tags) thenReturn List(tag)
     when(content.fields) thenReturn None
     when(content.pillarName) thenReturn None
+    when(content.`type`) thenReturn ContentType.Article
 
     when(content.blocks) thenReturn None
     when(blocks.main) thenReturn None
@@ -318,6 +319,13 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(f.tag.id) thenReturn "tone/quizzes"
 
     f.content.design shouldEqual QuizDesign
+  }
+
+  it should "have a design of 'InteractiveDesign' when ContentType is Interactive" in {
+    val f = fixture
+    when(f.content.`type`) thenReturn ContentType.Interactive
+
+    f.content.design shouldEqual InteractiveDesign
   }
 
   it should "have a design of 'PhotoEssayDesign' when displayHint contains photoessay" in {
