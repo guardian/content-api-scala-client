@@ -8,9 +8,6 @@ import org.mockito.Mockito._
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
 
-import javax.imageio.ImageTypeSpecifier
-
-
 class CapiModelEnrichmentDesignTypeTest extends FlatSpec with MockitoSugar with Matchers {
 
   def fixture = new {
