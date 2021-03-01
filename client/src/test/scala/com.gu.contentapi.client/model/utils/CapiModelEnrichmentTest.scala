@@ -275,7 +275,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     val f = fixture
     when(f.tag.id) thenReturn "tone/letters"
 
-    f.content.design shouldEqual CommentDesign
+    f.content.design shouldEqual LetterDesign
   }
 
   it should "have a design of 'FeatureDesign' when tag tone/features is present" in {
@@ -375,14 +375,6 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     val f = fixture
     when(f.content.pillarName) thenReturn Some("News")
     when(f.tag.id) thenReturn "tone/comment"
-
-    f.content.theme shouldEqual OpinionPillar
-  }
-
-  it should "return a theme of 'OpinionPillar' when tag tone/letters is present and has a pillarNAme of 'News'" in {
-    val f = fixture
-    when(f.content.pillarName) thenReturn Some("News")
-    when(f.tag.id) thenReturn "tone/letters"
 
     f.content.theme shouldEqual OpinionPillar
   }

@@ -25,8 +25,6 @@ object CapiModelEnrichment {
 
   val isReview: ContentFilter = content => tagExistsWithId("tone/reviews")(content) || tagExistsWithId("tone/livereview")(content) || tagExistsWithId("tone/albumreview")(content)
 
-  val isCommentDesign: ContentFilter = content => tagExistsWithId("tone/comment")(content) || tagExistsWithId("tone/letters")(content)
-
   val isLiveBlog: ContentFilter = content => isLiveBloggingNow(content) && tagExistsWithId("tone/minutebyminute")(content)
 
   val isDeadBlog: ContentFilter = content => !isLiveBloggingNow(content) && tagExistsWithId("tone/minutebyminute")(content)
@@ -43,6 +41,7 @@ object CapiModelEnrichment {
 
     def designType: DesignType = {
 
+      val isComment: ContentFilter = content => tagExistsWithId("tone/comment")(content) || tagExistsWithId("tone/letters")(content)
       val defaultDesignType: DesignType = Article
 
       val predicates: List[(ContentFilter, DesignType)] = List(
@@ -56,7 +55,7 @@ object CapiModelEnrichment {
         isMedia -> Media,
         isReview -> Review,
         tagExistsWithId("tone/analysis") -> Analysis,
-        isCommentDesign -> Comment,
+        isComment -> Comment,
         tagExistsWithId("tone/features") -> Feature,
         isLiveBlog -> Live,
         isDeadBlog -> Article
@@ -81,7 +80,8 @@ object CapiModelEnrichment {
         isMedia -> MediaDesign,
         isReview -> ReviewDesign,
         tagExistsWithId("tone/analysis") -> AnalysisDesign,
-        isCommentDesign -> CommentDesign,
+        tagExistsWithId("tone/comment") -> CommentDesign,
+        tagExistsWithId("tone/letters") -> LetterDesign,
         tagExistsWithId("tone/features") -> FeatureDesign,
         tagExistsWithId("tone/recipes") -> RecipeDesign,
         tagExistsWithId("tone/matchreports") -> MatchReportDesign,
@@ -119,7 +119,7 @@ object CapiModelEnrichment {
       def isPillar(pillar: String): ContentFilter = content => content.pillarName.contains(pillar)
 
       val isSpecialReport: ContentFilter = content => content.tags.exists(t => specialReportTags(t.id))
-      val isOpinion: ContentFilter = content => (isCommentDesign(content) && isPillar("News")(content)) ||
+      val isOpinion: ContentFilter = content => (tagExistsWithId("tone/comment")(content) && isPillar("News")(content)) ||
         isPillar("Opinion")(content)
       val isCulture: ContentFilter = content => isPillar("Arts")(content) || isPillar("Books")(content)
 
