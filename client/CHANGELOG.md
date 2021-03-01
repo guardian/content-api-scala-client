@@ -1,3 +1,8 @@
+## 17.10
+
+* Add `Format` to `CapiModelEnrichment`.
+  * This adds the `Design`, `Display` and `Theme` traits to be consumed by platforms.
+
 ## 17.9
 
 * Adds `showAliasPaths` to `ShowParameters`
