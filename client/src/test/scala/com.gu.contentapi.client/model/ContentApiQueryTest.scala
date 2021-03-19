@@ -23,6 +23,11 @@ class ContentApiQueryTest extends FlatSpec with Matchers  {
       "/search?tag=profile%2Fjustin-pinner&show-elements=all&show-alias-paths=true&type=article"
   }
 
+  "SearchQuery" should "accept paths as a parameter" in {
+    SearchQuery().paths("path/one,path/two").getUrl("") shouldEqual
+      "/search?paths=path%2Fone%2Cpath%2Ftwo"
+  }
+
   "SectionsQuery" should "be beautiful" in {
     SectionsQuery().getUrl("") shouldEqual "/sections"
   }
