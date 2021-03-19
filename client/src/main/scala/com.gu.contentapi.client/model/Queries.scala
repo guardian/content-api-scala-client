@@ -241,7 +241,7 @@ trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { t
 trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def tag = StringParameter("tag")
   def ids = StringParameter("ids")
-  def paths: StringParameter = StringParameter("paths")
+  def paths = StringParameter("paths")
   def rights = StringParameter("rights")
   def leadContent = StringParameter("lead-content")
   def fromDate = DateParameter("from-date")
