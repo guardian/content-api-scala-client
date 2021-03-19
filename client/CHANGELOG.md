@@ -1,3 +1,7 @@
+## 17.12
+
+* Add support for `paths` SearchQuery parameter (e.g. `search?paths=path/one,path/two`)
+
 ## 17.11
 
 * Bump CAPI models to 15.10.0
