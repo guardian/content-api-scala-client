@@ -5,7 +5,7 @@ import Dependencies._
 /* --------------------------------------------------------------------- */
 
 lazy val root = (project in file("."))
-  .aggregate(client, defaultClient)
+  .aggregate(client, defaultClient, aws)
   .settings(commonSettings, publishSettings)
   .settings(
     skip in publish    := true,
