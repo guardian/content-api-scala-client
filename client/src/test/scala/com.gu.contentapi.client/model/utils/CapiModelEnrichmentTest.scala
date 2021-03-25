@@ -380,7 +380,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     val featureTag = mock[Tag]
 
     when(interviewTag.id) thenReturn "tone/interview"
-    when(featureTag.id) thenReturn "tone-features"
+    when(featureTag.id) thenReturn "tone/features"
     when(content.fields) thenReturn None
     when(content.tags) thenReturn List(interviewTag, featureTag)
 
