@@ -61,6 +61,7 @@ lazy val awsSettings: Seq[Setting[_]] = Seq(
   name                := Metadata.ghProject + "-aws",
   description         := "AWS helper functionality for using Guardian's Content API scala client",
   developers          := Metadata.awsDevs,
+  releaseUseGlobalVersion := false,
   releaseVersionFile  := baseDirectory.value / "version.sbt",
   libraryDependencies ++= awsDeps,
 )
