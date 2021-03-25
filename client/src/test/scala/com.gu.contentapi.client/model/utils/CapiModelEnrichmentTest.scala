@@ -359,7 +359,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.design shouldEqual ArticleDesign
   }
 
-  //test one example of filters being applied in priority order
+  //test examples of filters being applied in priority order
   it should "return a design of 'MediaDesign' over a design of 'CommentDesign' where tags for both are present'" in {
     val content = mock[Content]
     val commentTag = mock[Tag]
@@ -371,6 +371,20 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(content.tags) thenReturn List(commentTag, videoTag)
 
     content.design shouldEqual MediaDesign
+
+  }
+
+  it should "return a design of 'InterviewDesign' over a design of 'FeatureDesign' where tags for both are present'" in {
+    val content = mock[Content]
+    val interviewTag = mock[Tag]
+    val featureTag = mock[Tag]
+
+    when(interviewTag.id) thenReturn "tone/interview"
+    when(featureTag.id) thenReturn "tone/features"
+    when(content.fields) thenReturn None
+    when(content.tags) thenReturn List(interviewTag, featureTag)
+
+    content.design shouldEqual InterviewDesign
 
   }
 
