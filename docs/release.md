@@ -18,9 +18,22 @@ The api key needs to be a production key with tier `Internal`. You can obtain a 
 #### Releasing content-api-client-aws:
 This project does not depend on content-api-client.
 ```
-sbt 'aws/release cross'
+sbt 'project aws' 'release cross'
 ```
 
+The release process uses the content-api-client version number in the `sonatypeBundleDirectory` (see https://github.com/xerial/sbt-sonatype).  This is incidental since it doesn't affect the version number that is released to Sonatype, but it does result in some concerning log lines e.g.
+
+```
+[info] 	published content-api-client-aws_2.13 to /Users/<user>/code/content-api-scala-client/target/sonatype-staging/17.10-SNAPSHOT/com/gu/content-api-client-aws_2.13/0.6.part/content-api-client-aws_2.13-0.6-javadoc.jar
+```
+
+When you might have expected 
+
+```
+[info] 	published content-api-client-aws_2.13 to /Users/<user>/code/content-api-scala-client/target/sonatype-staging/0.6/com/gu/content-api-client-aws_2.13/0.6.part/content-api-client-aws_2.13-0.6-javadoc.jar
+```
+
+Try not to worry about this, or if it really bothers you please fix it.
 
 If the release process ends with the following lines;
 ```
