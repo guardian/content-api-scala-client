@@ -325,9 +325,9 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.design shouldEqual InteractiveDesign
   }
 
-  it should "have a design of 'PhotoEssayDesign' when displayHint contains photoessay" in {
+  it should "have a design of 'PhotoEssayDesign' when displayHint contains photoEssay" in {
     val f = fixture
-    when(f.fields.displayHint) thenReturn Some("photoessay")
+    when(f.fields.displayHint) thenReturn Some("photoEssay")
     when(f.content.fields) thenReturn Some(f.fields)
 
     f.content.design shouldEqual PhotoEssayDesign
@@ -385,6 +385,17 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(content.tags) thenReturn List(interviewTag, featureTag)
 
     content.design shouldEqual InterviewDesign
+
+  }
+
+  it should "return a design of 'PhotoEssayDesign' over a design of 'FeatureDesign' where information for both is present'" in {
+    val f = fixture
+
+    when(f.tag.id) thenReturn "tone/features"
+    when(f.fields.displayHint) thenReturn Some("photoEssay")
+    when(f.content.fields) thenReturn Some(f.fields)
+
+    f.content.design shouldEqual PhotoEssayDesign
 
   }
 
@@ -534,6 +545,13 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     val f = fixture
     when(f.content.fields) thenReturn Some(f.fields)
     when(f.fields.displayHint) thenReturn Some("immersive")
+    f.content.display shouldEqual ImmersiveDisplay
+  }
+
+  it should "return a display of 'ImmersiveDisplay' when a displayHint of photoEssay is set" in {
+    val f = fixture
+    when(f.content.fields) thenReturn Some(f.fields)
+    when(f.fields.displayHint) thenReturn Some("photoEssay")
     f.content.display shouldEqual ImmersiveDisplay
   }
 
