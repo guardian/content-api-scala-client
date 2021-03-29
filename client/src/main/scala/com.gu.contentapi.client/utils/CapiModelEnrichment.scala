@@ -21,6 +21,8 @@ object CapiModelEnrichment {
 
   val isImmersive: ContentFilter = content => displayHintExistsWithName("immersive")(content)
 
+  val isPhotoEssay: ContentFilter = content => displayHintExistsWithName("photoEssay")(content)
+
   val isMedia: ContentFilter = content => tagExistsWithId("type/audio")(content) || tagExistsWithId("type/video")(content) || tagExistsWithId("type/gallery")(content)
 
   val isReview: ContentFilter = content => tagExistsWithId("tone/reviews")(content) || tagExistsWithId("tone/livereview")(content) || tagExistsWithId("tone/albumreview")(content)
@@ -73,8 +75,6 @@ object CapiModelEnrichment {
 
       val defaultDesign: Design = ArticleDesign
 
-      val isPhotoEssay: ContentFilter = content => content.fields.flatMap(_.displayHint).contains("photoessay")
-
       val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
 
       val predicates: List[(ContentFilter, Design)] = List(
@@ -84,6 +84,7 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/analysis") -> AnalysisDesign,
         tagExistsWithId("tone/comment") -> CommentDesign,
         tagExistsWithId("tone/letters") -> LetterDesign,
+        isPhotoEssay -> PhotoEssayDesign,
         tagExistsWithId("tone/interview") -> InterviewDesign,
         tagExistsWithId("tone/features") -> FeatureDesign,
         tagExistsWithId("tone/recipes") -> RecipeDesign,
@@ -91,7 +92,6 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/editorials") -> EditorialDesign,
         tagExistsWithId("tone/quizzes") -> QuizDesign,
         isInteractive -> InteractiveDesign,
-        isPhotoEssay -> PhotoEssayDesign,
         isLiveBlog -> LiveBlogDesign,
         isDeadBlog -> DeadBlogDesign
       )
@@ -143,6 +143,14 @@ object CapiModelEnrichment {
 
       val defaultDisplay = StandardDisplay
 
+      // We separate this out from the previous isImmersive to prevent breaking the legacy designType when adding
+      // the logic currently handled on Frontend. isGallery relies on Frontend metadata and so won't be added here
+      // https://github.com/guardian/frontend/blob/e71dc1c521672b28399811c59331e0c2c713bf00/common/app/model/content.scala#L86
+
+      val isImmersiveDisplay: ContentFilter = content =>
+        isImmersive(content) ||
+          isPhotoEssay(content)
+
       def hasShowcaseImage: ContentFilter = content => {
         val hasShowcaseImage = for {
           blocks <- content.blocks
@@ -189,7 +197,7 @@ object CapiModelEnrichment {
       val isNumberedList: ContentFilter = displayHintExistsWithName("numberedList")
 
       val predicates: List[(ContentFilter, Display)] = List(
-        isImmersive -> ImmersiveDisplay,
+        isImmersiveDisplay -> ImmersiveDisplay,
         isShowcase -> ShowcaseDisplay,
         isNumberedList -> NumberedListDisplay
       )
