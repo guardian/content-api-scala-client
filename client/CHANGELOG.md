@@ -2,7 +2,7 @@
 
 * Fix bug with ordering of predicates in Design enrichment for Features and PhotoEssays
 * Make PhotoEssays Immersive Display
-* 
+
 ## 17.13
 
 * Fix bug with ordering of predicates in Design enrichment for Features and Interviews
