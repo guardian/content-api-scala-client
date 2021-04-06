@@ -1,3 +1,7 @@
+## 17.15
+
+* Correct Letters content to have `OpinionPillar` instead of `NewsPillar` when tag is present.
+
 ## 17.14
 
 * Fix bug with ordering of predicates in Design enrichment for Features and PhotoEssays
