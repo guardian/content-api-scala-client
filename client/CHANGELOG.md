@@ -1,3 +1,8 @@
+## 17.16
+
+* Bump CAPI models to 15.10.2
+  * updates `blocks` field to include code type elements on the body
+
 ## 17.15
 
 * Correct Letters content to have `OpinionPillar` instead of `NewsPillar` when tag is present.
