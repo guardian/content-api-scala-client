@@ -15,6 +15,20 @@ sbt -DCAPI_TEST_KEY=a-valid-api-key 'release cross'
 The api key needs to be a production key with tier `Internal`. You can obtain a key from `https://bonobo.capi.gutools.co.uk/`
 
 
+#### Non-production releases:
+If you intend to publish a release candidate or snapshot build (e.g. from a WIP code branch) for testing the library in another application prior to releasing your changes to production - which can be useful when testing the effects of upgrading dependencies etc - you should also send the appropriate value in a parameter:
+```
+sbt -DCAPI_TEST_KEY=a-valid-api-key -DRELEASE_TYPE=candidate|snapshot 'release cross'
+```
+
+The value you pass drives the version numbering hints and which release steps to execute. For example a snapshot release is not published to Maven Central but a release candidate is. 
+
+These options also influence the post-release steps such as updating the version.sbt file and committing it to git. Neither the candidate nor the snapshot releases include those steps. 
+
+You'll still be prompted to enter the version number you're releasing and it is currently left to the developer to ensure the version number is suitable. You can always check what's already available on maven here: https://mvnrepository.com/artifact/com.gu/content-api-client   
+
+For a "normal" production release be sure not to have a RELEASE_TYPE reference hanging around - quit and restart sbt without the parameter if you do.
+
 #### Releasing content-api-client-aws:
 This project does not depend on content-api-client.
 ```
