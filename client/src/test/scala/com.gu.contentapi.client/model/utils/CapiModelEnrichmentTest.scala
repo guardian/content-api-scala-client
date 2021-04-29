@@ -535,6 +535,21 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.theme shouldEqual SpecialReportTheme
   }
 
+  it should "return a theme of 'SpecialReportTheme' when it is also an Opinion piece" in {
+
+    val content = mock[Content]
+    val commentTag = mock[Tag]
+    val specialReportTag = mock[Tag]
+
+
+    when(specialReportTag.id) thenReturn "society/series/this-is-the-nhs"
+    when(commentTag.id) thenReturn "tone/letters"
+    when(content.fields) thenReturn None
+    when(content.tags) thenReturn List(commentTag, specialReportTag)
+
+    content.theme shouldEqual SpecialReportTheme
+  }
+
   it should "return a theme of 'Labs' when tag tone/advertisement-features is present" in {
     val f = fixture
     when(f.tag.id) thenReturn "tone/advertisement-features"
