@@ -596,6 +596,21 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.display shouldEqual NumberedListDisplay
   }
 
+  it should "return a display of 'NumberedListDisplay' when a displayHint of numberedList is set and a showcase element is present" in {
+    val f = fixture
+    when(f.content.fields) thenReturn Some(f.fields)
+    when(f.fields.displayHint) thenReturn Some("numberedList")
+
+    when(f.content.elements) thenReturn Some(scala.collection.Seq(f.element))
+    when(f.element.relation) thenReturn "main"
+    when(f.element.`type`) thenReturn ElementType.Embed
+    when(f.asset.`type`) thenReturn AssetType.Embed
+    when(f.asset.typeData) thenReturn Some(f.assetFields)
+    when(f.assetFields.role) thenReturn Some("showcase")
+
+    f.content.display shouldEqual NumberedListDisplay
+  }
+
   it should "return a display of 'StandardDisplay' when no predicates are set" in {
     val f = fixture
 
