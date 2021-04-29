@@ -200,8 +200,8 @@ object CapiModelEnrichment {
 
       val predicates: List[(ContentFilter, Display)] = List(
         isImmersiveDisplay -> ImmersiveDisplay,
-        isShowcase -> ShowcaseDisplay,
-        isNumberedList -> NumberedListDisplay
+        isNumberedList -> NumberedListDisplay,
+        isShowcase -> ShowcaseDisplay
       )
 
       val result = getFromPredicate(content, predicates)
