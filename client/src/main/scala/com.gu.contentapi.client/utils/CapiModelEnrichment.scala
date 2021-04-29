@@ -134,7 +134,7 @@ object CapiModelEnrichment {
         isOpinion -> OpinionPillar,
         isPillar("Sport") -> SportPillar,
         isCulture -> CulturePillar,
-        isPillar("Lifestyle") -> LifestylePillar,
+        isPillar("Lifestyle") -> LifestylePillar
       )
 
       val result = getFromPredicate(content, predicates)
