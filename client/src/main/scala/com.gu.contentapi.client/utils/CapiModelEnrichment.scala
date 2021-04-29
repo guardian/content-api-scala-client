@@ -130,11 +130,11 @@ object CapiModelEnrichment {
 
       val predicates: List[(ContentFilter, Theme)] = List(
         isSpecialReport -> SpecialReportTheme,
+        tagExistsWithId("tone/advertisement-features") -> Labs,
         isOpinion -> OpinionPillar,
         isPillar("Sport") -> SportPillar,
         isCulture -> CulturePillar,
         isPillar("Lifestyle") -> LifestylePillar,
-        tagExistsWithId("tone/advertisement-features") -> Labs
       )
 
       val result = getFromPredicate(content, predicates)
