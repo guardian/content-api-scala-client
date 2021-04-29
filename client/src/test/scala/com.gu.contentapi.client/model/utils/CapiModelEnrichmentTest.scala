@@ -557,6 +557,15 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.theme shouldEqual Labs
   }
 
+  it should "return a theme of 'Labs' when tag tone/advertisement-features is present and any pillarName is set" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "tone/advertisement-features"
+    when(f.content.pillarName) thenReturn Some("Lifestyle")
+
+
+    f.content.theme shouldEqual Labs
+  }
+
   it should "return a theme of 'NewsPillar' when no predicates match" in {
     val f = fixture
     f.content.theme shouldEqual NewsPillar
