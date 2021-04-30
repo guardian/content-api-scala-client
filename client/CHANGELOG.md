@@ -1,3 +1,9 @@
+## 17.17
+
+* Fix bug with ordering of some predicate in model enrichment
+  * Prioritise NumberedList over Showcase
+  * Special reports and labs should override standard pillars.
+   
 ## 17.16
 
 * Bump CAPI models to 15.10.2
