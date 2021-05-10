@@ -535,9 +535,33 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.theme shouldEqual SpecialReportTheme
   }
 
+  it should "return a theme of 'SpecialReportTheme' when it is also an Opinion piece" in {
+
+    val content = mock[Content]
+    val commentTag = mock[Tag]
+    val specialReportTag = mock[Tag]
+
+
+    when(specialReportTag.id) thenReturn "society/series/this-is-the-nhs"
+    when(commentTag.id) thenReturn "tone/letters"
+    when(content.fields) thenReturn None
+    when(content.tags) thenReturn List(commentTag, specialReportTag)
+
+    content.theme shouldEqual SpecialReportTheme
+  }
+
   it should "return a theme of 'Labs' when tag tone/advertisement-features is present" in {
     val f = fixture
     when(f.tag.id) thenReturn "tone/advertisement-features"
+
+    f.content.theme shouldEqual Labs
+  }
+
+  it should "return a theme of 'Labs' when tag tone/advertisement-features is present and any pillarName is set" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "tone/advertisement-features"
+    when(f.content.pillarName) thenReturn Some("Lifestyle")
+
 
     f.content.theme shouldEqual Labs
   }
@@ -593,6 +617,21 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     val f = fixture
     when(f.content.fields) thenReturn Some(f.fields)
     when(f.fields.displayHint) thenReturn Some("numberedList")
+    f.content.display shouldEqual NumberedListDisplay
+  }
+
+  it should "return a display of 'NumberedListDisplay' when a displayHint of numberedList is set and a showcase element is present" in {
+    val f = fixture
+    when(f.content.fields) thenReturn Some(f.fields)
+    when(f.fields.displayHint) thenReturn Some("numberedList")
+
+    when(f.content.elements) thenReturn Some(scala.collection.Seq(f.element))
+    when(f.element.relation) thenReturn "main"
+    when(f.element.`type`) thenReturn ElementType.Embed
+    when(f.asset.`type`) thenReturn AssetType.Embed
+    when(f.asset.typeData) thenReturn Some(f.assetFields)
+    when(f.assetFields.role) thenReturn Some("showcase")
+
     f.content.display shouldEqual NumberedListDisplay
   }
 

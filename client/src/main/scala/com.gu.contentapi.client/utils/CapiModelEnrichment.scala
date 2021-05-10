@@ -129,12 +129,12 @@ object CapiModelEnrichment {
       val isCulture: ContentFilter = content => isPillar("Arts")(content) || isPillar("Books")(content)
 
       val predicates: List[(ContentFilter, Theme)] = List(
+        isSpecialReport -> SpecialReportTheme,
+        tagExistsWithId("tone/advertisement-features") -> Labs,
         isOpinion -> OpinionPillar,
         isPillar("Sport") -> SportPillar,
         isCulture -> CulturePillar,
-        isPillar("Lifestyle") -> LifestylePillar,
-        isSpecialReport -> SpecialReportTheme,
-        tagExistsWithId("tone/advertisement-features") -> Labs
+        isPillar("Lifestyle") -> LifestylePillar
       )
 
       val result = getFromPredicate(content, predicates)
@@ -200,8 +200,8 @@ object CapiModelEnrichment {
 
       val predicates: List[(ContentFilter, Display)] = List(
         isImmersiveDisplay -> ImmersiveDisplay,
-        isShowcase -> ShowcaseDisplay,
-        isNumberedList -> NumberedListDisplay
+        isNumberedList -> NumberedListDisplay,
+        isShowcase -> ShowcaseDisplay
       )
 
       val result = getFromPredicate(content, predicates)

@@ -1,8 +1,14 @@
-## 17.17
+## 17.18
 
-* Bump CAPI models to 16.0.0 (upgrades thrift to 0.13.0)
+* Bump CAPI models to 16.0.1 (upgrades thrift to 0.13.0)
 * Bump our own import of thrift to 0.13.0 also
 
+## 17.17
+
+* Fix bug with ordering of some predicate in model enrichment
+  * Prioritise NumberedList over Showcase
+  * Special reports and labs should override standard pillars.
+   
 ## 17.16
 
 * Bump CAPI models to 15.10.2
