@@ -1,6 +1,6 @@
 ## 17.18
 
-* Bump CAPI models to 16.0.1 (upgrades thrift to 0.13.0)
+* Bump CAPI models to 16.1.0 (upgrades thrift to 0.13.0)
 * Bump our own import of thrift to 0.13.0 also
 
 ## 17.17
