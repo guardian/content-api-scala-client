@@ -3,7 +3,7 @@ import sbt._
 object Dependencies {
   val scalaVersions = Seq("2.11.12", "2.12.10", "2.13.1")
 
-  val CapiModelsVersion = "16.2.0-RC1"
+  val CapiModelsVersion = "17.0.0"
 
   // Note: keep libthrift at a version functionally compatible with that used in CAPI models
   // if build failures occur due to eviction / sbt-assembly mergeStrategy errors

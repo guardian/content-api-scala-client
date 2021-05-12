@@ -1,6 +1,6 @@
 ## 17.19
 
-* Bump CAPI models to 16.2.0 (at least - final ver TBC)
+* Bump CAPI models to 17.0.0
 
 ## 17.18
 
