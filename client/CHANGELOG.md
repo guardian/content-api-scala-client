@@ -1,3 +1,7 @@
+## 17.19
+
+* Bump CAPI models to 16.2.0 (at least - final ver TBC)
+
 ## 17.18
 
 * Bump CAPI models to 16.1.0 (upgrades thrift to 0.13.0)
