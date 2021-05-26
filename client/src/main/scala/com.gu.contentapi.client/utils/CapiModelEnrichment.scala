@@ -78,6 +78,7 @@ object CapiModelEnrichment {
       val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
 
       val predicates: List[(ContentFilter, Design)] = List(
+        isInteractive -> InteractiveDesign,
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
         isMedia -> MediaDesign,
         isReview -> ReviewDesign,
@@ -91,7 +92,6 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/matchreports") -> MatchReportDesign,
         tagExistsWithId("tone/editorials") -> EditorialDesign,
         tagExistsWithId("tone/quizzes") -> QuizDesign,
-        isInteractive -> InteractiveDesign,
         isLiveBlog -> LiveBlogDesign,
         isDeadBlog -> DeadBlogDesign
       )
