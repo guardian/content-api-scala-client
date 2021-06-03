@@ -1,3 +1,7 @@
+## 17.20
+* Bump CAPI models to 17.0.1
+  * updates embed type elements to include 'caption' field
+  
 ## 17.19
 
 * Bump CAPI models to 17.0.0
