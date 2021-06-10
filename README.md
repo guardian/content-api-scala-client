@@ -1,7 +1,7 @@
 Content API Scala Client
 ========================
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.gu/content-api-client_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.gu/content-api-client_2.11)
+[![scalacheck Scala version support](https://index.scala-lang.org/guardian/content-api-client/content-api-client/latest-by-scala-version.svg)](https://index.scala-lang.org/guardian/content-api-client/content-api-client)
 
 A Scala client for the Guardian's [Content API](http://explorer.capi.gutools.co.uk/).
 
