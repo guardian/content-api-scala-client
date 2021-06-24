@@ -378,7 +378,6 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(content.tags) thenReturn List(commentTag, videoTag)
 
     content.design shouldEqual MediaDesign
-
   }
 
   it should "return a design of 'InterviewDesign' over a design of 'FeatureDesign' where tags for both are present'" in {
@@ -392,7 +391,6 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(content.tags) thenReturn List(interviewTag, featureTag)
 
     content.design shouldEqual InterviewDesign
-
   }
 
   it should "return a design of 'PhotoEssayDesign' over a design of 'FeatureDesign' where information for both is present'" in {
@@ -403,7 +401,16 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(f.content.fields) thenReturn Some(f.fields)
 
     f.content.design shouldEqual PhotoEssayDesign
+  }
 
+  it should "return a design of 'ObituaryDesign' over a design of 'FeatureDesign' where information for both is present'" in {
+    val f = fixture
+
+    when(f.tag.id) thenReturn "tone/obituaries"
+    when(f.fields.displayHint) thenReturn Some("photoEssay")
+    when(f.content.fields) thenReturn Some(f.fields)
+
+    f.content.design shouldEqual ObituaryDesign
   }
 
   behavior of "Format.theme"

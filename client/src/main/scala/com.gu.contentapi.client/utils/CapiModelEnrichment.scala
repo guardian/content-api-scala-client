@@ -70,7 +70,6 @@ object CapiModelEnrichment {
 
   implicit class RenderingFormat(val content: Content) extends AnyVal {
 
-
     def design: Design = {
 
       val defaultDesign: Design = ArticleDesign
