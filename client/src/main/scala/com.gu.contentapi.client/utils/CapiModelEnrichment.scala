@@ -70,7 +70,6 @@ object CapiModelEnrichment {
 
   implicit class RenderingFormat(val content: Content) extends AnyVal {
 
-
     def design: Design = {
 
       val defaultDesign: Design = ArticleDesign
@@ -81,6 +80,7 @@ object CapiModelEnrichment {
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
         isMedia -> MediaDesign,
         isReview -> ReviewDesign,
+        tagExistsWithId("tone/obituaries") -> ObituaryDesign,
         tagExistsWithId("tone/analysis") -> AnalysisDesign,
         tagExistsWithId("tone/comment") -> CommentDesign,
         tagExistsWithId("tone/letters") -> LetterDesign,

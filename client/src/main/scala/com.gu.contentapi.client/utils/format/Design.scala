@@ -19,3 +19,4 @@ case object QuizDesign extends Design
 case object InteractiveDesign extends Design
 case object PhotoEssayDesign extends Design
 case object PrintShopDesign extends Design
+case object ObituaryDesign extends Design
