@@ -1,3 +1,7 @@
+## 17.21
+
+* Introduce new `Design`: `ObituaryDesign`, for Obituaries.
+
 ## 17.20
 * Bump CAPI models to 17.1.0
   * updates embed type elements to include 'caption' field
