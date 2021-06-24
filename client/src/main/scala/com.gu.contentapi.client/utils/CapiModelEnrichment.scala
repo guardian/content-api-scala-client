@@ -84,6 +84,7 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/analysis") -> AnalysisDesign,
         tagExistsWithId("tone/comment") -> CommentDesign,
         tagExistsWithId("tone/letters") -> LetterDesign,
+        tagExistsWithId("tone/obituaries") -> ObituaryDesign,
         isPhotoEssay -> PhotoEssayDesign,
         tagExistsWithId("tone/interview") -> InterviewDesign,
         tagExistsWithId("tone/features") -> FeatureDesign,

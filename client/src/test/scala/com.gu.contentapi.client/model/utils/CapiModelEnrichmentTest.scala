@@ -276,6 +276,13 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.design shouldEqual LetterDesign
   }
 
+  it should "have a design of 'ObituaryDesign' when tag tone/obituaries is present" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "tone/obituaries"
+
+    f.content.design shouldEqual ObituaryDesign
+  }
+
   it should "have a design of 'FeatureDesign' when tag tone/features is present" in {
     val f = fixture
     when(f.tag.id) thenReturn "tone/features"
