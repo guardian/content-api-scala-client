@@ -106,7 +106,6 @@ object CapiModelEnrichment {
       val specialReportTags: Set[String] = Set(
         "business/series/undercover-in-the-chicken-industry",
         "business/series/britains-debt-timebomb",
-        "world/series/this-is-europe",
         "environment/series/the-polluters",
         "news/series/hsbc-files",
         "news/series/panama-papers",
