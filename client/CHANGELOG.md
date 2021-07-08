@@ -1,3 +1,5 @@
+## 17.21
+* Remove This is Europe tag from Special Report in format
 
 ## 17.20
 * Bump CAPI models to 17.1.0
