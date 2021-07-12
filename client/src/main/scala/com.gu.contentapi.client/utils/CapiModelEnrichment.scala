@@ -3,6 +3,8 @@ package com.gu.contentapi.client.utils
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.utils.format._
 
+import org.apache.commons.codec.digest.DigestUtils
+
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
@@ -118,9 +120,20 @@ object CapiModelEnrichment {
         "society/series/this-is-the-nhs"
       )
 
+      val hashedSpecialReportTags: Set[String] = Set(
+      )
+
+      val salt = "a-public-salt3W#ywHav!p+?r+W2$E6="
+
       def isPillar(pillar: String): ContentFilter = content => content.pillarName.contains(pillar)
 
-      val isSpecialReport: ContentFilter = content => content.tags.exists(t => specialReportTags(t.id))
+      def hashedTagIds = content.tags.map { tag =>
+        DigestUtils.md5Hex(salt + tag.id)
+      }
+
+      val isSpecialReport: ContentFilter = content =>
+        content.tags.exists(t => specialReportTags(t.id)) || hashedTagIds.exists(hashedSpecialReportTags.apply)
+
       val isOpinion: ContentFilter = content =>
         (tagExistsWithId("tone/comment")(content) && isPillar("News")(content)) ||
           (tagExistsWithId("tone/letters")(content) && isPillar("News")(content)) ||
