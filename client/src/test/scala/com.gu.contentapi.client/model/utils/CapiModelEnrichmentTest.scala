@@ -212,6 +212,13 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
 
     f.content.design shouldEqual PrintShopDesign
   }
+  
+  it should "have a design of 'CorrectionDesign' when tag theguardian/series/correctionsandclarifications is present" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "theguardian/series/correctionsandclarifications"
+
+    f.content.design shouldEqual CorrectionDesign
+  }
 
   it should "have a design of 'MediaDesign' when tag type/audio is present" in {
     val f = fixture
