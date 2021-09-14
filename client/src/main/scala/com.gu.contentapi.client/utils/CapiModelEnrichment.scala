@@ -78,6 +78,9 @@ object CapiModelEnrichment {
 
       val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
 
+      // name could change pending conversation w composer
+      val isFullPageInteractive: ContentFilter = content => isInteractive(content) && displayHintExistsWithName("fullPageInteractive")(content)
+
       val predicates: List[(ContentFilter, Design)] = List(
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
         isMedia -> MediaDesign,
@@ -93,6 +96,7 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/matchreports") -> MatchReportDesign,
         tagExistsWithId("tone/editorials") -> EditorialDesign,
         tagExistsWithId("tone/quizzes") -> QuizDesign,
+        isFullPageInteractive -> FullPageInteractiveDesign,
         isInteractive -> InteractiveDesign,
         isLiveBlog -> LiveBlogDesign,
         isDeadBlog -> DeadBlogDesign

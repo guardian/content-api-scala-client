@@ -325,6 +325,25 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.design shouldEqual QuizDesign
   }
 
+  it should "have a design of 'FullPageInteractiveDesign' when ContentType is " +
+    "Interactive and display hint is 'fullPageInteractive" in {
+    val f = fixture
+    when(f.content.`type`) thenReturn ContentType.Interactive
+    when(f.fields.displayHint) thenReturn Some("fullPageInteractive")
+
+    f.content.design shouldEqual FullPageInteractiveDesign
+  }
+
+  it should "not have a design of 'FullPageInteractiveDesign' " +
+    "when display hint is 'fullPageInteractive and ContentType is 'Article" in {
+    val f = fixture
+    when(f.content.`type`) thenReturn ContentType.Article
+    when(f.fields.displayHint) thenReturn Some("fullPageInteractive")
+
+    f.content.design shouldEqual ArticleDesign
+    f.content.design should not equal FullPageInteractiveDesign
+  }
+
   it should "have a design of 'InteractiveDesign' when ContentType is Interactive" in {
     val f = fixture
     when(f.content.`type`) thenReturn ContentType.Interactive

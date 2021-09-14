@@ -13,6 +13,7 @@ case object LiveBlogDesign extends Design
 case object DeadBlogDesign extends Design
 case object RecipeDesign extends Design
 case object MatchReportDesign extends Design
+case object FullPageInteractiveDesign extends Design
 case object InterviewDesign extends Design
 case object EditorialDesign extends Design
 case object QuizDesign extends Design
