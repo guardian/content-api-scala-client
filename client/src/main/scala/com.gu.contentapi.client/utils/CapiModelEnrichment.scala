@@ -33,6 +33,9 @@ object CapiModelEnrichment {
 
   val isDeadBlog: ContentFilter = content => !isLiveBloggingNow(content) && tagExistsWithId("tone/minutebyminute")(content)
 
+  val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
+  
+  val isFullPageInteractive: ContentFilter = content => isInteractive(content) && displayHintExistsWithName("fullPageInteractive")(content)
   implicit class RichCapiDateTime(val cdt: CapiDateTime) extends AnyVal {
     def toOffsetDateTime: OffsetDateTime = OffsetDateTime.parse(cdt.iso8601)
   }
@@ -75,11 +78,6 @@ object CapiModelEnrichment {
     def design: Design = {
 
       val defaultDesign: Design = ArticleDesign
-
-      val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
-
-      // name could change pending conversation w composer
-      val isFullPageInteractive: ContentFilter = content => isInteractive(content) && displayHintExistsWithName("fullPageInteractive")(content)
 
       val predicates: List[(ContentFilter, Design)] = List(
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
@@ -169,7 +167,6 @@ object CapiModelEnrichment {
       // We separate this out from the previous isImmersive to prevent breaking the legacy designType when adding
       // the logic currently handled on Frontend. isGallery relies on Frontend metadata and so won't be added here
       // https://github.com/guardian/frontend/blob/e71dc1c521672b28399811c59331e0c2c713bf00/common/app/model/content.scala#L86
-
       val isImmersiveDisplay: ContentFilter = content =>
         isImmersive(content) ||
           isPhotoEssay(content)
@@ -222,7 +219,8 @@ object CapiModelEnrichment {
       val predicates: List[(ContentFilter, Display)] = List(
         isImmersiveDisplay -> ImmersiveDisplay,
         isNumberedList -> NumberedListDisplay,
-        isShowcase -> ShowcaseDisplay
+        isShowcase -> ShowcaseDisplay,
+        isFullPageInteractive -> StandardDisplay
       )
 
       val result = getFromPredicate(content, predicates)

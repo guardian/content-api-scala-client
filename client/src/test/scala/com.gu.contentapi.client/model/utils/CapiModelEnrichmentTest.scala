@@ -331,6 +331,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(f.content.`type`) thenReturn ContentType.Interactive
     when(f.fields.displayHint) thenReturn Some("fullPageInteractive")
 
+    f.content.display shouldEqual StandardDisplay
     f.content.design shouldEqual FullPageInteractiveDesign
   }
 
