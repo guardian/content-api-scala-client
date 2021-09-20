@@ -7,6 +7,8 @@ import org.apache.commons.codec.digest.DigestUtils
 
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.time.ZonedDateTime
+import java.time.ZoneOffset
 
 object CapiModelEnrichment {
 
@@ -35,7 +37,12 @@ object CapiModelEnrichment {
 
   val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
   
-  val isFullPageInteractive: ContentFilter = content => isInteractive(content) && displayHintExistsWithName("fullPageInteractive")(content)
+  // The date used here is arbitrary and will be moved nearer to the present when the new template feature is ready to be used in production
+  val isLegacyInteractiveDate: ContentFilter = content => content.fields.flatMap(_.creationDate).exists(date => ZonedDateTime.of(2022, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).isAfter(ZonedDateTime.parse(date.iso8601)))
+
+  val isLegacyImmersiveInteractive: ContentFilter = content => isInteractive(content) && isImmersive(content) && isLegacyInteractiveDate(content)
+  
+  val isFullPageInteractive: ContentFilter = content => isInteractive(content) && (displayHintExistsWithName("fullPageInteractive")(content) || isLegacyImmersiveInteractive(content))
   implicit class RichCapiDateTime(val cdt: CapiDateTime) extends AnyVal {
     def toOffsetDateTime: OffsetDateTime = OffsetDateTime.parse(cdt.iso8601)
   }
@@ -217,10 +224,10 @@ object CapiModelEnrichment {
       val isNumberedList: ContentFilter = displayHintExistsWithName("numberedList")
 
       val predicates: List[(ContentFilter, Display)] = List(
+        isFullPageInteractive -> StandardDisplay,
         isImmersiveDisplay -> ImmersiveDisplay,
         isNumberedList -> NumberedListDisplay,
-        isShowcase -> ShowcaseDisplay,
-        isFullPageInteractive -> StandardDisplay
+        isShowcase -> ShowcaseDisplay
       )
 
       val result = getFromPredicate(content, predicates)

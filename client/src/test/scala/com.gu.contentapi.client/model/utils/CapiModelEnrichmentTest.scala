@@ -336,6 +336,18 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.design shouldEqual FullPageInteractiveDesign
   }
 
+  it should "have a design of 'FullPageInteractiveDesign' when is legacy " +
+    "immersive interactive and display hint is 'immersive" in {
+    val f = fixture
+    when(f.content.`type`) thenReturn ContentType.Interactive
+    when(f.fields.displayHint) thenReturn Some("immersive")
+    when(f.content.fields) thenReturn Some(f.fields)
+    when(f.fields.creationDate) thenReturn Some(CapiDateTime(1632116952, "2021-09-20T06:49:12Z"))
+
+    f.content.display shouldEqual StandardDisplay
+    f.content.design shouldEqual FullPageInteractiveDesign
+  }
+
   it should "not have a design of 'FullPageInteractiveDesign' " +
     "when display hint is 'fullPageInteractive and ContentType is 'Article" in {
     val f = fixture
@@ -667,6 +679,22 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     val f = fixture
 
     f.content.display shouldEqual StandardDisplay
+  }
+  
+  it should "confirm content made in 2021 is legacy interactive content" in {
+    val f = fixture
+    when(f.content.fields) thenReturn Some(f.fields)
+    when(f.fields.creationDate) thenReturn Some(CapiDateTime(1632116952, "2021-09-20T06:49:12Z"))
+
+    isLegacyInteractiveDate(f.content) shouldEqual true
+  }
+
+  it should "confirm content made in 2023 is not legacy interactive content" in {
+    val f = fixture
+    when(f.content.fields) thenReturn Some(f.fields)
+    when(f.fields.creationDate) thenReturn Some(CapiDateTime(1695188952, "2023-09-20T06:49:12Z"))
+
+    isLegacyInteractiveDate(f.content) shouldEqual false
   }
 
 }
