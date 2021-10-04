@@ -38,7 +38,7 @@ object CapiModelEnrichment {
   val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
   
   // The date used here is arbitrary and will be moved nearer to the present when the new template feature is ready to be used in production
-  val isLegacyInteractiveDate: ContentFilter = content => content.fields.flatMap(_.creationDate).exists(date => ZonedDateTime.of(2022, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).isAfter(ZonedDateTime.parse(date.iso8601)))
+  val isLegacyInteractiveDate: ContentFilter = content => content.fields.flatMap(_.creationDate).exists(date => ZonedDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).isAfter(ZonedDateTime.parse(date.iso8601)))
 
   val isLegacyImmersiveInteractive: ContentFilter = content => isInteractive(content) && isImmersive(content) && isLegacyInteractiveDate(content)
   
