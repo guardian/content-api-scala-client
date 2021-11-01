@@ -49,6 +49,7 @@ object CapiModelEnrichment {
       val defaultDesignType: DesignType = Article
 
       val predicates: List[(ContentFilter, DesignType)] = List(
+        tagExistsWithId("info/newsletter-sign-up") -> NewsletterSignup,
         tagExistsWithId("tone/advertisement-features") -> AdvertisementFeature,
         tagExistsWithId("tone/matchreports") -> MatchReport,
         tagExistsWithId("tone/quizzes") -> Quiz,
