@@ -693,7 +693,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(f.content.fields) thenReturn Some(f.fields)
     when(f.fields.creationDate) thenReturn Some(CapiDateTime(1632116952, "2021-09-20T06:49:12Z"))
 
-    isLegacyInteractiveDate(f.content) shouldEqual true
+    publishedBeforeInteractiveImmersiveSwitchover(f.content) shouldEqual true
   }
 
   it should "confirm interactive content made in 2026 is not legacy interactive content" in {
@@ -701,7 +701,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(f.content.fields) thenReturn Some(f.fields)
     when(f.fields.creationDate) thenReturn Some(CapiDateTime(1695188952, "2026-09-20T06:49:12Z"))
 
-    isLegacyInteractiveDate(f.content) shouldEqual false
+    publishedBeforeInteractiveImmersiveSwitchover(f.content) shouldEqual false
   }
 
 }
