@@ -3,5 +3,3 @@
 !.travis.yml
 
 target/
-project/metals.sbt
-project/project/
