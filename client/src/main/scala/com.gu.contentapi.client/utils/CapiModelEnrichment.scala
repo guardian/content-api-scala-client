@@ -7,6 +7,8 @@ import org.apache.commons.codec.digest.DigestUtils
 
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.time.ZonedDateTime
+import java.time.ZoneOffset
 
 object CapiModelEnrichment {
 
@@ -33,6 +35,16 @@ object CapiModelEnrichment {
 
   val isDeadBlog: ContentFilter = content => !isLiveBloggingNow(content) && tagExistsWithId("tone/minutebyminute")(content)
 
+  val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
+  
+  // The date used here is arbitrary and will be moved nearer to the present when the new template feature is ready to be used in production
+  val immersiveInteractiveSwitchoverDate = ZonedDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
+  
+  val publishedBeforeInteractiveImmersiveSwitchover: ContentFilter = content => content.fields.flatMap(_.creationDate).exists(date => ZonedDateTime.parse(date.iso8601).isBefore(immersiveInteractiveSwitchoverDate))
+  
+  val isLegacyImmersiveInteractive: ContentFilter = content => isInteractive(content) && isImmersive(content) && publishedBeforeInteractiveImmersiveSwitchover(content)
+  
+  val isFullPageInteractive: ContentFilter = content => isInteractive(content) && (displayHintExistsWithName("fullPageInteractive")(content) || isLegacyImmersiveInteractive(content))
   implicit class RichCapiDateTime(val cdt: CapiDateTime) extends AnyVal {
     def toOffsetDateTime: OffsetDateTime = OffsetDateTime.parse(cdt.iso8601)
   }
@@ -77,8 +89,6 @@ object CapiModelEnrichment {
 
       val defaultDesign: Design = ArticleDesign
 
-      val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
-
       val predicates: List[(ContentFilter, Design)] = List(
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
         isMedia -> MediaDesign,
@@ -94,6 +104,7 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/matchreports") -> MatchReportDesign,
         tagExistsWithId("tone/editorials") -> EditorialDesign,
         tagExistsWithId("tone/quizzes") -> QuizDesign,
+        isFullPageInteractive -> FullPageInteractiveDesign,
         isInteractive -> InteractiveDesign,
         isLiveBlog -> LiveBlogDesign,
         isDeadBlog -> DeadBlogDesign
@@ -167,7 +178,6 @@ object CapiModelEnrichment {
       // We separate this out from the previous isImmersive to prevent breaking the legacy designType when adding
       // the logic currently handled on Frontend. isGallery relies on Frontend metadata and so won't be added here
       // https://github.com/guardian/frontend/blob/e71dc1c521672b28399811c59331e0c2c713bf00/common/app/model/content.scala#L86
-
       val isImmersiveDisplay: ContentFilter = content =>
         isImmersive(content) ||
           isPhotoEssay(content)
@@ -218,6 +228,7 @@ object CapiModelEnrichment {
       val isNumberedList: ContentFilter = displayHintExistsWithName("numberedList")
 
       val predicates: List[(ContentFilter, Display)] = List(
+        isFullPageInteractive -> StandardDisplay,
         isImmersiveDisplay -> ImmersiveDisplay,
         isNumberedList -> NumberedListDisplay,
         isShowcase -> ShowcaseDisplay
