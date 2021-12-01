@@ -1,3 +1,6 @@
+## 17.23
+* Map old "immersive interactive" articles to display: standard, design: full page interactive
+* Map new "immersive interactive" articles to display: immersive, design: interactive, to use the new template
 ## 17.21
 * Remove This is Europe tag from Special Report in format
 
