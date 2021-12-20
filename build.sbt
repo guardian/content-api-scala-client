@@ -27,10 +27,10 @@ lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
   .settings(commonSettings, versionSettingsMaybe, publishSettings)
   .settings(
-    skip in publish    := true,
+    publish / skip     := true,
     releaseVersionFile := baseDirectory.value / "version.sbt",
-    sources in Compile := Seq.empty,
-    sources in Test    := Seq.empty
+    Compile / sources  := Seq.empty,
+    Test / sources     := Seq.empty
   )
 
 lazy val client = (project in file("client"))
@@ -71,7 +71,7 @@ lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
   description         := "Default scala client for the Guardian's Content API",
   developers          := Metadata.clientDevs,
   libraryDependencies ++= clientDeps ++ defaultClientDeps,
-  initialCommands in console := """
+  console / initialCommands   := """
     import com.gu.contentapi.client._
     import scala.concurrent.ExecutionContext.Implicits.global
     import scala.concurrent.Await
@@ -102,7 +102,7 @@ lazy val publishSettings: Seq[Setting[_]] = Seq(
   publishTo := sonatypePublishToBundle.value,
   publishConfiguration := publishConfiguration.value.withOverwrite(canOverwrite),
   publishMavenStyle := true,
-  publishArtifact in Test := false,
+  Test / publishArtifact   := false,
   releaseVcsSign := true,
   releaseProcess := releaseProcessSteps,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
