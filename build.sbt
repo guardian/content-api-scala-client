@@ -5,8 +5,8 @@ import sbtrelease.{Version, versionFormatError}
 
 /* --------------------------------------------------------------------- */
 
-val candidateReleaseType = "candidate"
-val candidateReleaseSuffix = "-RC1"
+val betaReleaseType = "beta"
+val betaReleaseSuffix = "-beta.0"
 val snapshotReleaseType = "snapshot"
 val snapshotReleaseSuffix = "-SNAPSHOT"
 
@@ -14,7 +14,7 @@ lazy val versionSettingsMaybe = {
   // Set by e.g. sbt -DRELEASE_TYPE=candidate|snapshot.
   // For production release, don't set a RELEASE_TYPE variable
   sys.props.get("RELEASE_TYPE").map {
-    case v if v == candidateReleaseType => candidateReleaseSuffix
+    case v if v == betaReleaseType => betaReleaseSuffix
     case v if v == snapshotReleaseType => snapshotReleaseSuffix
   }.map { suffix =>
     releaseVersion := {
@@ -42,7 +42,7 @@ lazy val defaultClient = (project in file("client-default"))
   .settings(commonSettings, defaultClientSettings, publishSettings)
 
 // we apply versionSettingsMaybe to aws too because this project is always released in isolation
-// from the others - and we _might_ want to put out a snapsot or release candidate for that (TBC).
+// from the others - and we _might_ want to put out a snapshot or beta for that (TBC).
 // Bear this in mind if we begin releasing aws in sync with the others
 lazy val aws = (project in file("aws"))
   .settings(commonSettings, awsSettings, versionSettingsMaybe, publishSettings)
@@ -111,7 +111,7 @@ lazy val publishSettings: Seq[Setting[_]] = Seq(
 
 lazy val checkReleaseType: ReleaseStep = ReleaseStep({ st: State =>
   val releaseType = sys.props.get("RELEASE_TYPE").map {
-    case v if v == candidateReleaseType => candidateReleaseType.toUpperCase
+    case v if v == betaReleaseType => betaReleaseType.toUpperCase
     case v if v == snapshotReleaseType => snapshotReleaseType.toUpperCase
   }.getOrElse("PRODUCTION")
 
@@ -164,28 +164,28 @@ lazy val releaseProcessSteps: Seq[ReleaseStep] = {
   )
 
   /*
-  Release Candidate assemblies can be published to Sonatype and Maven.
+  Beta assemblies can be published to Sonatype and Maven.
 
   To make this work, start SBT with the candidate releaseType;
-    sbt -DRELEASE_TYPE=candidate
+    sbt -DRELEASE_TYPE=beta
 
   This gets around the "problem" of sbt-sonatype assuming that a -SNAPSHOT build should not be delivered to Maven.
 
-  In this mode, the version number will be presented as e.g. 1.2.3-RC1, but the git tagging and version-updating
+  In this mode, the version number will be presented as e.g. 1.2.3-beta.0, but the git tagging and version-updating
   steps are not triggered, so it's up to the developer to keep track of what was released and manipulate subsequent
   release and next versions appropriately.
   */
-  val candidateSteps: Seq[ReleaseStep] = Seq(
+  val betaSteps: Seq[ReleaseStep] = Seq(
     setReleaseVersion,
     releaseStepCommandAndRemaining("+publishSigned"),
     releaseStepCommand("sonatypeBundleRelease"),
     setNextVersion
   )
 
-  // remember to set with sbt -DRELEASE_TYPE=snapshot|candidate if running a non-prod release
+  // remember to set with sbt -DRELEASE_TYPE=snapshot|beta if running a non-prod release
   commonSteps ++ (sys.props.get("RELEASE_TYPE") match {
     case Some(v) if v == snapshotReleaseType => snapshotSteps // this deploys -SNAPSHOT build to sonatype snapshot repo only
-    case Some(v) if v == candidateReleaseType => candidateSteps // this enables a release candidate build to sonatype and Maven
+    case Some(v) if v == betaReleaseType => betaSteps // this enables a release candidate build to sonatype and Maven
     case None => prodSteps  // our normal deploy route
   })
 

@@ -11,10 +11,14 @@ A Scala client for the Guardian's [Content API](http://explorer.capi.gutools.co.
 Add the following line to your SBT build definition, and set the version number to be the latest from the [releases page](https://github.com/guardian/content-api-scala-client/releases):
 
 ```scala
-libraryDependencies += "com.gu" %% "content-api-client-default" % "x.y"
+libraryDependencies += "com.gu" %% "content-api-client-default" % "x.y.z"
 ```
 
-Please note, as of version 7.0, the content api scala client no longer supports java 7.
+Please note;
+
+- as of version 7.0, the content api scala client no longer supports java 7.
+
+- as of version 17.24.0 the content api scala client only supports scala 2.12+
 
 If you don't have an API key, go to [open-platform.theguardian.com/access/](http://open-platform.theguardian.com/access/) to get one. You will then need to create a new instance of the client and set the key:
 
