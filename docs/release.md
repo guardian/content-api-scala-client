@@ -16,14 +16,14 @@ The api key needs to be a production key with tier `Internal`. You can obtain a 
 
 
 #### Non-production releases:
-If you intend to publish a release candidate or snapshot build (e.g. from a WIP code branch) for testing the library in another application prior to releasing your changes to production - which can be useful when testing the effects of upgrading dependencies etc - you should also send the appropriate value in a parameter:
+If you intend to publish a beta or snapshot build (e.g. from a WIP code branch) for testing the library in another application prior to releasing your changes to production - which can be useful when testing the effects of upgrading dependencies etc - you should also send the appropriate value in a parameter:
 ```
-sbt -DCAPI_TEST_KEY=a-valid-api-key -DRELEASE_TYPE=candidate|snapshot 'release cross'
+sbt -DCAPI_TEST_KEY=a-valid-api-key -DRELEASE_TYPE=beta|snapshot 'release cross'
 ```
 
-The value you pass drives the version numbering hints and which release steps to execute. For example a snapshot release is not published to Maven Central but a release candidate is. 
+The value you pass drives the version numbering hints and which release steps to execute. For example a snapshot release is not published to Maven Central but a beta release is. 
 
-These options also influence the post-release steps such as updating the version.sbt file and committing it to git. Neither the candidate nor the snapshot releases include those steps. 
+These options also influence the post-release steps such as updating the version.sbt file and committing it to git. Neither the beta nor the snapshot releases include those steps. 
 
 You'll still be prompted to enter the version number you're releasing and it is currently left to the developer to ensure the version number is suitable. You can always check what's already available on maven here: https://mvnrepository.com/artifact/com.gu/content-api-client   
 

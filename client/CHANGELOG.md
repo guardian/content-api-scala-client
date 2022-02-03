@@ -1,6 +1,13 @@
+# 17.24.0
+* Bump CAPI models to 17.3.0 to take advantage of upstream dependency updates
+* Switch to three part semantic versioning to bring into line with other projects  
+* This build should be functionally identical to 17.23 but updates to thrift *could* introduce unexpected effects
+* This build no longer supports Scala < 2.12 due to upstream dependencies also dropping support for earlier versions
+
 ## 17.23
 * Map old "immersive interactive" articles to display: standard, design: full page interactive
 * Map new "immersive interactive" articles to display: immersive, design: interactive, to use the new template
+
 ## 17.21
 * Remove This is Europe tag from Special Report in format
 
