@@ -126,7 +126,8 @@ object CapiModelEnrichment {
       // echo -n '<salt><tag-id>' | md5sum
 
       val hashedSpecialReportTags: Set[String] = Set(
-        "b95f43cd3bfe5f1d04b354dcae3442ac"
+        "b95f43cd3bfe5f1d04b354dcae3442ac",
+        "45a016bed6c06c2b0ff7076ada8c8a97",
       )
 
       val salt = "a-public-salt3W#ywHav!p+?r+W2$E6="
