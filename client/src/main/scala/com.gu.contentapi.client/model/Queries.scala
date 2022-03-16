@@ -184,8 +184,12 @@ case class FilmReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 
 case class NextQuery[Q <: PaginatedApiQuery[Q]](originalQuery: Q, contentId: String)
   extends ContentApiQuery {
-  
-  def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter)).toMap
+
+  def parameters: Map[String, String] = {
+    // scala 2.13 introduces parameters.view.filterKeys but 2.12 borks at that
+    // originalQuery.parameters.view.filterKeys(not(isPaginationParameter)).toMap
+    originalQuery.parameters.filterKeys(not(isPaginationParameter)).toMap
+  }
 
   override def pathSegment: String = s"""content/${contentId}/next"""
 }

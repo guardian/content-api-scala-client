@@ -29,8 +29,11 @@ trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
 
   protected def parameterHolder: Map[String, Parameter]
 
-  def parameters: Map[String, String] =
+  def parameters: Map[String, String] = {
+    // Scala 2.13 introduces `parameterHolder.view.mapValues`, but 2.12 borks at that
+    // parameterHolder.view.mapValues(_.value).toMap.collect { case (k, Some(v)) => (k, v.toString) }
     parameterHolder.mapValues(_.value).toMap.collect { case (k, Some(v)) => (k, v.toString) }
+  }
 
   protected trait OwnedParameter extends Parameter {
     type ParameterOwner = Owner
