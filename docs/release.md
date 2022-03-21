@@ -4,16 +4,20 @@ This repository contains two projects: the client library (with its default impl
 Each has its own versioning and so they are released independently.
 
 #### Releasing content-api-client and content-api-client-default:
-In your PR, update `CHANGELOG.md` with a description of the change. Also update `version.sbt` if releasing a new major version. 
+Follow the instructions [here](https://docs.google.com/document/d/1rNXjoZDqZMsQblOVXPAIIOMWuwUKe3KzTCttuqS7AcY/edit#) to get set up with your first Scala deploy.
 
 Then to release (from main branch):
 ```
 sbt -DCAPI_TEST_KEY=a-valid-api-key 'release cross'
 ```
-(you need to supply the api key because the build process runs the tests)
 
-The api key needs to be a production key with tier `Internal`. You can obtain a key from `https://bonobo.capi.gutools.co.uk/`
+You need to supply the api key because the build process runs the tests. The api key needs to be a production key with tier `Internal`. You can retrieve your key or create a new one at `https://bonobo.capi.gutools.co.uk/`
 
+As part of the release process, you will be asked to specify the version of this release. It should be the current number with the word "SNAPSHOT" redacted. eg. if `version.sbt` records the current version as "17.24-SNAPSHOT", you should enter "17.24" at this prompt (or just press "enter" if that suggestion is already in place on the prompt). Similarly, the next version should be, in this example, "17.25-SNAPSHOT" which should also be enterred in the prompt if not already in place.
+
+Debugging note: if you get an error that prevents deploy and says the commit could not be properly 'signed' by your gpg key, it is worth adding the following line to your `~/.zshrc`, bash profile, or similar: `export GPG_TTY=$(tty)` and open a new terminal window. This allows your current terminal session to access and use your GPG keys if it cannot by default.
+
+Once this version has been released, update `CHANGELOG.md` with a description of the change.
 
 #### Non-production releases:
 If you intend to publish a beta or snapshot build (e.g. from a WIP code branch) for testing the library in another application prior to releasing your changes to production - which can be useful when testing the effects of upgrading dependencies etc - you should also send the appropriate value in a parameter:
