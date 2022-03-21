@@ -89,8 +89,8 @@ object CapiModelEnrichment {
 
       val defaultDesign: Design = ArticleDesign
 
-      // The following method will make the first assignment that matches
-      // so, modifying order here could create unintended problems:
+      // Note: only the first matching predicate will be picked.
+      // Modifying the order of predicates could create unintended problems:
       val predicates: List[(ContentFilter, Design)] = List(
         isFullPageInteractive -> FullPageInteractiveDesign,
         isInteractive -> InteractiveDesign,
