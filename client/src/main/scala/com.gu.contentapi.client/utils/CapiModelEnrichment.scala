@@ -89,7 +89,11 @@ object CapiModelEnrichment {
 
       val defaultDesign: Design = ArticleDesign
 
+      // Note: only the first matching predicate will be picked.
+      // Modifying the order of predicates could create unintended problems:
       val predicates: List[(ContentFilter, Design)] = List(
+        isFullPageInteractive -> FullPageInteractiveDesign,
+        isInteractive -> InteractiveDesign,
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
         isMedia -> MediaDesign,
         isReview -> ReviewDesign,
@@ -104,8 +108,6 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/matchreports") -> MatchReportDesign,
         tagExistsWithId("tone/editorials") -> EditorialDesign,
         tagExistsWithId("tone/quizzes") -> QuizDesign,
-        isFullPageInteractive -> FullPageInteractiveDesign,
-        isInteractive -> InteractiveDesign,
         isLiveBlog -> LiveBlogDesign,
         isDeadBlog -> DeadBlogDesign
       )
