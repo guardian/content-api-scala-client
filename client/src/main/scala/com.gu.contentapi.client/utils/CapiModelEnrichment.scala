@@ -75,7 +75,8 @@ object CapiModelEnrichment {
         isComment -> Comment,
         tagExistsWithId("tone/features") -> Feature,
         isLiveBlog -> Live,
-        isDeadBlog -> Article
+        isDeadBlog -> Article,
+        tagExistsWithId("tone/newsletter-tone") -> Newsletter
       )
 
       val result = getFromPredicate(content, predicates)
@@ -109,7 +110,8 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/editorials") -> EditorialDesign,
         tagExistsWithId("tone/quizzes") -> QuizDesign,
         isLiveBlog -> LiveBlogDesign,
-        isDeadBlog -> DeadBlogDesign
+        isDeadBlog -> DeadBlogDesign,
+        tagExistsWithId("tone/newsletter-tone") -> NewsletterDesign
       )
 
       val result = getFromPredicate(content, predicates)

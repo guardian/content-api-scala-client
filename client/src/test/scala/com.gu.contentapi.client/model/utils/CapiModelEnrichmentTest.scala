@@ -171,6 +171,12 @@ class CapiModelEnrichmentDesignTypeTest extends FlatSpec with MockitoSugar with 
     f.content.designType shouldEqual NewsletterSignup
   }
 
+  it should "have a designType of 'Newsletter' when tag tone/newsletter-tone is present" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "tone/newsletter-tone"
+
+    f.content.designType shouldEqual Newsletter
+  }  
 
 }
 
@@ -452,6 +458,13 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
 
     f.content.design shouldEqual ObituaryDesign
   }
+
+  it should "have a design of 'NewsletterDesign' when tag tone/newsletter-tone is present" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "tone/newsletter-tone"
+
+    f.content.design shouldEqual NewsletterDesign
+  }  
 
   behavior of "Format.theme"
 
