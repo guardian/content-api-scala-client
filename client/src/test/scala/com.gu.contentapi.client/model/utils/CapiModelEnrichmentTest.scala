@@ -219,25 +219,25 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.design shouldEqual PrintShopDesign
   }
 
-  it should "have a design of 'MediaDesign' when tag type/audio is present" in {
+  it should "have a design of 'AudioDesign' when tag type/audio is present" in {
     val f = fixture
     when(f.tag.id) thenReturn "type/audio"
 
-    f.content.design shouldEqual MediaDesign
+    f.content.design shouldEqual AudioDesign
   }
 
-  it should "have a design of 'MediaDesign' when tag type/video is present" in {
+  it should "have a design of 'VideoDesign' when tag type/video is present" in {
     val f = fixture
     when(f.tag.id) thenReturn "type/video"
 
-    f.content.design shouldEqual MediaDesign
+    f.content.design shouldEqual VideoDesign
   }
 
-  it should "have a design of 'MediaDesign' when tag type/gallery is present" in {
+  it should "have a design of 'GalleryDesign' when tag type/gallery is present" in {
     val f = fixture
     when(f.tag.id) thenReturn "type/gallery"
 
-    f.content.design shouldEqual MediaDesign
+    f.content.design shouldEqual GalleryDesign
   }
 
   it should "have a design of 'ReviewDesign' when tag tone/reviews is present" in {
@@ -406,7 +406,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
   }
 
   //test examples of filters being applied in priority order
-  it should "return a design of 'MediaDesign' over a design of 'CommentDesign' where tags for both are present'" in {
+  it should "return a design of 'VideoDesign' over a design of 'CommentDesign' where tags for both are present'" in {
     val content = mock[Content]
     val commentTag = mock[Tag]
     val videoTag = mock[Tag]
@@ -416,7 +416,7 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(content.fields) thenReturn None
     when(content.tags) thenReturn List(commentTag, videoTag)
 
-    content.design shouldEqual MediaDesign
+    content.design shouldEqual VideoDesign
   }
 
   it should "return a design of 'InterviewDesign' over a design of 'FeatureDesign' where tags for both are present'" in {
