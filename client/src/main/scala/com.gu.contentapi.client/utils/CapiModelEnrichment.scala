@@ -61,7 +61,6 @@ object CapiModelEnrichment {
       val defaultDesignType: DesignType = Article
 
       val predicates: List[(ContentFilter, DesignType)] = List(
-        tagExistsWithId("info/newsletter-sign-up") -> NewsletterSignup,
         tagExistsWithId("tone/advertisement-features") -> AdvertisementFeature,
         tagExistsWithId("tone/matchreports") -> MatchReport,
         tagExistsWithId("tone/quizzes") -> Quiz,
@@ -93,6 +92,7 @@ object CapiModelEnrichment {
       // Note: only the first matching predicate will be picked.
       // Modifying the order of predicates could create unintended problems:
       val predicates: List[(ContentFilter, Design)] = List(
+        tagExistsWithId("info/newsletter-sign-up") -> NewsletterSignupDesign,
         isFullPageInteractive -> FullPageInteractiveDesign,
         isInteractive -> InteractiveDesign,
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
@@ -111,7 +111,6 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/quizzes") -> QuizDesign,
         isLiveBlog -> LiveBlogDesign,
         isDeadBlog -> DeadBlogDesign,
-        tagExistsWithId("tone/newsletter-tone") -> NewsletterDesign
       )
 
       val result = getFromPredicate(content, predicates)
