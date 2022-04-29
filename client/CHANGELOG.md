@@ -1,3 +1,13 @@
+# 17.25.2
+* Rework modelling of `Newsletter` designs:
+  * Remove `NewsletterSignup` from `DesignType`
+  * Remove `NewsletterDesign` from `Design`
+
+# 17.25.1
+* Support styling of new newsletter-tone articles:
+  * Add `Newsletter` to `DesignType`
+  * Add `NewsletterDesign` to `Design`
+
 # 17.24.0
 * Bump CAPI models to 17.3.0 to take advantage of upstream dependency updates
 * Switch to three part semantic versioning to bring into line with other projects  
