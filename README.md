@@ -64,21 +64,21 @@ Every item on http://www.theguardian.com/ can be retrieved on the same path at h
 
 ```scala
 // query for a single content item and print its web title
-val itemQuery = ContentApiLogic.item("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa")
+val itemQuery = ItemQuery("commentisfree/2013/jan/16/vegans-stomach-unpalatable-truth-quinoa")
 client.getResponse(itemQuery).foreach { itemResponse =>
   println(itemResponse.content.get.webTitle)
 }
 
 // print web title for a tag
-val tagQuery = ContentApiLogic.item("music/metal")
-client.getResponse(tagQuery).foreach { tagResponse =>
-  println(tagResponse.tag.get.webTitle)
+val tagQuery = TagsQuery().tagType("contributor")
+client.getResponse(tagQuery).foreach { resp => resp.results.map(tagResponse =>
+  println(tagResponse.webTitle))
 }
 
 // print web title for a section
-val sectionQuery = ContentApiLogic.item("environment")
-client.getResponse(sectionQuery).foreach { sectionResponse =>
-  println(sectionResponse.section.get.webTitle)
+val sectionQuery = SectionsQuery().q("environment")
+client.getResponse(sectionQuery).foreach { resp => resp.results.map(sectionResponse =>
+  println(sectionResponse.webTitle))
 }
 ```
 
