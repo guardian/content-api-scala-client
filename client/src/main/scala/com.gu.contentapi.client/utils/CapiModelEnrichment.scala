@@ -92,9 +92,9 @@ object CapiModelEnrichment {
       // Note: only the first matching predicate will be picked.
       // Modifying the order of predicates could create unintended problems:
       val predicates: List[(ContentFilter, Design)] = List(
-        tagExistsWithId("info/newsletter-sign-up") -> NewsletterSignupDesign,
         isFullPageInteractive -> FullPageInteractiveDesign,
         isInteractive -> InteractiveDesign,
+        tagExistsWithId("info/newsletter-sign-up") -> NewsletterSignupDesign,
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
         tagExistsWithId("type/gallery") -> GalleryDesign,
         tagExistsWithId("type/audio") -> AudioDesign,
