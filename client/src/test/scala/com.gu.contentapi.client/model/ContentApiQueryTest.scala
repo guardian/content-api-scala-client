@@ -14,8 +14,8 @@ class ContentApiQueryTest extends FlatSpec with Matchers  {
   }
 
   "SearchQuery" should "also be excellent" in {
-    SearchQuery().tag("profile/robert-berry").showElements("all").contentType("article").getUrl("") shouldEqual
-      "/search?tag=profile%2Frobert-berry&show-elements=all&type=article"
+    SearchQuery().tag("profile/robert-berry").showElements("all").contentType("article").queryFields("body").getUrl("") shouldEqual
+      "/search?tag=profile%2Frobert-berry&show-elements=all&type=article&query-fields=body"
   }
 
   "SearchQuery" should "not be perturbed when asked to show alias paths" in {
