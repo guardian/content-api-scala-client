@@ -1,8 +1,7 @@
 package com.gu.contentapi.client
 
 import java.time.Instant
-
-import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
+import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse, TagsResponse}
 import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
 import com.gu.contentatom.thrift.{AtomData, AtomType}
 import org.scalatest._
@@ -114,6 +113,19 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     val result = api.paginateAccum(query)({ r: SearchResponse => r.results.length }, { (a: Int, b: Int) => a + b })
     
     result.futureValue should be (42)
+  }
+
+  it should "sum up the number of results" in {
+    val query = ContentApiClient.tags
+      .tagType("newspaper-book")
+      .section("music")
+      .pageSize(5)
+    // https://content.guardianapis.com/tags?type=newspaper-book&section=music&page-size=5
+    // has 19 results as of May 2022
+
+    val result = api.paginateAccum(query)({ r: TagsResponse => r.results.length }, { (a: Int, b: Int) => a + b })
+
+    result.futureValue should be >= 19
   }
 
   it should "fold over the results" in {
