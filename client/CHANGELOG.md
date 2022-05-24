@@ -1,14 +1,27 @@
-# 17.25.2
+## 18.0.1
+
+### Bug fixes
+
+* Prioritise interactives over newsletter sign-ups in the parsing of `Design`. There are some interactives that are also newsletter sign-ups; they don't work properly unless they're treated as interactives. (https://github.com/guardian/content-api-scala-client/pull/356)
+
+## 18.0.0
+
+### Breaking changes
+
+* Split `Design.Media` into `Design.Gallery`, `Design.Audio` and `Design.Video` (https://github.com/guardian/content-api-scala-client/pull/353)
+* Prioritise blogs over match reports in the parsing of `Design`. There are some old deadblogs that are also tagged as match reports; they should be treated as blogs. (https://github.com/guardian/content-api-scala-client/pull/355)
+
+## 17.25.2
 * Rework modelling of `Newsletter` designs:
   * Remove `NewsletterSignup` from `DesignType`
   * Remove `NewsletterDesign` from `Design`
 
-# 17.25.1
+## 17.25.1
 * Support styling of new newsletter-tone articles:
   * Add `Newsletter` to `DesignType`
   * Add `NewsletterDesign` to `Design`
 
-# 17.24.0
+## 17.24.0
 * Bump CAPI models to 17.3.0 to take advantage of upstream dependency updates
 * Switch to three part semantic versioning to bring into line with other projects  
 * This build should be functionally identical to 17.23 but updates to thrift *could* introduce unexpected effects
