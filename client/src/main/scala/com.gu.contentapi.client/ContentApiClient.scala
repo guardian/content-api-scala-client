@@ -2,14 +2,16 @@ package com.gu.contentapi.client
 
 import com.gu.contentapi.buildinfo.CapiBuildInfo
 import com.gu.contentapi.client.HttpRetry.withRetry
+import com.gu.contentapi.client.model.Direction.Next
 import com.gu.contentapi.client.model.HttpResponse.isSuccessHttpResponse
 import com.gu.contentapi.client.model._
+import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.gu.contentatom.thrift.AtomType
+import com.twitter.scrooge.{ThriftStruct, ThriftStructCodec}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ContentApiClient {
-  import Decoder._
 
   /** Your API key */
   def apiKey: String
@@ -46,7 +48,7 @@ trait ContentApiClient {
 
   /** Streamlines the handling of a valid CAPI response */
 
-  private def fetchResponse(contentApiQuery: ContentApiQuery)(implicit context: ExecutionContext): Future[Array[Byte]] = get(url(contentApiQuery), headers).flatMap {
+  private def fetchResponse(contentApiQuery: ContentApiQuery[_])(implicit ec: ExecutionContext): Future[Array[Byte]] = get(url(contentApiQuery), headers).flatMap {
     case response if isSuccessHttpResponse(response) => Future.successful(response)
     case response => Future.failed(ContentApiError(response))
   }.map(_.body)
@@ -59,7 +61,7 @@ trait ContentApiClient {
       }
     }
 
-  def url(contentApiQuery: ContentApiQuery): String =
+  def url(contentApiQuery: ContentApiQuery[_]): String =
     contentApiQuery.getUrl(targetUrl, parameters)
     
   /** Runs the query against the Content API.
@@ -68,10 +70,10 @@ trait ContentApiClient {
     * @param query the query
     * @return a future resolving to an unmarshalled response
     */
-  def getResponse[Q <: ContentApiQuery](query: Q)(
-    implicit 
-    decoder: Decoder[Q],
-    context: ExecutionContext): Future[decoder.Response] =
+  def getResponse[R <: ThriftStruct](query: ContentApiQuery[R])(
+    implicit
+    decoder: Decoder[R],
+    context: ExecutionContext): Future[R] =
     fetchResponse(query) map decoder.decode
 
   /** Unfolds a query to its results, page by page
@@ -82,15 +84,12 @@ trait ContentApiClient {
     * @param f a result-processing function
     * @return a future of a list of result-processed results
     */
-  def paginate[Q <: PaginatedApiQuery[Q], R, M](query: Q)(f: R => M)(
-    implicit 
-    decoder: Decoder.Aux[Q, R],
-    pager: PaginatedApiResponse[R],
+  def paginate[R <: ThriftStruct: Decoder, E, M](query: PaginatedApiQuery[R, E])(f: R => M)(
+    implicit
     context: ExecutionContext
   ): Future[List[M]] =
     unfoldM { r: R =>
-      val nextQuery = pager.getNextId(r).map { id => getResponse(ContentApiClient.next(query, id)) }
-      (f(r), nextQuery)      
+      (f(r), query.followingQueryGiven(r, Next).map(getResponse(_)))
     }(getResponse(query))
 
   /** Unfolds a query by accumulating its results
@@ -101,10 +100,8 @@ trait ContentApiClient {
     * @param f a result-processing function
     * @return a future of an accumulated value
     */
-  def paginateAccum[Q <: PaginatedApiQuery[Q], R, M](query: Q)(f: R => M, g: (M, M) => M)(
-    implicit 
-    decoder: Decoder.Aux[Q, R],
-    pager: PaginatedApiResponse[R],
+  def paginateAccum[R <: ThriftStruct: Decoder, E, M](query: PaginatedApiQuery[R, E])(f: R => M, g: (M, M) => M)(
+    implicit
     context: ExecutionContext
   ): Future[M] =
     paginate(query)(f).map {
@@ -114,26 +111,22 @@ trait ContentApiClient {
     }
 
   /** Unfolds a query by accumulating its results
-    * 
-    * @tparam Q the type of a Content API query with pagination parameters
+    *
     * @tparam R the type of response expected for `Q`
     * @param query the initial query
     * @param f a result-processing function
     * @return a future of an accumulated value
     */
-  def paginateFold[Q <: PaginatedApiQuery[Q], R, M](query: Q)(m: M)(f: (R, M) => M)(
-    implicit 
-    decoder: Decoder.Aux[Q, R],
-    decoderNext: Decoder.Aux[NextQuery[Q], R],
-    pager: PaginatedApiResponse[R],
+  def paginateFold[R <: ThriftStruct: Decoder, E, M](query: PaginatedApiQuery[R, E])(m: M)(f: (R, M) => M)(
+    implicit
     context: ExecutionContext
   ): Future[M] = {
-    def paginateFoldIn(nextQuery: Option[NextQuery[Q]])(m: M): Future[M] = {
-      val req = nextQuery.map(getResponse(_)).getOrElse(getResponse(query))
+    def paginateFoldIn(currentQuery: Option[PaginatedApiQuery[R, E]])(m: M): Future[M] = {
+      val req = currentQuery.map(getResponse(_)).getOrElse(getResponse(query))
       req.flatMap { r: R =>
-        pager.getNextId(r) match {
+        query.followingQueryGiven(r, Next) match {
           case None => Future.successful(f(r, m))
-          case Some(id) => paginateFoldIn(Some(ContentApiClient.next(query, id)))(f(r, m))
+          case Some(nextQuery) => paginateFoldIn(Some(nextQuery))(f(r, m))
         }
       }
     }
@@ -169,19 +162,4 @@ trait ContentApiQueries {
   val restaurantReviews = RestaurantReviewsQuery()
   val filmReviews = FilmReviewsQuery()
   val videoStats = VideoStatsQuery()
-  def next[Q <: PaginatedApiQuery[Q]](q: Q, id: String) = NextQuery(normalize(q), id)
-
-  private def normalize[Q <: PaginatedApiQuery[Q]]: Q => Q =
-    normalizePageSize andThen normalizeOrder
-
-  private def normalizePageSize[Q <: PaginatedApiQuery[Q]]: Q => Q = 
-    q => if (q.has("page-size")) q else q.pageSize(10)
-
-  private def normalizeOrder[Q <: PaginatedApiQuery[Q]]: Q => Q = 
-    q => if (q.has("order-by")) 
-      q 
-    else if (q.has("q"))
-      q.orderBy("relevance")
-    else
-      q.orderBy("newest")
 }

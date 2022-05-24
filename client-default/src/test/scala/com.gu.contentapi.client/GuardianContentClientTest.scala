@@ -1,14 +1,14 @@
 package com.gu.contentapi.client
 
-import java.time.Instant
-
-import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse}
-import com.gu.contentapi.client.model.{ContentApiError, ItemQuery, SearchQuery}
+import com.gu.contentapi.client.model.Direction.{Next, Previous}
+import com.gu.contentapi.client.model.v1.{ContentType, ErrorResponse, SearchResponse, TagsResponse}
+import com.gu.contentapi.client.model.{ContentApiError, FollowingSearchQuery, ItemQuery, SearchQuery}
 import com.gu.contentatom.thrift.{AtomData, AtomType}
 import org.scalatest._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.time.{Seconds, Span}
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object GuardianContentClientTest {
@@ -60,6 +60,13 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     content.futureValue.id should be (TestItemPath)
   }
 
+  it should "perform a given sections query" in {
+    val query = ContentApiClient.sections.q("business")
+    val results = for (response <- api.getResponse(query)) yield response.results
+    val fResults = results.futureValue
+    fResults.size should be >= 3 // UK business, US business, all da business
+  }
+
   it should "perform a given atoms query" in {
     val query = ContentApiClient.atoms.types("explainer")
     val results = for (response <- api.getResponse(query)) yield response.results
@@ -88,6 +95,24 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     }
   }
 
+  it should "be able to find previous and next articles in a series" in {
+    // This kind of functionality is used eg. for the DotCom image lightbox forward-backward buttons:
+    // https://github.com/guardian/frontend/pull/20462
+    val queryForNext = FollowingSearchQuery(
+      ContentApiClient.search.tag("commentisfree/series/guardian-comment-cartoon").orderBy("oldest").pageSize(1),
+      "commentisfree/picture/2022/may/15/nicola-jennings-boris-johnson-northern-ireland-cartoon",
+      Next
+    )
+
+    api.getResponse(queryForNext).futureValue.results.head.id shouldBe
+      "commentisfree/picture/2022/may/16/steve-bell-on-the-queens-platinum-jubilee-cartoon"
+
+    val queryForPrevious = queryForNext.copy(direction = Previous)
+
+    api.getResponse(queryForPrevious).futureValue.results.head.id shouldBe
+      "commentisfree/picture/2022/may/13/martin-rowson-whats-left-in-the-tories-box-of-tricks-cartoon"
+  }
+
   it should "paginate through all results" in {
     val query = ContentApiClient.search
       .q("brexit")
@@ -114,6 +139,19 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
     val result = api.paginateAccum(query)({ r: SearchResponse => r.results.length }, { (a: Int, b: Int) => a + b })
     
     result.futureValue should be (42)
+  }
+
+  it should "be able to paginate any query that supports paging, eg Tags!" in {
+    val query = ContentApiClient.tags
+      .tagType("newspaper-book")
+      .section("music")
+      .pageSize(5)
+    // https://content.guardianapis.com/tags?type=newspaper-book&section=music&page-size=5
+    // has 19 results as of May 2022
+
+    val result = api.paginateAccum(query)({ r: TagsResponse => r.results.length }, { (a: Int, b: Int) => a + b })
+
+    result.futureValue should be > 10
   }
 
   it should "fold over the results" in {
