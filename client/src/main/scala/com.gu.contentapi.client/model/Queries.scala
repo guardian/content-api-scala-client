@@ -266,6 +266,7 @@ trait FilterSectionParameters[Owner <: Parameters[Owner]] extends Parameters[Own
 
 trait FilterSearchParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def q = StringParameter("q")
+  def queryFields = StringParameter("query-fields")
 }
 
 trait AtomsParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
