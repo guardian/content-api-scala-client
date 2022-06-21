@@ -77,13 +77,15 @@ trait ContentApiClient {
     fetchResponse(query) map decoder.decode
 
   /** Unfolds a query to its results, page by page
-    * 
-    * @tparam Q the type of a Content API query with pagination parameters
-    * @tparam R the type of response expected for `Q`
+    *
     * @param query the initial query
-    * @param f a result-processing function
-    * @return a future of a list of result-processed results
+    * @tparam R the response type expected for this query
+    * @tparam E the 'element' type for the list of elements returned in the response - eg 'Tag' for 'TagsResponse'
+    * @tparam M a type specified by the caller to summarise the results of each response. Eg, might be `Seq[E]`
+    * @param f a result-processing function that converts the standard response type to the `M` type
+    * @return a future of a list of result-processed results (eg, if `M` = `Seq[E]`, the final result is `List[Seq[E]]`)
     */
+  // `R : Decoder` is a Scala 'context-bound', and means "To compile I need an implicit instance of `Decoder[R]`!"
   def paginate[R <: ThriftStruct: Decoder, E, M](query: PaginatedApiQuery[R, E])(f: R => M)(
     implicit
     context: ExecutionContext
@@ -92,13 +94,16 @@ trait ContentApiClient {
       (f(r), query.followingQueryGiven(r, Next).map(getResponse(_)))
     }(getResponse(query))
 
-  /** Unfolds a query by accumulating its results
-    * 
-    * @tparam Q the type of a Content API query with pagination parameters
-    * @tparam R the type of response expected for `Q`
+  /** Unfolds a query by accumulating its results - each response is transformed (by function `f`) and then combined
+    * (with function `g`) into a single accumulated result object.
+    *
     * @param query the initial query
-    * @param f a result-processing function
-    * @return a future of an accumulated value
+    * @tparam R the response type expected for this query
+    * @tparam E the 'element' type for the list of elements returned in the response - eg 'Tag' for 'TagsResponse'
+    * @tparam M a type specified by the caller to summarise the results of each response. Eg, might be `Seq[E]`
+    * @param f a result-processing function that converts the standard response type to the `M` type
+    * @param g a function that squashes together ('reduces') two `M` types - eg concatenates two `Seq[E]`
+    * @return a future of the accumulated value
     */
   def paginateAccum[R <: ThriftStruct: Decoder, E, M](query: PaginatedApiQuery[R, E])(f: R => M, g: (M, M) => M)(
     implicit
@@ -110,12 +115,16 @@ trait ContentApiClient {
       case ms => ms.reduce(g)
     }
 
-  /** Unfolds a query by accumulating its results
+  /** Unfolds a query by accumulating its results - each response is transformed and added to an accumulator value
+    * by a single folding function `f`.
     *
-    * @tparam R the type of response expected for `Q`
     * @param query the initial query
-    * @param f a result-processing function
-    * @return a future of an accumulated value
+    * @tparam R the response type expected for this query
+    * @tparam E the 'element' type for the list of elements returned in the response - eg 'Tag' for 'TagsResponse'
+    * @tparam M a type specified by the caller to summarise the results the responses. Eg, might be `Int`
+    * @param m an initial 'empty' starting value to begin the accumulation with. Eg, might be `0`
+    * @param f a result-processing function that adds the result of a response to the summary value accumulated so far
+    * @return a future of the accumulated value
     */
   def paginateFold[R <: ThriftStruct: Decoder, E, M](query: PaginatedApiQuery[R, E])(m: M)(f: (R, M) => M)(
     implicit
