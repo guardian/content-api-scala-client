@@ -1,3 +1,11 @@
+# Latest information in GitHub Releases
+
+Check out **https://github.com/guardian/content-api-scala-client/releases**
+for info on all releases from v19.0.0 onwards. For historical reference
+purposes, information on prior releases is included below.
+
+### Releases prior to v19.0.0...
+
 ## 18.0.1
 
 ### Bug fixes

@@ -17,7 +17,11 @@ As part of the release process, you will be asked to specify the version of this
 
 Debugging note: if you get an error that prevents deploy and says the commit could not be properly 'signed' by your gpg key, it is worth adding the following line to your `~/.zshrc`, bash profile, or similar: `export GPG_TTY=$(tty)` and open a new terminal window. This allows your current terminal session to access and use your GPG keys if it cannot by default.
 
-Once this version has been released, update `CHANGELOG.md` with a description of the change.
+Once the new version has been released, create a GitHub Release
+([guide](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)) 
+describing the change (the `Generate release notes` button can give you a good start!):
+
+https://github.com/guardian/content-api-scala-client/releases/new
 
 #### Non-production releases:
 If you intend to publish a beta or snapshot build (e.g. from a WIP code branch) for testing the library in another application prior to releasing your changes to production - which can be useful when testing the effects of upgrading dependencies etc - you should also send the appropriate value in a parameter:
