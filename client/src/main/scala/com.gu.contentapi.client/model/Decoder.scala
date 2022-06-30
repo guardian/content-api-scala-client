@@ -1,48 +1,34 @@
 package com.gu.contentapi.client
 
-import com.gu.contentapi.client.model._
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.thrift.ThriftDeserializer
 import com.twitter.scrooge.{ThriftStruct, ThriftStructCodec}
 
-/** Typeclass witnessing how to unmarshall a Thrift stream of bytes
-  * into a concrete data type
-  * @tparam Query the query type
-  */
-trait Decoder[Query] {
-  /** the response type corresponding to `Query` */
-  type Response <: ThriftStruct
-  /** the codec unmarshalling instances of `Response` */
-  def codec: ThriftStructCodec[Response]
-  /** performs the unmarshalling
-    * @return a function taking an array of bytes into a `Response`
-    */
-  def decode: Array[Byte] => Response = ThriftDeserializer.deserialize(_, codec)
+
+class Decoder[Response <: ThriftStruct](codec: ThriftStructCodec[Response]) {
+  def decode(data: Array[Byte]): Response = ThriftDeserializer.deserialize(data, codec)
 }
 
-private[client] object Decoder {
+trait PaginationDecoder[Response, Element] {
+  val pageSize: Response => Int
+  val elements: Response => collection.Seq[Element]
+}
 
-  type Aux[Q, R] = Decoder[Q] { type Response = R }
+object Decoder {
+  type PageableResponseDecoder[Response <: ThriftStruct, Element] = Decoder[Response] with PaginationDecoder[Response, Element]
 
-  private def apply[Q, R <: ThriftStruct](c: ThriftStructCodec[R]) = new Decoder[Q] {
-    type Response = R
-    def codec = c
-  }
+  def pageableResponseDecoder[R <: ThriftStruct, E](c: ThriftStructCodec[R])(ps: R => Int, el: R => collection.Seq[E]): PageableResponseDecoder[R, E] =
+    new Decoder[R](c) with PaginationDecoder[R, E] {
+      val pageSize: R => Int = ps
+      val elements: R => collection.Seq[E] = el
+    }
 
-  private def atomsDecoder[Query] = apply[Query, AtomsResponse](AtomsResponse)
-
-  implicit val itemQuery = apply[ItemQuery, ItemResponse](ItemResponse)
-  implicit val tagsQuery = apply[TagsQuery, TagsResponse](TagsResponse)
-  implicit val sectionsQuery = apply[SectionsQuery, SectionsResponse](SectionsResponse)
-  implicit val editionsQuery = apply[EditionsQuery, EditionsResponse](EditionsResponse)
-  implicit val videoStatsQuery = apply[VideoStatsQuery, VideoStatsResponse](VideoStatsResponse)
-  implicit val atomsQuery = atomsDecoder[AtomsQuery]
-  implicit val recipesQuery = atomsDecoder[RecipesQuery]
-  implicit val reviewsQuery = atomsDecoder[ReviewsQuery]
-  implicit val gameReviewsQuery = atomsDecoder[GameReviewsQuery]
-  implicit val restaurantReviewsQuery = atomsDecoder[RestaurantReviewsQuery]
-  implicit val filmReviewsQuery = atomsDecoder[FilmReviewsQuery]
-  implicit def searchQueryBase[T <: SearchQueryBase[T]] = apply[T, SearchResponse](SearchResponse)
-  implicit def nextQuery[Q <: PaginatedApiQuery[Q]](implicit d: Decoder[Q]) = apply[NextQuery[Q], d.Response](d.codec)
-  implicit def atomsUsageQuery = apply[AtomUsageQuery, AtomUsageResponse](AtomUsageResponse)
+  implicit val itemDecoder: Decoder[ItemResponse] = new Decoder(ItemResponse)
+  implicit val tagsDecoder: PageableResponseDecoder[TagsResponse, Tag] = pageableResponseDecoder(TagsResponse)(_.pageSize, _.results)
+  implicit val sectionsQuery: Decoder[SectionsResponse] = new Decoder(SectionsResponse)
+  implicit val editionsDecoder: Decoder[EditionsResponse] = new Decoder(EditionsResponse)
+  implicit val videoStatsDecoder: Decoder[VideoStatsResponse] = new Decoder(VideoStatsResponse)
+  implicit val atomsDecoder: Decoder[AtomsResponse] = new Decoder(AtomsResponse)
+  implicit val searchDecoder: PageableResponseDecoder[SearchResponse, Content] = pageableResponseDecoder(SearchResponse)(_.pageSize, _.results)
+  implicit val atomUsageDecoder: Decoder[AtomUsageResponse] = new Decoder(AtomUsageResponse)
 }

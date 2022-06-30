@@ -1,10 +1,14 @@
 package com.gu.contentapi.client.model
 
+import com.gu.contentapi.client.Decoder.PageableResponseDecoder
+import com.gu.contentapi.client.model.Direction.Next
+import com.gu.contentapi.client.model.v1.{AtomUsageResponse, AtomsResponse, Content, EditionsResponse, ItemResponse, SearchResponse, SectionsResponse, Tag, TagsResponse, VideoStatsResponse}
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentapi.client.{Parameter, Parameters}
 import com.gu.contentatom.thrift.AtomType
+import com.twitter.scrooge.ThriftStruct
 
-sealed trait ContentApiQuery {
+sealed trait ContentApiQuery[Response <: ThriftStruct] {
   def parameters: Map[String, String]
 
   def pathSegment: String
@@ -18,11 +22,36 @@ sealed trait ContentApiQuery {
   }
 
   def getUrl(targetUrl: String, customParameters: Map[String, String] = Map.empty): String =
-    url(s"$targetUrl/${pathSegment}", parameters ++ customParameters)
+    url(s"$targetUrl/$pathSegment", parameters ++ customParameters)
+
+}
+
+abstract class PaginatedApiQuery[Response <: ThriftStruct, Element](
+  implicit prd: PageableResponseDecoder[Response, Element]
+) extends ContentApiQuery[Response] {
+
+  /**
+    * Produce a version of this query that explicitly sets previously ''unset'' pagination/ordering parameters,
+    * matching how the Content API server decided to process the previous request.
+    *
+    * For instance, if the Content API decided to process https://content.guardianapis.com/search?q=brexit
+    * with pageSize:10 & orderBy:relevance, that will have been detailed in the CAPI response - and therefore we
+    * can copy those parameters into our following query so we don't change how we're ordering the results
+    * as we paginate through them!
+   */
+  def setPaginationConsistentWith(response: Response): PaginatedApiQuery[Response, Element]
+
+  def followingQueryGiven(response: Response, direction: Direction): Option[PaginatedApiQuery[Response, Element]] =
+    if (response.impliesNoFurtherResults) None else setPaginationConsistentWith(response).followingQueryGivenFull(response, direction)
+
+  /** Construct a query for the subsequent results after this response. This method will only be called if the
+    * response was supplied a full page of results, meaning that there's the possibility of more results to fetch.
+    */
+  protected def followingQueryGivenFull(response: Response, direction: Direction): Option[PaginatedApiQuery[Response, Element]]
 }
 
 trait SearchQueryBase[Self <: SearchQueryBase[Self]]
-  extends ContentApiQuery
+  extends PaginatedApiQuery[SearchResponse, Content]
      with ShowParameters[Self]
      with ShowReferencesParameters[Self]
      with OrderByParameter[Self]
@@ -35,7 +64,7 @@ trait SearchQueryBase[Self <: SearchQueryBase[Self]]
 }
 
 case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[ItemResponse]
   with EditionParameters[ItemQuery]
   with ShowParameters[ItemQuery]
   with ShowReferencesParameters[ItemQuery]
@@ -58,26 +87,42 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   extends SearchQueryBase[SearchQuery] {
 
+  def setPaginationConsistentWith(response: SearchResponse): PaginatedApiQuery[SearchResponse, Content] =
+    pageSize.setIfUndefined(response.pageSize).orderBy.setIfUndefined(response.orderBy)
+
   def withParameters(parameterMap: Map[String, Parameter]): SearchQuery = copy(parameterMap)
 
   override def pathSegment: String = "search"
+
+  protected override def followingQueryGivenFull(response: SearchResponse, direction: Direction) = for {
+    lastResultInResponse <- response.results.lastOption
+  } yield FollowingSearchQuery(this, lastResultInResponse.id, direction)
+
 }
 
 case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends PaginatedApiQuery[TagsResponse, Tag]
   with ShowReferencesParameters[TagsQuery]
   with PaginationParameters[TagsQuery]
   with FilterParameters[TagsQuery]
   with FilterTagParameters[TagsQuery]
   with FilterSearchParameters[TagsQuery] {
 
+  def setPaginationConsistentWith(response: TagsResponse): PaginatedApiQuery[TagsResponse, Tag] =
+    pageSize.setIfUndefined(response.pageSize)
+
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   override def pathSegment: String = "tags"
+
+  protected override def followingQueryGivenFull(response: TagsResponse, direction: Direction): Option[TagsQuery] = {
+    val followingPage = response.currentPage + direction.delta
+    if (followingPage >= 1 && followingPage <= response.pages) Some(page(followingPage)) else None
+  }
 }
 
 case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[SectionsResponse]
   with FilterSearchParameters[SectionsQuery]
   with FilterSectionParameters[SectionsQuery]{
 
@@ -87,7 +132,7 @@ case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class EditionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[EditionsResponse]
   with FilterSearchParameters[EditionsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
@@ -99,7 +144,7 @@ case class VideoStatsQuery(
   edition: Option[String] = None,
   section: Option[String] = None,
   parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[VideoStatsResponse]
   with FilterSearchParameters[VideoStatsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(edition, section, parameterMap)
@@ -108,7 +153,7 @@ case class VideoStatsQuery(
 }
 
 case class AtomsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[AtomsResponse]
   with AtomsParameters[AtomsQuery]
   with PaginationParameters[AtomsQuery]
   with UseDateParameter[AtomsQuery]
@@ -121,16 +166,16 @@ case class AtomsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class AtomUsageQuery(atomType: AtomType, atomId: String, parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[AtomUsageResponse]
   with PaginationParameters[AtomUsageQuery] {
-  
+
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterHolder = parameterMap)
 
   override def pathSegment: String = s"atom/${atomType.toString.toLowerCase}/$atomId/usage"
 }
 
 case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[AtomsResponse]
   with PaginationParameters[RecipesQuery]
   with RecipeParameters[RecipesQuery] {
 
@@ -140,7 +185,7 @@ case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class ReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[AtomsResponse]
   with PaginationParameters[ReviewsQuery]
   with ReviewSpecificParameters[ReviewsQuery] {
 
@@ -150,7 +195,7 @@ case class ReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class GameReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[AtomsResponse]
     with ReviewSpecificParameters[GameReviewsQuery]
     with PaginationParameters[GameReviewsQuery]
     with GameParameters[GameReviewsQuery] {
@@ -161,7 +206,7 @@ case class GameReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class RestaurantReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[AtomsResponse]
     with ReviewSpecificParameters[RestaurantReviewsQuery]
     with PaginationParameters[RestaurantReviewsQuery]
     with RestaurantParameters[RestaurantReviewsQuery] {
@@ -172,7 +217,7 @@ case class RestaurantReviewsQuery(parameterHolder: Map[String, Parameter] = Map.
 }
 
 case class FilmReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery
+  extends ContentApiQuery[AtomsResponse]
     with ReviewSpecificParameters[FilmReviewsQuery]
     with PaginationParameters[FilmReviewsQuery]
     with FilmParameters[FilmReviewsQuery] {
@@ -182,12 +227,46 @@ case class FilmReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   override def pathSegment: String = "atoms/reviews/film"
 }
 
-case class NextQuery[Q <: PaginatedApiQuery[Q]](originalQuery: Q, contentId: String)
-  extends ContentApiQuery {
-  
+sealed trait Direction {
+  val pathSegment: String
+  val delta: Int
+  def guidingElementIn[T](elements: Iterable[T]): Option[T]
+}
+
+object Direction {
+  object Next extends Direction {
+    override val pathSegment: String = "next"
+    override val delta: Int = 1
+    override def guidingElementIn[T](elements: Iterable[T]): Option[T] = elements.lastOption
+
+  }
+  object Previous extends Direction {
+    override val pathSegment: String = "prev"
+    override val delta: Int = -1
+    override def guidingElementIn[T](elements: Iterable[T]): Option[T] = elements.headOption
+  }
+
+  def forPathSegment(pathSegment: String): Direction = pathSegment match {
+    case Next.pathSegment => Next
+    case Previous.pathSegment => Previous
+  }
+}
+
+case class FollowingSearchQuery(
+  originalQuery: PaginatedApiQuery[SearchResponse, Content], contentId: String, direction: Direction = Next
+) extends PaginatedApiQuery[SearchResponse, Content] {
+
   def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter)).toMap
 
-  override def pathSegment: String = s"""content/${contentId}/next"""
+  override def pathSegment: String = s"content/$contentId/${direction.pathSegment}"
+
+  override def setPaginationConsistentWith(response: SearchResponse): PaginatedApiQuery[SearchResponse, Content] =
+    originalQuery.setPaginationConsistentWith(response)
+
+  protected override def followingQueryGivenFull(response: SearchResponse, updatedDirection: Direction): Option[PaginatedApiQuery[SearchResponse, Content]] = for {
+    content <- updatedDirection.guidingElementIn(response.results)
+  } yield copy(contentId = content.id, direction = updatedDirection)
+
 }
 
 trait EditionParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>

@@ -40,11 +40,13 @@ trait Parameters[Owner <: Parameters[Owner]] { self: Owner =>
   case class StringParameter(name: String, value: Option[String] = None) extends OwnedParameter {
     type Self = String
     def withValue(newValue: Option[String]) = copy(value = newValue)
+    def setIfUndefined(str: String) = if (owner.has(name)) owner else apply(str)
   }
 
   case class IntParameter(name: String, value: Option[Int] = None) extends OwnedParameter {
     type Self = Int
     def withValue(newValue: Option[Int]) = copy(value = newValue)
+    def setIfUndefined(v: Int) = if (owner.has(name)) owner else apply(v)
   }
 
   case class DateParameter(name: String, value: Option[Instant] = None) extends OwnedParameter {

@@ -1,14 +1,14 @@
 package com.gu.contentapi.client
 
-import java.time.Instant
-import java.util.concurrent.TimeUnit
-
+import com.gu.contentapi.client.model.Direction.{Next, Previous}
 import com.gu.contentapi.client.model._
-import com.gu.contentapi.client.model.v1.SearchResponse
+import com.gu.contentapi.client.model.v1.{Content, SearchResponse}
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
 
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,6 +29,19 @@ class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with
     api.url(ContentApiClient.search) should include(s"api-key=${api.apiKey}")
   }
 
+  it should "generate the correct path segments for following a query" in {
+    val queryForNext = FollowingSearchQuery(
+      ContentApiClient.search,
+      "commentisfree/picture/2022/may/15/nicola-jennings-boris-johnson-northern-ireland-cartoon",
+      Next
+    )
+
+    api.url(queryForNext) should include(s"content/commentisfree/picture/2022/may/15/nicola-jennings-boris-johnson-northern-ireland-cartoon/next")
+
+    val queryForPrevious = queryForNext.copy(direction = Previous)
+    api.url(queryForPrevious) should include(s"content/commentisfree/picture/2022/may/15/nicola-jennings-boris-johnson-northern-ireland-cartoon/prev")
+  }
+
   it should "understand custom parameters" in {
     val now = Instant.now()
     val params = ContentApiClient.search
@@ -46,18 +59,33 @@ class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with
 
   behavior of "Paginated queries"
 
+  def stubContent(capiId: String): Content = Content(capiId, webTitle="", webUrl="", apiUrl="")
+  def stubContents(num: Int) = (1 to num).map(i => stubContent(s"blah-$i"))
+  def stubSearchResponse(pageSize: Int, orderBy: String, results: Seq[Content]): SearchResponse = SearchResponse(
+    status = "", userTier="", total = -1, startIndex = -1, currentPage = -1, pages= -1, orderBy = orderBy,
+    pageSize = pageSize, // Needed for deciding next query
+    results = results)
+
   it should "produce next urls for 10 results ordered by relevance" in {
     val query = ContentApiClient.search.q("brexit")
-    val next = ContentApiClient.next(query, "hello")
+    val next = query.followingQueryGiven(stubSearchResponse(
+      pageSize = 10,
+      orderBy = "relevance",
+      stubContents(9) :+ stubContent("hello")
+    ), Next).value
 
     testPaginatedQuery("content/hello/next", 10, "relevance", Some("brexit"))(next)
   }
 
   it should "produce next urls for 20 results order by newest" in {
     val query = ContentApiClient.search.pageSize(20)
-    val next = ContentApiClient.next(query, "hello")
+    val next = query.followingQueryGiven(stubSearchResponse(
+      pageSize = 20,
+      orderBy = "newest",
+      stubContents(19) :+ stubContent("hello")
+    ), Next).value
 
-    testPaginatedQuery("content/hello/", 20, "newest")(next)
+    testPaginatedQuery("content/hello/next", 20, "newest")(next)
   }
 
   it should "recover gracefully from error" in {
@@ -72,7 +100,7 @@ class ContentApiClientTest extends FlatSpec with Matchers with ScalaFutures with
     errorTest.futureValue
   }
 
-  def testPaginatedQuery(pt: String, page: Int, ob: String, q: Option[String] = None)(query: ContentApiQuery) = {
+  def testPaginatedQuery(pt: String, page: Int, ob: String, q: Option[String] = None)(query: ContentApiQuery[_]) = {
     val ps = query.parameters
     query.pathSegment should startWith (pt)
     ps.get("page-size") should be (Some(page.toString))
