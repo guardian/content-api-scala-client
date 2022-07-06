@@ -11,7 +11,7 @@ class Decoder[Response <: ThriftStruct](codec: ThriftStructCodec[Response]) {
 
 trait PaginationDecoder[Response, Element] {
   val pageSize: Response => Int
-  val currentPage: Response => Int,
+  val currentPage: Response => Int
   val pages: Response => Int
   val elements: Response => collection.Seq[Element]
 }
@@ -37,7 +37,7 @@ object Decoder {
   implicit val sectionsQuery: Decoder[SectionsResponse] = new Decoder(SectionsResponse)
   implicit val editionsDecoder: Decoder[EditionsResponse] = new Decoder(EditionsResponse)
   implicit val videoStatsDecoder: Decoder[VideoStatsResponse] = new Decoder(VideoStatsResponse)
-  implicit val atomsDecoder: Decoder[AtomsResponse] = new Decoder(AtomsResponse)
+  implicit val atomsDecoder: Decoder[AtomsResponse] = pageableResponseDecoder(AtomsResponse)(_.pageSize, _.currentPage, _.pages, _.results)
   implicit val searchDecoder: PageableResponseDecoder[SearchResponse, Content] = pageableResponseDecoder(SearchResponse)(_.pageSize, _.currentPage, _.pages, _.results)
   implicit val atomUsageDecoder: Decoder[AtomUsageResponse] = new Decoder(AtomUsageResponse)
 }
