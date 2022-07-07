@@ -51,7 +51,7 @@ abstract class PaginatedApiQuery[Response <: ThriftStruct, Element](
 }
 
 trait SearchQueryBase[Self <: SearchQueryBase[Self]]
-  extends PaginatedApiQuery[SearchResponse, Content]
+  extends ContentApiQuery[SearchResponse]
      with ShowParameters[Self]
      with ShowReferencesParameters[Self]
      with OrderByParameter[Self]
@@ -85,7 +85,7 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
 }
 
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends SearchQueryBase[SearchQuery] {
+  extends PaginatedApiQuery[SearchResponse, Content] with SearchQueryBase[SearchQuery] {
 
   def setPaginationConsistentWith(response: SearchResponse): PaginatedApiQuery[SearchResponse, Content] =
     pageSize.setIfUndefined(response.pageSize).orderBy.setIfUndefined(response.orderBy)
