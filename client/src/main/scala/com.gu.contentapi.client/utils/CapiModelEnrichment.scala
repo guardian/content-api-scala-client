@@ -43,7 +43,9 @@ object CapiModelEnrichment {
   val publishedBeforeInteractiveImmersiveSwitchover: ContentFilter = content => content.fields.flatMap(_.creationDate).exists(date => ZonedDateTime.parse(date.iso8601).isBefore(immersiveInteractiveSwitchoverDate))
   
   val isLegacyImmersiveInteractive: ContentFilter = content => isInteractive(content) && isImmersive(content) && publishedBeforeInteractiveImmersiveSwitchover(content)
-  
+
+  val isObituary: ContentFilter = content => (tagExistsWithId("tone/obituaries")(content) && !tagExistsWithId("tone/letters")(content))
+
   val isFullPageInteractive: ContentFilter = content => isInteractive(content) && (displayHintExistsWithName("fullPageInteractive")(content) || isLegacyImmersiveInteractive(content))
   implicit class RichCapiDateTime(val cdt: CapiDateTime) extends AnyVal {
     def toOffsetDateTime: OffsetDateTime = OffsetDateTime.parse(cdt.iso8601)
@@ -100,7 +102,7 @@ object CapiModelEnrichment {
         tagExistsWithId("type/audio") -> AudioDesign,
         tagExistsWithId("type/video") -> VideoDesign,
         isReview -> ReviewDesign,
-        tagExistsWithId("tone/obituaries") -> ObituaryDesign,
+        isObituary -> ObituaryDesign,
         tagExistsWithId("tone/analysis") -> AnalysisDesign,
         tagExistsWithId("tone/comment") -> CommentDesign,
         tagExistsWithId("tone/letters") -> LetterDesign,
