@@ -104,7 +104,7 @@ object CapiModelEnrichment {
         isReview -> ReviewDesign,
         isObituary -> ObituaryDesign,
         tagExistsWithId("tone/analysis") -> AnalysisDesign,
-        tagExistsWithId("tone/explainer") -> ExplainerDesign,
+        tagExistsWithId("tone/explainers") -> ExplainerDesign,
         tagExistsWithId("tone/comment") -> CommentDesign,
         tagExistsWithId("tone/letters") -> LetterDesign,
         isPhotoEssay -> PhotoEssayDesign,
