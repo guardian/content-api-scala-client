@@ -268,9 +268,9 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.design shouldEqual AnalysisDesign
   }
 
-  it should "have a design of 'ExplainerDesign' when tag tone/explainer is present" in {
+  it should "have a design of 'ExplainerDesign' when tag tone/explainers is present" in {
     val f = fixture
-    when(f.tag.id) thenReturn "tone/explainer"
+    when(f.tag.id) thenReturn "tone/explainers"
 
     f.content.design shouldEqual ExplainerDesign
   }
