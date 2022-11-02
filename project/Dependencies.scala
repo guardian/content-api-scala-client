@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   val scalaVersions = Seq("2.12.10", "2.13.1")
-  val capiModelsVersion = "17.3.1-SNAPSHOT" // this needs the version of https://github.com/guardian/content-api-models/pull/216
+  val capiModelsVersion = "17.3.2-beta.0" // this needs the version of https://github.com/guardian/content-api-models/pull/216
   val thriftVersion = "0.15.0"
   val commonsCodecVersion = "1.10"
   val scalaTestVersion = "3.0.8"
