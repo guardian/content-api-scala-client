@@ -151,16 +151,22 @@ object CapiModelEnrichment {
         "0d18e8413ab7cdf377e1202d24452e63"
       )
 
+      val hashedSpecialReportAltTags: Set[String] = Set(
+        "2943c2fcbfa65e6505ca00eb805350bf"
+      )
+
       val salt = "a-public-salt3W#ywHav!p+?r+W2$E6="
 
       def isPillar(pillar: String): ContentFilter = content => content.pillarName.contains(pillar)
 
-      def hashedTagIds = content.tags.map { tag =>
+      def hashedTagIds(content: Content) = content.tags.map { tag =>
         DigestUtils.md5Hex(salt + tag.id)
       }
 
       val isSpecialReport: ContentFilter = content =>
-        content.tags.exists(t => specialReportTags(t.id)) || hashedTagIds.exists(hashedSpecialReportTags.apply)
+        content.tags.exists(t => specialReportTags(t.id)) || hashedTagIds(content).exists(hashedSpecialReportTags.apply)
+
+      val isSpecialReportAlt: ContentFilter = content => hashedTagIds(content).exists(hashedSpecialReportAltTags.apply)
 
       val isOpinion: ContentFilter = content =>
         (tagExistsWithId("tone/comment")(content) && isPillar("News")(content)) ||
@@ -170,6 +176,7 @@ object CapiModelEnrichment {
 
       val predicates: List[(ContentFilter, Theme)] = List(
         isSpecialReport -> SpecialReportTheme,
+        isSpecialReportAlt -> SpecialReportAltTheme,
         tagExistsWithId("tone/advertisement-features") -> Labs,
         isOpinion -> OpinionPillar,
         isPillar("Sport") -> SportPillar,

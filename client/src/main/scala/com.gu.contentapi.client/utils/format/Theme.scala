@@ -11,4 +11,5 @@ case object SportPillar extends Pillar
 case object CulturePillar extends Pillar
 case object LifestylePillar extends Pillar
 case object SpecialReportTheme extends Special
+case object SpecialReportAltTheme extends Special
 case object Labs extends Special
