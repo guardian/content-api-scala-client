@@ -1,0 +1,26 @@
+name: Release Snapshot to Sonatype
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release_snapshot_sonatype:
+    if: "github.event.release.prerelease"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: corretto
+          java-version: 8
+          cache: sbt
+
+      - name: Release Snapshot to Sonatype
+        run: |
+          echo "hello"
+        env:
+          PGP_SECRET: ${{ secrets.PGP_SECRET }}
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
