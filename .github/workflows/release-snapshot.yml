@@ -16,7 +16,7 @@ jobs:
       - name: Release Snapshot to Sonatype
         run: |
           VERSION=$(git describe --tags | cut -f2 -d"@")
-          sbt "clean" "project clientCI" "set isSnapshot := true" "release release-version $VERSION with-defaults"
+          sbt "clean" "project clientCI" "set isSnapshot := true" "release release-version 0.0.0-2022-11-25-SNAPSHOT with-defaults"
         env:
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
