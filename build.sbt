@@ -33,6 +33,14 @@ lazy val root = (project in file("."))
     Test / sources     := Seq.empty
   )
 
+lazy val clientCI = (project in file("client/target/client_ci"))
+  .settings(commonSettings, clientSettings, publishCISettings)
+  .settings(
+    Compile / scalaSource := baseDirectory.value / "client" / "src" / "main" / "scala",
+    releaseVersionFile := baseDirectory.value / ".." / "version.sbt",
+  )
+  .enablePlugins(BuildInfoPlugin)
+
 lazy val client = (project in file("client"))
   .settings(commonSettings, clientSettings, publishSettings)
   .enablePlugins(BuildInfoPlugin)
@@ -109,6 +117,25 @@ lazy val publishSettings: Seq[Setting[_]] = Seq(
   pgpSecretRing := pgpPublicRing.value  // <-- I wonder if this is causing the pgp errors some of us struggle with 🤔
 )
 
+// we can combine these common settings with the publish settings in the future
+lazy val commonPublishSettings: Seq[Setting[_]] = Seq(
+  resolvers += Resolver.sonatypeRepo("public"),
+  pomIncludeRepository := { _ => false },
+  publishTo := sonatypePublishToBundle.value,
+  publishConfiguration := publishConfiguration.value.withOverwrite(canOverwrite),
+  publishMavenStyle := true,
+  Test / publishArtifact   := false,
+  releaseVcsSign := true,
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  pgpSecretRing := pgpPublicRing.value  // <-- I wonder if this is causing the pgp errors some of us struggle with 🤔
+)
+
+lazy val publishCISettings: Seq[Setting[_]] = {
+  commonPublishSettings ++ Seq(
+    releaseProcess := releaseCIProcessSteps,
+  )
+}
+
 lazy val checkReleaseType: ReleaseStep = ReleaseStep({ st: State =>
   val releaseType = sys.props.get("RELEASE_TYPE").map {
     case v if v == betaReleaseType => betaReleaseType.toUpperCase
@@ -122,6 +149,27 @@ lazy val checkReleaseType: ReleaseStep = ReleaseStep({ st: State =>
   // we haven't changed state, just pass it on if we haven't thrown an error from above
   st
 })
+
+lazy val releaseCIProcessSteps: Seq[ReleaseStep] = {
+  val commonSteps = Seq(
+    // seems like we don't need this next step for the CI release process, we already know we're doing a snapshot release
+    // checkReleaseType,
+    // checkSnapshotDependencies, // probably don't want this for snapshot releases, but we will for production releases
+    inquireVersions, // takes version from command lines, maybe in the future we could delete version.sbt if always passing in the version from the tag
+    runClean,
+    runTest
+  )
+
+  val snapshotSteps: Seq[ReleaseStep] = Seq(
+    // we're assuming that we pass in the right version for now (e.g. the suffix must be -SNAPSHOT)
+
+    // assume we can write to version.sbt before running the steps
+    setReleaseVersion, // ingests version from command or version.sbt to release correct version
+    releaseStepCommandAndRemaining("+publishSigned"),
+  )
+
+  commonSteps ++ snapshotSteps
+}
 
 lazy val releaseProcessSteps: Seq[ReleaseStep] = {
   val commonSteps = Seq(

@@ -1,12 +1,13 @@
 name: Release Snapshot to Sonatype
 
 on:
-  release:
-    types: [published]
+#  release:
+#    types: [published]
+  push:
 
 jobs:
   release_snapshot_sonatype:
-    if: "github.event.release.prerelease"
+#    if: "github.event.release.prerelease"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +19,10 @@ jobs:
 
       - name: Release Snapshot to Sonatype
         run: |
-          echo "hello"
+        # maybe we should validate that version includes -SNAPSHOT suffix, and does not include 'v' at beginning
+        # assuming that tags will be created to include the project name, eg client-default@19.1.1-SNAPSHOT
+          VERSION=$(git describe --tags | cut -f2 -d"@")
+          sbt "clean" "project clientCI" "set isSnapshot := true" "release release-version $VERSION with-defaults"
         env:
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
