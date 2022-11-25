@@ -16,7 +16,6 @@ jobs:
           distribution: corretto
           java-version: 8
           cache: sbt
-
       - name: Release Snapshot to Sonatype
         run: |
         # maybe we should validate that version includes -SNAPSHOT suffix, and does not include 'v' at beginning
