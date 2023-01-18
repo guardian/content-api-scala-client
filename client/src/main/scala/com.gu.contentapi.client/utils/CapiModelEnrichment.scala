@@ -116,6 +116,8 @@ object CapiModelEnrichment {
         isLiveBlog -> LiveBlogDesign,
         isDeadBlog -> DeadBlogDesign,
         tagExistsWithId("tone/matchreports") -> MatchReportDesign,
+        tagExistsWithId("tone/timelines") -> TimelineDesign,
+        tagExistsWithId("tone/profiles") -> ProfileDesign,
       )
 
       val result = getFromPredicate(content, predicates)
