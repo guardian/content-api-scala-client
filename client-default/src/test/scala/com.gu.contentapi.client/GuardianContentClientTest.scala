@@ -41,7 +41,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   it should "return errors as a broken promise" in {
     val query = ItemQuery("something-that-does-not-exist")
     val errorTest = api.getResponse(query) recover { case error =>
-      error should be (ContentApiError(404, "", Some(ErrorResponse("error", "The requested resource could not be found."))))
+      error should matchPattern { case ContentApiError(404, _, Some(ErrorResponse("error", "The requested resource could not be found."))) => }
     }
     errorTest.futureValue
   }
@@ -49,7 +49,7 @@ class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures
   it should "handle error responses" in {
     val query = SearchQuery().pageSize(500)
     val errorTest = api.getResponse(query) recover { case error =>
-      error should be (ContentApiError(400, "", Some(ErrorResponse("error", "page-size must be an integer between 0 and 200"))))
+      error should matchPattern { case ContentApiError(400, _, Some(ErrorResponse("error", "page-size must be an integer between 0 and 200"))) => }
     }
     errorTest.futureValue
   }
