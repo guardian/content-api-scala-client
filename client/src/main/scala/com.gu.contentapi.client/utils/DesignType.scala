@@ -19,3 +19,5 @@ case object GuardianLabs extends DesignType
 case object Quiz extends DesignType
 case object AdvertisementFeature extends DesignType
 case object Newsletter extends DesignType
+case object Timeline extends DesignType
+case object Profile extends DesignType
