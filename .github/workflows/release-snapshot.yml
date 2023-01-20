@@ -16,6 +16,7 @@ jobs:
       - name: Release Snapshot to Sonatype
         run: |
           VERSION=$(git describe --tags | cut -f2 -d"@")
+          echo $PGP_SECRET | base64 --decode | gpg --batch --import
           sbt "clean" "project clientCI" "set isSnapshot := true" "release release-version 0.0.0-2023-01-20-SNAPSHOT with-defaults"
         env:
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
