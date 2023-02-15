@@ -154,7 +154,7 @@ object CapiModelEnrichment {
       )
 
       val hashedSpecialReportAltTags: Set[String] = Set(
-        "2943c2fcbfa65e6505ca00eb805350bf"
+        "beb7e395cdb815dff6af13f7eda9d1e4"
       )
 
       val salt = "a-public-salt3W#ywHav!p+?r+W2$E6="
