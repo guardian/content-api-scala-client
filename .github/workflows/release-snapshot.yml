@@ -6,7 +6,6 @@ on:
 
 jobs:
   release_snapshot_sonatype:
-#    if: "github.event.release.prerelease"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,11 +17,9 @@ jobs:
       - name: Release Snapshot to Sonatype
         run: |
           VERSION="v19.2.2-SNAPSHOT"
-        # strip leading v if it exists
           if [[ ${VERSION:0:1} == "v" ]] ; then
           VERSION=${VERSION:1}
           fi
-        # append snapshot if it doesn't exist
           if [[ ${VERSION: -9} != "-SNAPSHOT" ]] ; then
             echo "Version must end in -SNAPSHOT. Adding -SNAPSHOT suffix"
             VERSION="$VERSION-SNAPSHOT"
@@ -30,7 +27,6 @@ jobs:
           echo $PGP_SECRET | base64 --decode | gpg --batch --import
           export GPG_TTY=$(tty)
           echo "Releasing version $VERSION Sonatype as snapshot"
-#          sbt "clean" "project clientCI" "set isSnapshot := true" "release release-version $VERSION with-defaults"
         env:
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
