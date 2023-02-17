@@ -1,12 +1,13 @@
 name: Release Snapshot to Sonatype
 
 on:
+  push:
   release:
     types: [published]
 
 jobs:
   release_snapshot_sonatype:
-    if: "github.event.release.prerelease"
+    # if: "github.event.release.prerelease"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,9 +18,10 @@ jobs:
           cache: sbt
       - name: Release Snapshot to Sonatype
         run: |
-          VERSION=$(git describe --tags | cut -f2 -d"@")
+          # VERSION=$(git describe --tags | cut -f2 -d"@")
+          VERSION=0.0.0-2022-02-17-SNAPSHOT
           if [[ ${VERSION:0:1} == "v" ]] ; then
-          VERSION=${VERSION:1}
+            VERSION=${VERSION:1}
           fi
           if [[ ${VERSION: -9} != "-SNAPSHOT" ]] ; then
             echo "Version must end in -SNAPSHOT. Adding -SNAPSHOT suffix"
@@ -28,7 +30,7 @@ jobs:
           echo $PGP_SECRET | base64 --decode | gpg --batch --import
           export GPG_TTY=$(tty)
           echo "Releasing version $VERSION Sonatype as snapshot"
-          yes | sbt -DRELEASE_TYPE=snapshot "clean" "project client" "release release-version $VERSION with-defaults"
+          yes | sbt -DRELEASE_TYPE=snapshot "clean" "project client" "release cross release-version $VERSION with-defaults"
         env:
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
