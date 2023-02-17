@@ -169,8 +169,7 @@ class CapiModelEnrichmentDesignTypeTest extends FlatSpec with MockitoSugar with 
     when(f.tag.id) thenReturn "tone/newsletter-tone"
 
     f.content.designType shouldEqual Newsletter
-  }  
-
+  }
 }
 
 class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matchers {
@@ -464,7 +463,21 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     when(f.tag.id) thenReturn "info/newsletter-sign-up"
 
     f.content.design shouldEqual NewsletterSignupDesign
-  }  
+  }
+
+  it should "have a design of 'TimelineDesign' when tag tone/timelines is present" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "tone/timelines"
+
+    f.content.design shouldEqual TimelineDesign
+  }
+
+  it should "have a design of 'ProfileDesign' when tag tone/profiles is present" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "tone/profiles"
+
+    f.content.design shouldEqual ProfileDesign
+  }
 
   behavior of "Format.theme"
 
