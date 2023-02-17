@@ -1,13 +1,12 @@
 name: Release Snapshot to Sonatype
 
 on:
-  push:
   release:
     types: [published]
 
 jobs:
   release_snapshot_sonatype:
-    # if: "github.event.release.prerelease"
+    if: "github.event.release.prerelease"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,8 +17,7 @@ jobs:
           cache: sbt
       - name: Release Snapshot to Sonatype
         run: |
-          # VERSION=$(git describe --tags | cut -f2 -d"@")
-          VERSION=0.0.0-2022-02-17-SNAPSHOT
+          VERSION=$(git describe --tags | cut -f2 -d"@")
           if [[ ${VERSION:0:1} == "v" ]] ; then
             VERSION=${VERSION:1}
           fi
