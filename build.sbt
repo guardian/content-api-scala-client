@@ -115,8 +115,8 @@ lazy val checkReleaseType: ReleaseStep = ReleaseStep({ st: State =>
     case v if v == snapshotReleaseType => snapshotReleaseType.toUpperCase
   }.getOrElse("PRODUCTION")
 
-  sys.props.get("CI_RELEASE").foreach {
-    case x if x == "true" => println("Releasing via CI")
+  sys.props.get("CI_RELEASE") match {
+    case x if x.contains("true") => println("Releasing via CI")
     case _ => SimpleReader.readLine(s"This will be a $releaseType release. Continue? (y/n) [N]: ") match {
       case Some(v) if Seq("Y", "YES").contains(v.toUpperCase) => // we don't care about the value - it's a flow control mechanism
       case _ => sys.error(s"Release aborted by user!")
