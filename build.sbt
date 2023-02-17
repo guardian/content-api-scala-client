@@ -33,14 +33,6 @@ lazy val root = (project in file("."))
     Test / sources     := Seq.empty
   )
 
-lazy val clientCI = (project in file("client/target/client_ci"))
-  .settings(commonSettings, clientSettings, publishCISettings)
-  .settings(
-    Compile / scalaSource := baseDirectory.value / "client" / "src" / "main" / "scala",
-    releaseVersionFile := baseDirectory.value / ".." / "version.sbt",
-  )
-  .enablePlugins(BuildInfoPlugin)
-
 lazy val client = (project in file("client"))
   .settings(commonSettings, clientSettings, publishSettings)
   .enablePlugins(BuildInfoPlugin)
