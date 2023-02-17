@@ -30,9 +30,10 @@ jobs:
           echo $PGP_SECRET | base64 --decode | gpg --batch --import
           export GPG_TTY=$(tty)
           echo "Releasing version $VERSION Sonatype as snapshot"
-          yes | sbt -DRELEASE_TYPE=snapshot "clean" "release cross release-version $VERSION with-defaults"
+          yes | sbt -DRELEASE_TYPE=snapshot -DCAPI_TEST_KEY=$CAPI_TEST_KEY "clean" "release cross release-version $VERSION with-defaults"
         env:
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          CAPI_TEST_KEY: ${{ secrets.CAPI_TEST_KEY }}
