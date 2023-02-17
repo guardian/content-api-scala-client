@@ -1,6 +1,7 @@
 name: Release Snapshot to Sonatype
 
 on:
+  push:
   release:
     types: [published]
 
