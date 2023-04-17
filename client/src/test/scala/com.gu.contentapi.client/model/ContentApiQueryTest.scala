@@ -28,6 +28,11 @@ class ContentApiQueryTest extends FlatSpec with Matchers  {
       "/search?paths=path%2Fone%2Cpath%2Ftwo"
   }
 
+  "SearchQuery" should "provide channels when requested with an internal tier key" in {
+    SearchQuery().paths("path/one,path/two").showChannels("all").getUrl("") shouldEqual
+      "/search?paths=path%2Fone%2Cpath%2Ftwo&show-channels=all"
+  }
+
   "SectionsQuery" should "be beautiful" in {
     SectionsQuery().getUrl("") shouldEqual "/sections"
   }
