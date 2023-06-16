@@ -4,6 +4,7 @@ sealed trait Design
 
 case object ArticleDesign extends Design
 case object GalleryDesign extends Design
+case object PictureDesign extends Design
 case object AudioDesign extends Design
 case object VideoDesign extends Design
 case object ReviewDesign extends Design

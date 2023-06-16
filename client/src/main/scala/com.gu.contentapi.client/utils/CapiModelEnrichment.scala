@@ -36,7 +36,11 @@ object CapiModelEnrichment {
   val isDeadBlog: ContentFilter = content => !isLiveBloggingNow(content) && tagExistsWithId("tone/minutebyminute")(content)
 
   val isInteractive: ContentFilter = content => content.`type` == ContentType.Interactive
-  
+
+  val isPictureContent: ContentFilter = content => content.`type` == ContentType.Picture
+
+  val isGallery: ContentFilter = tagExistsWithId("type/gallery")
+
   // The date used here is arbitrary and will be moved nearer to the present when the new template feature is ready to be used in production
   val immersiveInteractiveSwitchoverDate = ZonedDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
   
@@ -98,7 +102,8 @@ object CapiModelEnrichment {
         isInteractive -> InteractiveDesign,
         tagExistsWithId("info/newsletter-sign-up") -> NewsletterSignupDesign,
         tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
-        tagExistsWithId("type/gallery") -> GalleryDesign,
+        isGallery -> GalleryDesign,
+        isPictureContent -> PictureDesign,
         tagExistsWithId("type/audio") -> AudioDesign,
         tagExistsWithId("type/video") -> VideoDesign,
         isReview -> ReviewDesign,
@@ -200,7 +205,8 @@ object CapiModelEnrichment {
       // https://github.com/guardian/frontend/blob/e71dc1c521672b28399811c59331e0c2c713bf00/common/app/model/content.scala#L86
       val isImmersiveDisplay: ContentFilter = content =>
         isImmersive(content) ||
-          isPhotoEssay(content)
+          isPhotoEssay(content) ||
+          isGallery(content)
 
       def hasShowcaseImage: ContentFilter = content => {
         val hasShowcaseImage = for {
@@ -243,7 +249,8 @@ object CapiModelEnrichment {
       val isShowcase: ContentFilter = content => displayHintExistsWithName("column")(content) ||
         displayHintExistsWithName("showcase")(content) ||
         hasShowcaseImage(content) ||
-        hasShowcaseEmbed(content)
+        hasShowcaseEmbed(content) ||
+        isGallery(content)
 
       val isNumberedList: ContentFilter = displayHintExistsWithName("numberedList")
 
