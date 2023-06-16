@@ -250,7 +250,7 @@ object CapiModelEnrichment {
         displayHintExistsWithName("showcase")(content) ||
         hasShowcaseImage(content) ||
         hasShowcaseEmbed(content) ||
-        isGallery(content)
+        isPictureContent(content)
 
       val isNumberedList: ContentFilter = displayHintExistsWithName("numberedList")
 
