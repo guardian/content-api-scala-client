@@ -26,6 +26,7 @@ jobs:
 
       - name: Test
         env:
+          CAPI_TEST_KEY: ${{ secrets.CAPI_TEST_KEY }}
           SBT_JUNIT_OUTPUT: ./junit-tests
           JAVA_OPTS: -XX:+UseCompressedOops
         run: sbt test
