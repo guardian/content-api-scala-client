@@ -190,3 +190,6 @@ lazy val releaseProcessSteps: Seq[ReleaseStep] = {
   })
 
 }
+
+
+Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", sys.env.getOrElse("SBT_JUNIT_OUTPUT", "junit"))
