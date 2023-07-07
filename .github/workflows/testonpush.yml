@@ -1,0 +1,37 @@
+name: Test on push
+
+on:
+  push:
+    branches: [ "**" ]
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
+      issues: read
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: corretto
+          java-version: 11
+          cache: sbt
+
+      - name: Test
+        env:
+          CAPI_TEST_KEY: ${{ secrets.CAPI_TEST_KEY }}
+          SBT_JUNIT_OUTPUT: ./junit-tests
+          JAVA_OPTS: -XX:+UseCompressedOops
+        run: sbt test
+
+      - uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()  #runs even if there is a test failure
+        with:
+          files: junit-tests/*.xml
