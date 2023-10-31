@@ -41,6 +41,8 @@ object CapiModelEnrichment {
 
   val isGallery: ContentFilter = tagExistsWithId("type/gallery")
 
+  val isPrintShop: ContentFilter = content => !isPictureContent(content) && tagExistsWithId("artanddesign/series/guardian-print-shop")(content)
+
   // The date used here is arbitrary and will be moved nearer to the present when the new template feature is ready to be used in production
   val immersiveInteractiveSwitchoverDate = ZonedDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
   
@@ -101,7 +103,7 @@ object CapiModelEnrichment {
         isFullPageInteractive -> FullPageInteractiveDesign,
         isInteractive -> InteractiveDesign,
         tagExistsWithId("info/newsletter-sign-up") -> NewsletterSignupDesign,
-        tagExistsWithId("artanddesign/series/guardian-print-shop") -> PrintShopDesign,
+        isPrintShop -> PrintShopDesign,
         isGallery -> GalleryDesign,
         isPictureContent -> PictureDesign,
         tagExistsWithId("type/audio") -> AudioDesign,
