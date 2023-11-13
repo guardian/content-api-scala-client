@@ -716,6 +716,13 @@ class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matc
     f.content.display shouldEqual NumberedListDisplay
   }
 
+  it should "return a display of 'KeyTakeawaysDisplay' when a displayHint of keyTakeaways is set" in {
+    val f = fixture
+    when(f.content.fields) thenReturn Some(f.fields)
+    when(f.fields.displayHint) thenReturn Some("keyTakeaways")
+    f.content.display shouldEqual KeyTakeawaysDisplay
+  }
+
   it should "return a display of 'StandardDisplay' when no predicates are set" in {
     val f = fixture
 

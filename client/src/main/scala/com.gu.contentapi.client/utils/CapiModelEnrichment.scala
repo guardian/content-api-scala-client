@@ -256,10 +256,13 @@ object CapiModelEnrichment {
 
       val isNumberedList: ContentFilter = displayHintExistsWithName("numberedList")
 
+      val isKeyTakeaways: ContentFilter = displayHintExistsWithName("keyTakeaways")
+
       val predicates: List[(ContentFilter, Display)] = List(
         isFullPageInteractive -> StandardDisplay,
         isImmersiveDisplay -> ImmersiveDisplay,
         isNumberedList -> NumberedListDisplay,
+        isKeyTakeaways -> KeyTakeawaysDisplay,
         isShowcase -> ShowcaseDisplay
       )
 
