@@ -35,4 +35,3 @@ jobs:
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         CAPI_TEST_KEY: ${{ secrets.CAPI_TEST_KEY }}
-        isSnapshot: ${{ github.event.release.prerelease }}
