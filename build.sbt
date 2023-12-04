@@ -9,10 +9,9 @@ val snapshotReleaseType = "snapshot"
 val snapshotReleaseSuffix = "-SNAPSHOT"
 
 lazy val versionSettingsMaybe = {
-  // Set by e.g. sbt -DRELEASE_TYPE=candidate|snapshot.
-  // For production release, don't set a RELEASE_TYPE variable
   sys.props.get("RELEASE_TYPE").map {
     case v if v == snapshotReleaseType => snapshotReleaseSuffix
+    case _ => ""
   }.map { suffix =>
     releaseVersion := {
       ver => Version(ver).map(_.withoutQualifier.string).map(_.concat(suffix)).getOrElse(versionFormatError(ver))
