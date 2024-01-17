@@ -3,15 +3,11 @@ import ReleaseTransformations._
 import Dependencies._
 import sbtversionpolicy.withsbtrelease.ReleaseVersion
 
-licenses := Seq(License.Apache2)
-organization := "com.gu"
-organizationName := "Guardian News & Media Ltd"
-organizationHomepage := Some(url("https://www.theguardian.com/"))
+
 val ghProject = "content-api-client"
 
 lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
-  .settings(commonSettings)
   .settings(
     publish / skip := true,
     releaseVersion := ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease().value,
@@ -28,18 +24,20 @@ lazy val root = (project in file("."))
   )
 
 lazy val client = (project in file("client"))
-  .settings(commonSettings, clientSettings)
+  .settings(artifactProductionSettings, clientSettings)
   .enablePlugins(BuildInfoPlugin)
 
 lazy val defaultClient = (project in file("client-default"))
   .dependsOn(client)
-  .settings(commonSettings, defaultClientSettings)
+  .settings(artifactProductionSettings, defaultClientSettings)
 
 
-lazy val commonSettings: Seq[Setting[_]] = Seq(
+lazy val artifactProductionSettings: Seq[Setting[_]] = Seq(
   crossScalaVersions      := scalaVersions,
   scalaVersion            := scalaVersions.max,
   scalacOptions           ++= Seq("-deprecation", "-unchecked", "-release:8"),
+  licenses                := Seq(License.Apache2),
+  organization            := "com.gu"
 )
 
 lazy val clientSettings: Seq[Setting[_]] = Seq(
