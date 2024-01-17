@@ -20,20 +20,32 @@ import sbtrelease.{Version, versionFormatError}
 //  }.toSeq
 //}
 
+licenses := Seq(License.Apache2)
+organization := "com.gu"
+organizationName := "Guardian News & Media Ltd"
+organizationHomepage := Some(url("https://www.theguardian.com/"))
+val ghUser = "guardian"
+val ghProject = "content-api-client"
+//scmInfo := Some(ScmInfo(
+//  url(s"https://github.com/$ghUser/$ghProject"),
+//  s"scm:git@github.com:$ghUser/$ghProject.git"
+//))
+//homepage := scmInfo.value.map(_.browseUrl)
+
 lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
   .settings(commonSettings)
   .settings(
     publish / skip := true,
     //releaseVersionFile := baseDirectory.value / "version.sbt",
-    Compile / sources := Seq.empty,
-    Test / sources := Seq.empty,
+//    Compile / sources := Seq.empty,
+//    Test / sources := Seq.empty,
     releaseVersion := ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease().value,
     releaseProcess := Seq(
       checkSnapshotDependencies,
       inquireVersions,
       runClean,
-      runTest,
+//      runTest,
       setReleaseVersion,
       commitReleaseVersion,
       tagRelease,
@@ -52,7 +64,7 @@ lazy val defaultClient = (project in file("client-default"))
 
 /* --------------------------------------------------------------------- */
 
-lazy val commonSettings: Seq[Setting[_]] = Metadata.settings ++ Seq(
+lazy val commonSettings: Seq[Setting[_]] = Seq(
   crossScalaVersions      := scalaVersions,
   scalaVersion            := scalaVersions.max,
   javacOptions            ++= Seq("-source", "1.8", "-target", "1.8"),
@@ -60,7 +72,7 @@ lazy val commonSettings: Seq[Setting[_]] = Metadata.settings ++ Seq(
 )
 
 lazy val clientSettings: Seq[Setting[_]] = Seq(
-  name                := Metadata.ghProject,
+  name                := ghProject,
   description         := "Scala client for the Guardian's Content API",
   //developers          := Metadata.clientDevs,
   buildInfoKeys       := Seq[BuildInfoKey](version),
@@ -70,7 +82,7 @@ lazy val clientSettings: Seq[Setting[_]] = Seq(
 )
 
 lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
-  name                := Metadata.ghProject + "-default",
+  name                :=  ghProject + "-default",
   description         := "Default scala client for the Guardian's Content API",
   //developers          := Metadata.clientDevs,
   libraryDependencies ++= clientDeps ++ defaultClientDeps,
