@@ -2,50 +2,23 @@ import sbt.Keys._
 import ReleaseTransformations._
 import Dependencies._
 import sbtversionpolicy.withsbtrelease.ReleaseVersion
-import sbtrelease.{Version, versionFormatError}
-
-/* --------------------------------------------------------------------- */
-
-//val snapshotReleaseType = "snapshot"
-//val snapshotReleaseSuffix = "-SNAPSHOT"
-
-//lazy val versionSettingsMaybe = {
-//  sys.props.get("RELEASE_TYPE").map {
-//    case v if v == snapshotReleaseType => snapshotReleaseSuffix
-//    case _ => ""
-//  }.map { suffix =>
-//    releaseVersion := {
-//      ver => Version(ver).map(_.withoutQualifier.string).map(_.concat(suffix)).getOrElse(versionFormatError(ver))
-//    }
-//  }.toSeq
-//}
 
 licenses := Seq(License.Apache2)
 organization := "com.gu"
 organizationName := "Guardian News & Media Ltd"
 organizationHomepage := Some(url("https://www.theguardian.com/"))
-val ghUser = "guardian"
 val ghProject = "content-api-client"
-//scmInfo := Some(ScmInfo(
-//  url(s"https://github.com/$ghUser/$ghProject"),
-//  s"scm:git@github.com:$ghUser/$ghProject.git"
-//))
-//homepage := scmInfo.value.map(_.browseUrl)
 
 lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
   .settings(commonSettings)
   .settings(
     publish / skip := true,
-    //releaseVersionFile := baseDirectory.value / "version.sbt",
-//    Compile / sources := Seq.empty,
-//    Test / sources := Seq.empty,
     releaseVersion := ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease().value,
     releaseProcess := Seq(
       checkSnapshotDependencies,
       inquireVersions,
       runClean,
-//      runTest,
       setReleaseVersion,
       commitReleaseVersion,
       tagRelease,
@@ -62,19 +35,16 @@ lazy val defaultClient = (project in file("client-default"))
   .dependsOn(client)
   .settings(commonSettings, defaultClientSettings)
 
-/* --------------------------------------------------------------------- */
 
 lazy val commonSettings: Seq[Setting[_]] = Seq(
   crossScalaVersions      := scalaVersions,
   scalaVersion            := scalaVersions.max,
-  javacOptions            ++= Seq("-source", "1.8", "-target", "1.8"),
-  scalacOptions           ++= Seq("-unchecked", "-release:11"),
+  scalacOptions           ++= Seq("-deprecation", "-unchecked", "-release:8"),
 )
 
 lazy val clientSettings: Seq[Setting[_]] = Seq(
   name                := ghProject,
   description         := "Scala client for the Guardian's Content API",
-  //developers          := Metadata.clientDevs,
   buildInfoKeys       := Seq[BuildInfoKey](version),
   buildInfoPackage    := "com.gu.contentapi.buildinfo",
   buildInfoObject     := "CapiBuildInfo",
@@ -84,7 +54,6 @@ lazy val clientSettings: Seq[Setting[_]] = Seq(
 lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
   name                :=  ghProject + "-default",
   description         := "Default scala client for the Guardian's Content API",
-  //developers          := Metadata.clientDevs,
   libraryDependencies ++= clientDeps ++ defaultClientDeps,
   console / initialCommands   := """
     import com.gu.contentapi.client._
@@ -93,38 +62,6 @@ lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
     import scala.concurrent.duration._
   """
 )
-
-
-//lazy val publishSettings: Seq[Setting[_]] = Seq(
-//  resolvers += Resolver.sonatypeRepo("public"),
-//  pomIncludeRepository := { _ => false },
-//  publishTo := sonatypePublishToBundle.value,
-//  publishMavenStyle := true,
-//  Test / publishArtifact   := false,
-//  releaseVcsSign := true,
-//  releaseProcess := {
-//    sys.props.get("RELEASE_TYPE") match {
-//      case Some("production") => productionReleaseProcess
-//      case _ => snapshotReleaseProcess
-//    }
-//  }
-//)
-
-//lazy val commonReleaseProcess = Seq[ReleaseStep](
-//  checkSnapshotDependencies,
-//  inquireVersions,
-//  setReleaseVersion,
-//  runClean,
-//  runTest,
-//  // For non cross-build projects, use releaseStepCommand("publishSigned")
-//  releaseStepCommandAndRemaining("+publishSigned")
-//)
-//
-//lazy val productionReleaseProcess = commonReleaseProcess ++ Seq[ReleaseStep](
-//  releaseStepCommand("sonatypeBundleRelease")
-//)
-//
-//lazy val snapshotReleaseProcess = commonReleaseProcess
 
 
 Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", sys.env.getOrElse("SBT_JUNIT_OUTPUT", "junit"))
