@@ -25,9 +25,4 @@ object Dependencies {
   val defaultClientDeps = Seq(
     "com.squareup.okhttp3" % "okhttp" % okhttpVersion
   )
-
-  val awsDeps = Seq(
-    "com.amazonaws" % "aws-java-sdk-core" % awsSdkVersion,
-    "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
-  )
 }

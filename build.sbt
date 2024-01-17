@@ -37,12 +37,6 @@ lazy val defaultClient = (project in file("client-default"))
   .dependsOn(client)
   .settings(commonSettings, defaultClientSettings, publishSettings)
 
-// we apply versionSettingsMaybe to aws too because this project is always released in isolation
-// from the others - and we _might_ want to put out a snapshot or beta for that (TBC).
-// Bear this in mind if we begin releasing aws in sync with the others
-lazy val aws = (project in file("aws"))
-  .settings(commonSettings, awsSettings, versionSettingsMaybe, publishSettings)
-
 /* --------------------------------------------------------------------- */
 
 lazy val commonSettings: Seq[Setting[_]] = Metadata.settings ++ Seq(
@@ -73,15 +67,6 @@ lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
     import scala.concurrent.Await
     import scala.concurrent.duration._
   """
-)
-
-lazy val awsSettings: Seq[Setting[_]] = Seq(
-  name                := Metadata.ghProject + "-aws",
-  description         := "AWS helper functionality for using Guardian's Content API scala client",
-  developers          := Metadata.awsDevs,
-  releaseUseGlobalVersion := false,
-  releaseVersionFile  := baseDirectory.value / "version.sbt",
-  libraryDependencies ++= awsDeps,
 )
 
 
