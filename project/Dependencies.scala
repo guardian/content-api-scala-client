@@ -8,7 +8,7 @@ object Dependencies {
   val scalaTestVersion = "3.0.9"
   val slf4jVersion = "1.7.36"
   val mockitoVersion = "1.10.19"
-  val okhttpVersion = "3.14.9"
+  val okhttpVersion = "4.12.0"
   val awsSdkVersion = "1.11.280"
 
   // Note: keep libthrift at a version functionally compatible with that used in content-api-models
