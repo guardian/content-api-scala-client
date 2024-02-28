@@ -6,7 +6,7 @@ object Dependencies {
   val thriftVersion = "0.19.0"
   val commonsCodecVersion = "1.16.1"
   val scalaTestVersion = "3.2.18"
-  val slf4jVersion = "1.7.36"
+  val slf4jVersion = "2.0.12"
   val mockitoVersion = "1.10.19"
   val okhttpVersion = "4.12.0"
   val awsSdkVersion = "1.11.280"
