@@ -8,8 +8,10 @@ import org.scalatest.concurrent.ScalaFutures
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class BackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
+class BackoffTest extends AnyFlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
   private def NANOS = TimeUnit.NANOSECONDS
   private def MILLIS = TimeUnit.MILLISECONDS
 

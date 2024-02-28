@@ -1,8 +1,9 @@
 package com.gu.contentapi.client.utils
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class QueryStringParamsTest extends FlatSpec with Matchers {
+class QueryStringParamsTest extends AnyFlatSpec with Matchers {
 
   "QueryStringParams" should "correctly encode GET query string parameters" in {
 

@@ -10,6 +10,8 @@ import org.scalatest.time.{Seconds, Span}
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 object GuardianContentClientTest {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
@@ -18,7 +20,7 @@ object GuardianContentClientTest {
   }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable e.g. sbt -D$ApiKeyProperty=some-api-key")
 }
 
-class GuardianContentClientTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
+class GuardianContentClientTest extends AnyFlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
   import GuardianContentClientTest.apiKey
 
   private val api = new GuardianContentClient(apiKey)
