@@ -1,14 +1,14 @@
 import sbt._
 
 object Dependencies {
-  val scalaVersions = Seq("2.12.18", "2.13.12")
-  val capiModelsVersion = "19.0.0"
-  val thriftVersion = "0.15.0"
-  val commonsCodecVersion = "1.10"
-  val scalaTestVersion = "3.0.8"
-  val slf4jVersion = "1.7.25"
+  val scalaVersions = Seq("2.12.19", "2.13.13")
+  val capiModelsVersion = "19.0.1"
+  val thriftVersion = "0.19.0"
+  val commonsCodecVersion = "1.16.1"
+  val scalaTestVersion = "3.0.9"
+  val slf4jVersion = "1.7.36"
   val mockitoVersion = "1.10.19"
-  val okhttpVersion = "3.9.1"
+  val okhttpVersion = "3.14.9"
   val awsSdkVersion = "1.11.280"
 
   // Note: keep libthrift at a version functionally compatible with that used in content-api-models
