@@ -1,8 +1,9 @@
 package com.gu.contentapi.client.model
 
-import org.scalatest.{Matchers, FlatSpec}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class VideoStatsQueryTest extends FlatSpec with Matchers {
+class VideoStatsQueryTest extends AnyFlatSpec with Matchers {
 
   it should "request overall video stats" in {
     VideoStatsQuery().pathSegment shouldEqual

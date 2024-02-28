@@ -5,10 +5,11 @@ import com.gu.contentapi.client.utils.CapiModelEnrichment._
 import com.gu.contentapi.client.utils._
 import com.gu.contentapi.client.utils.format._
 import org.mockito.Mockito._
-import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CapiModelEnrichmentDesignTypeTest extends FlatSpec with MockitoSugar with Matchers {
+class CapiModelEnrichmentDesignTypeTest extends AnyFlatSpec with MockitoSugar with Matchers {
 
   def fixture = new {
     val content: Content = mock[Content]
@@ -172,7 +173,7 @@ class CapiModelEnrichmentDesignTypeTest extends FlatSpec with MockitoSugar with 
   }
 }
 
-class CapiModelEnrichmentFormatTest extends FlatSpec with MockitoSugar with Matchers {
+class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with Matchers {
 
   def fixture = new {
     val content: Content = mock[Content]
