@@ -12,6 +12,8 @@ import org.scalatest.exceptions.TestFailedException
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future, Promise}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 object FakeGuardianContentClient {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
@@ -65,7 +67,7 @@ class FakeGuardianContentClient(retries: Int, failCode: Option[Int], alwaysFail:
 
 }
 
-class GuardianContentClientBackoffTest extends FlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
+class GuardianContentClientBackoffTest extends AnyFlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
 
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 

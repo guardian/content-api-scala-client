@@ -2,10 +2,11 @@ package com.gu.contentapi.client
 
 import com.gu.contentapi.client.BackoffStrategy.constantStrategy
 import com.gu.contentapi.client.model.HttpResponse
-import org.scalatest.{AsyncWordSpecLike, Matchers}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AsyncWordSpecLike
 
 class HttpRetryTest extends AsyncWordSpecLike with Matchers {
 
