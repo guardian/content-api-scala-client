@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   val scalaVersions = Seq("2.12.19", "2.13.13")
-  val capiModelsVersion = "22.0.0"
+  val capiModelsVersion = "23.0.0-PREVIEW.dbbump-and-test-content-entity-version.2024-03-27T0934.cbc6ec49"//TODO - need to update this with latest prod release version that has new content-entity version
   val thriftVersion = "0.19.0"
   val commonsCodecVersion = "1.16.1"
   val scalaTestVersion = "3.0.9"
