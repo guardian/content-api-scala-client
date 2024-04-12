@@ -62,4 +62,4 @@ lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
 )
 
 
-Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", sys.env.getOrElse("SBT_JUNIT_OUTPUT", "junit"))
+Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", sys.env.getOrElse("SBT_JUNIT_OUTPUT", "junit-tests"))
