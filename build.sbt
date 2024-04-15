@@ -15,6 +15,7 @@ lazy val root = (project in file("."))
       checkSnapshotDependencies,
       inquireVersions,
       runClean,
+      runTest,
       setReleaseVersion,
       commitReleaseVersion,
       tagRelease,
