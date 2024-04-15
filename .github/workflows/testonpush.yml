@@ -27,11 +27,10 @@ jobs:
       - name: Test
         env:
           CAPI_TEST_KEY: ${{ secrets.CAPI_TEST_KEY }}
-          SBT_JUNIT_OUTPUT: ./junit-tests
           JAVA_OPTS: -XX:+UseCompressedOops
         run: sbt test
 
       - uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()  #runs even if there is a test failure
         with:
-          files: junit-tests/*.xml
+          files: test-results/**/TEST-*.xml
