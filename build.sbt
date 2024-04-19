@@ -15,6 +15,7 @@ lazy val root = (project in file("."))
       checkSnapshotDependencies,
       inquireVersions,
       runClean,
+      runTest,
       setReleaseVersion,
       commitReleaseVersion,
       tagRelease,
@@ -61,5 +62,4 @@ lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
   """
 )
 
-
-Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", sys.env.getOrElse("SBT_JUNIT_OUTPUT", "junit"))
+Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", s"test-results/scala-${scalaVersion.value}", "-o")
