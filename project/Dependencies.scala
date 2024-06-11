@@ -1,13 +1,13 @@
 import sbt._
 
 object Dependencies {
-  val scalaVersions = Seq("2.12.19", "2.13.13")
+  val scalaVersions = Seq("2.12.19", "2.13.14")
   val capiModelsVersion = "24.0.0"
-  val thriftVersion = "0.19.0"
-  val commonsCodecVersion = "1.16.1"
+  val thriftVersion = "0.20.0"
+  val commonsCodecVersion = "1.17.0"
   val scalaTestVersion = "3.2.18"
-  val slf4jVersion = "2.0.12"
-  val mockitoVersion = "4.11.0"
+  val slf4jVersion = "2.0.13"
+  val mockitoVersion = "5.12.0"
   val okhttpVersion = "4.12.0"
   val awsSdkVersion = "1.11.280"
 
