@@ -1,10 +1,12 @@
 package com.gu.contentapi.client
 
 import com.gu.contentapi.client.BackoffStrategy.constantStrategy
-import org.scalatest.{AsyncWordSpecLike, Matchers, RecoverMethods}
+import org.scalatest.RecoverMethods
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AsyncWordSpecLike
 
 class RetryTest extends AsyncWordSpecLike with Matchers with RecoverMethods {
 

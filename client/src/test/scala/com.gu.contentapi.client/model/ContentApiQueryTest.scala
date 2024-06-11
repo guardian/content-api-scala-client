@@ -1,8 +1,9 @@
 package com.gu.contentapi.client.model
 
-import org.scalatest.{Matchers, FlatSpec}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ContentApiQueryTest extends FlatSpec with Matchers  {
+class ContentApiQueryTest extends AnyFlatSpec with Matchers  {
   "ItemQuery" should "be excellent" in {
     ItemQuery("profile/robert-berry").showFields("all").getUrl("") shouldEqual
       "/profile/robert-berry?show-fields=all"
