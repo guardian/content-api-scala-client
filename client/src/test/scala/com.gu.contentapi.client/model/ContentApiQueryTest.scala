@@ -14,6 +14,11 @@ class ContentApiQueryTest extends AnyFlatSpec with Matchers  {
       "/profile/justin-pinner?show-alias-paths=true"
   }
 
+  "ItemQuery" should "include the internal-all-channels if requested" in {
+    ItemQuery("profile/justin-pinner").internalAllChannels(true).getUrl("") shouldEqual
+      "/profile/justin-pinner?internal-all-channels=true"
+  }
+
   "SearchQuery" should "also be excellent" in {
     SearchQuery().tag("profile/robert-berry").showElements("all").contentType("article").queryFields("body").getUrl("") shouldEqual
       "/search?tag=profile%2Frobert-berry&show-elements=all&type=article&query-fields=body"

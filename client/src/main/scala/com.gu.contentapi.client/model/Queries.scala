@@ -74,7 +74,8 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   with UseDateParameter[ItemQuery]
   with FilterParameters[ItemQuery]
   with FilterExtendedParameters[ItemQuery]
-  with FilterSearchParameters[ItemQuery] {
+  with FilterSearchParameters[ItemQuery]
+  with InternalParameters[ItemQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(id, parameterMap)
 
@@ -347,6 +348,17 @@ trait FilterSectionParameters[Owner <: Parameters[Owner]] extends Parameters[Own
 trait FilterSearchParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
   def q = StringParameter("q")
   def queryFields = StringParameter("query-fields")
+}
+
+trait InternalParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
+  /**
+    * Requests that results for /internal-code/?? paths are returned from Live even if they are
+    * not published to the website [Open Channel]. No effect on Preview as they are returned even if unpublished then.
+    * No effect if the active key is not Internal tier, or the request is not an item-retrieval for an internal-code of the
+    * article.
+    * @return
+    */
+  def internalAllChannels = BoolParameter("internal-all-channels")
 }
 
 trait AtomsParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
