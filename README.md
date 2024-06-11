@@ -1,7 +1,7 @@
 Content API Scala Client
 ========================
 
-[![scalacheck Scala version support](https://index.scala-lang.org/guardian/content-api-client/content-api-client/latest-by-scala-version.svg)](https://index.scala-lang.org/guardian/content-api-client/content-api-client)
+[![content-api-client-default Scala version support](https://index.scala-lang.org/guardian/content-api-scala-client/content-api-client-default/latest-by-scala-version.svg?platform=jvm)](https://index.scala-lang.org/guardian/content-api-scala-client/content-api-client)
 [![Release](https://github.com/guardian/content-api-scala-client/actions/workflows/release.yml/badge.svg)](https://github.com/guardian/content-api-scala-client/actions/workflows/release.yml)
 
 A Scala client for the Guardian's [Content API](http://explorer.capi.gutools.co.uk/).
