@@ -84,15 +84,28 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   override def pathSegment: String = id
 }
 
-case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty, channelId: Option[String] = None)
   extends PaginatedApiQuery[SearchResponse, Content] with SearchQueryBase[SearchQuery] {
 
   def setPaginationConsistentWith(response: SearchResponse): PaginatedApiQuery[SearchResponse, Content] =
     pageSize.setIfUndefined(response.pageSize).orderBy.setIfUndefined(response.orderBy)
 
-  def withParameters(parameterMap: Map[String, Parameter]): SearchQuery = copy(parameterMap)
+  def withParameters(parameterMap: Map[String, Parameter]): SearchQuery = copy(parameterMap, channelId)
 
-  override def pathSegment: String = "search"
+  /**
+    * Make this search on a CAPI channel rather than against web-only content
+    * For more information about channels, and the reason why your app should only be in one channel,
+    * content the Content API team
+    * @param channelId the channel to search against, or "all" to search across all channels.
+    */
+  def withChannel(channelId:String):SearchQuery = copy(parameterHolder, Some(channelId))
+
+  def withoutChannel(): SearchQuery = copy(parameterHolder, None)
+
+  override def pathSegment: String = channelId match {
+    case None=>"search"
+    case Some(chnl)=>s"channel/$chnl/search"
+  }
 
   protected override def followingQueryGivenFull(response: SearchResponse, direction: Direction) = for {
     lastResultInResponse <- response.results.lastOption
