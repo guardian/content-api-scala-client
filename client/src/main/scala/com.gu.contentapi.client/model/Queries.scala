@@ -102,7 +102,7 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty, chan
   /**
     * Make this search on a CAPI channel rather than against web-only content
     * For more information about channels, and the reason why your app should only be in one channel,
-    * content the Content API team
+    * contact the Content API team
     * @param channelId the channel to search against, or "all" to search across all channels.
     */
   def withChannel(channelId:String):SearchQuery = copy(parameterHolder, Some(channelId))
@@ -192,6 +192,17 @@ case class AtomUsageQuery(atomType: AtomType, atomId: String, parameterHolder: M
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterHolder = parameterMap)
 
   override def pathSegment: String = s"atom/${atomType.toString.toLowerCase}/$atomId/usage"
+}
+
+@deprecated("Recipe atoms no longer exist and should not be relied upon. No data will be returned and this class will be removed in a future iteration of the library")
+case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+  extends ContentApiQuery[AtomsResponse]
+    with PaginationParameters[RecipesQuery]
+    with RecipeParameters[RecipesQuery] {
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "atoms/recipes"
 }
 
 case class ReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)

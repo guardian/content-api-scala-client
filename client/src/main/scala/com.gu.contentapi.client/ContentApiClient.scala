@@ -165,6 +165,8 @@ trait ContentApiQueries {
   val editions = EditionsQuery()
   val atoms = AtomsQuery()
   def atomUsage(atomType: AtomType, atomId: String) = AtomUsageQuery(atomType, atomId)
+  @deprecated("Recipe atoms no longer exist and should not be relied upon. No data will be returned and this query will be removed in a future iteration of the library")
+  val recipes = RecipesQuery()
   val reviews = ReviewsQuery()
   val gameReviews = GameReviewsQuery()
   val restaurantReviews = RestaurantReviewsQuery()
