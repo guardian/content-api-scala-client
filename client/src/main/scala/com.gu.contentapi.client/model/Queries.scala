@@ -305,6 +305,7 @@ trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { thi
   def showStats = BoolParameter("show-stats")
   def showAliasPaths = BoolParameter("show-alias-paths")
   def showSchemaOrg = BoolParameter("show-schemaorg")
+  def showChannels = StringParameter("show-channels")
 }
 
 trait ShowReferencesParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
