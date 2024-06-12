@@ -63,7 +63,7 @@ trait SearchQueryBase[Self <: SearchQueryBase[Self]]
   this: Self =>
 }
 
-case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty)
+case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty, channelId: Option[String]=None)
   extends ContentApiQuery[ItemResponse]
   with EditionParameters[ItemQuery]
   with ShowParameters[ItemQuery]
@@ -76,12 +76,19 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   with FilterExtendedParameters[ItemQuery]
   with FilterSearchParameters[ItemQuery] {
 
-  def withParameters(parameterMap: Map[String, Parameter]) = copy(id, parameterMap)
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(id, parameterMap, channelId)
+
+  def withChannelId(newChannel:String) = copy(id, parameterHolder, Some(newChannel))
+
+  def withoutChannelId() = copy(id, parameterHolder, None)
 
   def itemId(contentId: String): ItemQuery =
     copy(id = contentId)
 
-  override def pathSegment: String = id
+  override def pathSegment: String = channelId match {
+    case None => id
+    case Some(chl) => s"channel/$chl/item/$id"
+  }
 }
 
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty, channelId: Option[String] = None)
@@ -185,16 +192,6 @@ case class AtomUsageQuery(atomType: AtomType, atomId: String, parameterHolder: M
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterHolder = parameterMap)
 
   override def pathSegment: String = s"atom/${atomType.toString.toLowerCase}/$atomId/usage"
-}
-
-case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[AtomsResponse]
-  with PaginationParameters[RecipesQuery]
-  with RecipeParameters[RecipesQuery] {
-
-  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
-
-  override def pathSegment: String = "atoms/recipes"
 }
 
 case class ReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)

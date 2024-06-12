@@ -165,7 +165,6 @@ trait ContentApiQueries {
   val editions = EditionsQuery()
   val atoms = AtomsQuery()
   def atomUsage(atomType: AtomType, atomId: String) = AtomUsageQuery(atomType, atomId)
-  val recipes = RecipesQuery()
   val reviews = ReviewsQuery()
   val gameReviews = GameReviewsQuery()
   val restaurantReviews = RestaurantReviewsQuery()
