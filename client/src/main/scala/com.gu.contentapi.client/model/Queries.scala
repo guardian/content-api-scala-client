@@ -63,7 +63,7 @@ trait SearchQueryBase[Self <: SearchQueryBase[Self]]
   this: Self =>
 }
 
-case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty)
+case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty, channelId: Option[String]=None)
   extends ContentApiQuery[ItemResponse]
   with EditionParameters[ItemQuery]
   with ShowParameters[ItemQuery]
@@ -76,23 +76,43 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   with FilterExtendedParameters[ItemQuery]
   with FilterSearchParameters[ItemQuery] {
 
-  def withParameters(parameterMap: Map[String, Parameter]) = copy(id, parameterMap)
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(id, parameterMap, channelId)
+
+  def withChannelId(newChannel:String) = copy(id, parameterHolder, Some(newChannel))
+
+  def withoutChannelId() = copy(id, parameterHolder, None)
 
   def itemId(contentId: String): ItemQuery =
     copy(id = contentId)
 
-  override def pathSegment: String = id
+  override def pathSegment: String = channelId match {
+    case None => id
+    case Some(chl) => s"channel/$chl/item/$id"
+  }
 }
 
-case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty)
+case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty, channelId: Option[String] = None)
   extends PaginatedApiQuery[SearchResponse, Content] with SearchQueryBase[SearchQuery] {
 
   def setPaginationConsistentWith(response: SearchResponse): PaginatedApiQuery[SearchResponse, Content] =
     pageSize.setIfUndefined(response.pageSize).orderBy.setIfUndefined(response.orderBy)
 
-  def withParameters(parameterMap: Map[String, Parameter]): SearchQuery = copy(parameterMap)
+  def withParameters(parameterMap: Map[String, Parameter]): SearchQuery = copy(parameterMap, channelId)
 
-  override def pathSegment: String = "search"
+  /**
+    * Make this search on a CAPI channel rather than against web-only content
+    * For more information about channels, and the reason why your app should only be in one channel,
+    * contact the Content API team
+    * @param channelId the channel to search against, or "all" to search across all channels.
+    */
+  def withChannel(channelId:String):SearchQuery = copy(parameterHolder, Some(channelId))
+
+  def withoutChannel(): SearchQuery = copy(parameterHolder, None)
+
+  override def pathSegment: String = channelId match {
+    case None=>"search"
+    case Some(chnl)=>s"channel/$chnl/search"
+  }
 
   protected override def followingQueryGivenFull(response: SearchResponse, direction: Direction) = for {
     lastResultInResponse <- response.results.lastOption
@@ -174,10 +194,11 @@ case class AtomUsageQuery(atomType: AtomType, atomId: String, parameterHolder: M
   override def pathSegment: String = s"atom/${atomType.toString.toLowerCase}/$atomId/usage"
 }
 
+@deprecated("Recipe atoms no longer exist and should not be relied upon. No data will be returned and this class will be removed in a future iteration of the library")
 case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
   extends ContentApiQuery[AtomsResponse]
-  with PaginationParameters[RecipesQuery]
-  with RecipeParameters[RecipesQuery] {
+    with PaginationParameters[RecipesQuery]
+    with RecipeParameters[RecipesQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -284,6 +305,7 @@ trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { thi
   def showStats = BoolParameter("show-stats")
   def showAliasPaths = BoolParameter("show-alias-paths")
   def showSchemaOrg = BoolParameter("show-schemaorg")
+  def showChannels = StringParameter("show-channels")
 }
 
 trait ShowReferencesParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>

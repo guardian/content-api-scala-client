@@ -14,6 +14,16 @@ class ContentApiQueryTest extends AnyFlatSpec with Matchers  {
       "/profile/justin-pinner?show-alias-paths=true"
   }
 
+  "ItemQuery" should "accept a channel" in {
+    ItemQuery("lifeandstyle/thing").withChannelId("recipes").getUrl("") shouldEqual
+      "/channel/recipes/item/lifeandstyle/thing"
+  }
+
+  "ItemQuery" should "drop the included channel if asked" in {
+    ItemQuery("lifeandstyle/thing").withChannelId("recipes").withoutChannelId().getUrl("") shouldEqual
+      "/lifeandstyle/thing"
+  }
+
   "SearchQuery" should "also be excellent" in {
     SearchQuery().tag("profile/robert-berry").showElements("all").contentType("article").queryFields("body").getUrl("") shouldEqual
       "/search?tag=profile%2Frobert-berry&show-elements=all&type=article&query-fields=body"
@@ -27,6 +37,16 @@ class ContentApiQueryTest extends AnyFlatSpec with Matchers  {
   "SearchQuery" should "accept paths as a parameter" in {
     SearchQuery().paths("path/one,path/two").getUrl("") shouldEqual
       "/search?paths=path%2Fone%2Cpath%2Ftwo"
+  }
+
+  "SearchQuery" should "include a channel if asked" in {
+    SearchQuery().withChannel("my-channel").paths("path/one").getUrl("") shouldEqual
+      "/channel/my-channel/search?paths=path%2Fone"
+  }
+
+  "SearchQuery" should "drop the included channel if asked" in {
+    SearchQuery().withChannel("my-channel").withoutChannel().paths("path/one").getUrl("") shouldEqual
+      "/search?paths=path%2Fone"
   }
 
   "SectionsQuery" should "be beautiful" in {
