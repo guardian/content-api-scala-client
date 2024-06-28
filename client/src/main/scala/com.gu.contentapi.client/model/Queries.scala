@@ -8,7 +8,7 @@ import com.gu.contentapi.client.{Parameter, Parameters}
 import com.gu.contentatom.thrift.AtomType
 import com.twitter.scrooge.ThriftStruct
 
-sealed trait ContentApiQuery[Response <: ThriftStruct] {
+sealed trait ContentApiQuery[+Response <: ThriftStruct] {
   def parameters: Map[String, String]
 
   def pathSegment: String
