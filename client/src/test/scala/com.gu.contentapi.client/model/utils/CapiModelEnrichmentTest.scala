@@ -513,19 +513,13 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
     f.content.theme shouldEqual SportPillar
   }
 
-  it should "return a theme of 'CulturePillar' when has a pillarName of 'Arts'" in {
+  it should "return a theme of 'CulturePillar' when has a pillarName of 'Culture'" in {
     val f = fixture
-    when(f.content.pillarName) thenReturn Some("Arts")
+    when(f.content.pillarName) thenReturn Some("Culture")
 
     f.content.theme shouldEqual CulturePillar
   }
 
-  it should "return a theme of 'CulturePillar' when has a pillarName of 'Books'" in {
-    val f = fixture
-    when(f.content.pillarName) thenReturn Some("Books")
-
-    f.content.theme shouldEqual CulturePillar
-  }
 
   it should "return a theme of 'LifestylePillar' when has a pillarName of 'Lifestyle'" in {
     val f = fixture

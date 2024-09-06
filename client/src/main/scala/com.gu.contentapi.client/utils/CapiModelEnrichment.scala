@@ -186,7 +186,6 @@ object CapiModelEnrichment {
         (tagExistsWithId("tone/comment")(content) && isPillar("News")(content)) ||
           (tagExistsWithId("tone/letters")(content) && isPillar("News")(content)) ||
           isPillar("Opinion")(content)
-      val isCulture: ContentFilter = content => isPillar("Arts")(content) || isPillar("Books")(content)
 
       val predicates: List[(ContentFilter, Theme)] = List(
         isSpecialReport -> SpecialReportTheme,
@@ -194,7 +193,7 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/advertisement-features") -> Labs,
         isOpinion -> OpinionPillar,
         isPillar("Sport") -> SportPillar,
-        isCulture -> CulturePillar,
+        isPillar("Culture") -> CulturePillar,
         isPillar("Lifestyle") -> LifestylePillar
       )
 
