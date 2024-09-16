@@ -212,13 +212,6 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
 
   behavior of "Format.design"
 
-  it should "have a design of 'PrintShopDesign' when tag artanddesign/series/guardian-print-shop is present" in {
-    val f = fixture
-    when(f.tag.id) thenReturn "artanddesign/series/guardian-print-shop"
-
-    f.content.design shouldEqual PrintShopDesign
-  }
-
   it should "have a design of PictureDesign when tag artanddesign/series/guardian-print-shop is present on Picture content" in {
     val f = fixture
     when(f.tag.id) thenReturn "artanddesign/series/guardian-print-shop"

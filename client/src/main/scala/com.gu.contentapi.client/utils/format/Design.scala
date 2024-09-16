@@ -23,7 +23,6 @@ case object EditorialDesign extends Design
 case object QuizDesign extends Design
 case object InteractiveDesign extends Design
 case object PhotoEssayDesign extends Design
-case object PrintShopDesign extends Design
 case object ObituaryDesign extends Design
 case object NewsletterSignupDesign extends Design
 case object TimelineDesign extends Design
