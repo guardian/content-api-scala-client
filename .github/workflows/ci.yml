@@ -20,13 +20,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: corretto
-          java-version: 11
-          cache: sbt
+      - uses: sbt/setup-sbt@v1.1.0
 
       - name: Test
         env:
