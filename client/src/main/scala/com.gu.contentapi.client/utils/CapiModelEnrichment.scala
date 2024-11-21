@@ -215,7 +215,7 @@ object CapiModelEnrichment {
         val hasShowcaseImage = for {
           blocks <- content.blocks
           main <- blocks.main
-          mainMedia = main.elements.head
+          mainMedia <- main.elements.headOption
           imageTypeData <- mainMedia.imageTypeData
           imageRole <- imageTypeData.role
         } yield {
