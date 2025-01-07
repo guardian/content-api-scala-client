@@ -7,6 +7,7 @@ case object GalleryDesign extends Design
 case object PictureDesign extends Design
 case object AudioDesign extends Design
 case object VideoDesign extends Design
+case object CrosswordDesign extends Design
 case object ReviewDesign extends Design
 case object AnalysisDesign extends Design
 case object ExplainerDesign extends Design

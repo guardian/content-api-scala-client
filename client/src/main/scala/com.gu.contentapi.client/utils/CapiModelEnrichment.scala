@@ -105,6 +105,7 @@ object CapiModelEnrichment {
         isPictureContent -> PictureDesign,
         tagExistsWithId("type/audio") -> AudioDesign,
         tagExistsWithId("type/video") -> VideoDesign,
+        tagExistsWithId("type/crossword") -> CrosswordDesign,
         isReview -> ReviewDesign,
         isObituary -> ObituaryDesign,
         tagExistsWithId("tone/analysis") -> AnalysisDesign,
