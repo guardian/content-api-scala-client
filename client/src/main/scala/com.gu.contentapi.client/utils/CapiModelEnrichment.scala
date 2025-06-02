@@ -209,8 +209,7 @@ object CapiModelEnrichment {
       // https://github.com/guardian/frontend/blob/e71dc1c521672b28399811c59331e0c2c713bf00/common/app/model/content.scala#L86
       val isImmersiveDisplay: ContentFilter = content =>
         isImmersive(content) ||
-          isPhotoEssay(content) ||
-          isGallery(content)
+          isPhotoEssay(content)
 
       def hasShowcaseImage: ContentFilter = content => {
         val hasShowcaseImage = for {
