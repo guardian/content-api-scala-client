@@ -5,7 +5,7 @@ object Dependencies {
   val capiModelsVersion = "31.1.0"
   val thriftVersion = "0.20.0"
   val commonsCodecVersion = "1.17.0"
-  val scalaTestVersion = "3.2.18"
+  val scalaTestVersion = "3.2.19"
   val slf4jVersion = "2.0.13"
   val mockitoVersion = "5.12.0"
   val okhttpVersion = "4.12.0"
