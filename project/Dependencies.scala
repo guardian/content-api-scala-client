@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   val scalaVersions = Seq("2.12.19", "2.13.14")
-  val capiModelsVersion = "30.0.0-PREVIEW.filterproduct-element-temp.2025-09-17T1214.873da3a9" //TODO update to include product element
+  val capiModelsVersion = "32.0.0-PREVIEW.filterproduct-element-temp.2025-10-07T1607.88693c5b" //TODO update to include product element
   val thriftVersion = "0.20.0"
   val commonsCodecVersion = "1.17.0"
   val scalaTestVersion = "3.2.18"
