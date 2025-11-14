@@ -30,9 +30,12 @@ object FindTags {
       },
       60.seconds
     )
+    val tagUsageRows: Iterable[Seq[String]] = tagUsages.map {
+      case (tag, usages) => usages.map(_.toString).prepended(tag)
+    }
     val writer = new FileWriter(outputFilename, StandardCharsets.UTF_8)
     try {
-      writer.write(tagUsages.asJson.spaces2)
+      writer.write(tagUsageRows.asJson.spaces2)
     } finally {
       writer.close()
     }
