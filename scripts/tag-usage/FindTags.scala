@@ -22,27 +22,30 @@ object FindTags {
     val tags = Await.result(commissioningDeskTags(client), 5.seconds)
     println(s"Got ${tags.size} commissioning desk tags. Finding the monthly usage for them.")
     val tagUsages: TagUsages = Await.result(
-      tags.foldLeft(Future.successful(Map.empty[String, Seq[Int]])) {
+      tags.foldLeft(Future.successful(Map.empty[String, Seq[Set[String]]])) {
         case (future, tag) => future.flatMap(resultsSoFar => {
         println(s"Querying usage for ${tag}")
         val query = SearchQuery().tag(tag).pageSize(200)
-          yearUsages(client, query).map(results => resultsSoFar.concat(Seq(tag -> results.map(_.size))))
+          yearUsages(client, query).map(results => resultsSoFar.concat(Seq(tag -> results)))
       })
       },
       60.seconds
     )
-    val tagUsageRows: Iterable[Seq[String]] = tagUsages.map {
+    val tagUsageCounts: Map[String, Seq[Int]] = tagUsages.map {
+      case (tag, monthUsages) => (tag, monthUsages.map(_.size))
+    }
+    val tagUsageRows: Iterable[Seq[String]] = tagUsageCounts.map {
       case (tag, usages) => usages.map(_.toString).prepended(tag)
     }
     val writer = new FileWriter(outputFilename, StandardCharsets.UTF_8)
     try {
-      writer.write(tagUsageRows.asJson.spaces2)
+      writer.write(tagUsages.asJson.spaces2)
     } finally {
       writer.close()
     }
   }
   
-  type TagUsages = Map[String, Seq[Int]]
+  type TagUsages = Map[String, Seq[Set[String]]]
 
   def commissioningDeskTags(client: GuardianContentClient): Future[Set[String]] = {
     client.paginateFold(TagsQuery().tagType("tracking"))(Set.empty[String]) {
