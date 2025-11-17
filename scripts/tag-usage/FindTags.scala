@@ -24,6 +24,7 @@ object FindTags {
     val tagUsages: TagUsages = Await.result(
       tags.foldLeft(Future.successful(Map.empty[String, Seq[Int]])) {
         case (future, tag) => future.flatMap(resultsSoFar => {
+        println(s"Querying usage for ${tag}")
         val query = SearchQuery().tag(tag).pageSize(200)
           yearUsages(client, query).map(results => resultsSoFar.concat(Seq(tag -> results.map(_.size))))
       })
