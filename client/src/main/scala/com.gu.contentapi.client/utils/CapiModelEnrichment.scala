@@ -40,6 +40,8 @@ object CapiModelEnrichment {
   val isPictureContent: ContentFilter = content => content.`type` == ContentType.Picture
 
   val isGallery: ContentFilter = tagExistsWithId("type/gallery")
+	
+	val isHostedArticle: ContentFilter = content => content.isHosted && content.`type` == ContentType.Article
 
   // The date used here is arbitrary and will be moved nearer to the present when the new template feature is ready to be used in production
   val immersiveInteractiveSwitchoverDate = ZonedDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
