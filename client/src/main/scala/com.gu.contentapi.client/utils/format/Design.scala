@@ -28,6 +28,6 @@ case object ObituaryDesign extends Design
 case object NewsletterSignupDesign extends Design
 case object TimelineDesign extends Design
 case object ProfileDesign extends Design
-case object HostedArticle extends Design
-case object HostedVideo extends Design
-case object HostedGallery extends Design
+case object HostedArticleDesign extends Design
+case object HostedVideoDesign extends Design
+case object HostedGalleryDesign extends Design

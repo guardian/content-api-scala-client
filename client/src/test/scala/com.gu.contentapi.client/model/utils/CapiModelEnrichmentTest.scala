@@ -396,6 +396,14 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
 
     f.content.design shouldEqual LiveBlogDesign
   }
+	
+	it should "have a designType of 'HostedArticle' when isHosted is true and type is Article" in {
+		val f = fixture
+		when(f.content.isHosted) thenReturn true
+		when(f.content.`type`) thenReturn ContentType.Article
+
+		f.content.designType shouldEqual HostedArticleDesign
+	}
 
   it should "have a design of 'DeadBlogDesign' when tag tone/minutebyminute is present but not live anymore" in {
     val f = fixture

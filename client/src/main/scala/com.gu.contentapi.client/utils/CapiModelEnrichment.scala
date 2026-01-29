@@ -9,6 +9,7 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.ZonedDateTime
 import java.time.ZoneOffset
+import com.gu.contentatom.thrift.atom.media.Category.Hosted
 
 object CapiModelEnrichment {
 
@@ -125,6 +126,7 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/matchreports") -> MatchReportDesign,
         tagExistsWithId("tone/timelines") -> TimelineDesign,
         tagExistsWithId("tone/profiles") -> ProfileDesign,
+				isHostedArticle -> HostedArticleDesign,
       )
 
       val result = getFromPredicate(content, predicates)
