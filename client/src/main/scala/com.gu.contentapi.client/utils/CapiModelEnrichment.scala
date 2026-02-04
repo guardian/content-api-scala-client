@@ -9,7 +9,6 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.ZonedDateTime
 import java.time.ZoneOffset
-import com.gu.contentatom.thrift.atom.media.Category.Hosted
 
 object CapiModelEnrichment {
 
