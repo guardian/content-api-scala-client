@@ -41,13 +41,13 @@ object CapiModelEnrichment {
 
   val isGallery: ContentFilter = tagExistsWithId("type/gallery")
 	
-	val isHosted: ContentFilter = content => content.isHosted
+  val isHosted: ContentFilter = content => content.isHosted
 	
-	val isHostedArticle: ContentFilter = content => isHosted(content) && content.`type` == ContentType.Article
+  val isHostedArticle: ContentFilter = content => isHosted(content) && content.`type` == ContentType.Article
 	
-	val isHostedVideo: ContentFilter = content => isHosted(content) && content.`type` == ContentType.Video
+  val isHostedVideo: ContentFilter = content => isHosted(content) && content.`type` == ContentType.Video
 	
-	val isHostedGallery: ContentFilter = content => isHosted(content) && content.`type` == ContentType.Gallery
+  val isHostedGallery: ContentFilter = content => isHosted(content) && content.`type` == ContentType.Gallery
 
   // The date used here is arbitrary and will be moved nearer to the present when the new template feature is ready to be used in production
   val immersiveInteractiveSwitchoverDate = ZonedDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)
@@ -106,9 +106,9 @@ object CapiModelEnrichment {
       // Note: only the first matching predicate will be picked.
       // Modifying the order of predicates could create unintended problems:
       val predicates: List[(ContentFilter, Design)] = List(
-				isHostedArticle -> HostedArticleDesign,
-				isHostedVideo -> HostedVideoDesign,
-				isHostedGallery -> HostedGalleryDesign,
+        isHostedArticle -> HostedArticleDesign,
+        isHostedVideo -> HostedVideoDesign,
+        isHostedGallery -> HostedGalleryDesign,
         isFullPageInteractive -> FullPageInteractiveDesign,
         isInteractive -> InteractiveDesign,
         tagExistsWithId("info/newsletter-sign-up") -> NewsletterSignupDesign,
