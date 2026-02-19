@@ -40,6 +40,8 @@ object CapiModelEnrichment {
   val isPictureContent: ContentFilter = content => content.`type` == ContentType.Picture
 
   val isGallery: ContentFilter = tagExistsWithId("type/gallery")
+
+  val isNewsletter: ContentFilter = content => tagExistsWithId("tone/newsletter-tone")(content) || tagExistsWithId("info/newsletter-sign-up")(content)
 	
   val isHosted: ContentFilter = content => content.isHosted
 	
