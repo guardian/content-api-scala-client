@@ -171,6 +171,12 @@ class CapiModelEnrichmentDesignTypeTest extends AnyFlatSpec with MockitoSugar wi
 
     f.content.designType shouldEqual Newsletter
   }
+  it should "have a designType of 'Newsletter' when tag info/newsletter-sign-up is present" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "info/newsletter-sign-up"
+
+    f.content.designType shouldEqual Newsletter
+  }
 }
 
 class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with Matchers {
