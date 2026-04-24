@@ -10,7 +10,7 @@ lazy val root = (project in file("."))
   .aggregate(client, defaultClient)
   .settings(
     publish / skip := true,
-    releaseVersion := ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease().value,
+//    releaseVersion := ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease().value,
     releaseProcess := Seq(
       checkSnapshotDependencies,
       inquireVersions,
