@@ -30,5 +30,5 @@ object Decoder {
   implicit val videoStatsDecoder: Decoder[VideoStatsResponse] = new Decoder(VideoStatsResponse)
   implicit val atomsDecoder: Decoder[AtomsResponse] = new Decoder(AtomsResponse)
   implicit val searchDecoder: PageableResponseDecoder[SearchResponse, Content] = pageableResponseDecoder(SearchResponse)(_.pageSize, _.results)
-  implicit val atomUsageDecoder: Decoder[AtomUsageResponse] = new Decoder(AtomUsageResponse)
+  implicit val atomUsageDecoder: PageableResponseDecoder[AtomUsageResponse, String] = pageableResponseDecoder(AtomUsageResponse)(_.pageSize, _.results)
 }
