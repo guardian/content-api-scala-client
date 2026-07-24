@@ -31,7 +31,7 @@ releaseProcess := Seq[ReleaseStep](
 val jacksonVersion = "2.17.2"
 
 libraryDependencies ++= Seq(
-  "com.gu" %% "content-api-models-scala" % "44.0.0",
+  "com.gu" %% "content-api-models-scala" % "46.0.0",
   "com.gu" %% "thrift-serializer" % "5.0.7",
   "software.amazon.kinesis" % "amazon-kinesis-client" % "3.2.1",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
