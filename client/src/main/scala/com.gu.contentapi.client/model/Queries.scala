@@ -50,6 +50,28 @@ abstract class PaginatedApiQuery[Response <: ThriftStruct, Element](
   protected def followingQueryGivenFull(response: Response, direction: Direction): Option[PaginatedApiQuery[Response, Element]]
 }
 
+abstract class PageNumberPaginatedApiQuery[Response <: ThriftStruct, Element](
+  implicit prd: PageableResponseDecoder[Response, Element]
+) extends PaginatedApiQuery[Response, Element] {
+
+  val ps:
+
+  override def setPaginationConsistentWith(response: Response): PaginatedApiQuery[Response, Element]
+    = pageSize.setIfUndefined(prd.pageSize(response)
+
+  override protected def followingQueryGivenFull(response: Response, direction: Direction): Option[PaginatedApiQuery[Response, Element]]
+
+
+  def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
+
+  override def pathSegment: String = "tags"
+
+  protected override def followingQueryGivenFull(response: TagsResponse, direction: Direction): Option[TagsQuery] = {
+    val followingPage = response.currentPage + direction.delta
+    if (followingPage >= 1 && followingPage <= response.pages) Some(page(followingPage)) else None
+  }
+}
+
 trait SearchQueryBase[Self <: SearchQueryBase[Self]]
   extends ContentApiQuery[SearchResponse]
      with ShowParameters[Self]
