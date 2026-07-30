@@ -186,12 +186,20 @@ case class AtomsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class AtomUsageQuery(atomType: AtomType, atomId: String, parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[AtomUsageResponse]
+  extends PaginatedApiQuery[AtomUsageResponse, String]
   with PaginationParameters[AtomUsageQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterHolder = parameterMap)
 
   override def pathSegment: String = s"atom/${atomType.toString.toLowerCase}/$atomId/usage"
+
+  def setPaginationConsistentWith(response: AtomUsageResponse): PaginatedApiQuery[AtomUsageResponse, String] =
+    pageSize.setIfUndefined(response.pageSize)
+
+  protected override def followingQueryGivenFull(response: AtomUsageResponse, direction: Direction): Option[AtomUsageQuery] = {
+    val followingPage = response.currentPage + direction.delta
+    if (followingPage >= 1 && followingPage <= response.pages) Some(page(followingPage)) else None
+  }
 }
 
 @deprecated("Recipe atoms no longer exist and should not be relied upon. No data will be returned and this class will be removed in a future iteration of the library")
