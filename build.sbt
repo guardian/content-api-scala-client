@@ -7,10 +7,10 @@ import sbtversionpolicy.withsbtrelease.ReleaseVersion
 val ghProject = "content-api-client"
 
 lazy val root = (project in file("."))
-  .aggregate(client, defaultClient)
+  .aggregate(client, defaultClient, catsEffectClient)
   .settings(
     publish / skip := true,
-    releaseVersion := ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease().value,
+    // releaseVersion := ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease().value,
     releaseProcess := Seq(
       checkSnapshotDependencies,
       inquireVersions,
@@ -30,6 +30,22 @@ lazy val client = (project in file("client"))
 lazy val defaultClient = (project in file("client-default"))
   .dependsOn(client)
   .settings(artifactProductionSettings, defaultClientSettings)
+  .settings(
+    name                :=  ghProject + "-default"
+  )
+
+lazy val catsEffectClient = (project in file("client-cats-effect"))
+  .dependsOn(client, defaultClient % "compile->compile;test->test")
+  .settings(artifactProductionSettings, defaultClientSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.typelevel" %% "cats-core" % "2.13.0",
+      "org.typelevel" %% "cats-effect" % "3.7.0",
+      "co.fs2" %% "fs2-core" % "3.13.0",
+      "com.madgag" %% "bin-packing" % "1.0.0",
+    ),
+    name                :=  ghProject + "-cats-effect"
+  )
 
 
 lazy val artifactProductionSettings: Seq[Setting[?]] = Seq(
@@ -50,7 +66,6 @@ lazy val clientSettings: Seq[Setting[?]] = Seq(
 )
 
 lazy val defaultClientSettings: Seq[Setting[?]] = Seq(
-  name                :=  ghProject + "-default",
   description         := "Default scala client for the Guardian's Content API",
   libraryDependencies ++= clientDeps ++ defaultClientDeps,
   console / initialCommands   := """
