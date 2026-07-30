@@ -1,8 +1,8 @@
 package com.gu.contentapi.client.utils
 
+import com.gu.contentapi.client.model.CapiId
 import com.gu.contentapi.client.model.v1._
 import com.gu.contentapi.client.utils.format._
-
 import org.apache.commons.codec.digest.DigestUtils
 
 import java.time.OffsetDateTime
@@ -70,6 +70,8 @@ object CapiModelEnrichment {
   }
 
   implicit class RichContent(val content: Content) extends AnyVal {
+
+    def capiId = CapiId(content.id)
 
     def designType: DesignType = {
 
