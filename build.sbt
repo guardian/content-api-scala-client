@@ -35,7 +35,7 @@ lazy val defaultClient = (project in file("client-default"))
 lazy val artifactProductionSettings: Seq[Setting[_]] = Seq(
   crossScalaVersions      := scalaVersions,
   scalaVersion            := scalaVersions.max,
-  scalacOptions           ++= Seq("-deprecation", "-unchecked", "-release:8"),
+  scalacOptions           ++= Seq("-deprecation", "-unchecked", "-release:11"),
   licenses                := Seq(License.Apache2),
   organization            := "com.gu"
 )
