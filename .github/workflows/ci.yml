@@ -19,14 +19,14 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: sbt/setup-sbt@v1.1.0
+      - uses: actions/checkout@v7
+      - uses: guardian/setup-scala@v1
 
       - name: Test
         env:
           CAPI_TEST_KEY: ${{ secrets.CAPI_TEST_KEY }}
           JAVA_OPTS: -XX:+UseCompressedOops
-        run: sbt test
+        run: sbt testFull
 
       - uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()  #runs even if there is a test failure
