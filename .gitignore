@@ -1,9 +1,9 @@
 .*
 !.gitignore
-!.travis.yml
 
 target/
 project/metals.sbt
 project/project/
+test-results/
 
 !.github

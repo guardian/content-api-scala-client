@@ -32,7 +32,7 @@ lazy val defaultClient = (project in file("client-default"))
   .settings(artifactProductionSettings, defaultClientSettings)
 
 
-lazy val artifactProductionSettings: Seq[Setting[_]] = Seq(
+lazy val artifactProductionSettings: Seq[Setting[?]] = Seq(
   crossScalaVersions      := scalaVersions,
   scalaVersion            := scalaVersions.max,
   scalacOptions           ++= Seq("-deprecation", "-unchecked", "-release:11"),
@@ -40,7 +40,7 @@ lazy val artifactProductionSettings: Seq[Setting[_]] = Seq(
   organization            := "com.gu"
 )
 
-lazy val clientSettings: Seq[Setting[_]] = Seq(
+lazy val clientSettings: Seq[Setting[?]] = Seq(
   name                := ghProject,
   description         := "Scala client for the Guardian's Content API",
   buildInfoKeys       := Seq[BuildInfoKey](version),
@@ -49,7 +49,7 @@ lazy val clientSettings: Seq[Setting[_]] = Seq(
   libraryDependencies ++= clientDeps
 )
 
-lazy val defaultClientSettings: Seq[Setting[_]] = Seq(
+lazy val defaultClientSettings: Seq[Setting[?]] = Seq(
   name                :=  ghProject + "-default",
   description         := "Default scala client for the Guardian's Content API",
   libraryDependencies ++= clientDeps ++ defaultClientDeps,
