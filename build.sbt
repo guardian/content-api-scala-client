@@ -33,7 +33,7 @@ val jacksonVersion = "2.17.3"
 libraryDependencies ++= Seq(
   "com.gu" %% "content-api-models-scala" % "47.0.0",
   "com.gu" %% "thrift-serializer" % "5.0.7",
-  "software.amazon.kinesis" % "amazon-kinesis-client" % "3.4.2",
+  "software.amazon.kinesis" % "amazon-kinesis-client" % "3.4.3",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
   "com.twitter" %% "scrooge-core" % "21.12.0",
   "at.yawk.lz4" % "lz4-java" % "1.10.4", // Necessary while the ExclusionRule for org.lz4:lz4-java is necessary
@@ -42,7 +42,7 @@ libraryDependencies ++= Seq(
   "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
   "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion,
   "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion
-) ++ Seq("aws-json-protocol", "kinesis").map(artifact => "software.amazon.awssdk" % artifact % "2.29.52")
+) ++ Seq("aws-json-protocol", "kinesis").map(artifact => "software.amazon.awssdk" % artifact % "2.49.5")
 
 excludeDependencies ++= Seq(
   /**
