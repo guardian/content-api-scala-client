@@ -28,7 +28,7 @@ releaseProcess := Seq[ReleaseStep](
   commitNextVersion
 )
 
-val jacksonVersion = "2.17.2"
+val jacksonVersion = "2.17.3"
 
 libraryDependencies ++= Seq(
   "com.gu" %% "content-api-models-scala" % "47.0.0",
