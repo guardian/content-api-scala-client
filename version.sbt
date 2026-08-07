@@ -1,1 +1,1 @@
-ThisBuild / version := "48.0.2-SNAPSHOT"
+ThisBuild / version := "48.0.2-PREVIEW.add-cats-effect-capi-client.2026-08-07T1634.223f9453"
