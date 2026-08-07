@@ -10,6 +10,7 @@ import com.gu.contentapi.client.{ContentApiClient, Decoder, GuardianContentClien
 import com.twitter.scrooge.ThriftStruct
 import fs2.Stream.unfoldChunkLoopEval
 import fs2.{Chunk, Stream}
+import org.typelevel.log4cats.{LoggerFactory, SelfAwareStructuredLogger}
 
 import java.net.URI
 import java.net.http.HttpClient.Version.HTTP_2
@@ -18,7 +19,6 @@ import java.net.http.{HttpClient, HttpRequest}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.jdk.OptionConverters._
-import scala.util.control.Exception.noCatch.desc
 
 /** Originally copied from code at
   * https://github.com/guardian/word-usage/blob/7587abcdc06738414655bd05ea5ee4854a4b3925/src/main/scala/com/gu/words/capi/IOCapiClient.scala#L19
@@ -27,11 +27,13 @@ class IOCapiClient private (
     protected[catseffect] val underlyingClient: ContentApiClient,
     rateLimiter: TokenBucket
 )(implicit
-    ec: ExecutionContext
+    ec: ExecutionContext,
+    logging: LoggerFactory[IO]
 ) {
+  implicit val logger: SelfAwareStructuredLogger[IO] = LoggerFactory[IO].getLogger
 
   def getResponse[Resp <: ThriftStruct: Decoder](query: ContentApiQuery[Resp]): IO[Resp] =
-    retry( // probably use cats-retry once on Scala 3...
+    retry(
       execute(query),
       desc = query.getClass.getSimpleName,
       detail = query.getUrl(""),
@@ -66,7 +68,7 @@ object IOCapiClient {
       TokenBucket.create(minuteQuota, minuteQuota / 60, 1.second)
   }
 
-  def from(apiKey: String)(implicit ec: ExecutionContext): IO[IOCapiClient] = for {
+  def from(apiKey: String)(implicit ec: ExecutionContext, loggerFactory: LoggerFactory[IO]): IO[IOCapiClient] = for {
     rateLimiter <- createRateLimiterAppropriateTo(apiKey)
   } yield new IOCapiClient(new GuardianContentClient(apiKey), rateLimiter)
 

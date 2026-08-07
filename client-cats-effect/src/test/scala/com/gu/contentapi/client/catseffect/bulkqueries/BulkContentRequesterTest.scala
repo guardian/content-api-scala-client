@@ -1,9 +1,12 @@
 package com.gu.contentapi.client.catseffect.bulkqueries
 
+import cats.effect.IO
+import com.gu.contentapi.client.GuardianContentClientTest
 import com.gu.contentapi.client.catseffect.IOCapiClient
 import com.gu.contentapi.client.model.SearchQuery
 import com.gu.contentapi.client.utils.CapiModelEnrichment.RichContent
-import com.gu.contentapi.client.{GuardianContentClientTest, SampleCapiIds}
+import org.typelevel.log4cats.LoggerFactory
+import org.typelevel.log4cats.slf4j.Slf4jFactory
 import weaver.SimpleIOSuite
 
 import java.time.Instant
@@ -11,6 +14,8 @@ import java.time.temporal.ChronoUnit.DAYS
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object BulkContentRequesterTest extends SimpleIOSuite {
+
+  implicit val logging: LoggerFactory[IO] = Slf4jFactory.create[IO]
 
   val fixedMoment = Instant.parse("2020-06-01T00:00:00Z")
 
