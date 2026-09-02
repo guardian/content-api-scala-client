@@ -4,7 +4,7 @@ object Dependencies {
   val scalaVersions = Seq("2.13.18")
   val capiModelsVersion = "50.0.0"
   val thriftVersion = "0.23.0"
-  val commonsCodecVersion = "1.17.2"
+  val commonsCodecVersion = "1.22.1"
   val scalaTestVersion = "3.2.20"
   val slf4jVersion = "2.0.18"
   val mockitoVersion = "5.12.0"
