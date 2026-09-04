@@ -24,9 +24,9 @@ jobs:
           aws-region: eu-west-1
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: guardian/setup-scala@v1
+      - uses: guardian/setup-scala@v2
       - name: Build and Test
-        run: sbt -v +test
+        run: sbt -v +testFull
       - name: Test Summary
         uses: test-summary/action@v2
         with:
