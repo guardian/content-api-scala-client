@@ -7,7 +7,7 @@ import sbtversionpolicy.withsbtrelease.ReleaseVersion
 val ghProject = "content-api-client"
 
 lazy val root = (project in file("."))
-  .aggregate(client, defaultClient)
+  .aggregate(client, defaultClient, firehoseClient)
   .settings(
     publish / skip := true,
     releaseVersion := ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease().value,
@@ -31,6 +31,23 @@ lazy val defaultClient = (project in file("client-default"))
   .dependsOn(client)
   .settings(artifactProductionSettings, defaultClientSettings)
 
+lazy val firehoseClient = (project in file("firehose-client"))
+  .settings(artifactProductionSettings).settings(
+    name                := "content-api-firehose-client",
+    description         := "Firehose client for the CAPI Crier feed",
+    libraryDependencies ++= Seq(
+      capiModels,
+      "com.gu" %% "thrift-serializer" % "5.0.7",
+      "software.amazon.kinesis" % "amazon-kinesis-client" % "3.4.3",
+      "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
+      // "com.twitter" %% "scrooge-core" % "21.12.0",
+      "at.yawk.lz4" % "lz4-java" % "1.10.4", // Necessary while the ExclusionRule for org.lz4:lz4-java is necessary
+      scalaTest,
+    ) ++ Seq("aws-json-protocol", "kinesis").map(artifact => "software.amazon.awssdk" % artifact % "2.49.5") ++ Seq(
+      "jackson-databind", "jackson-annotations", "jackson-core"
+    ).map(artifact => "com.fasterxml.jackson.core" % artifact % "2.17.3")
+
+  )
 
 lazy val artifactProductionSettings: Seq[Setting[?]] = Seq(
   crossScalaVersions      := scalaVersions,
