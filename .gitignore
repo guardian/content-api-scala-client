@@ -1,9 +1,0 @@
-.gitignore.*
-!.gitignore
-
-target/
-
-!.github
-
-test-results/
-.bsp/
