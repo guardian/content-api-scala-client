@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The ContentApiFirehoseClientTesting stack matches the snapshot 1`] = `
+exports[`The ContentApiClientsTesting stack matches the snapshot 1`] = `
 {
   "Metadata": {
     "gu:cdk:constructs": [
@@ -28,7 +28,7 @@ exports[`The ContentApiFirehoseClientTesting stack matches the snapshot 1`] = `
               "Action": "sts:AssumeRoleWithWebIdentity",
               "Condition": {
                 "StringLike": {
-                  "token.actions.githubusercontent.com:sub": "repo:guardian/content-api-firehose-client:*",
+                  "token.actions.githubusercontent.com:sub": "repo:guardian/content-api-scala-client:*",
                 },
               },
               "Effect": "Allow",
@@ -57,11 +57,11 @@ exports[`The ContentApiFirehoseClientTesting stack matches the snapshot 1`] = `
           },
           {
             "Key": "gu:repo",
-            "Value": "guardian/content-api-firehose-client",
+            "Value": "guardian/content-api-scala-client",
           },
           {
             "Key": "Stack",
-            "Value": "content-api-firehose-client",
+            "Value": "content-api-clients",
           },
           {
             "Key": "Stage",

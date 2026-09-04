@@ -4,7 +4,7 @@ import { GuGithubActionsRole } from '@guardian/cdk/lib/constructs/iam';
 import { GuAllowPolicy } from '@guardian/cdk/lib/constructs/iam/policies/base-policy';
 import type { App } from 'aws-cdk-lib';
 
-export class ContentApiFirehoseClientTesting extends GuStack {
+export class ContentApiClientsTesting extends GuStack {
 	constructor(scope: App, id: string, props: GuStackProps) {
 		super(scope, id, props);
 		new GuGithubActionsRole(this, {
@@ -18,7 +18,7 @@ export class ContentApiFirehoseClientTesting extends GuStack {
 			],
 			condition: {
 				githubOrganisation: 'guardian',
-				repositories: 'content-api-firehose-client:*',
+				repositories: 'content-api-scala-client:*',
 			},
 		});
 	}

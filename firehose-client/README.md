@@ -1,8 +1,8 @@
 Content API Firehose Client
 ============================
 
-[![content-api-firehose-client Scala version support](https://index.scala-lang.org/guardian/content-api-firehose-client/content-api-firehose-client/latest-by-scala-version.svg?platform=jvm)](https://index.scala-lang.org/guardian/content-api-firehose-client/content-api-firehose-client)
-[![Release](https://github.com/guardian/content-api-firehose-client/actions/workflows/release.yml/badge.svg)](https://github.com/guardian/content-api-firehose-client/actions/workflows/release.yml)
+_Looking for [old PRs on this project](https://github.com/guardian/content-api-firehose-client/pulls?q=is%3Apr)? 
+This project lived in [`guardian/content-api-firehose-client`](https://github.com/guardian/content-api-firehose-client) until September 2026_
 
 A client for the Guardian's [Content API](http://explorer.capi.gutools.co.uk/) firehose - an events stream for all updates and deletes of Guardian content.
 
@@ -148,8 +148,3 @@ And when you're finished:
 ```
 contentApiFirehoseConsumer.shutdown()
 ```
-## How to release a new version
-
-This repo uses [`gha-scala-library-release-workflow`](https://github.com/guardian/gha-scala-library-release-workflow)
-to automate publishing releases - see
-[**Making a Release**](https://github.com/guardian/gha-scala-library-release-workflow/blob/main/docs/making-a-release.md).
