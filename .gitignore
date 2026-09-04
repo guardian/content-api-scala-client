@@ -1,0 +1,9 @@
+.*
+!.gitignore
+
+target/
+project/metals.sbt
+project/project/
+test-results/
+
+!.github
