@@ -19,6 +19,12 @@ jobs:
       pull-requests: write
 
     steps:
+      - uses: aws-actions/configure-aws-credentials@v4 # Needed for Kinesis read access for the tests!
+        with:
+          # The AWS role is configured as a GitHub Repo secret, the value is the cloudformation-output of the
+          # 'ContentApiFirehoseClientTesting' cloudformation stack.
+          role-to-assume: ${{ secrets.AWS_ROLE_FOR_TESTS }}
+          aws-region: eu-west-1
       - uses: actions/checkout@v7
       - uses: guardian/setup-scala@v1
 
