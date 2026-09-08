@@ -9,16 +9,18 @@ object Dependencies {
   val slf4jVersion = "2.0.18"
   val mockitoVersion = "5.12.0"
   val okhttpVersion = "4.12.0"
-  val awsSdkVersion = "1.11.280"
 
+  val capiModels: ModuleID = "com.gu" %% "content-api-models-scala" % capiModelsVersion
+  val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % scalaTestVersion % Test `exclude`("org.mockito", "mockito-core")
+  
   // Note: keep libthrift at a version functionally compatible with that used in content-api-models
   // if build failures occur due to eviction / sbt-assembly mergeStrategy errors
   val clientDeps = Seq(
-    "com.gu" %% "content-api-models-scala" % capiModelsVersion,
+    capiModels,
     "org.apache.thrift" % "libthrift" % thriftVersion,
     "commons-codec" % "commons-codec" % commonsCodecVersion,
-    "org.scalatest" %% "scalatest" % scalaTestVersion % "test" exclude("org.mockito", "mockito-core"),
-    "org.scalatestplus" %% "mockito-4-11" % "3.2.18.0" % "test",
+    scalaTest,
+    "org.scalatestplus" %% "mockito-4-11" % "3.2.18.0" % Test,
     "org.slf4j" % "slf4j-api" % slf4jVersion,
     "org.mockito" % "mockito-core" % mockitoVersion
   )
