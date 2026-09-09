@@ -2,6 +2,7 @@ package com.gu.contentapi.client.model
 
 import com.gu.contentapi.client.Decoder.PageableResponseDecoder
 import com.gu.contentapi.client.model.Direction.Next
+import com.gu.contentapi.client.model.SearchQuery.IdSeparator
 import com.gu.contentapi.client.model.v1.{AtomUsageResponse, AtomsResponse, Content, EditionsResponse, ItemResponse, SearchResponse, SectionsResponse, Tag, TagsResponse, VideoStatsResponse}
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentapi.client.{Parameter, Parameters}
@@ -91,8 +92,14 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
   }
 }
 
+object SearchQuery {
+  val IdSeparator = "," // the separator used by the 'ids' parameter
+}
+
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty, channelId: Option[String] = None)
   extends PaginatedApiQuery[SearchResponse, Content] with SearchQueryBase[SearchQuery] {
+
+  def withIds(capiIds: Set[CapiId]): SearchQuery = ids(capiIds.map(_.value).mkString(IdSeparator))
 
   def setPaginationConsistentWith(response: SearchResponse): PaginatedApiQuery[SearchResponse, Content] =
     pageSize.setIfUndefined(response.pageSize).orderBy.setIfUndefined(response.orderBy)

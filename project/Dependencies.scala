@@ -12,7 +12,7 @@ object Dependencies {
 
   val capiModels: ModuleID = "com.gu" %% "content-api-models-scala" % capiModelsVersion
   val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % scalaTestVersion % Test `exclude`("org.mockito", "mockito-core")
-  
+
   // Note: keep libthrift at a version functionally compatible with that used in content-api-models
   // if build failures occur due to eviction / sbt-assembly mergeStrategy errors
   val clientDeps = Seq(

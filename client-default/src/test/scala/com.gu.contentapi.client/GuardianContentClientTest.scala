@@ -6,16 +6,16 @@ import com.gu.contentapi.client.model.{ContentApiError, FollowingSearchQuery, It
 import com.gu.contentatom.thrift.{AtomData, AtomType}
 import org.scalatest._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Seconds, Span}
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 
 object GuardianContentClientTest {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
-  private val apiKey: String = {
+  val apiKey: String = {
     Option(System.getProperty(ApiKeyProperty)) orElse Option(System.getenv(ApiKeyProperty))
   }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable e.g. sbt -D$ApiKeyProperty=some-api-key")
 }
