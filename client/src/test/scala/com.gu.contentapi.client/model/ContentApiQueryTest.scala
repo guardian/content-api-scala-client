@@ -48,7 +48,10 @@ class ContentApiQueryTest extends AnyFlatSpec with Matchers  {
     SearchQuery().withChannel("my-channel").withoutChannel().paths("path/one").getUrl("") shouldEqual
       "/search?paths=path%2Fone"
   }
-
+  "SearchQuery" should "filter by active ab tests if asked" in {
+    SearchQuery().containsActiveAbTest(true).getUrl("") shouldEqual
+      "/search?contains-active-abtest=true"
+  }
   "SectionsQuery" should "be beautiful" in {
     SectionsQuery().getUrl("") shouldEqual "/sections"
   }
