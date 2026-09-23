@@ -1,1 +1,1 @@
-ThisBuild / version := "49.1.3-SNAPSHOT"
+ThisBuild / version := "50.0.0-PREVIEW.abadd-search-for-active-tests.2026-09-23T0803.f7763ae4"
