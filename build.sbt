@@ -63,7 +63,7 @@ lazy val firehoseClient = (project in file("firehose-client"))
       scalaTest,
     ) ++ Seq("aws-json-protocol", "kinesis").map(artifact => "software.amazon.awssdk" % artifact % "2.49.5") ++ Seq(
       "jackson-databind", "jackson-annotations", "jackson-core"
-    ).map(artifact => "com.fasterxml.jackson.core" % artifact % "2.17.3")
+    ).map(artifact => "com.fasterxml.jackson.core" % artifact % "2.22")
 
   )
 
