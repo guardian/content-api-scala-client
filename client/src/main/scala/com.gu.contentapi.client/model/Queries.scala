@@ -345,6 +345,7 @@ trait FilterParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { t
   def reference = StringParameter("reference")
   def referenceType = StringParameter("reference-type")
   def productionOffice = StringParameter("production-office")
+
 }
 
 trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
@@ -362,6 +363,7 @@ trait FilterExtendedParameters[Owner <: Parameters[Owner]] extends Parameters[Ow
   def containsElement = StringParameter("contains-element")
   def commentable = BoolParameter("commentable")
   def filename = StringParameter("filename")
+  def containsActiveAbTest = BoolParameter("contains-active-abtest")
 }
 
 trait FilterTagParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { this: Owner =>
