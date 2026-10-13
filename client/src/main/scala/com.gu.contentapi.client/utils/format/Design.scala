@@ -31,3 +31,4 @@ case object ProfileDesign extends Design
 case object HostedArticleDesign extends Design
 case object HostedVideoDesign extends Design
 case object HostedGalleryDesign extends Design
+case object WeekendEssayDesign extends Design

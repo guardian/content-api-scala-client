@@ -19,6 +19,9 @@ object CapiModelEnrichment {
 
   def tagExistsWithId(tagId: String): ContentFilter = content => content.tags.exists(tag => tag.id == tagId)
 
+  def tagExistsWithAnyId(ids: String*): ContentFilter =
+    content => ids.exists(id => tagExistsWithId(id)(content))
+
   def displayHintExistsWithName(displayHintName: String): ContentFilter = content => content.fields.flatMap(_.displayHint).contains(displayHintName)
 
   def isLiveBloggingNow: ContentFilter = content => content.fields.flatMap(_.liveBloggingNow).contains(true)
@@ -134,6 +137,7 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/quizzes") -> QuizDesign,
         isLiveBlog -> LiveBlogDesign,
         isDeadBlog -> DeadBlogDesign,
+        tagExistsWithAnyId("news/series/the-saturday-read", "news/series/the-sunday-read") -> WeekendEssayDesign,
         tagExistsWithId("tone/features") -> FeatureDesign,
         tagExistsWithId("tone/matchreports") -> MatchReportDesign,
         tagExistsWithId("tone/timelines") -> TimelineDesign,
