@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   val scalaVersions = Seq("2.13.18")
-  val capiModelsVersion = "52.0.0"
+  val capiModelsVersion = "53.0.0-PREVIEW.dscemmsupdate-tag-model-adds-commercialInformation.2026-10-06T1258.45453f85"
   val thriftVersion = "0.23.0"
   val commonsCodecVersion = "1.22.1"
   val scalaTestVersion = "3.2.20"
