@@ -56,12 +56,12 @@ lazy val firehoseClient = (project in file("firehose-client"))
     libraryDependencies ++= Seq(
       capiModels,
       "com.gu" %% "thrift-serializer" % "5.0.7",
-      "software.amazon.kinesis" % "amazon-kinesis-client" % "3.4.3",
+      "software.amazon.kinesis" % "amazon-kinesis-client" % "3.5.2",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
       // "com.twitter" %% "scrooge-core" % "21.12.0",
       "at.yawk.lz4" % "lz4-java" % "1.10.4", // Necessary while the ExclusionRule for org.lz4:lz4-java is necessary
       scalaTest,
-    ) ++ Seq("aws-json-protocol", "kinesis").map(artifact => "software.amazon.awssdk" % artifact % "2.49.5") ++ Seq(
+    ) ++ Seq("aws-json-protocol", "kinesis").map(artifact => "software.amazon.awssdk" % artifact % "2.49.6") ++ Seq(
       "jackson-databind", "jackson-annotations", "jackson-core"
     ).map(artifact => "com.fasterxml.jackson.core" % artifact % "2.17.3")
 
