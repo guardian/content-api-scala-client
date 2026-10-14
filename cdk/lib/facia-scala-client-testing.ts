@@ -22,8 +22,8 @@ export class FaciaScalaClientTesting extends GuStack {
 				}),
 			],
 			condition: {
-				githubOrganisation: 'guardian',
-				repositories: 'facia-scala-client:*',
+				githubOrganisation: 'guardian@164318',
+				repositories: 'facia-scala-client@20723151:*',
 			},
 		});
 	}
