@@ -55,7 +55,7 @@ lazy val firehoseClient = (project in file("firehose-client"))
     description         := "Firehose client for the CAPI Crier feed",
     libraryDependencies ++= Seq(
       capiModels,
-      "com.gu" %% "thrift-serializer" % "5.0.7",
+      "com.gu" %% "thrift-serializer" % "5.0.8",
       "software.amazon.kinesis" % "amazon-kinesis-client" % "3.4.3",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
       // "com.twitter" %% "scrooge-core" % "21.12.0",
