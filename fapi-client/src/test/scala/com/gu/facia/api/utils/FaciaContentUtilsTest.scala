@@ -88,7 +88,7 @@ class FaciaContentUtilsTest extends AnyFreeSpec with Matchers with TestContent {
       atomId = None,
       mediaAtom = None,
       multimediaSlideshowAtomId = None,
-      multimediaSlideshowAtom = None,
+      multimediaSlideshow = None,
       tests = None
     )
 

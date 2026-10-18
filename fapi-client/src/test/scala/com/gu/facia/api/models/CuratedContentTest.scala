@@ -95,7 +95,7 @@ class CuratedContentTest extends AnyFreeSpec with Matchers with TestContent {
       curatedContent.multimediaSlideshowAtomId should be(
         Some("atom/multimediaslideshow/123")
       )
-      curatedContent.multimediaSlideshowAtom should be(None)
+      curatedContent.multimediaSlideshow should be(None)
     }
 
     "should default to no multimedia slideshow when not configured" in {
@@ -108,7 +108,7 @@ class CuratedContentTest extends AnyFreeSpec with Matchers with TestContent {
       )
       curatedContent.properties.multimediaSlideshowReplace should be(false)
       curatedContent.multimediaSlideshowAtomId should be(None)
-      curatedContent.multimediaSlideshowAtom should be(None)
+      curatedContent.multimediaSlideshow should be(None)
     }
   }
 

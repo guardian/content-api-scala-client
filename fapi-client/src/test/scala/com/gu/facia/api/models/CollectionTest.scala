@@ -1,6 +1,29 @@
 package com.gu.facia.api.models
 
-import com.gu.contentapi.client.model.v1.{Content, ContentFields, ContentType}
+import com.gu.contentapi.client.model.v1.{
+  Content,
+  ContentFields,
+  ContentType,
+  ItemResponse
+}
+import com.gu.contentatom.thrift.{
+  Atom,
+  AtomData,
+  AtomType,
+  ContentChangeDetails,
+  Image => AtomImage
+}
+import com.gu.contentatom.thrift.atom.media.{
+  Category,
+  MediaAtom,
+  Metadata => MediaMetadata
+}
+import com.gu.contentatom.thrift.atom.multimediaslideshow.{
+  MediaReference,
+  MultimediaSlideshowAtom,
+  Slide,
+  SlideContent
+}
 import com.gu.facia.api.utils.ContentApiUtils._
 import com.gu.facia.api.utils._
 import com.gu.facia.client.models.{
@@ -13,18 +36,21 @@ import com.gu.facia.client.models.{
 import org.joda.time.DateTime
 import org.mockito.Mockito._
 import org.scalatest.OneInstancePerTest
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.libs.json.{JsArray, JsString, Json}
+import play.api.libs.json.{JsArray, JsBoolean, JsString, Json}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import com.gu.contentapi.client.ContentApiClient
 
 class CollectionTest
     extends AnyFreeSpec
     with Matchers
     with MockitoSugar
+    with ScalaFutures
     with OneInstancePerTest {
   val trailMetadata = spy(TrailMetaData.empty)
   val trail =
@@ -381,6 +407,181 @@ class CollectionTest
             )
           )
         }
+    }
+  }
+
+  "liveContent with a multimedia slideshow" - {
+    val capiClient = mock[ContentApiClient]
+    val slideshowAtomId = "atom/multimediaslideshow/slideshow-1"
+
+    def atom(id: String, atomType: AtomType, data: AtomData): Atom =
+      Atom(
+        id = id,
+        atomType = atomType,
+        labels = Nil,
+        defaultHtml = "",
+        data = data,
+        contentChangeDetails = ContentChangeDetails(revision = 1)
+      )
+
+    def mediaAtom(id: String, expiryDate: Option[Long] = None): Atom =
+      atom(
+        id,
+        AtomType.Media,
+        AtomData.Media(
+          MediaAtom(
+            assets = Nil,
+            title = s"Video $id",
+            category = Category.News,
+            metadata = Some(MediaMetadata(expiryDate = expiryDate))
+          )
+        )
+      )
+
+    def slideshowAtom(slides: Slide*): Atom =
+      atom(
+        "slideshow-1",
+        AtomType.Multimediaslideshow,
+        AtomData.MultimediaSlideshow(
+          MultimediaSlideshowAtom(
+            slides = slides,
+            title = Some("Slideshow title"),
+            aspectRatio = Some("5:4")
+          )
+        )
+      )
+
+    def videoSlide(mediaAtomId: String): Slide =
+      Slide(content = SlideContent.MediaAtom(MediaReference(mediaAtomId)))
+
+    val image = AtomImage(assets = Nil, mediaId = "image-1")
+
+    def stubAtomResponse(path: String, response: ItemResponse): Unit =
+      when(capiClient.getResponse(ContentApiClient.item(path)))
+        .thenReturn(Future.successful(response))
+
+    def stubSlideshow(slideshow: Atom): Unit =
+      stubAtomResponse(
+        slideshowAtomId,
+        ItemResponse(
+          status = "ok",
+          userTier = "internal",
+          multimediaslideshow = Some(slideshow)
+        )
+      )
+
+    def stubMediaAtom(mediaAtomId: String, media: Option[Atom]): Unit =
+      stubAtomResponse(
+        s"atom/media/$mediaAtomId",
+        ItemResponse(status = "ok", userTier = "internal", media = media)
+      )
+
+    def liveSlideshowCard(): CuratedContent = {
+      val slideshowTrail = Trail(
+        "internal-code/page/123",
+        1,
+        None,
+        Some(
+          TrailMetaData(
+            Map(
+              "multimediaSlideshowReplace" -> JsBoolean(true),
+              "multimediaSlideshowAtomId" -> JsString(slideshowAtomId)
+            )
+          )
+        ),
+        None
+      )
+      val collection = Collection.fromCollectionJsonConfigAndContent(
+        "id",
+        Some(collectionJson.copy(live = List(slideshowTrail))),
+        collectionConfig
+      )
+
+      Collection
+        .liveContent(collection, contents)(capiClient, global)
+        .asFuture
+        .futureValue match {
+        case Right(List(card: CuratedContent)) => card
+        case other                             => fail(s"Expected a single curated card, got $other")
+      }
+    }
+
+    "replaces each video slide's id with its media atom, fetching each video once" in {
+      val video = mediaAtom("video-1")
+      stubSlideshow(
+        slideshowAtom(
+          Slide(
+            content = SlideContent.Image(image),
+            caption = Some("caption"),
+            label = Some("label"),
+            credit = Some("credit")
+          ),
+          videoSlide("video-1"),
+          videoSlide("video-1")
+        )
+      )
+      stubMediaAtom("video-1", Some(video))
+
+      liveSlideshowCard().multimediaSlideshow should be(
+        Some(
+          FaciaMultimediaSlideshow(
+            id = "slideshow-1",
+            title = Some("Slideshow title"),
+            aspectRatio = Some("5:4"),
+            slides = List(
+              FaciaSlide(
+                FaciaSlideImage(image),
+                Some("caption"),
+                Some("label"),
+                Some("credit")
+              ),
+              FaciaSlide(FaciaSlideVideo(video), None, None, None),
+              FaciaSlide(FaciaSlideVideo(video), None, None, None)
+            )
+          )
+        )
+      )
+      verify(capiClient, times(1))
+        .getResponse(ContentApiClient.item("atom/media/video-1"))
+    }
+
+    "drops slides whose video is expired, missing or fails to fetch" in {
+      val validVideo = mediaAtom("valid-video")
+      stubSlideshow(
+        slideshowAtom(
+          videoSlide("expired-video"),
+          videoSlide("missing-video"),
+          videoSlide("failing-video"),
+          videoSlide("valid-video")
+        )
+      )
+      stubMediaAtom(
+        "expired-video",
+        Some(
+          mediaAtom(
+            "expired-video",
+            expiryDate = Some(DateTime.now.minusDays(1).getMillis)
+          )
+        )
+      )
+      stubMediaAtom("missing-video", None)
+      when(
+        capiClient.getResponse(
+          ContentApiClient.item("atom/media/failing-video")
+        )
+      ).thenReturn(Future.failed(new Exception("CAPI error")))
+      stubMediaAtom("valid-video", Some(validVideo))
+
+      liveSlideshowCard().multimediaSlideshow.map(_.slides) should be(
+        Some(List(FaciaSlide(FaciaSlideVideo(validVideo), None, None, None)))
+      )
+    }
+
+    "has no slideshow when none of its slides can be shown" in {
+      stubSlideshow(slideshowAtom(videoSlide("missing-video")))
+      stubMediaAtom("missing-video", None)
+
+      liveSlideshowCard().multimediaSlideshow should be(None)
     }
   }
 

@@ -3,7 +3,7 @@ package com.gu.facia.api.models
 import com.gu.contentapi.client.model.v1.{Content, TagType}
 import com.gu.contentapi.client.utils.CapiModelEnrichment.RenderingFormat
 import com.gu.contentapi.client.utils.format._
-import com.gu.contentatom.thrift.Atom
+import com.gu.contentatom.thrift.{Atom, Image => AtomImage}
 import com.gu.facia.api.utils.ContentApiUtils._
 import com.gu.facia.api.utils._
 import com.gu.facia.client.models.{
@@ -371,6 +371,24 @@ object LatestSnap {
   }
 }
 
+case class FaciaMultimediaSlideshow(
+    id: String,
+    title: Option[String],
+    aspectRatio: Option[String],
+    slides: List[FaciaSlide]
+)
+
+case class FaciaSlide(
+    content: FaciaSlideContent,
+    caption: Option[String],
+    label: Option[String],
+    credit: Option[String]
+)
+
+sealed trait FaciaSlideContent
+case class FaciaSlideImage(image: AtomImage) extends FaciaSlideContent
+case class FaciaSlideVideo(mediaAtom: Atom) extends FaciaSlideContent
+
 case class CuratedContent(
     content: Content,
     maybeFrontPublicationDate: Option[Long],
@@ -392,7 +410,7 @@ case class CuratedContent(
     atomId: Option[String],
     mediaAtom: Option[Atom],
     multimediaSlideshowAtomId: Option[String],
-    multimediaSlideshowAtom: Option[Atom],
+    multimediaSlideshow: Option[FaciaMultimediaSlideshow],
     tests: Option[List[Test]]
 ) extends FaciaContent
 
