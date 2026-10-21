@@ -192,7 +192,6 @@ object FaciaContentUtils {
   )
   def discussionId(fc: FaciaContent) = shortUrlPath(fc)
 
-  def isBoosted(fc: FaciaContent): Boolean = fc.properties.isBoosted
   def boostLevel(fc: FaciaContent): BoostLevel = fc.properties.boostLevel
   def showBoostedHeadline(fc: FaciaContent): Boolean =
     fc.properties.showBoostedHeadline
