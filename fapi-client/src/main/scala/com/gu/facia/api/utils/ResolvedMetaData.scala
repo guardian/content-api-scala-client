@@ -48,7 +48,6 @@ object ResolvedMetaData {
 
   val Default = ResolvedMetaData(
     isBreaking = false,
-    isBoosted = false,
     boostLevel = BoostLevel.Default.label,
     isImmersive = false,
     imageHide = false,
@@ -69,7 +68,6 @@ object ResolvedMetaData {
   def fromTrailMetaData(trailMeta: MetaDataCommonFields): ResolvedMetaData =
     ResolvedMetaData(
       isBreaking = trailMeta.isBreaking.exists(identity),
-      isBoosted = trailMeta.isBoosted.exists(identity),
       boostLevel = trailMeta.boostLevel.getOrElse(BoostLevel.Default.label),
       isImmersive = trailMeta.isImmersive.exists(identity),
       imageHide = trailMeta.imageHide.exists(identity),
@@ -109,7 +107,6 @@ object ResolvedMetaData {
     metaDataFromContent.copy(
       isBreaking =
         trailMeta.isBreaking.getOrElse(metaDataFromContent.isBreaking),
-      isBoosted = trailMeta.isBoosted.getOrElse(metaDataFromContent.isBoosted),
       boostLevel = trailMeta.boostLevel.getOrElse(BoostLevel.Default.label),
       isImmersive =
         trailMeta.isImmersive.getOrElse(metaDataFromContent.isImmersive),
@@ -152,7 +149,6 @@ object ResolvedMetaData {
     resolvedMetaData match {
       case ResolvedMetaData(
             isBreaking,
-            isBoosted,
             boostLevel,
             isImmersive,
             imageHide,
@@ -171,7 +167,6 @@ object ResolvedMetaData {
           ) =>
         Map(
           "isBreaking" -> isBreaking,
-          "isBoosted" -> isBoosted,
           "boostLevel.default" -> (BoostLevel.fromMetaData(
             boostLevel
           ) == BoostLevel.Default),
@@ -204,7 +199,6 @@ object ResolvedMetaData {
 
 case class ResolvedMetaData(
     isBreaking: Boolean,
-    isBoosted: Boolean,
     boostLevel: String,
     isImmersive: Boolean,
     imageHide: Boolean,
@@ -228,7 +222,6 @@ object ContentProperties {
   ): ContentProperties =
     ContentProperties(
       isBreaking = resolvedMetaData.isBreaking,
-      isBoosted = resolvedMetaData.isBoosted,
       boostLevel = BoostLevel.fromMetaData(resolvedMetaData.boostLevel),
       isImmersive = resolvedMetaData.isImmersive,
       imageHide = resolvedMetaData.imageHide,
@@ -245,7 +238,6 @@ object ContentProperties {
 
 case class ContentProperties(
     isBreaking: Boolean,
-    isBoosted: Boolean,
     boostLevel: BoostLevel,
     isImmersive: Boolean,
     imageHide: Boolean,
