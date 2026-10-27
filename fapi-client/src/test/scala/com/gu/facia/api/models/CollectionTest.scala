@@ -1110,17 +1110,6 @@ class CollectionTest
         boostLevel
       ) shouldBe 4
     }
-
-    "should return 4 for any other collection type" in {
-      val isSplashCard = false
-      val collectionType = "dynamic/fast"
-      val boostLevel = BoostLevel.Default.label
-      Collection.maxSupportingItems(
-        isSplashCard,
-        collectionType,
-        boostLevel
-      ) shouldBe 4
-    }
   }
   "isSplashCard" - {
     "should return true for any card in a splash group of a flexible general" in {

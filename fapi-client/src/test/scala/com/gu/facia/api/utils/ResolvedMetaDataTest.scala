@@ -89,7 +89,6 @@ class ResolvedMetaDataTest extends AnyFreeSpec with Matchers with TestContent {
         Symbol("showQuotedHeadline")(false),
         Symbol("imageCutoutReplace")(false),
         Symbol("showMainVideo")(false),
-        Symbol("isBoosted")(false),
         Symbol("isBreaking")(false),
         Symbol("imageHide")(false),
         Symbol("imageReplace")(false),

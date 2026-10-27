@@ -128,11 +128,12 @@ object SubnavImage {
 case class CustomSubnavHeader(
     headerText: String,
     dotcomPath: Option[String],
-    copy: String
+    copy: String,
+    showHeaderText: Boolean = true
 )
 object CustomSubnavHeader {
   implicit val customSubnavHeaderFormat: OFormat[CustomSubnavHeader] =
-    Json.format[CustomSubnavHeader]
+    Json.using[Json.WithDefaultValues].format[CustomSubnavHeader]
 }
 
 case class Palette(

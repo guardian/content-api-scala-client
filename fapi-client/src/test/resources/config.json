@@ -3494,9 +3494,14 @@
     },
     "3edd3c46-fee2-401c-a028-647f333b41a6" : {
       "displayName" : "australia advertising",
-      "type" : "dynamic/fast",
+      "type": "flexible/general",
+      "groups": [
+        "standard",
+        "big",
+        "very big",
+        "splash"
+      ],
       "href" : "advertising/guardian-australia-advertising",
-      "groups" : [ "standard", "big", "very big", "huge" ]
     },
     "6029d7e1-8607-42ae-a1ce-df6e1909f3bd" : {
       "displayName" : "housing network",

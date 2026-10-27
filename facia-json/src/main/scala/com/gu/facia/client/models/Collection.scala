@@ -50,8 +50,6 @@ sealed trait MetaDataCommonFields {
     json.get("imageSrcHeight").flatMap(_.asOpt[String])
   lazy val isBreaking: Option[Boolean] =
     json.get("isBreaking").flatMap(_.asOpt[Boolean])
-  lazy val isBoosted: Option[Boolean] =
-    json.get("isBoosted").flatMap(_.asOpt[Boolean])
   lazy val boostLevel: Option[String] =
     json.get("boostLevel").flatMap(_.asOpt[String])
   lazy val isImmersive: Option[Boolean] =
