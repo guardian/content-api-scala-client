@@ -387,6 +387,8 @@ case class FaciaSlide(
 
 sealed trait FaciaSlideContent
 case class FaciaSlideImage(image: AtomImage) extends FaciaSlideContent
+
+/** `mediaAtom.data` is always `AtomData.Media`, unexpired when fetched. */
 case class FaciaSlideVideo(mediaAtom: Atom) extends FaciaSlideContent
 
 case class CuratedContent(

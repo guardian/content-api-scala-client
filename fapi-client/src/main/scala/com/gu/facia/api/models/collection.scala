@@ -410,9 +410,11 @@ object Collection extends StrictLogging {
 
     val responses: Seq[Response[FaciaContent]] = faciaContent.map {
       case curatedContent: CuratedContent =>
+        val mediaAtomResponse = getMediaAtom(curatedContent)
+        val multimediaSlideshowResponse = getMultimediaSlideshow(curatedContent)
         for {
-          maybeMediaAtom <- getMediaAtom(curatedContent)
-          maybeMultimediaSlideshow <- getMultimediaSlideshow(curatedContent)
+          maybeMediaAtom <- mediaAtomResponse
+          maybeMultimediaSlideshow <- multimediaSlideshowResponse
         } yield {
           val withMediaAtom = maybeMediaAtom match {
             case mediaAtom @ Some(_) =>
