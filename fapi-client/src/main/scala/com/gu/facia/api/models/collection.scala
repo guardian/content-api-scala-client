@@ -288,29 +288,34 @@ object Collection extends StrictLogging {
         case curatedContent: CuratedContent
             if curatedContent.properties.multimediaSlideshowReplace =>
           curatedContent.multimediaSlideshowAtomId match {
-            case Some(atomId) =>
-              capiClient
-                .getResponse(ContentApiClient.item(atomId))
-                .flatMap { response =>
-                  response.multimediaslideshow match {
-                    case Some(atom) => resolveMultimediaSlideshow(atom)
-                    case None       => Future.successful(None)
-                  }
-                }
-                .recover { case e =>
-                  logger.warn(
-                    s"Exception while fetching multimedia slideshow atom for ID $atomId: ${e.getMessage}",
-                    e
-                  )
-                  None
-                }
-            case None => Future.successful(None)
+            case Some(atomId) => fetchMultimediaSlideshow(atomId)
+            case None         => Future.successful(None)
           }
         case _ => Future.successful(None)
       }
 
       Response.Async.Right(futureMaybeSlideshow)
     }
+
+    def fetchMultimediaSlideshow(atomId: String)(implicit
+        ec: ExecutionContext,
+        capiClient: ContentApiClient
+    ): Future[Option[FaciaMultimediaSlideshow]] =
+      capiClient
+        .getResponse(ContentApiClient.item(atomId))
+        .flatMap { response =>
+          response.multimediaslideshow match {
+            case Some(atom) => resolveMultimediaSlideshow(atom)
+            case None       => Future.successful(None)
+          }
+        }
+        .recover { case e =>
+          logger.warn(
+            s"Exception while fetching multimedia slideshow atom for ID $atomId: ${e.getMessage}",
+            e
+          )
+          None
+        }
 
     def resolveMultimediaSlideshow(atom: Atom)(implicit
         ec: ExecutionContext,
