@@ -89,6 +89,8 @@ sealed trait MetaDataCommonFields {
     json.get("imageSlideshowReplace").flatMap(_.asOpt[Boolean])
   lazy val videoReplace: Option[Boolean] =
     json.get("videoReplace").flatMap(_.asOpt[Boolean])
+  lazy val multimediaSlideshowReplace: Option[Boolean] =
+    json.get("multimediaSlideshowReplace").flatMap(_.asOpt[Boolean])
   lazy val slideshow: Option[List[SlideshowAsset]] =
     json
       .get("slideshow")
@@ -101,6 +103,8 @@ sealed trait MetaDataCommonFields {
   lazy val hideShowMore: Option[Boolean] =
     json.get("hideShowMore").flatMap(_.asOpt[Boolean])
   lazy val atomId: Option[String] = json.get("atomId").flatMap(_.asOpt[String])
+  lazy val multimediaSlideshowAtomId: Option[String] =
+    json.get("multimediaSlideshowAtomId").flatMap(_.asOpt[String])
   lazy val blockId: Option[String] =
     json.get("blockId").flatMap(_.asOpt[String])
 }

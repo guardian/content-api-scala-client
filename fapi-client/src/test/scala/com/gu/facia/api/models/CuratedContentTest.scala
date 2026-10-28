@@ -72,6 +72,46 @@ class CuratedContentTest extends AnyFreeSpec with Matchers with TestContent {
     }
   }
 
+  "CuratedContent multimedia slideshow" - {
+    val content = baseContent
+
+    "should carry the multimediaSlideshowAtomId from TrailMetaData and leave the atom unresolved" in {
+      val trailMetaData = TrailMetaData(
+        Map(
+          "multimediaSlideshowReplace" -> JsBoolean(true),
+          "multimediaSlideshowAtomId" -> JsString(
+            "atom/multimediaslideshow/123"
+          )
+        )
+      )
+      val curatedContent = CuratedContent.fromTrailAndContent(
+        content,
+        trailMetaData,
+        None,
+        collectionConfig,
+        None
+      )
+      curatedContent.properties.multimediaSlideshowReplace should be(true)
+      curatedContent.multimediaSlideshowAtomId should be(
+        Some("atom/multimediaslideshow/123")
+      )
+      curatedContent.multimediaSlideshow should be(None)
+    }
+
+    "should default to no multimedia slideshow when not configured" in {
+      val curatedContent = CuratedContent.fromTrailAndContent(
+        content,
+        TrailMetaData(Map.empty),
+        None,
+        collectionConfig,
+        None
+      )
+      curatedContent.properties.multimediaSlideshowReplace should be(false)
+      curatedContent.multimediaSlideshowAtomId should be(None)
+      curatedContent.multimediaSlideshow should be(None)
+    }
+  }
+
   "CuratedContent itemKicker" - {
     val emptyContent = baseContent.copy(
       fields = Some(

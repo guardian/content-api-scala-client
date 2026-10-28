@@ -43,7 +43,8 @@ class ResolvedMetaDataTest extends AnyFreeSpec with Matchers with TestContent {
       "showByline" -> JsBoolean(true),
       "showMainVideo" -> JsBoolean(true),
       "showQuotedHeadline" -> JsBoolean(true),
-      "imageCutoutReplace" -> JsBoolean(true)
+      "imageCutoutReplace" -> JsBoolean(true),
+      "multimediaSlideshowReplace" -> JsBoolean(true)
     )
   )
   val trailMetaDataWithFieldsSetFalse = TrailMetaData(
@@ -108,6 +109,7 @@ class ResolvedMetaDataTest extends AnyFreeSpec with Matchers with TestContent {
         Symbol("showQuotedHeadline")(false),
         Symbol("imageCutoutReplace")(false),
         Symbol("showMainVideo")(false),
+        Symbol("multimediaSlideshowReplace")(false),
         Symbol("isBreaking")(false),
         Symbol("imageHide")(false),
         Symbol("imageReplace")(false),
@@ -125,6 +127,7 @@ class ResolvedMetaDataTest extends AnyFreeSpec with Matchers with TestContent {
         Symbol("showQuotedHeadline")(true),
         Symbol("imageCutoutReplace")(true),
         Symbol("showMainVideo")(true),
+        Symbol("multimediaSlideshowReplace")(true),
         Symbol("isBreaking")(false),
         Symbol("imageHide")(false),
         Symbol("imageReplace")(false),

@@ -202,6 +202,9 @@ object FaciaContentUtils {
 
   def videoReplace(fc: FaciaContent): Boolean = fc.properties.videoReplace
 
+  def multimediaSlideshowReplace(fc: FaciaContent): Boolean =
+    fc.properties.multimediaSlideshowReplace
+
   def showLivePlayable(fc: FaciaContent): Boolean =
     fc.properties.showLivePlayable
   def sectionName(fc: FaciaContent): Option[String] = fold(fc)(

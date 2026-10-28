@@ -10,6 +10,10 @@ import com.gu.contentapi.client.model.v1.{
 }
 import com.gu.contentatom.thrift.{Atom, AtomData}
 import com.gu.contentatom.thrift.atom.media.MediaAtom
+import com.gu.contentatom.thrift.atom.multimediaslideshow.{
+  MultimediaSlideshowAtom,
+  SlideContent
+}
 import com.gu.facia.api.contentapi.{LatestSnapsRequest, LinkSnapsRequest}
 import com.gu.facia.client.models.{
   CollectionJson,
@@ -230,7 +234,9 @@ object Collection extends StrictLogging {
 
   }
 
-  private def enrichContentWithVideo(faciaContent: List[FaciaContent])(implicit
+  private def enrichContentWithMediaOrMultimediaAtom(
+      faciaContent: List[FaciaContent]
+  )(implicit
       capiClient: ContentApiClient,
       ec: ExecutionContext
   ): Response[List[FaciaContent]] = {
@@ -274,6 +280,107 @@ object Collection extends StrictLogging {
       Response.Async.Right(futureMaybeAtomData)
     }
 
+    def getMultimediaSlideshow(fcContent: FaciaContent)(implicit
+        ec: ExecutionContext,
+        capiClient: ContentApiClient
+    ): Response[Option[FaciaMultimediaSlideshow]] = {
+      val futureMaybeSlideshow = fcContent match {
+        case curatedContent: CuratedContent
+            if curatedContent.properties.multimediaSlideshowReplace =>
+          curatedContent.multimediaSlideshowAtomId match {
+            case Some(atomId) => fetchMultimediaSlideshow(atomId)
+            case None         => Future.successful(None)
+          }
+        case _ => Future.successful(None)
+      }
+
+      Response.Async.Right(futureMaybeSlideshow)
+    }
+
+    def fetchMultimediaSlideshow(atomId: String)(implicit
+        ec: ExecutionContext,
+        capiClient: ContentApiClient
+    ): Future[Option[FaciaMultimediaSlideshow]] =
+      capiClient
+        .getResponse(ContentApiClient.item(atomId))
+        .flatMap { response =>
+          response.multimediaslideshow match {
+            case Some(atom) => resolveMultimediaSlideshow(atom)
+            case None       => Future.successful(None)
+          }
+        }
+        .recover { case e =>
+          logger.warn(
+            s"Exception while fetching multimedia slideshow atom for ID $atomId: ${e.getMessage}",
+            e
+          )
+          None
+        }
+
+    def resolveMultimediaSlideshow(atom: Atom)(implicit
+        ec: ExecutionContext,
+        capiClient: ContentApiClient
+    ): Future[Option[FaciaMultimediaSlideshow]] = atom.data match {
+      case AtomData.MultimediaSlideshow(slideshow) =>
+        getMultimediaSlideshowMediaAtoms(atom.id, slideshow).map { mediaAtoms =>
+          val slides = slideshow.slides.toList.flatMap { slide =>
+            val content: Option[FaciaSlideContent] = slide.content match {
+              case SlideContent.Image(image) => Some(FaciaSlideImage(image))
+              case SlideContent.MediaAtom(reference) =>
+                mediaAtoms.get(reference.mediaAtomId).map(FaciaSlideVideo(_))
+              case SlideContent.UnknownUnionField(_) =>
+                logger.warn(
+                  s"Dropping slide with unknown content from multimedia slideshow ${atom.id}"
+                )
+                None
+            }
+            content.map(FaciaSlide(_, slide.caption, slide.label, slide.credit))
+          }
+          Option.when(slides.nonEmpty)(
+            FaciaMultimediaSlideshow(
+              atom.id,
+              slideshow.title,
+              slideshow.aspectRatio,
+              slides
+            )
+          )
+        }
+      case _ =>
+        logger.warn(s"Multimedia slideshow atom ${atom.id} is not valid")
+        Future.successful(None)
+    }
+
+    def getMultimediaSlideshowMediaAtoms(
+        slideshowId: String,
+        slideshow: MultimediaSlideshowAtom
+    )(implicit
+        ec: ExecutionContext,
+        capiClient: ContentApiClient
+    ): Future[Map[String, Atom]] = {
+      val mediaAtomIds = slideshow.slides
+        .map(_.content)
+        .collect { case SlideContent.MediaAtom(reference) =>
+          reference.mediaAtomId
+        }
+        .distinct
+        .toList
+
+      Future
+        .traverse(mediaAtomIds) { mediaAtomId =>
+          capiClient
+            .getResponse(ContentApiClient.item(s"atom/media/$mediaAtomId"))
+            .map(_.media.filter(isValidMediaAtom).map(mediaAtomId -> _))
+            .recover { case e =>
+              logger.warn(
+                s"Exception while fetching media atom $mediaAtomId for multimedia slideshow $slideshowId: ${e.getMessage}",
+                e
+              )
+              None
+            }
+        }
+        .map(_.flatten.toMap)
+    }
+
     def getMainMediaAtomId(faciaContent: CuratedContent): Option[String] = {
       for {
         block <- faciaContent.content.blocks
@@ -308,9 +415,22 @@ object Collection extends StrictLogging {
 
     val responses: Seq[Response[FaciaContent]] = faciaContent.map {
       case curatedContent: CuratedContent =>
-        getMediaAtom(curatedContent).map {
-          case mediaAtom @ Some(_) => curatedContent.copy(mediaAtom = mediaAtom)
-          case None                => curatedContent
+        val mediaAtomResponse = getMediaAtom(curatedContent)
+        val multimediaSlideshowResponse = getMultimediaSlideshow(curatedContent)
+        for {
+          maybeMediaAtom <- mediaAtomResponse
+          maybeMultimediaSlideshow <- multimediaSlideshowResponse
+        } yield {
+          val withMediaAtom = maybeMediaAtom match {
+            case mediaAtom @ Some(_) =>
+              curatedContent.copy(mediaAtom = mediaAtom)
+            case None => curatedContent
+          }
+          maybeMultimediaSlideshow match {
+            case multimediaSlideshow @ Some(_) =>
+              withMediaAtom.copy(multimediaSlideshow = multimediaSlideshow)
+            case None => withMediaAtom
+          }
         }
       case content => Response.Right(content)
     }
@@ -336,7 +456,7 @@ object Collection extends StrictLogging {
       linkSnapBrandingsByEdition,
       collection => collection.live
     )
-    enrichContentWithVideo(liveContent)
+    enrichContentWithMediaOrMultimediaAtom(liveContent)
   }
 
   def liveContentIdsWithoutSnaps(collection: Collection): List[String] =
@@ -406,7 +526,7 @@ object Collection extends StrictLogging {
       linkSnapBrandingsByEdition,
       collection => collection.draft.getOrElse(collection.live)
     )
-    enrichContentWithVideo(draftContent)
+    enrichContentWithMediaOrMultimediaAtom(draftContent)
   }
 
   def draftContentIdsWithoutSnaps(
@@ -479,7 +599,7 @@ object Collection extends StrictLogging {
       linkSnapBrandingsByEdition = Map.empty,
       collection => collection.treats
     )
-    enrichContentWithVideo(treatContent)
+    enrichContentWithMediaOrMultimediaAtom(treatContent)
   }
 
   def treatsRequestFor(
