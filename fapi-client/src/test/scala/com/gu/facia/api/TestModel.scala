@@ -42,15 +42,14 @@ object TestModel {
   ): Boolean =
     n.nameOf(a).toLowerCase == otherName.replaceAll("-", "")
 
-  implicit val capiDateReads: Reads[CapiDateTime] = __.read[String] map {
-    dateString =>
-      CapiDateTime(
-        LocalDateTime
-          .parse(dateString, ISO_OFFSET_DATE_TIME)
-          .toInstant(UTC)
-          .toEpochMilli,
-        dateString
-      )
+  implicit val capiDateReads: Reads[CapiDateTime] = __.read[String] map { dateString =>
+    CapiDateTime(
+      LocalDateTime
+        .parse(dateString, ISO_OFFSET_DATE_TIME)
+        .toInstant(UTC)
+        .toEpochMilli,
+      dateString
+    )
   }
 
   case class TestSponsorshipTargeting(
@@ -60,8 +59,7 @@ object TestModel {
   implicit val testSponsorshipTargeting: Reads[TestSponsorshipTargeting] =
     Json.reads[TestSponsorshipTargeting]
 
-  case class TestLogoDimensions(width: Int, height: Int)
-      extends SponsorshipLogoDimensions
+  case class TestLogoDimensions(width: Int, height: Int) extends SponsorshipLogoDimensions
   implicit val testLogoDimensionsFormat: Reads[TestLogoDimensions] =
     Json.reads[TestLogoDimensions]
 
@@ -80,9 +78,7 @@ object TestModel {
     def sponsorshipType: SponsorshipType =
       SponsorshipType.list.find(byName(sponsorshipTypeName)(_)).get
     def sponsorshipPackage: Option[SponsorshipPackage] =
-      sponsorshipPackageName.flatMap(p =>
-        SponsorshipPackage.list.find(byName(p)(_))
-      )
+      sponsorshipPackageName.flatMap(p => SponsorshipPackage.list.find(byName(p)(_)))
     def validFrom = None
     def validTo = None
   }
@@ -100,8 +96,7 @@ object TestModel {
   }
   implicit val stubSectionFormat: Reads[StubSection] = Json.reads[StubSection]
 
-  case class StubFields(isInappropriateForSponsorship: Option[Boolean])
-      extends ContentFields {
+  case class StubFields(isInappropriateForSponsorship: Option[Boolean]) extends ContentFields {
     def headline: Option[String] = None
     def standfirst: Option[String] = None
     def trailText: Option[String] = None

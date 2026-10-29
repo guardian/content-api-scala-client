@@ -84,8 +84,7 @@ object ResolvedMetaData {
       showQuotedHeadline = trailMeta.showQuotedHeadline.exists(identity),
       imageSlideshowReplace = trailMeta.imageSlideshowReplace.exists(identity),
       videoReplace = trailMeta.videoReplace.exists(identity),
-      multimediaSlideshowReplace =
-        trailMeta.multimediaSlideshowReplace.exists(identity)
+      multimediaSlideshowReplace = trailMeta.multimediaSlideshowReplace.exists(identity)
     )
 
   def fromContent(content: Content, cardStyle: CardStyle): ResolvedMetaData =
@@ -108,14 +107,11 @@ object ResolvedMetaData {
   ): ResolvedMetaData = {
     val metaDataFromContent = fromContent(content, cardStyle)
     metaDataFromContent.copy(
-      isBreaking =
-        trailMeta.isBreaking.getOrElse(metaDataFromContent.isBreaking),
+      isBreaking = trailMeta.isBreaking.getOrElse(metaDataFromContent.isBreaking),
       boostLevel = trailMeta.boostLevel.getOrElse(BoostLevel.Default.label),
-      isImmersive =
-        trailMeta.isImmersive.getOrElse(metaDataFromContent.isImmersive),
+      isImmersive = trailMeta.isImmersive.getOrElse(metaDataFromContent.isImmersive),
       imageHide = trailMeta.imageHide.getOrElse(metaDataFromContent.imageHide),
-      imageReplace =
-        trailMeta.imageReplace.getOrElse(metaDataFromContent.imageReplace),
+      imageReplace = trailMeta.imageReplace.getOrElse(metaDataFromContent.imageReplace),
       showKickerSection = trailMeta.showKickerSection.getOrElse(
         metaDataFromContent.showKickerSection
       ),
@@ -125,15 +121,12 @@ object ResolvedMetaData {
       showBoostedHeadline = trailMeta.showBoostedHeadline.getOrElse(
         metaDataFromContent.showBoostedHeadline
       ),
-      showMainVideo =
-        trailMeta.showMainVideo.getOrElse(metaDataFromContent.showMainVideo),
+      showMainVideo = trailMeta.showMainVideo.getOrElse(metaDataFromContent.showMainVideo),
       showLivePlayable = trailMeta.showLivePlayable.getOrElse(
         metaDataFromContent.showLivePlayable
       ),
-      showKickerTag =
-        trailMeta.showKickerTag.getOrElse(metaDataFromContent.showKickerTag),
-      showByline =
-        trailMeta.showByline.getOrElse(metaDataFromContent.showByline),
+      showKickerTag = trailMeta.showKickerTag.getOrElse(metaDataFromContent.showKickerTag),
+      showByline = trailMeta.showByline.getOrElse(metaDataFromContent.showByline),
       imageCutoutReplace = trailMeta.imageCutoutReplace.getOrElse(
         metaDataFromContent.imageCutoutReplace
       ),
@@ -143,8 +136,7 @@ object ResolvedMetaData {
       imageSlideshowReplace = trailMeta.imageSlideshowReplace.getOrElse(
         metaDataFromContent.imageSlideshowReplace
       ),
-      videoReplace =
-        trailMeta.videoReplace.getOrElse(metaDataFromContent.videoReplace),
+      videoReplace = trailMeta.videoReplace.getOrElse(metaDataFromContent.videoReplace),
       multimediaSlideshowReplace = trailMeta.multimediaSlideshowReplace
         .getOrElse(metaDataFromContent.multimediaSlideshowReplace)
     )

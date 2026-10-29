@@ -16,10 +16,13 @@ object ContainerBrandingFinder {
 
   /** Finds branding of a set of content items, tags and sections in a container.
     *
-    * @param config  Configuration of container holding this content
-    * @param items   Content items with <code>section</code>, <code>isInappropriateForSponsorship</code> field
-    *                and all <code>tags</code> populated
-    * @param edition in lowercase String format eg. <code>uk</code>
+    * @param config
+    *   Configuration of container holding this content
+    * @param items
+    *   Content items with <code>section</code>, <code>isInappropriateForSponsorship</code> field and all
+    *   <code>tags</code> populated
+    * @param edition
+    *   in lowercase String format eg. <code>uk</code>
     */
   def findBranding(
       config: CollectionConfig,
@@ -32,10 +35,9 @@ object ContainerBrandingFinder {
       BrandingFinder.findBranding(edition)(brandable)
     findBranding(
       isConfiguredForBranding = config.metadata.exists(_.contains(Branded)),
-      optBrandings =
-        items.map(toBranding(_)) ++ tags.map(toBranding(_)) ++ sections.map(
-          toBranding(_)
-        )
+      optBrandings = items.map(toBranding(_)) ++ tags.map(toBranding(_)) ++ sections.map(
+        toBranding(_)
+      )
     )
   }
 

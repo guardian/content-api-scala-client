@@ -1,12 +1,7 @@
 package com.gu.facia.client
 
 import com.gu.etagcaching.aws.s3.{ObjectId, S3ByteArrayFetching}
-import com.gu.etagcaching.fetching.{
-  ETaggedData,
-  Fetching,
-  Missing,
-  MissingOrETagged
-}
+import com.gu.etagcaching.fetching.{ETaggedData, Fetching, Missing, MissingOrETagged}
 import com.gu.facia.client.lib.ResourcesHelper
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -16,8 +11,8 @@ import org.scalatest.matchers.should.Matchers
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.hashing.MurmurHash3
 
-/** This is used only for testing, it's a dummy implementation of S3ByteArrayFetching that
-  * just loads blobs from the `src/test/resources` folder, rather than hitting S3.
+/** This is used only for testing, it's a dummy implementation of S3ByteArrayFetching that just loads blobs
+  * from the `src/test/resources` folder, rather than hitting S3.
   */
 object FakeS3Fetching extends S3ByteArrayFetching with ResourcesHelper {
   private def pretendETagFor(bytes: Array[Byte]): String =
@@ -26,9 +21,8 @@ object FakeS3Fetching extends S3ByteArrayFetching with ResourcesHelper {
   override def fetch(
       objectId: ObjectId
   ): Future[MissingOrETagged[Array[Byte]]] = Future.successful {
-    slurpBytes(objectId.key).fold(Missing: MissingOrETagged[Array[Byte]]) {
-      bytes =>
-        ETaggedData(pretendETagFor(bytes), bytes)
+    slurpBytes(objectId.key).fold(Missing: MissingOrETagged[Array[Byte]]) { bytes =>
+      ETaggedData(pretendETagFor(bytes), bytes)
     }
   }
 

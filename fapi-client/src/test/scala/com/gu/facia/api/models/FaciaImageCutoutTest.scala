@@ -23,39 +23,35 @@ class FaciaImageCutoutTest extends AnyFreeSpec with Matchers with TestContent {
   )
 
   val emptyContent =
-    baseContent.copy(fields =
-      Some(
-        ContentFields(
-          headline = Some("webTitle"),
-          trailText = Some("Content trailtext"),
-          byline = Some("Content byline")
-        )
+    baseContent.copy(fields = Some(
+      ContentFields(
+        headline = Some("webTitle"),
+        trailText = Some("Content trailtext"),
+        byline = Some("Content byline")
       )
-    )
+    ))
 
   def contentWithContributorTag(bylineLargeImageUrl: String): Content =
-    emptyContent.copy(tags =
-      List(
-        Tag(
-          "tagid",
-          TagType.Contributor,
-          None,
-          None,
-          "webTitle",
-          "webUrl",
-          "apiUrl",
-          Nil,
-          None,
-          None,
-          None,
-          Option(bylineLargeImageUrl),
-          None,
-          None,
-          None,
-          None
-        )
+    emptyContent.copy(tags = List(
+      Tag(
+        "tagid",
+        TagType.Contributor,
+        None,
+        None,
+        "webTitle",
+        "webUrl",
+        "apiUrl",
+        Nil,
+        None,
+        None,
+        None,
+        Option(bylineLargeImageUrl),
+        None,
+        None,
+        None,
+        None
       )
-    )
+    ))
 
   val bylineImageUrl =
     "http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2014/3/13/1394733744420/MichaelWhite.png"

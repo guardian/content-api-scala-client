@@ -1,11 +1,6 @@
 package com.gu.facia.api.utils
 
-import com.gu.commercial.branding.{
-  Branding,
-  Logo,
-  PaidMultiSponsorBranding,
-  Sponsored
-}
+import com.gu.commercial.branding.{Branding, Logo, PaidMultiSponsorBranding, Sponsored}
 import com.gu.contentapi.client.model.v1.Content
 import com.gu.facia.api.TestModel.{getContentItem, getTag}
 import com.gu.facia.api.models.CollectionConfig
@@ -15,10 +10,7 @@ import org.scalatest.OptionValues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class ContainerBrandingFinderTest
-    extends AnyFlatSpec
-    with Matchers
-    with OptionValues {
+class ContainerBrandingFinderTest extends AnyFlatSpec with Matchers with OptionValues {
 
   private def getTagBrandedItem = getContentItem("TagBrandedContent.json")
   private def getMultipleTagBrandedItem = getContentItem(
@@ -52,8 +44,7 @@ class ContainerBrandingFinderTest
         brandingType = Sponsored,
         sponsorName = "Fairtrade Foundation",
         logo = Logo(
-          src =
-            "https://static.theguardian.com/commercial/sponsor/sustainable/series/spotlight-commodities/logo.png",
+          src = "https://static.theguardian.com/commercial/sponsor/sustainable/series/spotlight-commodities/logo.png",
           dimensions = None,
           link = "http://www.fairtrade.org.uk/",
           label = "Supported by"
@@ -120,8 +111,7 @@ class ContainerBrandingFinderTest
         brandingType = Sponsored,
         sponsorName = "Fairtrade Foundation",
         logo = Logo(
-          src =
-            "https://static.theguardian.com/commercial/sponsor/sustainable/series/spotlight-commodities/logo.png",
+          src = "https://static.theguardian.com/commercial/sponsor/sustainable/series/spotlight-commodities/logo.png",
           dimensions = None,
           link = "http://www.fairtrade.org.uk/",
           label = "Supported by"
@@ -162,8 +152,7 @@ class ContainerBrandingFinderTest
         brandingType = Sponsored,
         sponsorName = "Fairtrade Foundation",
         logo = Logo(
-          src =
-            "https://static.theguardian.com/commercial/sponsor/sustainable/series/spotlight-commodities/logo.png",
+          src = "https://static.theguardian.com/commercial/sponsor/sustainable/series/spotlight-commodities/logo.png",
           dimensions = None,
           link = "http://www.fairtrade.org.uk/",
           label = "Supported by"

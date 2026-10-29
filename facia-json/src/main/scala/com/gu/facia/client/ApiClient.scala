@@ -3,11 +3,7 @@ package com.gu.facia.client
 import com.gu.etagcaching.FreshnessPolicy.AlwaysWaitForRefreshedValue
 import com.gu.etagcaching.aws.s3.{ObjectId, S3ByteArrayFetching}
 import com.gu.etagcaching.{ConfigCache, ETagCache}
-import com.gu.facia.client.models.{
-  CollectionJson,
-  ConfigJson,
-  CustomSubnavConfig
-}
+import com.gu.facia.client.models.{CollectionJson, ConfigJson, CustomSubnavConfig}
 import play.api.libs.json.{Format, JsError, JsSuccess, Json}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,20 +27,20 @@ object ApiClient {
   private def parseBytes[B: Format](bytes: Array[Byte]): B =
     Json.fromJson[B](Json.parse(new String(bytes, Encoding))) match {
       case JsSuccess(value, _) => value
-      case JsError(errors) =>
+      case JsError(errors)     =>
         throw JsonDeserialisationError(
           s"Failed to parse JSON: $errors"
         )
     }
 
-  /** @param s3Fetching see scaladoc on `S3ByteArrayFetching` i.e. use `S3ObjectFetching.byteArraysWith(s3AsyncClient)`
+  /** @param s3Fetching
+    *   see scaladoc on `S3ByteArrayFetching` i.e. use `S3ObjectFetching.byteArraysWith(s3AsyncClient)`
     */
   def withCaching(
       bucket: String,
       environment: Environment,
       s3Fetching: S3ByteArrayFetching,
-      configureCollectionCache: ConfigCache =
-        _.maximumSize(10000) // at most 1GB RAM worst case
+      configureCollectionCache: ConfigCache = _.maximumSize(10000) // at most 1GB RAM worst case
   )(implicit ec: ExecutionContext): ApiClient = new ApiClient {
     private val fetching =
       s3Fetching.keyOn[String](path => ObjectId(bucket, path))

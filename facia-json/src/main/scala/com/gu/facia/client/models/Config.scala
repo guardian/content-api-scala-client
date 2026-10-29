@@ -73,7 +73,7 @@ object Metadata extends StrictLogging {
         case JsSuccess(JsString(string), _) =>
           tags.get(string) match {
             case Some(result) => JsSuccess(result)
-            case None =>
+            case None         =>
               logger.warn(
                 s"Could not convert CollectionTag: $string is of unknown type"
               )
@@ -85,23 +85,23 @@ object Metadata extends StrictLogging {
     }
 
     def writes(cardStyle: Metadata) = cardStyle match {
-      case Secondary  => JsObject(Seq("type" -> JsString("Secondary")))
-      case Canonical  => JsObject(Seq("type" -> JsString("Canonical")))
-      case Special    => JsObject(Seq("type" -> JsString("Special")))
-      case Breaking   => JsObject(Seq("type" -> JsString("Breaking")))
-      case Branded    => JsObject(Seq("type" -> JsString("Branded")))
-      case DynamoLike => JsObject(Seq("type" -> JsString("DynamoLike")))
+      case Secondary          => JsObject(Seq("type" -> JsString("Secondary")))
+      case Canonical          => JsObject(Seq("type" -> JsString("Canonical")))
+      case Special            => JsObject(Seq("type" -> JsString("Special")))
+      case Breaking           => JsObject(Seq("type" -> JsString("Breaking")))
+      case Branded            => JsObject(Seq("type" -> JsString("Branded")))
+      case DynamoLike         => JsObject(Seq("type" -> JsString("DynamoLike")))
       case LongRunningPalette =>
         JsObject(Seq("type" -> JsString("LongRunningPalette")))
-      case SombrePalette => JsObject(Seq("type" -> JsString("SombrePalette")))
+      case SombrePalette        => JsObject(Seq("type" -> JsString("SombrePalette")))
       case InvestigationPalette =>
         JsObject(Seq("type" -> JsString("InvestigationPalette")))
       case BreakingPalette =>
         JsObject(Seq("type" -> JsString("BreakingPalette")))
-      case EventPalette => JsObject(Seq("type" -> JsString("EventPalette")))
+      case EventPalette    => JsObject(Seq("type" -> JsString("EventPalette")))
       case EventAltPalette =>
         JsObject(Seq("type" -> JsString("EventAltPalette")))
-      case Podcast => JsObject(Seq("type" -> JsString("Podcast")))
+      case Podcast               => JsObject(Seq("type" -> JsString("Podcast")))
       case LongRunningAltPalette =>
         JsObject(Seq("type" -> JsString("LongRunningAltPalette")))
       case SombreAltPalette =>
@@ -125,7 +125,7 @@ object CollectionPlatform {
       case JsString("Web") => JsSuccess(WebCollection)
       case JsString("App") => JsSuccess(AppCollection)
       case JsString("Any") => JsSuccess(AnyPlatform)
-      case other =>
+      case other           =>
         JsError(s"Could not deserialize to a CollectionPlatform type: $other")
     }
 
@@ -179,11 +179,11 @@ object TargetedTerritory {
 
   implicit object TargetedTerritoryFormat extends Format[TargetedTerritory] {
     def reads(json: JsValue): JsResult[TargetedTerritory] = json match {
-      case JsString(NZTerritory.id)          => JsSuccess(NZTerritory)
-      case JsString(USEastCoastTerritory.id) => JsSuccess(USEastCoastTerritory)
-      case JsString(USWestCoastTerritory.id) => JsSuccess(USWestCoastTerritory)
-      case JsString(EU27Territory.id)        => JsSuccess(EU27Territory)
-      case JsString(AUVictoriaTerritory.id)  => JsSuccess(AUVictoriaTerritory)
+      case JsString(NZTerritory.id)           => JsSuccess(NZTerritory)
+      case JsString(USEastCoastTerritory.id)  => JsSuccess(USEastCoastTerritory)
+      case JsString(USWestCoastTerritory.id)  => JsSuccess(USWestCoastTerritory)
+      case JsString(EU27Territory.id)         => JsSuccess(EU27Territory)
+      case JsString(AUVictoriaTerritory.id)   => JsSuccess(AUVictoriaTerritory)
       case JsString(AUQueenslandTerritory.id) =>
         JsSuccess(AUQueenslandTerritory)
       case JsString(AUNewSouthWalesTerritory.id) =>

@@ -188,8 +188,7 @@ object CollectionConfig {
     collectionConfig.collectionType match {
       case _ if PortraitCollections.contains(collectionConfig.collectionType) =>
         Portrait45
-      case _
-          if Landscape54Collections.contains(collectionConfig.collectionType) =>
+      case _ if Landscape54Collections.contains(collectionConfig.collectionType) =>
         Landscape54
       case "scrollable/highlights" => Square
       case _                       => Landscape53

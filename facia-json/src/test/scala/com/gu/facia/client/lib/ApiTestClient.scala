@@ -1,10 +1,6 @@
 package com.gu.facia.client.lib
 
-import com.gu.facia.client.models.{
-  CollectionJson,
-  ConfigJson,
-  CustomSubnavConfig
-}
+import com.gu.facia.client.models.{CollectionJson, ConfigJson, CustomSubnavConfig}
 import com.gu.facia.client.{ApiClient, Environment}
 import play.api.libs.json.{Format, Json}
 

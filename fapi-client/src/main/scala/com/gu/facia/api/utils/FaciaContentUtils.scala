@@ -17,7 +17,7 @@ object FaciaContentUtils {
       las: (LatestSnap) => T,
       eg: (EventGraphic) => T
   ): T = fc match {
-    case curatedContent: CuratedContent => c(curatedContent)
+    case curatedContent: CuratedContent                     => c(curatedContent)
     case supportingCuratedContent: SupportingCuratedContent =>
       scc(supportingCuratedContent)
     case linkSnap: LinkSnap         => ls(linkSnap)
@@ -38,8 +38,7 @@ object FaciaContentUtils {
 
   def webPublicationDateOption(fc: FaciaContent): Option[DateTime] = fold(fc)(
     c = curatedContent => curatedContent.content.webPublicationDate,
-    scc = supportingCuratedContent =>
-      supportingCuratedContent.content.webPublicationDate,
+    scc = supportingCuratedContent => supportingCuratedContent.content.webPublicationDate,
     ls = _ => None,
     las = latestSnap => latestSnap.latestContent.flatMap(_.webPublicationDate),
     eg = _ => None
@@ -58,8 +57,7 @@ object FaciaContentUtils {
 
   def maybeContentId(fc: FaciaContent): Option[String] = fold(fc)(
     c = curatedContent => Option(curatedContent.content.id),
-    scc =
-      supportingCuratedContent => Option(supportingCuratedContent.content.id),
+    scc = supportingCuratedContent => Option(supportingCuratedContent.content.id),
     ls = _ => None,
     las = latestSnap => latestSnap.latestContent.map(_.id),
     eg = _ => None
@@ -111,8 +109,7 @@ object FaciaContentUtils {
 
   def webUrl(fc: FaciaContent): Option[String] = fold(fc)(
     c = curatedContent => Option(curatedContent.content.webUrl),
-    scc = supportingCuratedContent =>
-      Option(supportingCuratedContent.content.webUrl),
+    scc = supportingCuratedContent => Option(supportingCuratedContent.content.webUrl),
     ls = linkSnap => linkSnap.snapUri,
     las = latestSnap => latestSnap.latestContent.map(_.webUrl),
     eg = _ => None
@@ -137,18 +134,15 @@ object FaciaContentUtils {
       else None
     fold(fc)(
       c = curatedContent => mediaTypeFromContent(curatedContent.content),
-      scc = supportingCuratedContent =>
-        mediaTypeFromContent(supportingCuratedContent.content),
+      scc = supportingCuratedContent => mediaTypeFromContent(supportingCuratedContent.content),
       ls = _ => None,
-      las =
-        latestSnap => latestSnap.latestContent.flatMap(mediaTypeFromContent),
+      las = latestSnap => latestSnap.latestContent.flatMap(mediaTypeFromContent),
       eg = _ => None
     )
   }
 
   def isLive(fc: FaciaContent): Boolean = fold(fc)(
-    c = curatedContent =>
-      curatedContent.content.fields.flatMap(_.liveBloggingNow).exists(identity),
+    c = curatedContent => curatedContent.content.fields.flatMap(_.liveBloggingNow).exists(identity),
     scc = supportingCuratedContent =>
       supportingCuratedContent.content.fields
         .flatMap(_.liveBloggingNow)
@@ -165,8 +159,7 @@ object FaciaContentUtils {
       f: (Option[ContentFields]) => Boolean
   ): Boolean = fold(fc)(
     c = curatedContent => f(curatedContent.content.fields),
-    scc =
-      supportingCuratedContent => f(supportingCuratedContent.content.fields),
+    scc = supportingCuratedContent => f(supportingCuratedContent.content.fields),
     ls = _ => false,
     las = latestSnap => latestSnap.latestContent.exists(c => f(c.fields)),
     eg = _ => false
@@ -179,8 +172,7 @@ object FaciaContentUtils {
       f: (Option[ContentFields]) => Option[T]
   ): Option[T] = fold(fc)(
     c = curatedContent => f(curatedContent.content.fields),
-    scc =
-      supportingCuratedContent => f(supportingCuratedContent.content.fields),
+    scc = supportingCuratedContent => f(supportingCuratedContent.content.fields),
     ls = _ => None,
     las = latestSnap => latestSnap.latestContent.flatMap(c => f(c.fields)),
     eg = _ => None
@@ -209,16 +201,14 @@ object FaciaContentUtils {
     fc.properties.showLivePlayable
   def sectionName(fc: FaciaContent): Option[String] = fold(fc)(
     c = curatedContent => curatedContent.content.sectionName,
-    scc =
-      supportingCuratedContent => supportingCuratedContent.content.sectionName,
+    scc = supportingCuratedContent => supportingCuratedContent.content.sectionName,
     ls = linkSnap => None,
     las = latestSnap => latestSnap.latestContent.flatMap(_.sectionName),
     eg = _ => None
   )
   def maybeSection(fc: FaciaContent): Option[String] = fold(fc)(
     c = curatedContent => curatedContent.content.sectionId,
-    scc =
-      supportingCuratedContent => supportingCuratedContent.content.sectionId,
+    scc = supportingCuratedContent => supportingCuratedContent.content.sectionId,
     ls = linkSnap => None,
     las = latestSnap => latestSnap.latestContent.flatMap(_.sectionId),
     eg = _ => None
@@ -284,8 +274,7 @@ object FaciaContentUtils {
 
   def maybeWebTitle(fc: FaciaContent): Option[String] = fold(fc)(
     c = curatedContent => Option(curatedContent.content.webTitle),
-    scc = supportingCuratedContent =>
-      Option(supportingCuratedContent.content.webTitle),
+    scc = supportingCuratedContent => Option(supportingCuratedContent.content.webTitle),
     ls = _ => None,
     las = latestSnap => latestSnap.latestContent.map(_.webTitle),
     eg = _ => None
@@ -296,13 +285,10 @@ object FaciaContentUtils {
   def linkText(fc: FaciaContent) = maybeWebTitle(fc)
 
   def elements(fc: FaciaContent): List[Element] = fold(fc)(
-    c = curatedContent =>
-      curatedContent.content.elements.map(_.toList).getOrElse(Nil),
-    scc = supportingCuratedContent =>
-      supportingCuratedContent.content.elements.map(_.toList).getOrElse(Nil),
+    c = curatedContent => curatedContent.content.elements.map(_.toList).getOrElse(Nil),
+    scc = supportingCuratedContent => supportingCuratedContent.content.elements.map(_.toList).getOrElse(Nil),
     ls = _ => Nil,
-    las = latestSnap =>
-      latestSnap.latestContent.flatMap(_.elements.map(_.toList)).getOrElse(Nil),
+    las = latestSnap => latestSnap.latestContent.flatMap(_.elements.map(_.toList)).getOrElse(Nil),
     eg = _ => Nil
   )
 
@@ -324,8 +310,7 @@ object FaciaContentUtils {
 
   def properties(fc: FaciaContent): Option[ContentProperties] = fold(fc)(
     c = curatedContent => Option(curatedContent.properties),
-    scc =
-      supportingCuratedContent => Option(supportingCuratedContent.properties),
+    scc = supportingCuratedContent => Option(supportingCuratedContent.properties),
     ls = _ => None,
     las = latestSnap => Option(latestSnap.properties),
     eg = _ => None

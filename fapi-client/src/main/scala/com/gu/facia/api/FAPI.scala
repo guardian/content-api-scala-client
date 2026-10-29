@@ -2,15 +2,8 @@ package com.gu.facia.api
 
 import com.gu.contentapi.client.ContentApiClient
 import com.gu.contentapi.client.model.v1.Content
-import com.gu.facia.api.contentapi.ContentApi.{
-  AdjustItemQuery,
-  AdjustSearchQuery
-}
-import com.gu.facia.api.contentapi.{
-  ContentApi,
-  LatestSnapsRequest,
-  LinkSnapsRequest
-}
+import com.gu.facia.api.contentapi.ContentApi.{AdjustItemQuery, AdjustSearchQuery}
+import com.gu.facia.api.contentapi.{ContentApi, LatestSnapsRequest, LinkSnapsRequest}
 import com.gu.facia.api.models._
 import com.gu.facia.api.utils.{BackfillResolver, BoostLevel, ContentProperties}
 import com.gu.facia.client.ApiClient
@@ -44,8 +37,8 @@ object FAPI {
     } yield front
   }
 
-  /** Fetches the collection information for the given id by resolving info out of the fronts config
-    * and the collection's own config JSON.
+  /** Fetches the collection information for the given id by resolving info out of the fronts config and the
+    * collection's own config JSON.
     */
   def getCollection(collectionId: String)(implicit
       capiClient: ContentApiClient,
@@ -216,15 +209,13 @@ object FAPI {
       yield snapContent
   }
 
-  private def getLiveLinkSnapBrandingsForCollection(collection: Collection)(
-      implicit
+  private def getLiveLinkSnapBrandingsForCollection(collection: Collection)(implicit
       capiClient: ContentApiClient,
       ec: ExecutionContext
   ): Response[Map[String, BrandingByEdition]] =
     getLinkSnapBrandings(Collection.liveLinkSnapsRequestFor(collection))
 
-  private def getDraftLinkSnapBrandingsForCollection(collection: Collection)(
-      implicit
+  private def getDraftLinkSnapBrandingsForCollection(collection: Collection)(implicit
       capiClient: ContentApiClient,
       ec: ExecutionContext
   ): Response[Map[String, BrandingByEdition]] =
@@ -238,9 +229,7 @@ object FAPI {
       capiClient: ContentApiClient,
       ec: ExecutionContext
   ): Response[Map[String, BrandingByEdition]] =
-    for (
-      snapContent <- ContentApi.linkSnapBrandingsByEdition(capiClient, request)
-    ) yield snapContent
+    for (snapContent <- ContentApi.linkSnapBrandingsByEdition(capiClient, request)) yield snapContent
 
   def getTreatsForCollection(
       collection: Collection,
@@ -361,8 +350,8 @@ object FAPI {
   }
 
   /** Fetches content for the configured backfill query. The query can be manipulated for different
-    * requirements by providing adjustment functions. The results then have their facia metadata
-    * resolved using the collection information.
+    * requirements by providing adjustment functions. The results then have their facia metadata resolved
+    * using the collection information.
     */
   def backfillFromConfig(
       collectionConfig: CollectionConfig,
@@ -390,19 +379,19 @@ object FAPI {
       curatedContent.copy(properties = properties)
     case supportingCuratedContent: SupportingCuratedContent =>
       supportingCuratedContent.copy(properties = properties)
-    case snap: LatestSnap => snap.copy(properties = properties)
-    case snap: LinkSnap   => snap.copy(properties = properties)
+    case snap: LatestSnap           => snap.copy(properties = properties)
+    case snap: LinkSnap             => snap.copy(properties = properties)
     case eventGraphic: EventGraphic =>
       eventGraphic.copy(properties = properties)
   }
 
   private def updateGroup(content: FaciaContent, group: String): FaciaContent =
     content match {
-      case curatedContent: CuratedContent => curatedContent.copy(group = group)
+      case curatedContent: CuratedContent                     => curatedContent.copy(group = group)
       case supportingCuratedContent: SupportingCuratedContent =>
         supportingCuratedContent.copy(group = group)
-      case snap: LatestSnap => snap.copy(group = group)
-      case snap: LinkSnap   => snap.copy(group = group)
+      case snap: LatestSnap           => snap.copy(group = group)
+      case snap: LinkSnap             => snap.copy(group = group)
       case eventGraphic: EventGraphic =>
         eventGraphic.copy(group = group)
     }
@@ -456,10 +445,9 @@ object FAPI {
   ): Option[List[GroupBoostConfig]] = {
     val groupsConfigTopGroupFirst = groupsConfig.reverse
     condOpt(collectionType) { case "flexible/general" =>
-      flexibleGeneralBoosts.zip(groupsConfigTopGroupFirst).map {
-        case (boosts, groupConfig) =>
-          boosts
-            .copy(maxItems = groupConfig.maxItems.getOrElse(boosts.maxItems))
+      flexibleGeneralBoosts.zip(groupsConfigTopGroupFirst).map { case (boosts, groupConfig) =>
+        boosts
+          .copy(maxItems = groupConfig.maxItems.getOrElse(boosts.maxItems))
       }
     }
   }

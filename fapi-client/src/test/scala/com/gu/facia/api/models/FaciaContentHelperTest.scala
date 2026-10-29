@@ -1,12 +1,7 @@
 package com.gu.facia.api.models
 
 import com.gu.contentapi.client.model.v1.ContentFields
-import com.gu.facia.api.utils.{
-  BoostLevel,
-  ContentProperties,
-  DefaultCardstyle,
-  FaciaContentUtils
-}
+import com.gu.facia.api.utils.{BoostLevel, ContentProperties, DefaultCardstyle, FaciaContentUtils}
 import com.gu.facia.client.models.{Trail, TrailMetaData}
 import lib.TestContent
 import org.scalatest.freespec.AnyFreeSpec
@@ -14,10 +9,7 @@ import org.scalatest.matchers.should.Matchers
 import com.gu.facia.client.models.CollectionConfigJson
 import play.api.libs.json.JsString
 
-class FaciaContentHelperTest
-    extends AnyFreeSpec
-    with Matchers
-    with TestContent {
+class FaciaContentHelperTest extends AnyFreeSpec with Matchers with TestContent {
 
   val emptyTrail: Trail =
     Trail("no-id", 0, None, Option(TrailMetaData.empty), None)
@@ -64,15 +56,13 @@ class FaciaContentHelperTest
   }
 
   "should return the headline for a CuratedContent" in {
-    val content = baseContent.copy(fields =
-      Some(
-        ContentFields(
-          headline = Some("myTitle"),
-          trailText = Some("Content trailtext"),
-          byline = Some("Content byline")
-        )
+    val content = baseContent.copy(fields = Some(
+      ContentFields(
+        headline = Some("myTitle"),
+        trailText = Some("Content trailtext"),
+        byline = Some("Content byline")
       )
-    )
+    ))
     val cc = CuratedContent(
       content,
       None,
@@ -101,15 +91,13 @@ class FaciaContentHelperTest
   }
 
   "should return 'Missing href' when the href is None in a CuratedContent" in {
-    val content = baseContent.copy(fields =
-      Some(
-        ContentFields(
-          headline = Some("myTitle"),
-          trailText = Some("Content trailtext"),
-          byline = Some("Content byline")
-        )
+    val content = baseContent.copy(fields = Some(
+      ContentFields(
+        headline = Some("myTitle"),
+        trailText = Some("Content trailtext"),
+        byline = Some("Content byline")
       )
-    )
+    ))
     val cc = CuratedContent(
       content,
       None,
@@ -138,15 +126,13 @@ class FaciaContentHelperTest
   }
 
   "should return default boost level for a CuratedContent if the boostLevel is not present in meta data" in {
-    val content = baseContent.copy(fields =
-      Some(
-        ContentFields(
-          headline = Some("myTitle"),
-          trailText = Some("Content trailtext"),
-          byline = Some("myByline")
-        )
+    val content = baseContent.copy(fields = Some(
+      ContentFields(
+        headline = Some("myTitle"),
+        trailText = Some("Content trailtext"),
+        byline = Some("myByline")
       )
-    )
+    ))
     val cc = CuratedContent.fromTrailAndContent(
       content,
       TrailMetaData.empty,
@@ -158,15 +144,13 @@ class FaciaContentHelperTest
   }
 
   "should return boost level for a CuratedContent" in {
-    val content = baseContent.copy(fields =
-      Some(
-        ContentFields(
-          headline = Some("myTitle"),
-          trailText = Some("Content trailtext"),
-          byline = Some("myByline")
-        )
+    val content = baseContent.copy(fields = Some(
+      ContentFields(
+        headline = Some("myTitle"),
+        trailText = Some("Content trailtext"),
+        byline = Some("myByline")
       )
-    )
+    ))
     val cc = CuratedContent.fromTrailAndContent(
       content,
       TrailMetaData(Map("boostLevel" -> JsString("gigaboost"))),
@@ -202,15 +186,13 @@ class FaciaContentHelperTest
   }
 
   "should return a byline for a LatestSnap" in {
-    val content = baseContent.copy(fields =
-      Some(
-        ContentFields(
-          headline = Some("myTitle"),
-          trailText = Some("Content trailtext"),
-          byline = Some("myByline")
-        )
+    val content = baseContent.copy(fields = Some(
+      ContentFields(
+        headline = Some("myTitle"),
+        trailText = Some("Content trailtext"),
+        byline = Some("myByline")
       )
-    )
+    ))
     val snap = LatestSnap.fromTrailAndContent(emptyTrail, Option(content))
     FaciaContentUtils.byline(snap) should equal(Some("myByline"))
   }
@@ -237,15 +219,13 @@ class FaciaContentHelperTest
       None
     )
 
-    val content = baseContent.copy(fields =
-      Some(
-        ContentFields(
-          headline = Some("myTitle"),
-          trailText = Some("Content trailtext"),
-          byline = Some("myByline")
-        )
+    val content = baseContent.copy(fields = Some(
+      ContentFields(
+        headline = Some("myTitle"),
+        trailText = Some("Content trailtext"),
+        byline = Some("myByline")
       )
-    )
+    ))
     val snap = LatestSnap.fromTrailAndContent(emptyTrail, Option(content))
     FaciaContentUtils.atomId(linkSnap) should equal(Some("atomId123"))
   }

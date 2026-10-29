@@ -6,16 +6,11 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 
-class FrontTest
-    extends AnyFreeSpec
-    with Matchers
-    with MockitoSugar
-    with OneInstancePerTest {
+class FrontTest extends AnyFreeSpec with Matchers with MockitoSugar with OneInstancePerTest {
   "fromFrontJson" - {
     "when generating the canonical field" - {
       val frontJson = FrontJson(
-        collections =
-          List("collection1", "collection2", "collection3", "collection4"),
+        collections = List("collection1", "collection2", "collection3", "collection4"),
         None,
         None,
         None,

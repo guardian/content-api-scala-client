@@ -13,10 +13,8 @@ import scala.concurrent.ExecutionContext
 case class InvalidBackfillConfiguration(msg: String) extends Exception(msg)
 
 sealed trait BackfillResolver
-case class CapiBackfill(query: String, collectionConfig: CollectionConfig)
-    extends BackfillResolver
-case class CollectionBackfill(parentCollectionId: String)
-    extends BackfillResolver
+case class CapiBackfill(query: String, collectionConfig: CollectionConfig) extends BackfillResolver
+case class CollectionBackfill(parentCollectionId: String) extends BackfillResolver
 case object EmptyBackfill extends BackfillResolver
 
 object BackfillResolver {

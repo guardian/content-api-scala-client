@@ -22,7 +22,7 @@ object IdsSearchQueries {
         Some(accumulator)
       } else
         batchAndRemaining(ids) match {
-          case None => None
+          case None                     => None
           case Some((batch, remaining)) =>
             iter(remaining, accumulator :+ batch)
         }

@@ -7,16 +7,12 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json.{JsError, JsString, JsSuccess, Json}
 
-class CollectionSpec
-    extends AnyFlatSpec
-    with Matchers
-    with OptionValues
-    with ResourcesHelper {
+class CollectionSpec extends AnyFlatSpec with Matchers with OptionValues with ResourcesHelper {
   def getCollectionFixture(path: String) = Json.fromJson[CollectionJson](
     Json.parse(slurpOrDie(path).get)
   ) match {
     case JsSuccess(a, _) => a
-    case e @ JsError(_) =>
+    case e @ JsError(_)  =>
       println(e)
       throw new RuntimeException("ARGH")
   }

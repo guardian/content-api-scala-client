@@ -7,8 +7,8 @@ import play.api.libs.json.JsString
 
 package object models {
 
-  /** However Facia Tool is serializing its date time, it's not doing so in a way that the default Play Formats for
-    * Joda DateTime can understand.
+  /** However Facia Tool is serializing its date time, it's not doing so in a way that the default Play
+    * Formats for Joda DateTime can understand.
     *
     * This makes me extremely sad.
     */

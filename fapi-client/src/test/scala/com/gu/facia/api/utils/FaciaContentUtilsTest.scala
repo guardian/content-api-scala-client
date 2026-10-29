@@ -35,14 +35,12 @@ class FaciaContentUtilsTest extends AnyFreeSpec with Matchers with TestContent {
   val staticDateTime =
     new DateTime().withYear(2015).withMonthOfYear(4).withDayOfMonth(22)
 
-  val content = baseContent.copy(webPublicationDate =
-    Option(
-      CapiDateTime(
-        staticDateTime.getMillis,
-        staticDateTime.toString(ISODateTimeFormat.dateTime())
-      )
+  val content = baseContent.copy(webPublicationDate = Option(
+    CapiDateTime(
+      staticDateTime.getMillis,
+      staticDateTime.toString(ISODateTimeFormat.dateTime())
     )
-  )
+  ))
 
   def makeLatestSnap(latestSnapId: String, content: Content = content) =
     LatestSnap(
@@ -210,9 +208,7 @@ class FaciaContentUtilsTest extends AnyFreeSpec with Matchers with TestContent {
             byline = Some("Content byline")
           )
         ),
-        tags = tagIds.toList.map(tagId =>
-          Tag(tagId, TagType.Type, None, None, "", "", "")
-        )
+        tags = tagIds.toList.map(tagId => Tag(tagId, TagType.Type, None, None, "", "", ""))
       )
 
     "should return a None for a LinkSnap" in {

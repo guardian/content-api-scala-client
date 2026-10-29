@@ -31,7 +31,7 @@ object JodaReads {
       case JsString(s) =>
         parse(s) match {
           case Some(d) => JsSuccess(d)
-          case _ =>
+          case _       =>
             JsError(JsPath(), s"error.unexpected.date.format. Date: '$s'")
         }
       case _ => JsError(JsPath(), "error.expected.date")

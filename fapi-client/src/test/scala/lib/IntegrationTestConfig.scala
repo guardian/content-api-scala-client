@@ -7,10 +7,7 @@ import software.amazon.awssdk.auth.credentials.{
 import com.gu.contentapi.client.GuardianContentClient
 import com.gu.etagcaching.aws.sdkv2.s3.S3ObjectFetching
 import com.gu.facia.client.{ApiClient, Environment}
-import software.amazon.awssdk.auth.credentials.{
-  AwsCredentialsProvider,
-  AwsCredentialsProviderChain
-}
+import software.amazon.awssdk.auth.credentials.{AwsCredentialsProvider, AwsCredentialsProviderChain}
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3AsyncClient
 
