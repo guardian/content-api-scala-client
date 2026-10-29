@@ -153,6 +153,7 @@ object TestModel {
     def internalCommissionedWordcount: Option[Int] = None
     def showAffiliateLinks: Option[Boolean] = None
     def showTableOfContents: Option[Boolean] = None
+    def livePricingEnabled: Option[Boolean] = None
   }
   implicit val stubFieldsFormat: Reads[StubFields] = Json.reads[StubFields]
 
