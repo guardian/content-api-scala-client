@@ -16,15 +16,13 @@ class CuratedContentTest extends AnyFreeSpec with Matchers with TestContent {
 
   "CuratedContent headline" - {
 
-    val contentWithFieldHeadline = baseContent.copy(fields =
-      Some(
-        ContentFields(
-          headline = Some("Content headline"),
-          trailText = Some("Content trailtext"),
-          byline = Some("Content byline")
-        )
+    val contentWithFieldHeadline = baseContent.copy(fields = Some(
+      ContentFields(
+        headline = Some("Content headline"),
+        trailText = Some("Content trailtext"),
+        byline = Some("Content byline")
       )
-    )
+    ))
     val contentWithoutFieldHeadline = baseContent.copy(
       webTitle = "contentWithoutFieldHeadlineHeadline",
       fields = Some(
@@ -157,7 +155,7 @@ class CuratedContentTest extends AnyFreeSpec with Matchers with TestContent {
     }
 
     "should resolve to TagKicker with config showTags true" in {
-      //This test requires content to have tags
+      // This test requires content to have tags
       val curatedContent = CuratedContent.fromTrailAndContent(
         emptyContent,
         emptyTrailMetaData,

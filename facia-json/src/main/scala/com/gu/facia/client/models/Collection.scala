@@ -130,8 +130,7 @@ object SupportingItemMetaData {
   val empty = SupportingItemMetaData(Map.empty)
 }
 
-case class SupportingItemMetaData(json: Map[String, JsValue])
-    extends MetaDataCommonFields
+case class SupportingItemMetaData(json: Map[String, JsValue]) extends MetaDataCommonFields
 
 object TrailMetaData {
   implicit val flatReads: Reads[TrailMetaData] = new Reads[TrailMetaData] {
@@ -149,13 +148,12 @@ object TrailMetaData {
   val empty = TrailMetaData(Map.empty)
 
   def withDefaults(defaults: (String, JsValue)*): TrailMetaData =
-    TrailMetaData(defaults.foldLeft(Map.empty[String, JsValue]) {
-      case (m, kv) => m + kv
+    TrailMetaData(defaults.foldLeft(Map.empty[String, JsValue]) { case (m, kv) =>
+      m + kv
     })
 }
 
-case class TrailMetaData(json: Map[String, JsValue])
-    extends MetaDataCommonFields {
+case class TrailMetaData(json: Map[String, JsValue]) extends MetaDataCommonFields {
   lazy val supporting: Option[List[SupportingItem]] =
     json.get("supporting").flatMap(_.asOpt[List[SupportingItem]])
 }
@@ -179,9 +177,10 @@ object VariantId {
   }
 }
 
-/** @param meta only contains the fields that are actually being tested, i.e. the fields that differ
-  *             per variant. Any field not being tested will not be present here, and consumers should
-  *             fall back to the trail's own [[TrailMetaData]] for those.
+/** @param meta
+  *   only contains the fields that are actually being tested, i.e. the fields that differ per variant. Any
+  *   field not being tested will not be present here, and consumers should fall back to the trail's own
+  *   [[TrailMetaData]] for those.
   */
 case class VariantMeta(id: VariantId, meta: TrailMetaData)
 object VariantMeta {
@@ -190,17 +189,31 @@ object VariantMeta {
 
 /** Represents an A/B test running on a trail within a collection.
   *
-  * @param testUuid a static reference that persists if the card moves between containers, and can be shared across multiple Test instances on multiple cards.
-  * @param variantMeta the list of variants for this test, each with its own metadata
-  * @param startDate the start date of the test, in milliseconds since epoch
-  * @param expiryDate the expiry date of the test, in milliseconds since epoch. If the test has expired, it will not be shown to users.
-  * @param createdByName the name of the person who created the test
-  * @param createdByEmail the email of the person who created the test
-  * @param frontsThisTestCanRunOn the list of fronts that this test can run on.
-  * @param hasManuallyEndedOnThisTrail whether this test has been manually ended on this trail. If true, the test will not be shown to users on this trail, nor will it report to Ophan, even if it is still active on other trails.
-  * @param manuallyEndedOnThisTrailByName the name of the person who manually ended this test on this trail, if applicable
-  * @param manuallyEndedOnThisTrailByEmail the email of the person who manually ended this test on this trail, if applicable
-  * @param manuallyEndedOnThisTrailDate the date at which the test was manually ended on this trail, if applicable, in milliseconds since epoch
+  * @param testUuid
+  *   a static reference that persists if the card moves between containers, and can be shared across multiple
+  *   Test instances on multiple cards.
+  * @param variantMeta
+  *   the list of variants for this test, each with its own metadata
+  * @param startDate
+  *   the start date of the test, in milliseconds since epoch
+  * @param expiryDate
+  *   the expiry date of the test, in milliseconds since epoch. If the test has expired, it will not be shown
+  *   to users.
+  * @param createdByName
+  *   the name of the person who created the test
+  * @param createdByEmail
+  *   the email of the person who created the test
+  * @param frontsThisTestCanRunOn
+  *   the list of fronts that this test can run on.
+  * @param hasManuallyEndedOnThisTrail
+  *   whether this test has been manually ended on this trail. If true, the test will not be shown to users on
+  *   this trail, nor will it report to Ophan, even if it is still active on other trails.
+  * @param manuallyEndedOnThisTrailByName
+  *   the name of the person who manually ended this test on this trail, if applicable
+  * @param manuallyEndedOnThisTrailByEmail
+  *   the email of the person who manually ended this test on this trail, if applicable
+  * @param manuallyEndedOnThisTrailDate
+  *   the date at which the test was manually ended on this trail, if applicable, in milliseconds since epoch
   */
 case class Test(
     testUuid: String,
@@ -223,9 +236,10 @@ object SupportingItem {
   implicit val jsonFormat: OFormat[SupportingItem] = Json.format[SupportingItem]
 }
 
-/** @param tests the list of A/B tests configured on this supporting item. Note that expired tests
-  *              and tests which have been manually ended aren't removed from this list. Consumers
-  *              must check a test's expiry/manually-ended status themselves.
+/** @param tests
+  *   the list of A/B tests configured on this supporting item. Note that expired tests and tests which have
+  *   been manually ended aren't removed from this list. Consumers must check a test's expiry/manually-ended
+  *   status themselves.
   */
 case class SupportingItem(
     id: String,
@@ -243,9 +257,10 @@ object Trail {
   val eventGraphicPrefix: String = "event-graphic/"
 }
 
-/** @param tests the list of A/B tests configured on this trail. Note that expired tests
-  *              and tests which have been manually ended aren't removed from this list. Consumers
-  *              must check a test's expiry/manually-ended status themselves.
+/** @param tests
+  *   the list of A/B tests configured on this trail. Note that expired tests and tests which have been
+  *   manually ended aren't removed from this list. Consumers must check a test's expiry/manually-ended status
+  *   themselves.
   */
 case class Trail(
     id: String,

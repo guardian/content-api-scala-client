@@ -61,9 +61,9 @@ object Front {
     )
   }
 
-  /** If we're on a network front, try hard-coded headlines ids, otherwise use editorially
-    * chosen canonical container if present, falling back to the first available collection.
-    * We should never have a front with no containers so final fallback is a placeholder.
+  /** If we're on a network front, try hard-coded headlines ids, otherwise use editorially chosen canonical
+    * container if present, falling back to the first available collection. We should never have a front with
+    * no containers so final fallback is a placeholder.
     */
   private def canonicalCollection(id: String, frontJson: FrontJson): String = {
     frontJson.canonical

@@ -1,26 +1,12 @@
 package com.gu.facia.api.models
 
 import com.gu.contentapi.client.ContentApiClient
-import com.gu.contentapi.client.model.v1.{
-  Block,
-  BlockElement,
-  Blocks,
-  Content,
-  ContentAtomElementFields
-}
+import com.gu.contentapi.client.model.v1.{Block, BlockElement, Blocks, Content, ContentAtomElementFields}
 import com.gu.contentatom.thrift.{Atom, AtomData}
 import com.gu.contentatom.thrift.atom.media.MediaAtom
-import com.gu.contentatom.thrift.atom.multimediaslideshow.{
-  MultimediaSlideshowAtom,
-  SlideContent
-}
+import com.gu.contentatom.thrift.atom.multimediaslideshow.{MultimediaSlideshowAtom, SlideContent}
 import com.gu.facia.api.contentapi.{LatestSnapsRequest, LinkSnapsRequest}
-import com.gu.facia.client.models.{
-  CollectionJson,
-  SupportingItem,
-  TargetedTerritory,
-  Trail
-}
+import com.gu.facia.client.models.{CollectionJson, SupportingItem, TargetedTerritory, Trail}
 import org.joda.time.{DateTime, DateTimeZone}
 import com.gu.facia.api.utils.BoostLevel
 import com.gu.facia.api.Response
@@ -209,9 +195,7 @@ object Collection extends StrictLogging {
         .orElse {
           snapContent
             .find { case (id, _) => supportingItem.id == id }
-            .map(c =>
-              LatestSnap.fromSupportingItemAndContent(supportingItem, c._2)
-            )
+            .map(c => LatestSnap.fromSupportingItemAndContent(supportingItem, c._2))
         }
         .orElse {
           Snap.maybeFromSupportingItem(supportingItem)
@@ -246,14 +230,11 @@ object Collection extends StrictLogging {
         capiClient: ContentApiClient
     ): Response[Option[Atom]] = {
       val futureMaybeAtomData = fcContent match {
-        case faciaContent @ AtomId(atomId)
-            if faciaContent.properties.videoReplace =>
+        case faciaContent @ AtomId(atomId) if faciaContent.properties.videoReplace =>
           capiClient
             .getResponse(ContentApiClient.item(atomId))
             .map { response =>
-              response.media.flatMap(atom =>
-                Option.when(isValidMediaAtom(atom))(atom)
-              )
+              response.media.flatMap(atom => Option.when(isValidMediaAtom(atom))(atom))
             }
             .recover { case e =>
               logger.warn(
@@ -263,15 +244,12 @@ object Collection extends StrictLogging {
               None
             }
 
-        case faciaContent: CuratedContent
-            if faciaContent.properties.showMainVideo =>
+        case faciaContent: CuratedContent if faciaContent.properties.showMainVideo =>
           val mainAtom = for {
             atomId <- getMainMediaAtomId(faciaContent)
             atoms <- faciaContent.content.atoms
             mediaAtoms <- atoms.media
-            validMediaAtom <- mediaAtoms.find(atom =>
-              atom.id == atomId && isValidMediaAtom(atom)
-            )
+            validMediaAtom <- mediaAtoms.find(atom => atom.id == atomId && isValidMediaAtom(atom))
           } yield validMediaAtom
           Future.successful(mainAtom)
         case _ => Future.successful(None)
@@ -285,8 +263,7 @@ object Collection extends StrictLogging {
         capiClient: ContentApiClient
     ): Response[Option[FaciaMultimediaSlideshow]] = {
       val futureMaybeSlideshow = fcContent match {
-        case curatedContent: CuratedContent
-            if curatedContent.properties.multimediaSlideshowReplace =>
+        case curatedContent: CuratedContent if curatedContent.properties.multimediaSlideshowReplace =>
           curatedContent.multimediaSlideshowAtomId match {
             case Some(atomId) => fetchMultimediaSlideshow(atomId)
             case None         => Future.successful(None)
@@ -325,7 +302,7 @@ object Collection extends StrictLogging {
         getMultimediaSlideshowMediaAtoms(atom.id, slideshow).map { mediaAtoms =>
           val slides = slideshow.slides.toList.flatMap { slide =>
             val content: Option[FaciaSlideContent] = slide.content match {
-              case SlideContent.Image(image) => Some(FaciaSlideImage(image))
+              case SlideContent.Image(image)         => Some(FaciaSlideImage(image))
               case SlideContent.MediaAtom(reference) =>
                 mediaAtoms.get(reference.mediaAtomId).map(FaciaSlideVideo(_))
               case SlideContent.UnknownUnionField(_) =>
@@ -482,9 +459,7 @@ object Collection extends StrictLogging {
       allLiveSupportingItems(collection)
         .filter(_.isSnap)
         .filter(_.safeMeta.snapType.contains("latest"))
-        .flatMap(snap =>
-          snap.meta.flatMap(_.snapUri).map(uri => snap.id -> uri)
-        )
+        .flatMap(snap => snap.meta.flatMap(_.snapUri).map(uri => snap.id -> uri))
         .toMap
     )
 
@@ -558,9 +533,7 @@ object Collection extends StrictLogging {
           listOfSupportingItems
             .filter(_.isSnap)
             .filter(_.safeMeta.snapType.contains("latest"))
-            .flatMap(snap =>
-              snap.meta.flatMap(_.snapUri).map(uri => snap.id -> uri)
-            )
+            .flatMap(snap => snap.meta.flatMap(_.snapUri).map(uri => snap.id -> uri))
             .toMap
         )
       )

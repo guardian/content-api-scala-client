@@ -10,10 +10,7 @@ import org.joda.time.DateTime
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
-class CustomSubnavServiceTest
-    extends AnyFreeSpec
-    with Matchers
-    with TestContent {
+class CustomSubnavServiceTest extends AnyFreeSpec with Matchers with TestContent {
   private val updatedAt = new DateTime(0)
 
   private def subnav(id: String, pages: List[TargetedPage]): CustomSubnav =
@@ -90,17 +87,15 @@ class CustomSubnavServiceTest
     }
 
     "returns matching draft subnav for one of the article tags" in {
-      val content = baseContent.copy(tags =
-        List(
-          Tag(
-            "tone/comment",
-            TagType.Keyword,
-            webTitle = "",
-            webUrl = "",
-            apiUrl = ""
-          )
+      val content = baseContent.copy(tags = List(
+        Tag(
+          "tone/comment",
+          TagType.Keyword,
+          webTitle = "",
+          webUrl = "",
+          apiUrl = ""
         )
-      )
+      ))
       val draftMatch =
         subnav("by-tag", List(TargetedPage(HasTag, "tone/comment")))
       val config = CustomSubnavConfig(live = Nil, draft = List(draftMatch))

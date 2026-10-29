@@ -1,10 +1,7 @@
 package com.gu.facia.api.integration
 
 import com.gu.contentapi.client.model.v1.TagType
-import com.gu.facia.api.contentapi.ContentApi.{
-  AdjustItemQuery,
-  AdjustSearchQuery
-}
+import com.gu.facia.api.contentapi.ContentApi.{AdjustItemQuery, AdjustSearchQuery}
 import com.gu.facia.api.models._
 import com.gu.facia.api.utils.SectionKicker
 import com.gu.facia.api.{ApiError, FAPI}
@@ -192,8 +189,8 @@ class IntegrationTest
         faciaContent.asFuture.futureValue.fold(
           err => fail(s"expected to get two latest snaps, got $err", err.cause),
           { listOfFaciaContent =>
-            val latestSnaps = listOfFaciaContent.collect {
-              case ls: LatestSnap => ls
+            val latestSnaps = listOfFaciaContent.collect { case ls: LatestSnap =>
+              ls
             }
             latestSnaps.length should be(2)
             latestSnaps(0).latestContent
@@ -227,16 +224,16 @@ class IntegrationTest
           { listOfFaciaContent =>
             listOfFaciaContent.length should be(4)
 
-            val normalContent = listOfFaciaContent.collect {
-              case cc: CuratedContent => cc
+            val normalContent = listOfFaciaContent.collect { case cc: CuratedContent =>
+              cc
             }
             normalContent.length should be(1)
             normalContent.apply(0).headline should be(
               "PM returns from holiday after video shows US reporter beheaded by Briton"
             )
 
-            val latestSnapContent = listOfFaciaContent.collect {
-              case ls: LatestSnap => ls
+            val latestSnapContent = listOfFaciaContent.collect { case ls: LatestSnap =>
+              ls
             }
             latestSnapContent.length should be(2)
             latestSnapContent.forall(_.latestContent.isEmpty) should be(false)
@@ -266,8 +263,8 @@ class IntegrationTest
           { listOfFaciaContent =>
             listOfFaciaContent.length should be(1)
 
-            val normalContent = listOfFaciaContent.collect {
-              case cc: CuratedContent => cc
+            val normalContent = listOfFaciaContent.collect { case cc: CuratedContent =>
+              cc
             }
             normalContent.apply(0).headline should be(
               "PM returns from holiday after video shows US reporter beheaded by Briton"
@@ -290,9 +287,7 @@ class IntegrationTest
       Some(new DateTime(1)),
       Some("updatedBy"),
       Some("updatedBy@example.com"),
-      CollectionConfig.empty.copy(backfill =
-        Some(Backfill(`type` = "capi", query = "business?edition=uk"))
-      ),
+      CollectionConfig.empty.copy(backfill = Some(Backfill(`type` = "capi", query = "business?edition=uk"))),
       None
     )
 
@@ -345,18 +340,15 @@ class IntegrationTest
     }
 
     "search query can be adjusted" ignore {
-      val testCollection = collection.copy(collectionConfig =
-        CollectionConfig.empty.copy(
-          backfill = Some(
-            Backfill(
-              `type` = "capi",
-              query =
-                "search?tag=sustainable-business/series/finance&use-date=published"
-            )
-          ),
-          showSections = true
-        )
-      )
+      val testCollection = collection.copy(collectionConfig = CollectionConfig.empty.copy(
+        backfill = Some(
+          Backfill(
+            `type` = "capi",
+            query = "search?tag=sustainable-business/series/finance&use-date=published"
+          )
+        ),
+        showSections = true
+      ))
       val adjust: AdjustSearchQuery = q => q.showTags("series")
       FAPI
         .backfillFromConfig(
@@ -659,8 +651,8 @@ class IntegrationTest
               c.supportingContent.collect { case s: SupportingCuratedContent =>
                 s
               }.length should be(2)
-              val latestSnaps = c.supportingContent.collect {
-                case l: LatestSnap => l
+              val latestSnaps = c.supportingContent.collect { case l: LatestSnap =>
+                l
               }
               latestSnaps.length should be(2)
               latestSnaps.forall(_.latestContent.isDefined == false) should be(
@@ -698,12 +690,12 @@ class IntegrationTest
           listOfFaciaContent.apply(0) match {
             case c: CuratedContent =>
               c.supportingContent.length should be(5)
-              val supportingContent = c.supportingContent.collect {
-                case s: SupportingCuratedContent => s
+              val supportingContent = c.supportingContent.collect { case s: SupportingCuratedContent =>
+                s
               }
               supportingContent.length should be(2)
-              val latestSnaps = c.supportingContent.collect {
-                case l: LatestSnap => l
+              val latestSnaps = c.supportingContent.collect { case l: LatestSnap =>
+                l
               }
               latestSnaps.length should be(2)
               latestSnaps.forall(_.latestContent.isDefined) should be(true)

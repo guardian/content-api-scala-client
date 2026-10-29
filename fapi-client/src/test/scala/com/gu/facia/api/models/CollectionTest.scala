@@ -1,23 +1,8 @@
 package com.gu.facia.api.models
 
-import com.gu.contentapi.client.model.v1.{
-  Content,
-  ContentFields,
-  ContentType,
-  ItemResponse
-}
-import com.gu.contentatom.thrift.{
-  Atom,
-  AtomData,
-  AtomType,
-  ContentChangeDetails,
-  Image => AtomImage
-}
-import com.gu.contentatom.thrift.atom.media.{
-  Category,
-  MediaAtom,
-  Metadata => MediaMetadata
-}
+import com.gu.contentapi.client.model.v1.{Content, ContentFields, ContentType, ItemResponse}
+import com.gu.contentatom.thrift.{Atom, AtomData, AtomType, ContentChangeDetails, Image => AtomImage}
+import com.gu.contentatom.thrift.atom.media.{Category, MediaAtom, Metadata => MediaMetadata}
 import com.gu.contentatom.thrift.atom.multimediaslideshow.{
   MediaReference,
   MultimediaSlideshowAtom,
@@ -26,13 +11,7 @@ import com.gu.contentatom.thrift.atom.multimediaslideshow.{
 }
 import com.gu.facia.api.utils.ContentApiUtils._
 import com.gu.facia.api.utils._
-import com.gu.facia.client.models.{
-  Branded,
-  CollectionConfigJson,
-  CollectionJson,
-  Trail,
-  TrailMetaData
-}
+import com.gu.facia.client.models.{Branded, CollectionConfigJson, CollectionJson, Trail, TrailMetaData}
 import org.joda.time.DateTime
 import org.mockito.Mockito._
 import org.scalatest.OneInstancePerTest
@@ -112,8 +91,7 @@ class CollectionTest
       trailText: Option[String] = None,
       group: String = "0",
       image: Option[FaciaImage] = None,
-      contentProperties: ContentProperties =
-        ContentProperties.fromResolvedMetaData(ResolvedMetaData.Default),
+      contentProperties: ContentProperties = ContentProperties.fromResolvedMetaData(ResolvedMetaData.Default),
       byline: Option[String] = None,
       kicker: Option[ItemKicker] = None
   ): LatestSnap =
@@ -150,8 +128,7 @@ class CollectionTest
       trailText: Option[String] = None,
       group: String = "0",
       image: Option[FaciaImage] = None,
-      contentProperties: ContentProperties =
-        ContentProperties.fromResolvedMetaData(ResolvedMetaData.Default),
+      contentProperties: ContentProperties = ContentProperties.fromResolvedMetaData(ResolvedMetaData.Default),
       byline: Option[String] = None,
       kicker: Option[ItemKicker] = None
   ): LinkSnap =
@@ -245,13 +222,12 @@ class CollectionTest
     "excludes trails where no corresponding content is found" in {
       val trail2 = Trail("content-id-2", 2, None, Some(trailMetadata), None)
 
-      Collection.liveContent(collection, contents)(capiClient, global).map {
-        curatedContent =>
-          val curatedIds = curatedContent.collect { case c: CuratedContent =>
-            c.content.id
-          }
+      Collection.liveContent(collection, contents)(capiClient, global).map { curatedContent =>
+        val curatedIds = curatedContent.collect { case c: CuratedContent =>
+          c.content.id
+        }
 
-          curatedIds should equal(List("content-id"))
+        curatedIds should equal(List("content-id"))
       }
     }
 
@@ -356,9 +332,7 @@ class CollectionTest
         "snap/4324234234234" -> Some(snapContentTwo)
       )
 
-      val collectionJsonTwo = collectionJson.copy(live =
-        List(snapOne, snapTwo, snapLatestOne, snapLatestTwo)
-      )
+      val collectionJsonTwo = collectionJson.copy(live = List(snapOne, snapTwo, snapLatestOne, snapLatestTwo))
 
       val collection = Collection.fromCollectionJsonConfigAndContent(
         "id",
@@ -602,9 +576,7 @@ class CollectionTest
     val snapTwo =
       Trail("snap/5345345215342", 1, None, Some(trailMetadata), None)
 
-    val collectionJsonTwo = collectionJson.copy(live =
-      List(trailOne, snapOne, snapTwo, trailTwo, trailThree)
-    )
+    val collectionJsonTwo = collectionJson.copy(live = List(trailOne, snapOne, snapTwo, trailTwo, trailThree))
 
     val collection = Collection.fromCollectionJsonConfigAndContent(
       "id",
@@ -746,9 +718,8 @@ class CollectionTest
         "snap/4324234234234" -> Some(snapContentTwo)
       )
 
-      val collectionJsonTwo = collectionJson.copy(live =
-        List(snapOne, snapTwo, trailOne, snapLatestOne, snapLatestTwo, trailTwo)
-      )
+      val collectionJsonTwo =
+        collectionJson.copy(live = List(snapOne, snapTwo, trailOne, snapLatestOne, snapLatestTwo, trailTwo))
 
       val collection = Collection.fromCollectionJsonConfigAndContent(
         "id",
@@ -868,18 +839,16 @@ class CollectionTest
         "snap/4324234234234" -> Some(snapContentTwo)
       )
 
-      val collectionJsonTwo = collectionJson.copy(draft =
-        Option(
-          List(
-            snapOne,
-            snapTwo,
-            trailTwo,
-            snapLatestOne,
-            snapLatestTwo,
-            trailOne
-          )
+      val collectionJsonTwo = collectionJson.copy(draft = Option(
+        List(
+          snapOne,
+          snapTwo,
+          trailTwo,
+          snapLatestOne,
+          snapLatestTwo,
+          trailOne
         )
-      )
+      ))
 
       val collection = Collection.fromCollectionJsonConfigAndContent(
         "id",
@@ -922,46 +891,38 @@ class CollectionTest
     )
 
     val contents = Set(
-      baseContent.copy(fields =
-        Some(
-          ContentFields(
-            internalPageCode = Some(3),
-            headline = Some("red apple"),
-            trailText = Some("Content trailtext"),
-            byline = Some("Content byline")
-          )
+      baseContent.copy(fields = Some(
+        ContentFields(
+          internalPageCode = Some(3),
+          headline = Some("red apple"),
+          trailText = Some("Content trailtext"),
+          byline = Some("Content byline")
         )
-      ),
-      baseContent.copy(fields =
-        Some(
-          ContentFields(
-            internalPageCode = Some(2),
-            headline = Some("straight banana"),
-            trailText = Some("Content trailtext"),
-            byline = Some("Content byline")
-          )
+      )),
+      baseContent.copy(fields = Some(
+        ContentFields(
+          internalPageCode = Some(2),
+          headline = Some("straight banana"),
+          trailText = Some("Content trailtext"),
+          byline = Some("Content byline")
         )
-      ),
-      baseContent.copy(fields =
-        Some(
-          ContentFields(
-            internalPageCode = Some(6),
-            headline = Some("hairy kiwi"),
-            trailText = Some("Content trailtext"),
-            byline = Some("Content byline")
-          )
+      )),
+      baseContent.copy(fields = Some(
+        ContentFields(
+          internalPageCode = Some(6),
+          headline = Some("hairy kiwi"),
+          trailText = Some("Content trailtext"),
+          byline = Some("Content byline")
         )
-      ),
-      baseContent.copy(fields =
-        Some(
-          ContentFields(
-            internalPageCode = Some(7),
-            headline = Some("straw berry"),
-            trailText = Some("Content trailtext"),
-            byline = Some("Content byline")
-          )
+      )),
+      baseContent.copy(fields = Some(
+        ContentFields(
+          internalPageCode = Some(7),
+          headline = Some("straw berry"),
+          trailText = Some("Content trailtext"),
+          byline = Some("Content byline")
         )
-      )
+      ))
     )
 
     def makeTrail(id: String) =
@@ -987,12 +948,11 @@ class CollectionTest
         Some(collectionJsonWithPageCode),
         collectionConfig
       )
-      Collection.liveContent(collection, contents)(capiClient, global).map {
-        content =>
-          content.length should be(1)
-          content.head should have(
-            Symbol("headline")("straight banana")
-          )
+      Collection.liveContent(collection, contents)(capiClient, global).map { content =>
+        content.length should be(1)
+        content.head should have(
+          Symbol("headline")("straight banana")
+        )
       }
     }
     "supporting with internalPageCode" in {
@@ -1004,17 +964,16 @@ class CollectionTest
         Some(collectionJsonWithPageCode),
         collectionConfig
       )
-      Collection.liveContent(collection, contents)(capiClient, global).map {
-        content =>
-          content.length should be(1)
-          content.head should have(
-            Symbol("headline")("straw berry")
-          )
-          val supportingContent =
-            FaciaContentUtils.supporting(content.head).head
-          FaciaContentUtils.headline(supportingContent) should be(
-            "straight banana"
-          )
+      Collection.liveContent(collection, contents)(capiClient, global).map { content =>
+        content.length should be(1)
+        content.head should have(
+          Symbol("headline")("straw berry")
+        )
+        val supportingContent =
+          FaciaContentUtils.supporting(content.head).head
+        FaciaContentUtils.headline(supportingContent) should be(
+          "straight banana"
+        )
       }
     }
     "AspectRatio.getAspectRatio" in {

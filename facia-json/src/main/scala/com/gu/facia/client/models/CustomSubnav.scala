@@ -1,16 +1,7 @@
 package com.gu.facia.client.models
 
 import org.joda.time.DateTime
-import play.api.libs.json.{
-  Format,
-  JsError,
-  JsResult,
-  JsString,
-  JsSuccess,
-  JsValue,
-  Json,
-  OFormat
-}
+import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue, Json, OFormat}
 
 case class SubnavLink(
     linkText: String,

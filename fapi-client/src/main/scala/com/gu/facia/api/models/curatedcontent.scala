@@ -6,13 +6,7 @@ import com.gu.contentapi.client.utils.format._
 import com.gu.contentatom.thrift.{Atom, Image => AtomImage}
 import com.gu.facia.api.utils.ContentApiUtils._
 import com.gu.facia.api.utils._
-import com.gu.facia.client.models.{
-  MetaDataCommonFields,
-  SupportingItem,
-  Test,
-  Trail,
-  TrailMetaData
-}
+import com.gu.facia.client.models.{MetaDataCommonFields, SupportingItem, Test, Trail, TrailMetaData}
 
 sealed trait FaciaImage
 
@@ -93,9 +87,7 @@ object FaciaImage {
       resolvedMetaData: ResolvedMetaData
   ): Option[FaciaImage] =
     trailMeta.slideshow.map { assets =>
-      val slideshowAssets = assets.map(asset =>
-        Replace(asset.src, asset.width, asset.height, asset.caption)
-      )
+      val slideshowAssets = assets.map(asset => Replace(asset.src, asset.width, asset.height, asset.caption))
       ImageSlideshow(slideshowAssets)
     }
 
@@ -593,8 +585,7 @@ object EventGraphic {
   def fromTrail(trail: Trail): EventGraphic = {
     EventGraphic(
       id = trail.id.stripPrefix(Trail.eventGraphicPrefix),
-      properties =
-        ContentProperties.fromResolvedMetaData(ResolvedMetaData.Default),
+      properties = ContentProperties.fromResolvedMetaData(ResolvedMetaData.Default),
       group = trail.safeMeta.group.getOrElse("0")
     )
   }

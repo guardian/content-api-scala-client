@@ -2,17 +2,8 @@ package com.gu.facia.api.contentapi
 
 import java.net.URI
 import com.gu.contentapi.client.model.ItemQuery
-import com.gu.contentapi.client.model.v1.{
-  Content,
-  ItemResponse,
-  SearchResponse,
-  Tag
-}
-import com.gu.contentapi.client.{
-  ContentApiClient,
-  ContentApiQueries,
-  GuardianContentClient
-}
+import com.gu.contentapi.client.model.v1.{Content, ItemResponse, SearchResponse, Tag}
+import com.gu.contentapi.client.{ContentApiClient, ContentApiQueries, GuardianContentClient}
 import com.gu.facia.api.Response
 import lib.ExecutionContext
 import org.mockito.Mockito._
@@ -54,8 +45,7 @@ class ContentApiTest
         .futureValue
         .fold(
           err => fail(s"expected hydrated queries, got error $err"),
-          result =>
-            result.head.parameters.get("page-size").value should equal("2")
+          result => result.head.parameters.get("page-size").value should equal("2")
         )
     }
   }

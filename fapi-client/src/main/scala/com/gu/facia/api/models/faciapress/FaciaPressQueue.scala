@@ -5,8 +5,9 @@ import org.joda.time.DateTime
 import play.api.libs.json._
 
 /** Strictly speaking, these models aren't part of the facia API - they are specific to communication between
-  * the fronts tool and facia-press in the frontend project. It's useful to enforce consistency between the two apps
-  * though to avoid messages failing to parse, and this seems the most obvious place to put them, so here they are.
+  * the fronts tool and facia-press in the frontend project. It's useful to enforce consistency between the
+  * two apps though to avoid messages failing to parse, and this seems the most obvious place to put them, so
+  * here they are.
   */
 
 object PressType {

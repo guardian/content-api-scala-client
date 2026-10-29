@@ -6,11 +6,7 @@ import play.api.libs.json.Json
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class ConfigSpec
-    extends AnyFlatSpec
-    with Matchers
-    with OptionValues
-    with ResourcesHelper {
+class ConfigSpec extends AnyFlatSpec with Matchers with OptionValues with ResourcesHelper {
   "Config" should "deserialize" in {
     val config = Json
       .fromJson[ConfigJson](
