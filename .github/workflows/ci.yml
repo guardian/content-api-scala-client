@@ -37,4 +37,4 @@ jobs:
       - uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()  #runs even if there is a test failure
         with:
-          files: test-results/**/TEST-*.xml
+          files: target/out/jvm/scala-*/*/test-reports/TEST-*.xml
