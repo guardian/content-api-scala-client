@@ -1,0 +1,40 @@
+name: CI
+on:
+  workflow_dispatch:
+  pull_request:
+
+  # triggering CI default branch improves caching
+  # see https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#restrictions-for-accessing-a-cache
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4 # Needed for Kinesis read access for the tests!
+        with:
+          # The AWS role is configured as a GitHub Repo secret, the value is the ARN givrn in the cloudformation-output
+          # of the 'ContentApiClientsTesting' cloudformation stack.
+          role-to-assume: ${{ secrets.AWS_ROLE_FOR_TESTS }}
+          aws-region: eu-west-1
+      - uses: actions/checkout@v7
+      - uses: guardian/setup-scala@v1
+
+      - name: Test
+        env:
+          CAPI_TEST_KEY: ${{ secrets.CAPI_TEST_KEY }}
+          JAVA_OPTS: -XX:+UseCompressedOops
+        run: sbt -v "scalafmtCheckAll; +testFull"
+
+      - uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()  #runs even if there is a test failure
+        with:
+          files: target/out/jvm/scala-*/*/test-reports/TEST-*.xml
