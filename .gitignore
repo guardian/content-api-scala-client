@@ -7,3 +7,4 @@ project/project/
 test-results/
 
 !.github
+!.scalafmt.conf
