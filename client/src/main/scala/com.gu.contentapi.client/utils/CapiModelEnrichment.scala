@@ -298,7 +298,8 @@ object CapiModelEnrichment {
           displayHintExistsWithName("showcase")(content) ||
           hasShowcaseImage(content) ||
           hasShowcaseEmbed(content) ||
-          isPictureContent(content)
+          isPictureContent(content) ||
+          tagExistsWithId("pending-top-hat-tag")(content)
 
       val isNumberedList: ContentFilter = displayHintExistsWithName("numberedList")
 
