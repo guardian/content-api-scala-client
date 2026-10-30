@@ -293,12 +293,31 @@ object CapiModelEnrichment {
         hasShowcaseEmbed.getOrElse(false)
       }
 
+      def hasShowcaseInteractiveAtom: ContentFilter = content => {
+        val hasShowcaseInteractiveAtom = for {
+          blocks <- content.blocks
+          main <- blocks.main
+          mainMedia <- main.elements.headOption
+          if mainMedia.`type` == ElementType.Contentatom
+          atomData <- mainMedia.contentAtomTypeData
+          if atomData.atomType == "interactive"
+          role <- atomData.role
+        } yield {
+          role == "showcase"
+        }
+        hasShowcaseInteractiveAtom.getOrElse(false)
+      }
+
+      val isShowcaseInteractive: ContentFilter = content =>
+        isInteractive(content) && hasShowcaseInteractiveAtom(content)
+
       val isShowcase: ContentFilter = content =>
         displayHintExistsWithName("column")(content) ||
           displayHintExistsWithName("showcase")(content) ||
           hasShowcaseImage(content) ||
           hasShowcaseEmbed(content) ||
-          isPictureContent(content)
+          isPictureContent(content) ||
+          isShowcaseInteractive(content)
 
       val isNumberedList: ContentFilter = displayHintExistsWithName("numberedList")
 
