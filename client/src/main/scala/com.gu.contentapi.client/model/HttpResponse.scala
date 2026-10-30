@@ -6,8 +6,10 @@ object HttpResponse {
   val failedButMaybeRecoverableCodes = Set(408, 429, 504, 509)
   val successfulResponseCodes = Set(200, 302)
 
-  def isSuccessHttpResponse(httpResponse: HttpResponse) = successfulResponseCodes.contains(httpResponse.statusCode)
+  def isSuccessHttpResponse(httpResponse: HttpResponse) =
+    successfulResponseCodes.contains(httpResponse.statusCode)
 
-  def isRecoverableHttpResponse(httpResponse: HttpResponse) = failedButMaybeRecoverableCodes.contains(httpResponse.statusCode)
+  def isRecoverableHttpResponse(httpResponse: HttpResponse) =
+    failedButMaybeRecoverableCodes.contains(httpResponse.statusCode)
 
 }

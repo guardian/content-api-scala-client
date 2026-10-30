@@ -3,7 +3,7 @@ package com.gu.contentapi.client.model
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class ContentApiQueryTest extends AnyFlatSpec with Matchers  {
+class ContentApiQueryTest extends AnyFlatSpec with Matchers {
   "ItemQuery" should "be excellent" in {
     ItemQuery("profile/robert-berry").showFields("all").getUrl("") shouldEqual
       "/profile/robert-berry?show-fields=all"
@@ -25,12 +25,16 @@ class ContentApiQueryTest extends AnyFlatSpec with Matchers  {
   }
 
   "SearchQuery" should "also be excellent" in {
-    SearchQuery().tag("profile/robert-berry").showElements("all").contentType("article").queryFields("body").getUrl("") shouldEqual
+    SearchQuery().tag("profile/robert-berry").showElements("all").contentType("article").queryFields(
+      "body"
+    ).getUrl("") shouldEqual
       "/search?tag=profile%2Frobert-berry&show-elements=all&type=article&query-fields=body"
   }
 
   "SearchQuery" should "not be perturbed when asked to show alias paths" in {
-    SearchQuery().tag("profile/justin-pinner").showElements("all").showAliasPaths(true).contentType("article").getUrl("") shouldEqual
+    SearchQuery().tag("profile/justin-pinner").showElements("all").showAliasPaths(true).contentType(
+      "article"
+    ).getUrl("") shouldEqual
       "/search?tag=profile%2Fjustin-pinner&show-elements=all&show-alias-paths=true&type=article"
   }
 
@@ -57,7 +61,9 @@ class ContentApiQueryTest extends AnyFlatSpec with Matchers  {
   }
 
   "SectionsQuery" should "add sponsorship-type filter" in {
-    SectionsQuery().sponsorshipType("paid-content").getUrl("") shouldEqual "/sections?sponsorship-type=paid-content"
+    SectionsQuery().sponsorshipType("paid-content").getUrl(
+      ""
+    ) shouldEqual "/sections?sponsorship-type=paid-content"
   }
 
   "TagsQuery" should "be awesome" in {

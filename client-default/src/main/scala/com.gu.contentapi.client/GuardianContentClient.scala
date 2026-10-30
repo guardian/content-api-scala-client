@@ -16,14 +16,16 @@ object GuardianContentClient {
     GuardianContentClient(apiKey, strategy)
   }
 
-  def apply(apiKey: String, clientBackoffStrategy: BackoffStrategy)(implicit executor0: ScheduledExecutor): GuardianContentClient =
+  def apply(apiKey: String, clientBackoffStrategy: BackoffStrategy)(implicit
+      executor0: ScheduledExecutor
+  ): GuardianContentClient =
     new GuardianContentClient(apiKey) with RetryableContentApiClient {
       override val backoffStrategy: BackoffStrategy = clientBackoffStrategy
       override implicit val executor: ScheduledExecutor = executor0
     }
 }
 
-class GuardianContentClient (val apiKey: String) extends ContentApiClient {
+class GuardianContentClient(val apiKey: String) extends ContentApiClient {
 
   protected def httpClientBuilder = new OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.SECONDS)
@@ -33,11 +35,13 @@ class GuardianContentClient (val apiKey: String) extends ContentApiClient {
 
   protected val http = httpClientBuilder.build
 
-  def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
+  def get(url: String, headers: Map[String, String])(implicit
+      context: ExecutionContext
+  ): Future[HttpResponse] = {
 
     val reqBuilder = new Request.Builder().url(url)
-    val req = headers.foldLeft(reqBuilder) {
-      case (r, (name, value)) => r.header(name, value)
+    val req = headers.foldLeft(reqBuilder) { case (r, (name, value)) =>
+      r.header(name, value)
     }
 
     val promise = Promise[HttpResponse]()

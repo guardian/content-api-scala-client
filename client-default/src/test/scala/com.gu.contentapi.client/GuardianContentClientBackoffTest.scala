@@ -19,20 +19,24 @@ object FakeGuardianContentClient {
   private final val ApiKeyProperty = "CAPI_TEST_KEY"
   private val apiKey: String = {
     Option(System.getProperty(ApiKeyProperty)) orElse Option(System.getenv(ApiKeyProperty))
-    }.orNull ensuring(_ != null, s"Please supply a $ApiKeyProperty as a system property or an environment variable e.g. sbt -D$ApiKeyProperty=some-api-key")
+  }.orNull ensuring (_ != null,
+    s"Please supply a $ApiKeyProperty as a system property or an environment variable e.g. sbt -D$ApiKeyProperty=some-api-key")
 }
 
-class FakeGuardianContentClient(retries: Int, failCode: Option[Int], alwaysFail: Boolean = false) extends GuardianContentClient(FakeGuardianContentClient.apiKey) {
+class FakeGuardianContentClient(retries: Int, failCode: Option[Int], alwaysFail: Boolean = false)
+    extends GuardianContentClient(FakeGuardianContentClient.apiKey) {
 
   private var attempts = 0
 
   def attemptCount: Int = attempts
 
-  override def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
+  override def get(url: String, headers: Map[String, String])(implicit
+      context: ExecutionContext
+  ): Future[HttpResponse] = {
 
     val reqBuilder = new Request.Builder().url(url)
-    val req = headers.foldLeft(reqBuilder) {
-      case (r, (name, value)) => r.header(name, value)
+    val req = headers.foldLeft(reqBuilder) { case (r, (name, value)) =>
+      r.header(name, value)
     }.build()
 
     val promise = Promise[HttpResponse]()
@@ -67,7 +71,14 @@ class FakeGuardianContentClient(retries: Int, failCode: Option[Int], alwaysFail:
 
 }
 
-class GuardianContentClientBackoffTest extends AnyFlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with IntegrationPatience {
+class GuardianContentClientBackoffTest
+    extends AnyFlatSpec
+    with Matchers
+    with ScalaFutures
+    with OptionValues
+    with BeforeAndAfterAll
+    with Inside
+    with IntegrationPatience {
 
   private val TestItemPath = "commentisfree/2012/aug/01/cyclists-like-pedestrians-must-get-angry"
 
@@ -77,8 +88,10 @@ class GuardianContentClientBackoffTest extends AnyFlatSpec with Matchers with Sc
     val myInterval = 250L
     val myAttempts = 3
     val failureCode = 408
-    val fakeApi = new FakeGuardianContentClient(myAttempts, Some(failureCode)) with RetryableContentApiClient {
-      override val backoffStrategy: BackoffStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myAttempts)
+    val fakeApi = new FakeGuardianContentClient(myAttempts, Some(failureCode))
+      with RetryableContentApiClient {
+      override val backoffStrategy: BackoffStrategy =
+        BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myAttempts)
       override implicit val executor: ScheduledExecutor = executor0
     }
 
@@ -86,7 +99,7 @@ class GuardianContentClientBackoffTest extends AnyFlatSpec with Matchers with Sc
     val content = for {
       response <- fakeApi.getResponse(query)
     } yield response.content.get
-    content.futureValue.id should be (TestItemPath)
+    content.futureValue.id should be(TestItemPath)
     fakeApi.shutdown()
   }
 
@@ -95,8 +108,10 @@ class GuardianContentClientBackoffTest extends AnyFlatSpec with Matchers with Sc
     val myRetries = 3 // i.e. try this once, and then make three retry attempts = 4 attempts in total
     val failureCode = 429
     val alwaysFail = true
-    val fakeApi = new FakeGuardianContentClient(myRetries, Some(failureCode), alwaysFail) with RetryableContentApiClient {
-      override val backoffStrategy: BackoffStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
+    val fakeApi = new FakeGuardianContentClient(myRetries, Some(failureCode), alwaysFail)
+      with RetryableContentApiClient {
+      override val backoffStrategy: BackoffStrategy =
+        BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
       override implicit val executor: ScheduledExecutor = executor0
     }
     val query = ItemQuery(TestItemPath)
@@ -106,7 +121,8 @@ class GuardianContentClientBackoffTest extends AnyFlatSpec with Matchers with Sc
     } yield response.content.get
 
     // there must be a nicer way to handle this
-    val expectedExceptionMessage = "The future returned an exception of type: com.gu.contentapi.client.ContentApiBackoffException, with message: Backoff failed after 3 attempts."
+    val expectedExceptionMessage =
+      "The future returned an exception of type: com.gu.contentapi.client.ContentApiBackoffException, with message: Backoff failed after 3 attempts."
     val caught = intercept[TestFailedException] {
       result.futureValue
     }
@@ -122,14 +138,15 @@ class GuardianContentClientBackoffTest extends AnyFlatSpec with Matchers with Sc
 
     HttpResponse.failedButMaybeRecoverableCodes.foreach(code => {
       val fakeApi = new FakeGuardianContentClient(myRetries, Some(code)) with RetryableContentApiClient {
-        override val backoffStrategy: BackoffStrategy = BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
+        override val backoffStrategy: BackoffStrategy =
+          BackoffStrategy.doublingStrategy(Duration(myInterval, TimeUnit.MILLISECONDS), myRetries)
         override implicit val executor: ScheduledExecutor = executor0
       }
       val content = for {
         response <- fakeApi.getResponse(query)
       } yield response.content.get
-      content.futureValue.id should be (TestItemPath)
-      fakeApi.attemptCount should be (myRetries)
+      content.futureValue.id should be(TestItemPath)
+      fakeApi.attemptCount should be(myRetries)
       fakeApi.shutdown()
     })
   }

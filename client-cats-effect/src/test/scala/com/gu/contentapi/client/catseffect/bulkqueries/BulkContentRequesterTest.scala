@@ -20,7 +20,7 @@ object BulkContentRequesterTest extends SimpleIOSuite {
   implicit val logging: LoggerFactory[IO] = Slf4jFactory.create[IO]
 
   private val queryToObtainLotsOfTestIds: SearchQuery = {
-    val fixedMoment = LocalDate.of(2020,6,1).atStartOfDay(UTC).toInstant
+    val fixedMoment = LocalDate.of(2020, 6, 1).atStartOfDay(UTC).toInstant
     SearchQuery().fromDate(fixedMoment).toDate(fixedMoment.plus(1, DAYS)).pageSize(50)
   }
 

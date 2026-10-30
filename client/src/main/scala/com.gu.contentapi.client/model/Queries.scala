@@ -3,7 +3,18 @@ package com.gu.contentapi.client.model
 import com.gu.contentapi.client.Decoder.PageableResponseDecoder
 import com.gu.contentapi.client.model.Direction.Next
 import com.gu.contentapi.client.model.SearchQuery.IdSeparator
-import com.gu.contentapi.client.model.v1.{AtomUsageResponse, AtomsResponse, Content, EditionsResponse, ItemResponse, SearchResponse, SectionsResponse, Tag, TagsResponse, VideoStatsResponse}
+import com.gu.contentapi.client.model.v1.{
+  AtomUsageResponse,
+  AtomsResponse,
+  Content,
+  EditionsResponse,
+  ItemResponse,
+  SearchResponse,
+  SectionsResponse,
+  Tag,
+  TagsResponse,
+  VideoStatsResponse
+}
 import com.gu.contentapi.client.utils.QueryStringParams
 import com.gu.contentapi.client.{Parameter, Parameters}
 import com.gu.contentatom.thrift.AtomType
@@ -27,59 +38,69 @@ sealed trait ContentApiQuery[+Response <: ThriftStruct] {
 
 }
 
-abstract class PaginatedApiQuery[Response <: ThriftStruct, Element](
-  implicit prd: PageableResponseDecoder[Response, Element]
+abstract class PaginatedApiQuery[Response <: ThriftStruct, Element](implicit
+    prd: PageableResponseDecoder[Response, Element]
 ) extends ContentApiQuery[Response] {
 
-  /**
-    * Produce a version of this query that explicitly sets previously ''unset'' pagination/ordering parameters,
-    * matching how the Content API server decided to process the previous request.
+  /** Produce a version of this query that explicitly sets previously ''unset'' pagination/ordering
+    * parameters, matching how the Content API server decided to process the previous request.
     *
     * For instance, if the Content API decided to process https://content.guardianapis.com/search?q=brexit
-    * with pageSize:10 & orderBy:relevance, that will have been detailed in the CAPI response - and therefore we
-    * can copy those parameters into our following query so we don't change how we're ordering the results
+    * with pageSize:10 & orderBy:relevance, that will have been detailed in the CAPI response - and therefore
+    * we can copy those parameters into our following query so we don't change how we're ordering the results
     * as we paginate through them!
-   */
+    */
   def setPaginationConsistentWith(response: Response): PaginatedApiQuery[Response, Element]
 
-  def followingQueryGiven(response: Response, direction: Direction): Option[PaginatedApiQuery[Response, Element]] =
-    if (response.impliesNoFurtherResults) None else setPaginationConsistentWith(response).followingQueryGivenFull(response, direction)
+  def followingQueryGiven(
+      response: Response,
+      direction: Direction
+  ): Option[PaginatedApiQuery[Response, Element]] =
+    if (response.impliesNoFurtherResults) None
+    else setPaginationConsistentWith(response).followingQueryGivenFull(response, direction)
 
   /** Construct a query for the subsequent results after this response. This method will only be called if the
-    * response was supplied a full page of results, meaning that there's the possibility of more results to fetch.
+    * response was supplied a full page of results, meaning that there's the possibility of more results to
+    * fetch.
     */
-  protected def followingQueryGivenFull(response: Response, direction: Direction): Option[PaginatedApiQuery[Response, Element]]
+  protected def followingQueryGivenFull(
+      response: Response,
+      direction: Direction
+  ): Option[PaginatedApiQuery[Response, Element]]
 }
 
 trait SearchQueryBase[Self <: SearchQueryBase[Self]]
-  extends ContentApiQuery[SearchResponse]
-     with ShowParameters[Self]
-     with ShowReferencesParameters[Self]
-     with OrderByParameter[Self]
-     with UseDateParameter[Self]
-     with PaginationParameters[Self]
-     with FilterParameters[Self]
-     with FilterExtendedParameters[Self]
-     with FilterSearchParameters[Self] {
+    extends ContentApiQuery[SearchResponse]
+    with ShowParameters[Self]
+    with ShowReferencesParameters[Self]
+    with OrderByParameter[Self]
+    with UseDateParameter[Self]
+    with PaginationParameters[Self]
+    with FilterParameters[Self]
+    with FilterExtendedParameters[Self]
+    with FilterSearchParameters[Self] {
   this: Self =>
 }
 
-case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.empty, channelId: Option[String]=None)
-  extends ContentApiQuery[ItemResponse]
-  with EditionParameters[ItemQuery]
-  with ShowParameters[ItemQuery]
-  with ShowReferencesParameters[ItemQuery]
-  with ShowExtendedParameters[ItemQuery]
-  with PaginationParameters[ItemQuery]
-  with OrderByParameter[ItemQuery]
-  with UseDateParameter[ItemQuery]
-  with FilterParameters[ItemQuery]
-  with FilterExtendedParameters[ItemQuery]
-  with FilterSearchParameters[ItemQuery] {
+case class ItemQuery(
+    id: String,
+    parameterHolder: Map[String, Parameter] = Map.empty,
+    channelId: Option[String] = None
+) extends ContentApiQuery[ItemResponse]
+    with EditionParameters[ItemQuery]
+    with ShowParameters[ItemQuery]
+    with ShowReferencesParameters[ItemQuery]
+    with ShowExtendedParameters[ItemQuery]
+    with PaginationParameters[ItemQuery]
+    with OrderByParameter[ItemQuery]
+    with UseDateParameter[ItemQuery]
+    with FilterParameters[ItemQuery]
+    with FilterExtendedParameters[ItemQuery]
+    with FilterSearchParameters[ItemQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(id, parameterMap, channelId)
 
-  def withChannelId(newChannel:String) = copy(id, parameterHolder, Some(newChannel))
+  def withChannelId(newChannel: String) = copy(id, parameterHolder, Some(newChannel))
 
   def withoutChannelId() = copy(id, parameterHolder, None)
 
@@ -87,7 +108,7 @@ case class ItemQuery(id: String, parameterHolder: Map[String, Parameter] = Map.e
     copy(id = contentId)
 
   override def pathSegment: String = channelId match {
-    case None => id
+    case None      => id
     case Some(chl) => s"channel/$chl/item/$id"
   }
 }
@@ -97,7 +118,8 @@ object SearchQuery {
 }
 
 case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty, channelId: Option[String] = None)
-  extends PaginatedApiQuery[SearchResponse, Content] with SearchQueryBase[SearchQuery] {
+    extends PaginatedApiQuery[SearchResponse, Content]
+    with SearchQueryBase[SearchQuery] {
 
   def withIds(capiIds: Set[CapiId]): SearchQuery = ids(capiIds.map(_.value).mkString(IdSeparator))
 
@@ -106,19 +128,18 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty, chan
 
   def withParameters(parameterMap: Map[String, Parameter]): SearchQuery = copy(parameterMap, channelId)
 
-  /**
-    * Make this search on a CAPI channel rather than against web-only content
-    * For more information about channels, and the reason why your app should only be in one channel,
-    * contact the Content API team
-    * @param channelId the channel to search against, or "all" to search across all channels.
+  /** Make this search on a CAPI channel rather than against web-only content For more information about
+    * channels, and the reason why your app should only be in one channel, contact the Content API team
+    * @param channelId
+    *   the channel to search against, or "all" to search across all channels.
     */
-  def withChannel(channelId:String):SearchQuery = copy(parameterHolder, Some(channelId))
+  def withChannel(channelId: String): SearchQuery = copy(parameterHolder, Some(channelId))
 
   def withoutChannel(): SearchQuery = copy(parameterHolder, None)
 
   override def pathSegment: String = channelId match {
-    case None=>"search"
-    case Some(chnl)=>s"channel/$chnl/search"
+    case None       => "search"
+    case Some(chnl) => s"channel/$chnl/search"
   }
 
   protected override def followingQueryGivenFull(response: SearchResponse, direction: Direction) = for {
@@ -128,12 +149,12 @@ case class SearchQuery(parameterHolder: Map[String, Parameter] = Map.empty, chan
 }
 
 case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends PaginatedApiQuery[TagsResponse, Tag]
-  with ShowReferencesParameters[TagsQuery]
-  with PaginationParameters[TagsQuery]
-  with FilterParameters[TagsQuery]
-  with FilterTagParameters[TagsQuery]
-  with FilterSearchParameters[TagsQuery] {
+    extends PaginatedApiQuery[TagsResponse, Tag]
+    with ShowReferencesParameters[TagsQuery]
+    with PaginationParameters[TagsQuery]
+    with FilterParameters[TagsQuery]
+    with FilterTagParameters[TagsQuery]
+    with FilterSearchParameters[TagsQuery] {
 
   def setPaginationConsistentWith(response: TagsResponse): PaginatedApiQuery[TagsResponse, Tag] =
     pageSize.setIfUndefined(response.pageSize)
@@ -142,16 +163,19 @@ case class TagsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 
   override def pathSegment: String = "tags"
 
-  protected override def followingQueryGivenFull(response: TagsResponse, direction: Direction): Option[TagsQuery] = {
+  protected override def followingQueryGivenFull(
+      response: TagsResponse,
+      direction: Direction
+  ): Option[TagsQuery] = {
     val followingPage = response.currentPage + direction.delta
     if (followingPage >= 1 && followingPage <= response.pages) Some(page(followingPage)) else None
   }
 }
 
 case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[SectionsResponse]
-  with FilterSearchParameters[SectionsQuery]
-  with FilterSectionParameters[SectionsQuery]{
+    extends ContentApiQuery[SectionsResponse]
+    with FilterSearchParameters[SectionsQuery]
+    with FilterSectionParameters[SectionsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -159,8 +183,8 @@ case class SectionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class EditionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[EditionsResponse]
-  with FilterSearchParameters[EditionsQuery] {
+    extends ContentApiQuery[EditionsResponse]
+    with FilterSearchParameters[EditionsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -168,11 +192,11 @@ case class EditionsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class VideoStatsQuery(
-  edition: Option[String] = None,
-  section: Option[String] = None,
-  parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[VideoStatsResponse]
-  with FilterSearchParameters[VideoStatsQuery] {
+    edition: Option[String] = None,
+    section: Option[String] = None,
+    parameterHolder: Map[String, Parameter] = Map.empty
+) extends ContentApiQuery[VideoStatsResponse]
+    with FilterSearchParameters[VideoStatsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(edition, section, parameterMap)
 
@@ -180,30 +204,35 @@ case class VideoStatsQuery(
 }
 
 case class AtomsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[AtomsResponse]
-  with AtomsParameters[AtomsQuery]
-  with PaginationParameters[AtomsQuery]
-  with UseDateParameter[AtomsQuery]
-  with OrderByParameter[AtomsQuery]
-  with FilterSearchParameters[AtomsQuery] {
+    extends ContentApiQuery[AtomsResponse]
+    with AtomsParameters[AtomsQuery]
+    with PaginationParameters[AtomsQuery]
+    with UseDateParameter[AtomsQuery]
+    with OrderByParameter[AtomsQuery]
+    with FilterSearchParameters[AtomsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
   override def pathSegment: String = "atoms"
 }
 
-case class AtomUsageQuery(atomType: AtomType, atomId: String, parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[AtomUsageResponse]
-  with PaginationParameters[AtomUsageQuery] {
+case class AtomUsageQuery(
+    atomType: AtomType,
+    atomId: String,
+    parameterHolder: Map[String, Parameter] = Map.empty
+) extends ContentApiQuery[AtomUsageResponse]
+    with PaginationParameters[AtomUsageQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterHolder = parameterMap)
 
   override def pathSegment: String = s"atom/${atomType.toString.toLowerCase}/$atomId/usage"
 }
 
-@deprecated("Recipe atoms no longer exist and should not be relied upon. No data will be returned and this class will be removed in a future iteration of the library")
+@deprecated(
+  "Recipe atoms no longer exist and should not be relied upon. No data will be returned and this class will be removed in a future iteration of the library"
+)
 case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[AtomsResponse]
+    extends ContentApiQuery[AtomsResponse]
     with PaginationParameters[RecipesQuery]
     with RecipeParameters[RecipesQuery] {
 
@@ -213,9 +242,9 @@ case class RecipesQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class ReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[AtomsResponse]
-  with PaginationParameters[ReviewsQuery]
-  with ReviewSpecificParameters[ReviewsQuery] {
+    extends ContentApiQuery[AtomsResponse]
+    with PaginationParameters[ReviewsQuery]
+    with ReviewSpecificParameters[ReviewsQuery] {
 
   def withParameters(parameterMap: Map[String, Parameter]) = copy(parameterMap)
 
@@ -223,7 +252,7 @@ case class ReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class GameReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[AtomsResponse]
+    extends ContentApiQuery[AtomsResponse]
     with ReviewSpecificParameters[GameReviewsQuery]
     with PaginationParameters[GameReviewsQuery]
     with GameParameters[GameReviewsQuery] {
@@ -234,7 +263,7 @@ case class GameReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
 }
 
 case class RestaurantReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[AtomsResponse]
+    extends ContentApiQuery[AtomsResponse]
     with ReviewSpecificParameters[RestaurantReviewsQuery]
     with PaginationParameters[RestaurantReviewsQuery]
     with RestaurantParameters[RestaurantReviewsQuery] {
@@ -245,7 +274,7 @@ case class RestaurantReviewsQuery(parameterHolder: Map[String, Parameter] = Map.
 }
 
 case class FilmReviewsQuery(parameterHolder: Map[String, Parameter] = Map.empty)
-  extends ContentApiQuery[AtomsResponse]
+    extends ContentApiQuery[AtomsResponse]
     with ReviewSpecificParameters[FilmReviewsQuery]
     with PaginationParameters[FilmReviewsQuery]
     with FilmParameters[FilmReviewsQuery] {
@@ -275,23 +304,30 @@ object Direction {
   }
 
   def forPathSegment(pathSegment: String): Direction = pathSegment match {
-    case Next.pathSegment => Next
+    case Next.pathSegment     => Next
     case Previous.pathSegment => Previous
   }
 }
 
 case class FollowingSearchQuery(
-  originalQuery: PaginatedApiQuery[SearchResponse, Content], contentId: String, direction: Direction = Next
+    originalQuery: PaginatedApiQuery[SearchResponse, Content],
+    contentId: String,
+    direction: Direction = Next
 ) extends PaginatedApiQuery[SearchResponse, Content] {
 
   def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter)).toMap
 
   override def pathSegment: String = s"content/$contentId/${direction.pathSegment}"
 
-  override def setPaginationConsistentWith(response: SearchResponse): PaginatedApiQuery[SearchResponse, Content] =
+  override def setPaginationConsistentWith(
+      response: SearchResponse
+  ): PaginatedApiQuery[SearchResponse, Content] =
     originalQuery.setPaginationConsistentWith(response)
 
-  protected override def followingQueryGivenFull(response: SearchResponse, updatedDirection: Direction): Option[PaginatedApiQuery[SearchResponse, Content]] = for {
+  protected override def followingQueryGivenFull(
+      response: SearchResponse,
+      updatedDirection: Direction
+  ): Option[PaginatedApiQuery[SearchResponse, Content]] = for {
     content <- updatedDirection.guidingElementIn(response.results)
   } yield copy(contentId = content.id, direction = updatedDirection)
 
@@ -307,7 +343,7 @@ trait ShowParameters[Owner <: Parameters[Owner]] extends Parameters[Owner] { thi
   def showElements = StringParameter("show-elements")
   def showRights = StringParameter("show-rights")
   def showBlocks = StringParameter("show-blocks")
-  def showAtoms  = StringParameter("show-atoms")
+  def showAtoms = StringParameter("show-atoms")
   def showSection = BoolParameter("show-section")
   def showStats = BoolParameter("show-stats")
   def showAliasPaths = BoolParameter("show-alias-paths")

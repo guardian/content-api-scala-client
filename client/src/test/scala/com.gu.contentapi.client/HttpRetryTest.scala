@@ -18,7 +18,8 @@ class HttpRetryTest extends AsyncWordSpecLike with Matchers {
     val failure = HttpResponse(Array(), 429, "")
 
     "not retry if we get success response" in {
-      val httpResponses = List(Future.successful(successResponse), Future.successful(failure), Future.successful(successResponse.copy(statusCode = 503))).iterator
+      val httpResponses = List(Future.successful(successResponse), Future.successful(failure),
+        Future.successful(successResponse.copy(statusCode = 503))).iterator
       for {
         result <- HttpRetry.withRetry(backoffStrategy) { _ =>
           httpResponses.next()

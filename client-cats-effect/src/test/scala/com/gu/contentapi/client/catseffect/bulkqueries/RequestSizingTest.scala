@@ -20,7 +20,8 @@ class RequestSizingTest extends AnyFlatSpec with should.Matchers with Inspectors
   private val client: ContentApiClient = new GuardianContentClient(apiKey)
   private val expectedUrlSizeWithJustOneSingleCharCapiId = 44 + apiKey.length
   val idAtTheSizeLimit: CapiId = {
-    val targetLengthForCapiIdThatIsOnTheLimit = MaxCapiUriLength - expectedUrlSizeWithJustOneSingleCharCapiId + 1
+    val targetLengthForCapiIdThatIsOnTheLimit =
+      MaxCapiUriLength - expectedUrlSizeWithJustOneSingleCharCapiId + 1
     val pathWithManySlashesThatWillExpandWhenUrlEncoded = Seq.fill(1000)("a").mkString("/")
     val remainingChars = targetLengthForCapiIdThatIsOnTheLimit -
       urlEncodedLengthOf(pathWithManySlashesThatWillExpandWhenUrlEncoded)
@@ -32,9 +33,13 @@ class RequestSizingTest extends AnyFlatSpec with should.Matchers with Inspectors
   val calculatedRequestSizer = RequestSizing.Calculated.basedOff(practicalRequestSizer)
 
   it should "calculate the length of the correct parts of the url - the parts that the length limit applies to" in {
-    practicalRequestSizer.urlLengthFor(Set(CapiId("a"))) shouldEqual expectedUrlSizeWithJustOneSingleCharCapiId
+    practicalRequestSizer.urlLengthFor(
+      Set(CapiId("a"))
+    ) shouldEqual expectedUrlSizeWithJustOneSingleCharCapiId
     practicalRequestSizer.urlLengthFor(Set(idAtTheSizeLimit)) shouldEqual MaxCapiUriLength
-    practicalRequestSizer.urlLengthFor(Set(idThatIsJustOneCharacterOverTheLimit)) shouldEqual MaxCapiUriLength + 1
+    practicalRequestSizer.urlLengthFor(
+      Set(idThatIsJustOneCharacterOverTheLimit)
+    ) shouldEqual MaxCapiUriLength + 1
 
     val fullUrl = client.url(baseQuery.withIds(Set(idAtTheSizeLimit)))
     fullUrl.length should be > MaxCapiUriLength // the limit does not include the protocol or domain of the actual url

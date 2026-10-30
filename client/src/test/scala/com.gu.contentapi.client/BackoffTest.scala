@@ -11,7 +11,14 @@ import scala.concurrent.{ExecutionContext, Future}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class BackoffTest extends AnyFlatSpec with Matchers with ScalaFutures with OptionValues with BeforeAndAfterAll with Inside with Inspectors {
+class BackoffTest
+    extends AnyFlatSpec
+    with Matchers
+    with ScalaFutures
+    with OptionValues
+    with BeforeAndAfterAll
+    with Inside
+    with Inspectors {
   private def NANOS = TimeUnit.NANOSECONDS
   private def MILLIS = TimeUnit.MILLISECONDS
 
@@ -20,15 +27,18 @@ class BackoffTest extends AnyFlatSpec with Matchers with ScalaFutures with Optio
   class RetryableCapiClient(strategy: BackoffStrategy) extends ContentApiClient {
     val apiKey = "TEST-API-KEY"
 
-    def get(url: String, headers: Map[String, String])(implicit context: ExecutionContext): Future[HttpResponse] = {
+    def get(url: String, headers: Map[String, String])(implicit
+        context: ExecutionContext
+    ): Future[HttpResponse] = {
       Future.successful(HttpResponse(Array(), 500, "status"))
     }
   }
 
-  def clientWithBackoff(strategy: BackoffStrategy): RetryableContentApiClient = new RetryableCapiClient(strategy) with RetryableContentApiClient {
-    override implicit val executor: ScheduledExecutor = schedEx
-    override val backoffStrategy: BackoffStrategy = strategy
-  }
+  def clientWithBackoff(strategy: BackoffStrategy): RetryableContentApiClient =
+    new RetryableCapiClient(strategy) with RetryableContentApiClient {
+      override implicit val executor: ScheduledExecutor = schedEx
+      override val backoffStrategy: BackoffStrategy = strategy
+    }
 
   "Client interface" should "have the expected doubling backoff strategy" in {
     val myInterval = 250L

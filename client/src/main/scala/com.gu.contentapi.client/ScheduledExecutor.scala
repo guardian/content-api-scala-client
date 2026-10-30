@@ -22,21 +22,22 @@ object ScheduledExecutor {
   }
 }
 
-/**
-  * A single threaded executor for tasks scheduled in the future
-  * @throws IllegalArgumentException if { @code corePoolSize < 0}
-  * @throws NullPointerException if { @code threadFactory} or
-  *                                         { @code handler} is null
+/** A single threaded executor for tasks scheduled in the future
+  * @throws IllegalArgumentException
+  *   if {@code corePoolSize < 0}
+  * @throws NullPointerException
+  *   if {@code threadFactory} or {@code handler} is null
   */
 abstract class ScheduledExecutor {
 
-  /**
-    * Creates a Future and schedules the operation to run after the given delay.
+  /** Creates a Future and schedules the operation to run after the given delay.
     *
-    * @param napTime duration for which to delay execution
-    * @return a Future to capture the signal that napTime is over
-    * @throws RejectedExecutionException if the task cannot be
-    *                                    scheduled for execution
+    * @param napTime
+    *   duration for which to delay execution
+    * @return
+    *   a Future to capture the signal that napTime is over
+    * @throws RejectedExecutionException
+    *   if the task cannot be scheduled for execution
     */
 
   def sleepFor(napTime: Duration): Future[Unit]

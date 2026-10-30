@@ -13,7 +13,9 @@ class QueryStringParamsTest extends AnyFlatSpec with Matchers {
       ("withPipe", "(tone/analytics|tone/comment)")
     )
 
-    QueryStringParams.apply(questionableParams) should be("?foo=bar&withPlus=1%2B2%3D3&withPipe=%28tone%2Fanalytics%7Ctone%2Fcomment%29")
+    QueryStringParams.apply(questionableParams) should be(
+      "?foo=bar&withPlus=1%2B2%3D3&withPipe=%28tone%2Fanalytics%7Ctone%2Fcomment%29"
+    )
   }
 
 }
