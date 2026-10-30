@@ -315,7 +315,8 @@ case class FollowingSearchQuery(
     direction: Direction = Next
 ) extends PaginatedApiQuery[SearchResponse, Content] {
 
-  def parameters: Map[String, String] = originalQuery.parameters.filterKeys(not(isPaginationParameter)).toMap
+  def parameters: Map[String, String] =
+    originalQuery.parameters.view.filterKeys(not(isPaginationParameter)).toMap
 
   override def pathSegment: String = s"content/$contentId/${direction.pathSegment}"
 

@@ -38,7 +38,7 @@ class GuardianContentClientTest
     api.shutdown()
   }
 
-  implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
+  implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
   it should "successfully call the Content API" in {
     val query = ItemQuery(TestItemPath)

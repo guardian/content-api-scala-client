@@ -27,6 +27,9 @@ exports[`The ContentApiClientsTesting stack matches the snapshot 1`] = `
             {
               "Action": "sts:AssumeRoleWithWebIdentity",
               "Condition": {
+                "StringEquals": {
+                  "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+                },
                 "StringLike": {
                   "token.actions.githubusercontent.com:sub": "repo:guardian/content-api-scala-client:*",
                 },
@@ -99,6 +102,111 @@ exports[`The ContentApiClientsTesting stack matches the snapshot 1`] = `
           "Version": "2012-10-17",
         },
         "PolicyName": "kinesisstreamaccessFE21B9E2",
+        "Roles": [
+          {
+            "Ref": "GithubActionsRoleF5CC769F",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+  },
+}
+`;
+
+exports[`The FaciaClientsTesting stack matches the snapshot 1`] = `
+{
+  "Metadata": {
+    "gu:cdk:constructs": [
+      "GuAllowPolicy",
+      "GuGithubActionsRole",
+    ],
+    "gu:cdk:version": "TEST",
+  },
+  "Outputs": {
+    "GithubActionsRoleGithubActionsRoleArnC13D9654": {
+      "Value": {
+        "Fn::GetAtt": [
+          "GithubActionsRoleF5CC769F",
+          "Arn",
+        ],
+      },
+    },
+  },
+  "Resources": {
+    "GithubActionsRoleF5CC769F": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+                },
+                "StringLike": {
+                  "token.actions.githubusercontent.com:sub": "repo:guardian@164318/facia-scala-client@20723151:*",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":oidc-provider/token.actions.githubusercontent.com",
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/content-api-scala-client",
+          },
+          {
+            "Key": "Stack",
+            "Value": "facia-scala-client",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "fapis3bucketaccessBFC8BDEF": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject",
+                "s3:ListBucket",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                "arn:aws:s3:::facia-tool-store/DEV/*",
+                "arn:aws:s3:::facia-tool-store",
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "fapis3bucketaccessBFC8BDEF",
         "Roles": [
           {
             "Ref": "GithubActionsRoleF5CC769F",

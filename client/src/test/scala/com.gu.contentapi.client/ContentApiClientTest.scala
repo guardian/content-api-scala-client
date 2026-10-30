@@ -35,7 +35,7 @@ class ContentApiClientTest
       Future.successful(HttpResponse(Array(), 500, "status"))
   }
 
-  implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
+  implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
   it should "correctly add API key to request" in {
     api.url(ContentApiClient.search) should include(s"api-key=${api.apiKey}")
   }
