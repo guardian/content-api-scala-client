@@ -114,6 +114,24 @@ class CollectionSpec extends AnyFlatSpec with Matchers with OptionValues with Re
     )
   }
 
+  it should "deserialize mini-nav metadata for trails and supporting items" in {
+    val metadataJson = Json.obj(
+      "showMiniNav" -> true,
+      "miniNavUrl" -> "/mini-nav"
+    )
+
+    val trailMeta = metadataJson.as[TrailMetaData]
+    trailMeta.showMiniNav shouldBe Some(true)
+    trailMeta.miniNavUrl shouldBe Some("/mini-nav")
+
+    val supportingItemMeta = metadataJson.as[SupportingItemMetaData]
+    supportingItemMeta.showMiniNav shouldBe Some(true)
+    supportingItemMeta.miniNavUrl shouldBe Some("/mini-nav")
+
+    TrailMetaData.empty.showMiniNav shouldBe None
+    TrailMetaData.empty.miniNavUrl shouldBe None
+  }
+
   it should "be able to serialize and deserialize the same object" in {
     val collectionJson = CollectionJson(
       live = List(Trail("id-123", DateTime.now.getMillis, None, None, None)),

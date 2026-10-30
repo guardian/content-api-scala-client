@@ -107,6 +107,10 @@ sealed trait MetaDataCommonFields {
     json.get("multimediaSlideshowAtomId").flatMap(_.asOpt[String])
   lazy val blockId: Option[String] =
     json.get("blockId").flatMap(_.asOpt[String])
+  lazy val showMiniNav: Option[Boolean] =
+    json.get("showMiniNav").flatMap(_.asOpt[Boolean])
+  lazy val miniNavUrl: Option[String] =
+    json.get("miniNavUrl").flatMap(_.asOpt[String])
 }
 
 object SupportingItemMetaData {
