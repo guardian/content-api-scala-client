@@ -42,7 +42,7 @@ lazy val catsEffectClient = (project in file("client-cats-effect"))
       "org.typelevel" %% "cats-core" % "2.13.0",
       "org.typelevel" %% "cats-effect" % "3.7.1",
       "org.typelevel" %% "log4cats-slf4j"   % "2.8.0",
-      "co.fs2" %% "fs2-core" % "3.13.0",
+      "co.fs2" %% "fs2-core" % "3.14.0",
       "com.madgag" %% "bin-packing" % "3.0.0",
       "org.typelevel" %% "weaver-cats" % "0.13.0" % Test
     ),
