@@ -8,7 +8,7 @@ object Dependencies {
   val scalaTestVersion = "3.2.20"
   val slf4jVersion = "2.0.18"
   val mockitoVersion = "5.12.0"
-  val okhttpVersion = "4.12.0"
+  val okhttpVersion = "5.5.0"
 
   val capiModels: ModuleID = "com.gu" %% "content-api-models-scala" % capiModelsVersion
   val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % scalaTestVersion % Test `exclude`("org.mockito", "mockito-core")
