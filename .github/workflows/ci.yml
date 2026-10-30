@@ -32,7 +32,7 @@ jobs:
         env:
           CAPI_TEST_KEY: ${{ secrets.CAPI_TEST_KEY }}
           JAVA_OPTS: -XX:+UseCompressedOops
-        run: sbt testFull
+        run: sbt -v "scalafmtCheckAll; +testFull"
 
       - uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()  #runs even if there is a test failure
