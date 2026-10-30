@@ -15,4 +15,3 @@ object ThriftDeserializer {
     codec.decode(protocol)
   }
 }
-

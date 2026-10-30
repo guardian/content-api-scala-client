@@ -2,21 +2,27 @@ package com.gu.contentapi.firehose.kinesis
 
 import com.gu.thrift.serializer.ThriftDeserializer
 import com.typesafe.scalalogging.LazyLogging
-import com.twitter.scrooge.{ ThriftStruct, ThriftStructCodec }
+import com.twitter.scrooge.{ThriftStruct, ThriftStructCodec}
 import software.amazon.kinesis.lifecycle.ShutdownReason
-import software.amazon.kinesis.lifecycle.events.{ InitializationInput, LeaseLostInput, ProcessRecordsInput, ShardEndedInput, ShutdownRequestedInput }
-import software.amazon.kinesis.processor.{ RecordProcessorCheckpointer, ShardRecordProcessor }
+import software.amazon.kinesis.lifecycle.events.{
+  InitializationInput,
+  LeaseLostInput,
+  ProcessRecordsInput,
+  ShardEndedInput,
+  ShutdownRequestedInput
+}
+import software.amazon.kinesis.processor.{RecordProcessorCheckpointer, ShardRecordProcessor}
 
 import java.nio.charset.StandardCharsets
 import java.util.Base64
-import java.util.concurrent.atomic.{ AtomicInteger, AtomicLong }
+import java.util.concurrent.atomic.{AtomicInteger, AtomicLong}
 import scala.jdk.CollectionConverters._
 import scala.concurrent.duration._
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 abstract class EventProcessor[EventT <: ThriftStruct: ThriftStructCodec]
-  extends ShardRecordProcessor
-  with LazyLogging {
+    extends ShardRecordProcessor
+    with LazyLogging {
 
   val checkpointInterval: Duration
   val maxCheckpointBatchSize: Int
@@ -38,7 +44,7 @@ abstract class EventProcessor[EventT <: ThriftStruct: ThriftStructCodec]
       val op = ThriftDeserializer.deserialize(buffer)
       op match {
         case Success(event) => Some(event)
-        case Failure(e) => {
+        case Failure(e)     => {
           logger.error(s"deserialization of event buffer failed: ${e.getMessage}", e)
           buffer.rewind()
           val encoded = Base64.getEncoder.encode(buffer)
@@ -47,7 +53,7 @@ abstract class EventProcessor[EventT <: ThriftStruct: ThriftStructCodec]
           None
         }
       }
-    }.toSeq //.toSeq is required on Scala 2.13 as the comprehension above gives us a mutable.Buffer which is not directly compatible with Seq.
+    }.toSeq // .toSeq is required on Scala 2.13 as the comprehension above gives us a mutable.Buffer which is not directly compatible with Seq.
 
     processEvents(events)
 
@@ -91,10 +97,11 @@ abstract class EventProcessor[EventT <: ThriftStruct: ThriftStructCodec]
     shutdown(ShutdownReason.REQUESTED)
   }
 
-  /**
-   * Subclass this method if you want to be informed of shutdown events.  The default implementation does nothing.
-   * @param reason ShutdownReason indicating why the shutdown occurred
-   */
+  /** Subclass this method if you want to be informed of shutdown events. The default implementation does
+    * nothing.
+    * @param reason
+    *   ShutdownReason indicating why the shutdown occurred
+    */
   def shutdown(reason: ShutdownReason): Unit = {}
 }
 

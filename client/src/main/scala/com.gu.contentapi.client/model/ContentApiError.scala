@@ -4,7 +4,8 @@ import com.gu.contentapi.client.model.v1.ErrorResponse
 import com.gu.contentapi.client.thrift.ThriftDeserializer
 import scala.util.Try
 
-case class ContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None) extends RuntimeException(httpMessage)
+case class ContentApiError(httpStatus: Int, httpMessage: String, errorResponse: Option[ErrorResponse] = None)
+    extends RuntimeException(httpMessage)
 
 object ContentApiError {
   def apply(response: HttpResponse): ContentApiError = {
@@ -12,4 +13,3 @@ object ContentApiError {
     ContentApiError(response.statusCode, response.statusMessage, errorResponse)
   }
 }
-

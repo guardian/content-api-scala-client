@@ -5,7 +5,9 @@ import com.twitter.scrooge.ThriftStruct
 
 package object model {
 
-  implicit class RichPageableResponse[R <: ThriftStruct, E](response: R)(implicit prd: PageableResponseDecoder[R, E]) {
+  implicit class RichPageableResponse[R <: ThriftStruct, E](response: R)(implicit
+      prd: PageableResponseDecoder[R, E]
+  ) {
 
     val impliesNoFurtherResults: Boolean = prd.elements(response).size < prd.pageSize(response)
   }

@@ -94,5 +94,3 @@ lazy val defaultClientSettings: Seq[Setting[?]] = Seq(
     import scala.concurrent.duration._
   """
 )
-
-Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", s"test-results/scala-${scalaVersion.value}", "-o")

@@ -5,12 +5,11 @@ import cats.effect.{FiberIO, IO}
 
 import scala.concurrent.duration.FiniteDuration
 
-/**
- * Token buckets can be used for rate-limiting - so we can throttle the rate of our requests to the
- * CAPI service.
- *
- * [[https://en.wikipedia.org/wiki/Token_bucket]]
- */
+/** Token buckets can be used for rate-limiting - so we can throttle the rate of our requests to the CAPI
+  * service.
+  *
+  * [[https://en.wikipedia.org/wiki/Token_bucket]]
+  */
 final class TokenBucket private (
     sem: Semaphore[IO],
     capacity: Long,

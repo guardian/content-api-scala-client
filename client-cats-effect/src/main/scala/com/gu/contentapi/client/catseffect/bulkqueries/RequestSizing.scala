@@ -9,8 +9,7 @@ import com.gu.contentapi.client.utils.QueryStringParams
 import java.net.URI
 
 /** In order to send bulk-queries that are *not* too big (ie no request bigger than
-  * [[RequestSizing.MaxCapiUriLength]]), we need to know how much space in the
-  * url is:
+  * [[RequestSizing.MaxCapiUriLength]]), we need to know how much space in the url is:
   *
   *   - left available in the url for CAPI-ids (derived from how much is already used)
   *   - consumed by each CAPI-id that's added
@@ -21,25 +20,24 @@ import java.net.URI
 trait RequestSizing {
 
   /** @return
-    *  the length of the part of the url that counts towards the [[RequestSizing.MaxCapiUriLength]] - ie
-    *  the path & query params, without "https://content.guardianapis.com/"
+    *   the length of the part of the url that counts towards the [[RequestSizing.MaxCapiUriLength]] - ie the
+    *   path & query params, without "https://content.guardianapis.com/"
     */
   def urlLengthFor(ids: Set[CapiId]): Int
 }
 
 object RequestSizing {
-  /**
-   * This limit includes the path, starting with the slash, the query parameters, and the separating '?'.
-   * It does not include the protocol, or domain.
-   */
+
+  /** This limit includes the path, starting with the slash, the query parameters, and the separating '?'. It
+    * does not include the protocol, or domain.
+    */
   val MaxCapiUriLength = 4096
 
-  /**
-   * Can't ask for more than 50 CAPI ids at a time - the Content API will error:
-   * "IDs parameter cannot contain more than 50 items"
-   *
-   * https://github.com/guardian/content-api/blob/dc64e5fe94bcd7e2a03cdb6d5cf5db3b415fbee4/concierge/src/main/scala/com.gu.contentapi.concierge/parameters/Parameters.scala#L592
-   */
+  /** Can't ask for more than 50 CAPI ids at a time - the Content API will error: "IDs parameter cannot
+    * contain more than 50 items"
+    *
+    * https://github.com/guardian/content-api/blob/dc64e5fe94bcd7e2a03cdb6d5cf5db3b415fbee4/concierge/src/main/scala/com.gu.contentapi.concierge/parameters/Parameters.scala#L592
+    */
   val MaxItemsAllowedInIdsParameter = 50
 
   /** Calculates a bulk-query's url length by getting the actual ContentApiClient to construct the url - this
@@ -68,7 +66,8 @@ object RequestSizing {
     def urlEncodedLengthOf(s: String): Int = QueryStringParams.encodeParameter(s).length
 
     private val UrlEncodedLengthOfIdSeparator: Int = urlEncodedLengthOf(IdSeparator)
-    val capiIdSizer: CapiId => Int = capiId => urlEncodedLengthOf(capiId.value) + UrlEncodedLengthOfIdSeparator
+    val capiIdSizer: CapiId => Int = capiId =>
+      urlEncodedLengthOf(capiId.value) + UrlEncodedLengthOfIdSeparator
 
     private val sampleCapiIds = Seq(
       "us-news/live/2021/jan/26/joe-biden-donald-trump-impeachment-kamala-harris-nancy-pelosi-covid-coronavirus-live-updates",

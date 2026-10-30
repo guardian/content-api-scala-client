@@ -18,7 +18,7 @@ class RetryTest extends AsyncWordSpecLike with Matchers with RecoverMethods {
     "not retry if operation result is not retryable" in {
       val attemptValues: Iterator[Int] = (1 to maxAttempts).iterator
       for {
-        result <- Retry.withRetry[Any](backoffStrategy, _ => false){ _ =>
+        result <- Retry.withRetry[Any](backoffStrategy, _ => false) { _ =>
           Future.successful(attemptValues.next())
         }
       } yield {

@@ -97,7 +97,6 @@ class CapiModelEnrichmentDesignTypeTest extends AnyFlatSpec with MockitoSugar wi
     f.content.designType shouldEqual Feature
   }
 
-
   it should "have a designType of 'Analysis' when tag tone/analysis is present" in {
     val f = fixture
     when(f.tag.id) thenReturn "tone/analysis"
@@ -150,7 +149,7 @@ class CapiModelEnrichmentDesignTypeTest extends AnyFlatSpec with MockitoSugar wi
     f.content.designType shouldEqual Recipe
   }
 
-  //test one example of filters being applied in priority order
+  // test one example of filters being applied in priority order
   it should "return a designType of 'Media' over a designType of 'Comment' where tags for both are present'" in {
     val content = mock[Content]
     val commentTag = mock[Tag]
@@ -347,36 +346,36 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
 
   it should "have a design of 'FullPageInteractiveDesign' when ContentType is " +
     "Interactive and display hint is 'fullPageInteractive" in {
-    val f = fixture
-    when(f.content.`type`) thenReturn ContentType.Interactive
-    when(f.fields.displayHint) thenReturn Some("fullPageInteractive")
-    when(f.content.fields) thenReturn Some(f.fields)
+      val f = fixture
+      when(f.content.`type`) thenReturn ContentType.Interactive
+      when(f.fields.displayHint) thenReturn Some("fullPageInteractive")
+      when(f.content.fields) thenReturn Some(f.fields)
 
-    f.content.display shouldEqual StandardDisplay
-    f.content.design shouldEqual FullPageInteractiveDesign
-  }
+      f.content.display shouldEqual StandardDisplay
+      f.content.design shouldEqual FullPageInteractiveDesign
+    }
 
   it should "have a design of 'FullPageInteractiveDesign' when is legacy " +
     "immersive interactive and display hint is 'immersive" in {
-    val f = fixture
-    when(f.content.`type`) thenReturn ContentType.Interactive
-    when(f.fields.displayHint) thenReturn Some("immersive")
-    when(f.content.fields) thenReturn Some(f.fields)
-    when(f.fields.creationDate) thenReturn Some(CapiDateTime(1632116952, "2021-09-20T06:49:12Z"))
+      val f = fixture
+      when(f.content.`type`) thenReturn ContentType.Interactive
+      when(f.fields.displayHint) thenReturn Some("immersive")
+      when(f.content.fields) thenReturn Some(f.fields)
+      when(f.fields.creationDate) thenReturn Some(CapiDateTime(1632116952, "2021-09-20T06:49:12Z"))
 
-    f.content.display shouldEqual StandardDisplay
-    f.content.design shouldEqual FullPageInteractiveDesign
-  }
+      f.content.display shouldEqual StandardDisplay
+      f.content.design shouldEqual FullPageInteractiveDesign
+    }
 
   it should "not have a design of 'FullPageInteractiveDesign' " +
     "when display hint is 'fullPageInteractive and ContentType is 'Article" in {
-    val f = fixture
-    when(f.content.`type`) thenReturn ContentType.Article
-    when(f.fields.displayHint) thenReturn Some("fullPageInteractive")
+      val f = fixture
+      when(f.content.`type`) thenReturn ContentType.Article
+      when(f.fields.displayHint) thenReturn Some("fullPageInteractive")
 
-    f.content.design shouldEqual ArticleDesign
-    f.content.design should not equal FullPageInteractiveDesign
-  }
+      f.content.design shouldEqual ArticleDesign
+      f.content.design should not equal FullPageInteractiveDesign
+    }
 
   it should "have a design of 'InteractiveDesign' when ContentType is Interactive" in {
     val f = fixture
@@ -402,30 +401,30 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
 
     f.content.design shouldEqual LiveBlogDesign
   }
-	
-	it should "have a design of 'HostedArticleDesign' when isHosted is true and type is Article" in {
-		val f = fixture
-		when(f.content.isHosted) thenReturn true
-		when(f.content.`type`) thenReturn ContentType.Article
 
-		f.content.design shouldEqual HostedArticleDesign
-	}
-	
-	it should "have a design of 'HostedVideoDesign' when isHosted is true and type is Video" in {
-		val f = fixture
-		when(f.content.isHosted) thenReturn true
-		when(f.content.`type`) thenReturn ContentType.Video
+  it should "have a design of 'HostedArticleDesign' when isHosted is true and type is Article" in {
+    val f = fixture
+    when(f.content.isHosted) thenReturn true
+    when(f.content.`type`) thenReturn ContentType.Article
 
-		f.content.design shouldEqual HostedVideoDesign
-	}
-	
-	it should "have a design of 'HostedGalleryDesign' when isHosted is true and type is Gallery" in {
-		val f = fixture
-		when(f.content.isHosted) thenReturn true
-		when(f.content.`type`) thenReturn ContentType.Gallery
+    f.content.design shouldEqual HostedArticleDesign
+  }
 
-		f.content.design shouldEqual HostedGalleryDesign
-	}
+  it should "have a design of 'HostedVideoDesign' when isHosted is true and type is Video" in {
+    val f = fixture
+    when(f.content.isHosted) thenReturn true
+    when(f.content.`type`) thenReturn ContentType.Video
+
+    f.content.design shouldEqual HostedVideoDesign
+  }
+
+  it should "have a design of 'HostedGalleryDesign' when isHosted is true and type is Gallery" in {
+    val f = fixture
+    when(f.content.isHosted) thenReturn true
+    when(f.content.`type`) thenReturn ContentType.Gallery
+
+    f.content.design shouldEqual HostedGalleryDesign
+  }
 
   it should "have a design of 'DeadBlogDesign' when tag tone/minutebyminute is present but not live anymore" in {
     val f = fixture
@@ -443,7 +442,7 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
     f.content.design shouldEqual ArticleDesign
   }
 
-  //test examples of filters being applied in priority order
+  // test examples of filters being applied in priority order
   it should "return a design of 'VideoDesign' over a design of 'CommentDesign' where tags for both are present'" in {
     val content = mock[Content]
     val commentTag = mock[Tag]
@@ -543,7 +542,6 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
     f.content.theme shouldEqual CulturePillar
   }
 
-
   it should "return a theme of 'LifestylePillar' when has a pillarName of 'Lifestyle'" in {
     val f = fixture
     when(f.content.pillarName) thenReturn Some("Lifestyle")
@@ -640,7 +638,6 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
     val commentTag = mock[Tag]
     val specialReportTag = mock[Tag]
 
-
     when(specialReportTag.id) thenReturn "society/series/this-is-the-nhs"
     when(commentTag.id) thenReturn "tone/letters"
     when(content.fields) thenReturn None
@@ -660,7 +657,6 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
     val f = fixture
     when(f.tag.id) thenReturn "tone/advertisement-features"
     when(f.content.pillarName) thenReturn Some("Lifestyle")
-
 
     f.content.theme shouldEqual Labs
   }
@@ -739,7 +735,7 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
 
     f.content.display shouldEqual StandardDisplay
   }
-  
+
   it should "confirm interactive content made in 2021 is legacy interactive content" in {
     val f = fixture
     when(f.content.fields) thenReturn Some(f.fields)

@@ -38,9 +38,10 @@ class IOCapiClient private (
       execute(query),
       desc = query.getClass.getSimpleName,
       detail = query.getUrl(""),
-      errorAnalyzer = { case cae: ContentApiError => ErrorAnalysis(
-        maybeRecoverable = failedButMaybeRecoverableCodes.contains(cae.httpStatus),
-        s"HTTP ${cae.httpStatus} - ${cae.errorResponse}") },
+      errorAnalyzer = { case cae: ContentApiError =>
+        ErrorAnalysis(maybeRecoverable = failedButMaybeRecoverableCodes.contains(cae.httpStatus),
+          s"HTTP ${cae.httpStatus} - ${cae.errorResponse}")
+      },
       retries = 5
     )
 
@@ -62,7 +63,10 @@ object IOCapiClient {
   private val httpClientForTestingRateLimit: HttpClient = HttpClient.newBuilder.version(HTTP_2).build()
 
   private def getPerMinuteQuotaFor(apiKey: String): Int = httpClientForTestingRateLimit
-    .send(HttpRequest.newBuilder(URI.create(s"https://content.guardianapis.com/?api-key=$apiKey")).GET().build(), discarding)
+    .send(
+      HttpRequest.newBuilder(URI.create(s"https://content.guardianapis.com/?api-key=$apiKey")).GET().build(),
+      discarding
+    )
     .headers().firstValueAsLong("x-ratelimit-limit-minute").toScala.get.toInt
 
   private def createRateLimiterAppropriateTo(apiKey: String): IO[TokenBucket] = {
@@ -71,7 +75,9 @@ object IOCapiClient {
       TokenBucket.create(minuteQuota, minuteQuota / 60, 1.second)
   }
 
-  def from(apiKey: String)(implicit ec: ExecutionContext, loggerFactory: LoggerFactory[IO]): IO[IOCapiClient] = for {
+  def from(
+      apiKey: String
+  )(implicit ec: ExecutionContext, loggerFactory: LoggerFactory[IO]): IO[IOCapiClient] = for {
     rateLimiter <- createRateLimiterAppropriateTo(apiKey)
   } yield new IOCapiClient(new GuardianContentClient(apiKey), rateLimiter)
 

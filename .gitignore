@@ -7,3 +7,5 @@ project/project/
 test-results/
 
 !.github
+!.scalafmt.conf
+!.git-blame-ignore-revs
