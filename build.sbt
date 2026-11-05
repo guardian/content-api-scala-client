@@ -138,6 +138,10 @@ def artifactProductionSettings(supportScala3: Boolean) = Seq(
   libraryDependencies += scalaTest
 )
 
+Test / scalacOptions ++= Seq(
+  "-language:reflectiveCalls"
+)
+
 lazy val clientSettings: Seq[Setting[?]] = Seq(
   name                := ghProject,
   description         := "Scala client for the Guardian's Content API",
