@@ -1015,42 +1015,9 @@ class CollectionTest
       ) shouldBe 2
     }
 
-    "should return 2 for non-splash cards in flexible/special collections with default boost level" in {
-      val isSplashCard = false
-      val collectionType = "flexible/special"
-      val boostLevel = BoostLevel.Default.label
-      Collection.maxSupportingItems(
-        isSplashCard,
-        collectionType,
-        boostLevel
-      ) shouldBe 2
-    }
-
-    "should return 4 for non-splash cards in flexible/special collections with mega boost boost level" in {
-      val isSplashCard = false
-      val collectionType = "flexible/special"
-      val boostLevel = BoostLevel.MegaBoost.label
-      Collection.maxSupportingItems(
-        isSplashCard,
-        collectionType,
-        boostLevel
-      ) shouldBe 4
-    }
-
     "should return 4 for splash cards in flexible/general collections" in {
       val isSplashCard = true
       val collectionType = "flexible/general"
-      val boostLevel = BoostLevel.Default.label
-      Collection.maxSupportingItems(
-        isSplashCard,
-        collectionType,
-        boostLevel
-      ) shouldBe 4
-    }
-
-    "should return 4 for splash cards in flexible/special collections" in {
-      val isSplashCard = true
-      val collectionType = "flexible/special"
       val boostLevel = BoostLevel.Default.label
       Collection.maxSupportingItems(
         isSplashCard,
@@ -1077,13 +1044,9 @@ class CollectionTest
       val trailMetaData =
         Some(TrailMetaData(Map("group" -> JsString(splashGroup))))
       val trail = Trail("internal-code/page/1", 1, None, trailMetaData, None)
-      val trailIndex = 0
-      val collectionHasSnap = false;
       Collection.isSplashCard(
         trail,
-        trailIndex,
-        collectionType,
-        collectionHasSnap
+        collectionType
       ) should be(true)
     }
     "should return false for any card not in the splash group of a flexible general" in {
@@ -1092,68 +1055,16 @@ class CollectionTest
       val trailMetaData =
         Some(TrailMetaData(Map("group" -> JsString(bigGroup))))
       val trail = Trail("internal-code/page/1", 1, None, trailMetaData, None)
-      val trailIndex = 0
-      val collectionHasSnap = false;
       Collection.isSplashCard(
         trail,
-        trailIndex,
-        collectionType,
-        collectionHasSnap
+        collectionType
       ) should be(false)
     }
-    "should return true for the first card of a flexible special when there is no snap" in {
-      val collectionType = "flexible/special"
-      val trailIndex = 0
-      val collectionHasSnap = false;
-      Collection.isSplashCard(
-        trail,
-        trailIndex,
-        collectionType,
-        collectionHasSnap
-      ) should be(true)
-    }
-    "should return false for the first card in a flexible special where there is a snap" in {
-      val collectionType = "flexible/special"
-      val trailIndex = 0
-      val collectionHasSnap = true;
-      Collection.isSplashCard(
-        trail,
-        trailIndex,
-        collectionType,
-        collectionHasSnap
-      ) should be(false)
-    }
-    "should return true for the second card of a flexible special when there is a snap" in {
-      val collectionType = "flexible/special"
-      val trailIndex = 1
-      val collectionHasSnap = true;
-      Collection.isSplashCard(
-        trail,
-        trailIndex,
-        collectionType,
-        collectionHasSnap
-      ) should be(true)
-    }
-    "should return false for the third card of a flexible special when there is a snap" in {
-      val collectionType = "flexible/special"
-      val trailIndex = 2
-      val collectionHasSnap = true;
-      Collection.isSplashCard(
-        trail,
-        trailIndex,
-        collectionType,
-        collectionHasSnap
-      ) should be(false)
-    }
-    "should return false if the container is not flexible general or flexible special" in {
+    "should return false if the container is not flexible general" in {
       val collectionType = "scrollable/medium"
-      val trailIndex = 0
-      val collectionHasSnap = false;
       Collection.isSplashCard(
         trail,
-        trailIndex,
-        collectionType,
-        collectionHasSnap
+        collectionType
       ) should be(false)
     }
   }
