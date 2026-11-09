@@ -64,6 +64,8 @@ lazy val firehoseClient = (project in file("firehose-client"))
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
       // "com.twitter" %% "scrooge-core" % "21.12.0",
       "at.yawk.lz4" % "lz4-java" % "1.11.4",
+      // Glue's Kafka client still selects an affected Snappy release.
+      "org.xerial.snappy" % "snappy-java" % "1.1.10.9",
       scalaTest,
     ) ++ Seq("schema-registry-serde", "schema-registry-common")
       .map(artifact => "software.amazon.glue" % artifact % glueSchemaRegistryVersion) ++
