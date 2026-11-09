@@ -18,6 +18,8 @@ object Dependencies {
   val clientDeps = Seq(
     capiModels,
     "org.apache.thrift" % "libthrift" % thriftVersion,
+    // Keep Thrift's HTTP transport available without its vulnerable HTTP 5 defaults.
+    "org.apache.httpcomponents.client5" % "httpclient5" % "5.6.5",
     "commons-codec" % "commons-codec" % commonsCodecVersion,
     scalaTest,
     "org.scalatestplus" %% "mockito-4-11" % "3.2.18.0" % Test,
