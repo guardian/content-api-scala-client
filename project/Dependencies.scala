@@ -10,6 +10,9 @@ object Dependencies {
   val mockitoVersion = "5.12.0"
   val okhttpVersion = "4.12.0"
   val glueSchemaRegistryVersion = "2.0.1"
+  val jacksonVersion = "2.22.4"
+  // Jackson annotations use minor-only release versions from 2.20 onwards.
+  val jacksonAnnotationsVersion = "2.22"
 
   val capiModels: ModuleID = "com.gu" %% "content-api-models-scala" % capiModelsVersion
   val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % scalaTestVersion % Test `exclude`("org.mockito", "mockito-core")

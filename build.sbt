@@ -70,8 +70,10 @@ lazy val firehoseClient = (project in file("firehose-client"))
     ) ++ Seq("schema-registry-serde", "schema-registry-common")
       .map(artifact => "software.amazon.glue" % artifact % glueSchemaRegistryVersion) ++
       Seq("aws-json-protocol", "kinesis").map(artifact => "software.amazon.awssdk" % artifact % "2.57.2") ++ Seq(
-      "jackson-databind", "jackson-annotations", "jackson-core"
-    ).map(artifact => "com.fasterxml.jackson.core" % artifact % "2.17.3"),
+      "jackson-databind", "jackson-core"
+    ).map(artifact => "com.fasterxml.jackson.core" % artifact % jacksonVersion) ++ Seq(
+      "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonAnnotationsVersion
+    ),
     // Both artifacts provide net.jpountz.*; never publish a graph containing both.
     excludeDependencies += ExclusionRule("org.lz4", "lz4-java"),
     // zstd-jni follows native Zstd versions, not Java API versions.
