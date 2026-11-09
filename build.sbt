@@ -6,6 +6,8 @@ import sbtversionpolicy.withsbtrelease.ReleaseVersion
 
 val ghProject = "content-api-client"
 
+lazy val verifyDependencies = taskKey[Unit]("Verify that only the maintained LZ4 artifact is resolved")
+
 lazy val root = (project in file("."))
   .aggregate(client, defaultClient, catsEffectClient, firehoseClient)
   .settings(
@@ -59,11 +61,27 @@ lazy val firehoseClient = (project in file("firehose-client"))
       "software.amazon.kinesis" % "amazon-kinesis-client" % "3.4.3",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
       // "com.twitter" %% "scrooge-core" % "21.12.0",
-      "at.yawk.lz4" % "lz4-java" % "1.10.4", // Necessary while the ExclusionRule for org.lz4:lz4-java is necessary
+      "at.yawk.lz4" % "lz4-java" % "1.11.4",
       scalaTest,
     ) ++ Seq("aws-json-protocol", "kinesis").map(artifact => "software.amazon.awssdk" % artifact % "2.57.2") ++ Seq(
       "jackson-databind", "jackson-annotations", "jackson-core"
-    ).map(artifact => "com.fasterxml.jackson.core" % artifact % "2.17.3")
+    ).map(artifact => "com.fasterxml.jackson.core" % artifact % "2.17.3"),
+    // Both artifacts provide net.jpountz.*; never publish a graph containing both.
+    excludeDependencies += ExclusionRule("org.lz4", "lz4-java"),
+    verifyDependencies := {
+      val configurations = update.value.configurations
+      configurations.foreach { configuration =>
+        val modules = configuration.modules.filterNot(_.evicted).map(_.module)
+        require(!modules.exists(m => m.organization == "org.lz4" && m.name == "lz4-java"),
+          s"Unmaintained org.lz4:lz4-java found in ${configuration.configuration}")
+      }
+      require(configurations.exists(_.modules.exists(m =>
+        !m.evicted && m.module.organization == "at.yawk.lz4" && m.module.name == "lz4-java")),
+        "Missing maintained at.yawk.lz4:lz4-java replacement")
+    },
+    // sbt 2's test is an input task; CI runs the non-incremental testFull task.
+    Test / test := (Test / test).dependsOn(verifyDependencies).evaluated,
+    Test / testFull := Def.uncached((Test / testFull).dependsOn(verifyDependencies).value)
 
   )
 
