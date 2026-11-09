@@ -3,6 +3,16 @@ import sbt.*
 object Dependencies {
   val capiVersion = "51.0.0"
   val eTagCachingVersion = "18.0.0"
+  val jacksonVersion = "2.18.11"
+
+  // Keep Play JSON's Jackson modules aligned on a patched release.
+  val jackson = Seq(
+    "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion,
+    "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
+    "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % jacksonVersion,
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jacksonVersion
+  )
 
   val eTagCachingS3Base =
     "com.gu.etag-caching" %% "aws-s3-base" % eTagCachingVersion

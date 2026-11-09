@@ -70,6 +70,7 @@ def faciaJson(playJsonVersion: PlayJsonVersion) = playJsonSpecificProject("facia
       playJsonVersion.lib,
       scalaLogging
     ),
+    libraryDependencies ++= jackson,
     artifactProducingSettings(supportScala3 = true)
   )
 
