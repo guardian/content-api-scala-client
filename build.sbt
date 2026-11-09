@@ -59,6 +59,8 @@ lazy val firehoseClient = (project in file("firehose-client"))
       capiModels,
       "com.gu" %% "thrift-serializer" % "5.0.8",
       "software.amazon.kinesis" % "amazon-kinesis-client" % "3.4.3",
+      // Used directly by KinesisStreamReader; KCL still brings an affected older release.
+      "com.google.guava" % "guava" % "33.7.2-jre",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
       // "com.twitter" %% "scrooge-core" % "21.12.0",
       "at.yawk.lz4" % "lz4-java" % "1.11.4",
