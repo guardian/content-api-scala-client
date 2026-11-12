@@ -1,13 +1,9 @@
 package lib
 
-import software.amazon.awssdk.auth.credentials.{
-  EnvironmentVariableCredentialsProvider,
-  ProfileCredentialsProvider
-}
 import com.gu.contentapi.client.GuardianContentClient
 import com.gu.etagcaching.aws.sdkv2.s3.S3ObjectFetching
 import com.gu.facia.client.{ApiClient, Environment}
-import software.amazon.awssdk.auth.credentials.{AwsCredentialsProvider, AwsCredentialsProviderChain}
+import software.amazon.awssdk.auth.credentials.{AwsCredentialsProvider, ProfileCredentialsProvider}
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3AsyncClient
 
@@ -29,24 +25,13 @@ trait IntegrationTestConfig extends ExecutionContext {
     }
   }
 
-  def credentialsForDevAndCI(
-      devProfile: String,
-      ciCreds: AwsCredentialsProvider
-  ): AwsCredentialsProviderChain =
-    AwsCredentialsProviderChain.of(
-      ciCreds,
-      ProfileCredentialsProvider.builder().profileName(devProfile).build()
-    )
+  def credentialsForDevAndCI(devProfile: String): AwsCredentialsProvider =
+    ProfileCredentialsProvider.builder().profileName(devProfile).build()
 
   private val s3AsyncClient: S3AsyncClient = S3AsyncClient
     .builder()
     .region(Region.EU_WEST_1)
-    .credentialsProvider(
-      credentialsForDevAndCI(
-        awsProfileName,
-        EnvironmentVariableCredentialsProvider.create()
-      )
-    )
+    .credentialsProvider(credentialsForDevAndCI(awsProfileName))
     .build()
 
   implicit val apiClient: ApiClient = ApiClient.withCaching(
