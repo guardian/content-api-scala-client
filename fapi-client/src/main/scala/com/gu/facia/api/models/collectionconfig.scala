@@ -163,7 +163,6 @@ object CollectionConfig {
     }
 
     val Landscape54Collections = List(
-      "flexible/special",
       "flexible/general",
       "scrollable/small",
       "scrollable/medium",
@@ -177,7 +176,6 @@ object CollectionConfig {
   }
 
   val BetaCollections = List(
-    "flexible/special",
     "flexible/general",
     "scrollable/small",
     "scrollable/medium",

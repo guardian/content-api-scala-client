@@ -53,24 +53,10 @@ object Collection extends StrictLogging {
 
   private[models] def isSplashCard(
       trail: Trail,
-      index: Int,
-      collectionType: String,
-      collectionHasSnap: Boolean
-  ): Boolean = {
-    (collectionType, trail.safeMeta.group, index, collectionHasSnap) match {
-      case ("flexible/general", Some("3"), _, _) => true
-      case ("flexible/special", None, 0, false)  => true
-      case ("flexible/special", None, 1, true)   => true
-      case _                                     => false
-    }
-  }
-
-  private[models] def isSnapCard(
-      group: Option[String],
       collectionType: String
   ): Boolean = {
-    (group, collectionType) match {
-      case (Some("1"), "flexible/special") => true
+    (collectionType, trail.safeMeta.group) match {
+      case ("flexible/general", Some("3")) => true
       case _                               => false
     }
   }
@@ -81,7 +67,7 @@ object Collection extends StrictLogging {
       boostLevel: String
   ): Int = {
     if (
-      (collectionType == "flexible/general" || collectionType == "flexible/special") &&
+      collectionType == "flexible/general" &&
       !isSplashCard && boostLevel == BoostLevel.Default.label
     ) {
       2
@@ -100,16 +86,12 @@ object Collection extends StrictLogging {
     // if content is not in the set it was most likely filtered out by the CAPI query, so exclude it
     // note that this does not currently deal with e.g. snaps
     def resolveTrail(
-        trail: Trail,
-        index: Int,
-        collectionHasSnap: Boolean
+        trail: Trail
     ): Option[FaciaContent] = {
       val boostLevel = trail.safeMeta.boostLevel
       val isSplash = isSplashCard(
         trail,
-        index,
-        collection.collectionConfig.collectionType,
-        collectionHasSnap
+        collection.collectionConfig.collectionType
       )
       val maxItems = maxSupportingItems(
         isSplash,
@@ -202,18 +184,9 @@ object Collection extends StrictLogging {
         }
     }
 
-    val collectionHasSnap = from(collection).headOption match {
-      case Some(trail) =>
-        isSnapCard(
-          trail.safeMeta.group,
-          collection.collectionConfig.collectionType
-        )
-      case None => false
-    }
-
     for {
-      (trail, index) <- from(collection).zipWithIndex
-      content <- resolveTrail(trail, index, collectionHasSnap)
+      trail <- from(collection)
+      content <- resolveTrail(trail)
     } yield content
 
   }
