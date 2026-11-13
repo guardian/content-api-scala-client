@@ -1,0 +1,37 @@
+import sbt._
+
+object Dependencies {
+  val scalaVersions = Seq("2.13.18")
+  val capiModelsVersion = "53.0.0"
+  val thriftVersion = "0.24.0"
+  val commonsCodecVersion = "1.22.1"
+  val scalaTestVersion = "3.2.20"
+  val slf4jVersion = "2.0.18"
+  val mockitoVersion = "5.12.0"
+  val okhttpVersion = "4.12.0"
+  val glueSchemaRegistryVersion = "2.0.1"
+  val jacksonVersion = "2.22.4"
+  // Jackson annotations use minor-only release versions from 2.20 onwards.
+  val jacksonAnnotationsVersion = "2.22"
+
+  val capiModels: ModuleID = "com.gu" %% "content-api-models-scala" % capiModelsVersion
+  val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % scalaTestVersion % Test `exclude`("org.mockito", "mockito-core")
+
+  // Note: keep libthrift at a version functionally compatible with that used in content-api-models
+  // if build failures occur due to eviction / sbt-assembly mergeStrategy errors
+  val clientDeps = Seq(
+    capiModels,
+    "org.apache.thrift" % "libthrift" % thriftVersion,
+    // Keep Thrift's HTTP transport available without its vulnerable HTTP 5 defaults.
+    "org.apache.httpcomponents.client5" % "httpclient5" % "5.6.5",
+    "commons-codec" % "commons-codec" % commonsCodecVersion,
+    scalaTest,
+    "org.scalatestplus" %% "mockito-4-11" % "3.2.18.0" % Test,
+    "org.slf4j" % "slf4j-api" % slf4jVersion,
+    "org.mockito" % "mockito-core" % mockitoVersion
+  )
+
+  val defaultClientDeps = Seq(
+    "com.squareup.okhttp3" % "okhttp" % okhttpVersion
+  )
+}
