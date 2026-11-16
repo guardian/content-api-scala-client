@@ -129,6 +129,12 @@ object CapiModelEnrichment {
     def design: Design = {
 
       val defaultDesign: Design = ArticleDesign
+      val isWeekendRead = tagExistsWithAnyId(
+        "news/series/the-saturday-read",
+        "news/series/the-sunday-read"
+      )
+      val isAnalysis: ContentFilter = content =>
+        tagExistsWithId("tone/analysis")(content) && !(isImmersive(content) && isWeekendRead(content))
 
       // Note: only the first matching predicate will be picked.
       // Modifying the order of predicates could create unintended problems:
@@ -146,7 +152,7 @@ object CapiModelEnrichment {
         tagExistsWithId("type/crossword") -> CrosswordDesign,
         isReview -> ReviewDesign,
         isObituary -> ObituaryDesign,
-        tagExistsWithId("tone/analysis") -> AnalysisDesign,
+        isAnalysis -> AnalysisDesign,
         tagExistsWithId("tone/explainers") -> ExplainerDesign,
         tagExistsWithId("tone/comment") -> CommentDesign,
         tagExistsWithId("tone/letters") -> LetterDesign,
@@ -157,8 +163,7 @@ object CapiModelEnrichment {
         tagExistsWithId("tone/quizzes") -> QuizDesign,
         isLiveBlog -> LiveBlogDesign,
         isDeadBlog -> DeadBlogDesign,
-        tagExistsWithAnyId("news/series/the-saturday-read",
-          "news/series/the-sunday-read") -> WeekendEssayDesign,
+        isWeekendRead -> WeekendEssayDesign,
         tagExistsWithId("tone/features") -> FeatureDesign,
         tagExistsWithId("tone/matchreports") -> MatchReportDesign,
         tagExistsWithId("tone/timelines") -> TimelineDesign,
