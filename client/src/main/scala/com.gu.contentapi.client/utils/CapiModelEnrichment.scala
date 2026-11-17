@@ -293,7 +293,7 @@ object CapiModelEnrichment {
         hasShowcaseEmbed.getOrElse(false)
       }
 
-      def hasShowcaseInteractiveAtom: ContentFilter = content => {
+      def hasShowcaseInteractiveAtomMainMedia: ContentFilter = content => {
         val hasShowcaseInteractiveAtom = for {
           blocks <- content.blocks
           main <- blocks.main
@@ -309,7 +309,7 @@ object CapiModelEnrichment {
       }
 
       val isShowcaseInteractive: ContentFilter = content =>
-        isInteractive(content) && hasShowcaseInteractiveAtom(content)
+        isInteractive(content) && hasShowcaseInteractiveAtomMainMedia(content)
 
       val isShowcase: ContentFilter = content =>
         displayHintExistsWithName("column")(content) ||
