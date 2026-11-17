@@ -124,6 +124,7 @@ object CapiModelEnrichment {
     }
   }
 
+  // Rule reference and maintenance checklist: docs/rendering-format.md (repository root).
   implicit class RenderingFormat(val content: Content) extends AnyVal {
 
     def design: Design = {

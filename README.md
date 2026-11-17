@@ -62,11 +62,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 ### Rendering format
 
 `CapiModelEnrichment.RenderingFormat` derives a content item's design, theme and display.
-Design rules use the first matching predicate. For articles with an `immersive` display hint
-and either the `news/series/the-saturday-read` or `news/series/the-sunday-read` tag, the Analysis
-rule is skipped so the article can use `WeekendEssayDesign` without removing `tone/analysis`.
-Other design rules retain their existing precedence, and the display remains `ImmersiveDisplay`.
-Non-immersive Analysis articles and immersive Analysis articles outside those series are unchanged.
+See the [rendering-format guide](docs/rendering-format.md) for selection rules, precedence
+diagrams, downstream rendering and the checklist for updating rules and documentation together.
 
 ### Single item
 
