@@ -274,6 +274,60 @@ class CapiModelEnrichmentFormatTest extends AnyFlatSpec with MockitoSugar with M
     f.content.design shouldEqual AnalysisDesign
   }
 
+  for (series <- Seq("news/series/the-saturday-read", "news/series/the-sunday-read")) {
+    it should s"prefer WeekendEssayDesign over AnalysisDesign for immersive $series articles" in {
+      val f = fixture
+      val seriesTag = mock[Tag]
+      val featureTag = mock[Tag]
+      when(f.tag.id) thenReturn "tone/analysis"
+      when(seriesTag.id) thenReturn series
+      when(featureTag.id) thenReturn "tone/features"
+      when(f.content.tags) thenReturn List(f.tag, seriesTag, featureTag)
+      when(f.content.fields) thenReturn Some(f.fields)
+      when(f.fields.displayHint) thenReturn Some("immersive")
+      when(f.fields.liveBloggingNow) thenReturn None
+
+      f.content.design shouldEqual WeekendEssayDesign
+      f.content.display shouldEqual ImmersiveDisplay
+      f.content.tags.map(_.id) should contain("tone/analysis")
+    }
+
+    it should s"retain AnalysisDesign for non-immersive $series articles" in {
+      val f = fixture
+      val seriesTag = mock[Tag]
+      when(f.tag.id) thenReturn "tone/analysis"
+      when(seriesTag.id) thenReturn series
+      when(f.content.tags) thenReturn List(f.tag, seriesTag)
+
+      f.content.design shouldEqual AnalysisDesign
+      f.content.display shouldEqual StandardDisplay
+    }
+  }
+
+  it should "retain AnalysisDesign for immersive articles outside the weekend read series" in {
+    val f = fixture
+    when(f.tag.id) thenReturn "tone/analysis"
+    when(f.content.fields) thenReturn Some(f.fields)
+    when(f.fields.displayHint) thenReturn Some("immersive")
+
+    f.content.design shouldEqual AnalysisDesign
+    f.content.display shouldEqual ImmersiveDisplay
+  }
+
+  it should "retain ReviewDesign for immersive weekend reads also tagged Analysis" in {
+    val f = fixture
+    val seriesTag = mock[Tag]
+    val reviewTag = mock[Tag]
+    when(f.tag.id) thenReturn "tone/analysis"
+    when(seriesTag.id) thenReturn "news/series/the-sunday-read"
+    when(reviewTag.id) thenReturn "tone/reviews"
+    when(f.content.tags) thenReturn List(f.tag, seriesTag, reviewTag)
+    when(f.content.fields) thenReturn Some(f.fields)
+    when(f.fields.displayHint) thenReturn Some("immersive")
+
+    f.content.design shouldEqual ReviewDesign
+  }
+
   it should "have a design of 'ExplainerDesign' when tag tone/explainers is present" in {
     val f = fixture
     when(f.tag.id) thenReturn "tone/explainers"

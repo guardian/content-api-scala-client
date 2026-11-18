@@ -59,6 +59,12 @@ import com.gu.contentapi.client.GuardianContentClient
 import scala.concurrent.ExecutionContext.Implicits.global
 ```
 
+### Rendering format
+
+`CapiModelEnrichment.RenderingFormat` derives a content item's design, theme and display.
+See the [rendering-format guide](docs/rendering-format.md) for selection rules, precedence
+diagrams, downstream rendering and the checklist for updating rules and documentation together.
+
 ### Single item
 
 Every item on http://www.theguardian.com/ can be retrieved on the same path at https://content.guardianapis.com/. They can be either content items, tags, or sections. For example:
